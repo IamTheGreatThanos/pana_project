@@ -1,0 +1,9 @@
+<svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1" y="1" width="86" height="86" rx="12" fill="#F5F5F5"/>
+<path d="M44 49.3335C46.2091 49.3335 48 47.5426 48 45.3335C48 43.1244 46.2091 41.3335 44 41.3335C41.7909 41.3335 40 43.1244 40 45.3335C40 47.5426 41.7909 49.3335 44 49.3335Z" stroke="#2B2B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M56 45V38.3333C56 37.597 55.403 37 54.6667 37H33.3333C32.597 37 32 37.597 32 38.3333V51.6667C32 52.403 32.597 53 33.3333 53H48" stroke="#2B2B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M47.1539 33H40.8461C40.2505 33 39.7217 33.3672 39.5333 33.9117L39.0721 35.245C38.7734 36.1084 39.4403 37 40.3848 37H47.6152C48.5597 37 49.2266 36.1084 48.9279 35.245L48.4667 33.9117C48.2783 33.3672 47.7495 33 47.1539 33Z" stroke="#2B2B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M56 49V57" stroke="#E56553" stroke-width="2" stroke-linecap="round"/>
+<path d="M52 53L60 53" stroke="#E56553" stroke-width="2" stroke-linecap="round"/>
+<rect x="1" y="1" width="86" height="86" rx="12" stroke="#E7E7E7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 6"/>
+</svg>

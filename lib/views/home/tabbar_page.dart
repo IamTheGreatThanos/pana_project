@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/auth/create_lock_code_page.dart';
 import 'package:pana_project/views/auth/lock_screen.dart';
 import 'package:pana_project/views/housing/home_housing.dart';
 import 'package:pana_project/views/impression/home_impression.dart';
@@ -16,7 +15,7 @@ class _TabBarPageState extends State<TabBarPage> {
   int selectedTabIndex = 2;
 
   List<Widget> tabViews = <Widget>[
-    CreateLockCodePage(),
+    HomeImpression(),
     HomeImpression(),
     HomeHousing(),
     PaymentPage(),

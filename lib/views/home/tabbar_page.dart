@@ -15,7 +15,7 @@ class _TabBarPageState extends State<TabBarPage> {
   int selectedTabIndex = 2;
 
   List<Widget> tabViews = <Widget>[
-    HomeImpression(),
+    LockScreen(),
     HomeImpression(),
     HomeHousing(),
     PaymentPage(),

@@ -5,6 +5,7 @@ import 'package:pana_project/views/auth/lock_screen.dart';
 import 'package:pana_project/views/housing/home_housing.dart';
 import 'package:pana_project/views/impression/home_impression.dart';
 import 'package:pana_project/views/payment/payment_page.dart';
+import 'package:pana_project/views/travel/home_travel.dart';
 
 class TabBarPage extends StatefulWidget {
   @override
@@ -13,18 +14,20 @@ class TabBarPage extends StatefulWidget {
 
 class _TabBarPageState extends State<TabBarPage> {
   int selectedTabIndex = 2;
+  GlobalKey globalKey = GlobalKey(debugLabel: 'btm_nav_bar');
 
-  List<Widget> tabViews = <Widget>[
-    LockScreen(),
-    HomeImpression(),
-    HomeHousing(),
-    PaymentPage(),
-    LockScreen(),
-  ];
+  List<Widget> tabViews = <Widget>[];
 
   @override
   void initState() {
     super.initState();
+    tabViews = <Widget>[
+      HomeTravel(changeTabMethod),
+      HomeImpression(),
+      HomeHousing(),
+      PaymentPage(),
+      LockScreen(),
+    ];
   }
 
   @override
@@ -40,6 +43,7 @@ class _TabBarPageState extends State<TabBarPage> {
       child: Scaffold(
         body: tabViews[selectedTabIndex],
         bottomNavigationBar: BottomNavigationBar(
+          key: globalKey,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
@@ -113,5 +117,11 @@ class _TabBarPageState extends State<TabBarPage> {
         ),
       ),
     );
+  }
+
+  void changeTabMethod() {
+    setState(() {
+      selectedTabIndex = 2;
+    });
   }
 }

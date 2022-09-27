@@ -383,7 +383,7 @@ class _AuthPageState extends State<AuthPage> {
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  'У вас нет аккаунта?',
+                  'У вас уже есть аккаунт?',
                   style: TextStyle(
                       color: Colors.black45,
                       fontWeight: FontWeight.w400,

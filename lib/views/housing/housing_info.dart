@@ -2,9 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/other/audio_reviews_page.dart';
+import 'package:pana_project/views/payment/payment_page.dart';
 
 class HousingInfo extends StatefulWidget {
   // HousingInfo(this.product);
@@ -619,100 +622,44 @@ class _HousingInfoState extends State<HousingInfo> {
                     padding:
                         const EdgeInsets.only(top: 20, left: 20, bottom: 10),
                     child: Row(
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           'Аудио-отзывы',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        Spacer(),
-                        Text(
-                          'Перейти',
-                          style: TextStyle(
-                            color: AppColors.accent,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AudioReviewsPage()));
+                          },
+                          child: const Text(
+                            'Перейти',
+                            style: TextStyle(
+                              color: AppColors.accent,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                        SizedBox(width: 20),
+                        const SizedBox(width: 20),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                        border: Border.all(width: 1, color: AppColors.grey),
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(12)),
-                              child: SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
-                                ),
-                              ),
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                child: const Text(
-                                  'Dinmukhammed Muslim',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 2),
-                                    child: SizedBox(
-                                      width: 12,
-                                      height: 12,
-                                      child: SvgPicture.asset(
-                                          'assets/icons/star.svg'),
-                                    ),
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(left: 5),
-                                    child: Text(
-                                      '4.9',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            width: 24,
-                            height: 24,
-                            child:
-                                SvgPicture.asset('assets/icons/play_audio.svg'),
-                          )
-                        ],
-                      ),
-                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: AudioReviewCard(),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: AudioReviewCard(),
                   ),
                   const Divider(),
                   const Padding(
@@ -850,7 +797,12 @@ class _HousingInfoState extends State<HousingInfo> {
                                     BorderRadius.circular(10), // <-- Radius
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PaymentPage()));
+                            },
                             child: const Text(
                               "Забронировать",
                               style: TextStyle(

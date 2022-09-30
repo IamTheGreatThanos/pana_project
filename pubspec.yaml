@@ -99,6 +99,9 @@ flutter:
     - assets/icons/share.svg
     - assets/icons/back_arrow.svg
     - assets/icons/heart_empty_2.svg
+    - assets/icons/chat.svg
+    - assets/icons/like_review.svg
+    - assets/icons/dislike_review.svg
     - assets/images/logo_word.svg
     - assets/images/logo_icon.svg
     - assets/images/auth_bg.svg

@@ -85,7 +85,7 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                       const Spacer(),
                       const Padding(
-                        padding: EdgeInsets.only(right: 20),
+                        padding: EdgeInsets.only(right: 0),
                         child: SizedBox(
                           height: 50,
                           width: 50,

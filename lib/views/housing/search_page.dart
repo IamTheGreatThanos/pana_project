@@ -50,12 +50,11 @@ class _SearchPageState extends State<SearchPage> {
             child: Container(
               color: AppColors.lightGray,
               width: MediaQuery.of(context).size.width,
-              height: 930,
               child: Column(
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    height: 300,
+                    height: selectedContinentIndex == 0 ? 300 : 380,
                     decoration: BoxDecoration(
                       color: AppColors.white,
                       borderRadius: BorderRadius.only(
@@ -178,6 +177,52 @@ class _SearchPageState extends State<SearchPage> {
                             ],
                           ),
                         ),
+                        selectedContinentIndex != 0
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(12),
+                                      ),
+                                      border: Border.all(
+                                          width: 1, color: AppColors.grey)),
+                                  child: Row(
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 20),
+                                        child: Text(
+                                          'Город',
+                                          style: TextStyle(
+                                              color: Colors.black45,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 20),
+                                        child: GestureDetector(
+                                          child: const Text(
+                                            'Выбрать',
+                                            style: TextStyle(
+                                                color: AppColors.accent,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          onTap: () {},
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : Container(),
                       ],
                     ),
                   ),

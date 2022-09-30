@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/audio_review_card.dart';
@@ -8,6 +7,8 @@ import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/payment/payment_page.dart';
+import 'package:story_view/controller/story_controller.dart';
+import 'package:story_view/widgets/story_view.dart';
 
 class HousingInfo extends StatefulWidget {
   // HousingInfo(this.product);
@@ -18,12 +19,19 @@ class HousingInfo extends StatefulWidget {
 }
 
 class _HousingInfoState extends State<HousingInfo> {
+  final storyController = StoryController();
   int lenOfList = 5;
   int indexOfImage = 1;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    storyController.dispose();
+    super.dispose();
   }
 
   void imageChanged(int index) async {
@@ -54,63 +62,73 @@ class _HousingInfoState extends State<HousingInfo> {
                   Stack(
                     children: [
                       SizedBox(
-                        height: 300,
-                        width: MediaQuery.of(context).size.width,
-                        child: CarouselSlider.builder(
-                          options: CarouselOptions(
-                            height: 300,
-                            aspectRatio: 16 / 9,
-                            viewportFraction: 1,
-                            initialPage: 0,
-                            enableInfiniteScroll: true,
-                            reverse: false,
-                            autoPlay: false,
-                            // autoPlayInterval: const Duration(seconds: 3),
-                            // autoPlayAnimationDuration:
-                            //     const Duration(milliseconds: 800),
-                            autoPlayCurve: Curves.fastOutSlowIn,
-                            enlargeCenterPage: false,
-                            onPageChanged: (index, reason) {
-                              imageChanged(index);
-                            },
-                            scrollDirection: Axis.horizontal,
-                          ),
-                          itemCount: lenOfList,
-                          itemBuilder: (BuildContext context, int itemIndex,
-                                  int pageViewIndex) =>
-                              CachedNetworkImage(
-                            fit: BoxFit.fitHeight,
-                            imageUrl:
-                                'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80',
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 260,
-                          left: MediaQuery.of(context).size.width - 70,
-                        ),
-                        child: Container(
-                          width: 48,
-                          height: 23,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(4),
-                            ),
-                            color: AppColors.black,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '$indexOfImage / $lenOfList',
-                                style: const TextStyle(color: Colors.white),
-                                textAlign: TextAlign.center,
-                              )
+                          height: 300,
+                          width: MediaQuery.of(context).size.width,
+                          child: StoryView(
+                            storyItems: [
+                              StoryItem.pageImage(
+                                url:
+                                    "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+                                controller: storyController,
+                                imageFit: BoxFit.fitHeight,
+                              ),
+                              StoryItem.pageImage(
+                                url:
+                                    "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+                                controller: storyController,
+                                imageFit: BoxFit.fitHeight,
+                              ),
+                              StoryItem.pageImage(
+                                url:
+                                    "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+                                controller: storyController,
+                                imageFit: BoxFit.fitHeight,
+                              ),
+                              StoryItem.pageImage(
+                                url:
+                                    "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+                                controller: storyController,
+                                imageFit: BoxFit.fitHeight,
+                              ),
                             ],
+                            onStoryShow: (s) {},
+                            onComplete: () {},
+                            progressPosition: ProgressPosition.bottom,
+                            repeat: true,
+                            controller: storyController,
+                            onVerticalSwipeComplete: (direction) {
+                              Navigator.of(context).pop();
+                            },
+                          )
+                          // CarouselSlider.builder(
+                          //   options: CarouselOptions(
+                          //     height: 300,
+                          //     aspectRatio: 16 / 9,
+                          //     viewportFraction: 1,
+                          //     initialPage: 0,
+                          //     enableInfiniteScroll: true,
+                          //     reverse: false,
+                          //     autoPlay: false,
+                          //     // autoPlayInterval: const Duration(seconds: 3),
+                          //     // autoPlayAnimationDuration:
+                          //     //     const Duration(milliseconds: 800),
+                          //     autoPlayCurve: Curves.fastOutSlowIn,
+                          //     enlargeCenterPage: false,
+                          //     onPageChanged: (index, reason) {
+                          //       imageChanged(index);
+                          //     },
+                          //     scrollDirection: Axis.horizontal,
+                          //   ),
+                          //   itemCount: lenOfList,
+                          //   itemBuilder: (BuildContext context, int itemIndex,
+                          //           int pageViewIndex) =>
+                          //       CachedNetworkImage(
+                          //     fit: BoxFit.fitHeight,
+                          //     imageUrl:
+                          //         'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80',
+                          //   ),
+                          // ),
                           ),
-                        ),
-                      ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
                         child: Row(

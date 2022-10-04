@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/housing/housing_info.dart';
+import 'package:pana_project/views/impression/impression_info.dart';
 
 class ImpressionCard extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class _ImpressionCardState extends State<ImpressionCard> {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HousingInfo()));
+            context, MaterialPageRoute(builder: (context) => ImpressionInfo()));
       },
       child: Container(
           decoration: BoxDecoration(

@@ -2,10 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/audio_review_card.dart';
+import 'package:pana_project/components/facilities_widget.dart';
 import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
+import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/payment/payment_page.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
@@ -20,8 +22,6 @@ class HousingInfo extends StatefulWidget {
 
 class _HousingInfoState extends State<HousingInfo> {
   final storyController = StoryController();
-  int lenOfList = 5;
-  int indexOfImage = 1;
 
   @override
   void initState() {
@@ -32,12 +32,6 @@ class _HousingInfoState extends State<HousingInfo> {
   void dispose() {
     storyController.dispose();
     super.dispose();
-  }
-
-  void imageChanged(int index) async {
-    setState(() {
-      indexOfImage = index + 1;
-    });
   }
 
   @override
@@ -97,7 +91,10 @@ class _HousingInfoState extends State<HousingInfo> {
                             repeat: true,
                             controller: storyController,
                             onVerticalSwipeComplete: (direction) {
-                              Navigator.of(context).pop();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MediaDetailPage()));
                             },
                           )
                           // CarouselSlider.builder(
@@ -403,87 +400,12 @@ class _HousingInfoState extends State<HousingInfo> {
                     padding:
                         const EdgeInsets.only(left: 20, bottom: 20, right: 10),
                     child: Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5)),
-                            border: Border.all(width: 1, color: AppColors.grey),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset('assets/icons/check.svg'),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 5),
-                                  child: Text(
-                                    'Wi-fi',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black45,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5)),
-                            border: Border.all(width: 1, color: AppColors.grey),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset('assets/icons/check.svg'),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 5),
-                                  child: Text(
-                                    'Кондиционер',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black45,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5)),
-                            border: Border.all(width: 1, color: AppColors.grey),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset('assets/icons/check.svg'),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 5),
-                                  child: Text(
-                                    'Фен',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black45,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                      children: const [
+                        FacilitiesWidget(title: 'Wi-Fi'),
+                        SizedBox(width: 10),
+                        FacilitiesWidget(title: 'Кондиционер'),
+                        SizedBox(width: 10),
+                        FacilitiesWidget(title: 'Фен'),
                       ],
                     ),
                   ),
@@ -495,6 +417,19 @@ class _HousingInfoState extends State<HousingInfo> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: MediaQuery.of(context).size.width * 0.9 / 1.23,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(16),
+                        ),
+                        color: Colors.orange[50],
                       ),
                     ),
                   ),

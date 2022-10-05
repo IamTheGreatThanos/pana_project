@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:pana_project/components/travel_card.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -17,6 +18,7 @@ class _HomeTravelState extends State<HomeTravel> {
       DateRangePickerController();
   TextEditingController _titleController = TextEditingController();
   String selectedRange = '';
+  bool justBool = true;
 
   @override
   void initState() {
@@ -35,91 +37,172 @@ class _HomeTravelState extends State<HomeTravel> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - 80,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: 120,
-                    height: 120,
-                    child:
-                        SvgPicture.asset('assets/images/placeholder_image.svg'),
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: const Text(
-                      'У вас пока нет запланированных поездок',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
+        body: justBool
+            ? SingleChildScrollView(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      Row(
+                        children: [
+                          const SizedBox(width: 40),
+                          const Spacer(),
+                          const Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text(
+                              'Мои поездки',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              showNewPlanOfTravelModalSheet();
+                            },
+                            child: const SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: Icon(
+                                Icons.add,
+                                size: 26,
+                                color: AppColors.accent,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                        ],
                       ),
-                      textAlign: TextAlign.center,
-                    ),
+                      const SizedBox(height: 5),
+                      Container(
+                        color: AppColors.lightGray,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.grey,
+                                    width: 1,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(100),
+                                  ),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 7),
+                                  child: Text(
+                                    'Июль 2022',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black45,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            for (int i = 0; i < 10; i++)
+                              TravelCard('Отдых с семьей')
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: SizedBox(
-                      height: 60,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: AppColors.accent,
-                          minimumSize: const Size.fromHeight(50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(10), // <-- Radius
+                ),
+              )
+            : SingleChildScrollView(
+                child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height - 80,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        const Spacer(),
+                        SizedBox(
+                          width: 120,
+                          height: 120,
+                          child: SvgPicture.asset(
+                              'assets/images/placeholder_image.svg'),
+                        ),
+                        const Spacer(),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: const Text(
+                            'У вас пока нет запланированных поездок',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            widget.onButtonPressed();
-                          });
-                        },
-                        child: const Text("Перейти к поиску жилья",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500)),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: SizedBox(
-                      height: 60,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: AppColors.white,
-                          minimumSize: const Size.fromHeight(50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(10), // <-- Radius
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: SizedBox(
+                            height: 60,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors.accent,
+                                minimumSize: const Size.fromHeight(50),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10), // <-- Radius
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  widget.onButtonPressed();
+                                });
+                              },
+                              child: const Text("Перейти к поиску жилья",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500)),
+                            ),
                           ),
                         ),
-                        onPressed: () {
-                          showNewPlanOfTravelModalSheet();
-                        },
-                        child: const Text("Создать план",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500)),
-                      ),
-                    ),
-                  )
-                ],
-              )),
-        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: SizedBox(
+                            height: 60,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors.white,
+                                minimumSize: const Size.fromHeight(50),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10), // <-- Radius
+                                ),
+                              ),
+                              onPressed: () {
+                                showNewPlanOfTravelModalSheet();
+                              },
+                              child: const Text("Создать план",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500)),
+                            ),
+                          ),
+                        )
+                      ],
+                    )),
+              ),
       ),
     );
   }

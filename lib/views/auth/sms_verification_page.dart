@@ -184,12 +184,15 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
       // TODO: Действие при авторизации пользователя...
       print(response);
       if (response['response_status'] == 'ok') {
-        // print(response['access_token']);
-        // prefs.setString("token", response['access_token']);
-        // prefs.setInt("user_id", response['user']['id']);
-        // prefs.setString("full_name", response['user']['name']);
-        // prefs.setBool('isLogedIn', true);
-        // print(response['token']);
+        prefs.setString("token", response['access_token']);
+        prefs.setInt("user_id", response['user']['id']);
+        prefs.setString("user_name", response['user']['name']);
+        prefs.setString("user_surname", response['user']['surname']);
+        prefs.setString("user_email", response['user']['email']);
+        prefs.setString("user_phone", response['user']['phone']);
+        prefs.setString("user_phone_code", response['user']['phone_code']);
+        prefs.setBool('isLogedIn', true);
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => widget.page),

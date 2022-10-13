@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/register_loading_page.dart';
 import 'package:pana_project/views/auth/sms_verification_page.dart';
@@ -120,11 +121,15 @@ class _AuthPageState extends State<AuthPage> {
                                 ),
                               ),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => TabBarPage()),
-                                );
+                                if (authPhoneController.text.isNotEmpty) {
+                                  login();
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text("Заполните все поля.",
+                                        style: const TextStyle(fontSize: 20)),
+                                  ));
+                                }
                               },
                               child: const Text("Войти",
                                   style: TextStyle(
@@ -211,7 +216,7 @@ class _AuthPageState extends State<AuthPage> {
                         child: TextField(
                           controller: nameController,
                           textCapitalization: TextCapitalization.words,
-                          maxLength: 10,
+                          maxLength: 30,
                           decoration: const InputDecoration(
                             counterStyle: TextStyle(
                               height: double.minPositive,
@@ -247,7 +252,7 @@ class _AuthPageState extends State<AuthPage> {
                         child: TextField(
                           controller: lastNameController,
                           textCapitalization: TextCapitalization.words,
-                          maxLength: 10,
+                          maxLength: 30,
                           decoration: const InputDecoration(
                             counterStyle: TextStyle(
                               height: double.minPositive,
@@ -282,7 +287,7 @@ class _AuthPageState extends State<AuthPage> {
                             vertical: 4, horizontal: 10),
                         child: TextField(
                           controller: emailController,
-                          maxLength: 10,
+                          maxLength: 50,
                           decoration: const InputDecoration(
                             counterStyle: TextStyle(
                               height: double.minPositive,
@@ -367,13 +372,17 @@ class _AuthPageState extends State<AuthPage> {
                         ),
                       ),
                       onPressed: () {
-                        registerButtonTapped();
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SmsVerificationPage(
-                                    RegisterLoadingPage())));
+                        if (nameController.text.isNotEmpty &&
+                            lastNameController.text.isNotEmpty &&
+                            emailController.text.isNotEmpty &&
+                            phoneController.text.isNotEmpty) {
+                          registerButtonTapped();
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Заполните все поля.",
+                                style: const TextStyle(fontSize: 20)),
+                          ));
+                        }
                       },
                       child: const Text("Зарегистрироваться",
                           style: TextStyle(
@@ -417,5 +426,43 @@ class _AuthPageState extends State<AuthPage> {
   void registerButtonTapped() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('user_name', nameController.text);
+
+    var response = await AuthProvider().register(authPhoneController.text, '7',
+        nameController.text, lastNameController.text, emailController.text);
+    // TODO: Действие при отправке номера телефона пользователя...
+    if (response['response_status'] == 'ok') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SmsVerificationPage(
+                  1,
+                  RegisterLoadingPage(),
+                  phoneController.text,
+                  nameController.text,
+                  lastNameController.text,
+                  emailController.text)));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void login() async {
+    var response = await AuthProvider().login(authPhoneController.text, '7');
+    // TODO: Действие при отправке номера телефона пользователя...
+    if (response['response_status'] == 'ok') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SmsVerificationPage(
+                  0, TabBarPage(), authPhoneController.text, '', '', '')));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

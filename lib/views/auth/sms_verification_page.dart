@@ -3,10 +3,19 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/auth_api_provider.dart';
 
 class SmsVerificationPage extends StatefulWidget {
-  SmsVerificationPage(this.page);
+  SmsVerificationPage(this.fromPage, this.page, this.phone, this.name,
+      this.surname, this.email);
   final Widget page;
+  final String phone;
+  final int fromPage;
+  final String name;
+  final String surname;
+  final String email;
 
   @override
   _SmsVerificationPageState createState() => _SmsVerificationPageState();
@@ -135,6 +144,7 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
                   onTap: () {
                     if (_time == '00') {
                       startTimer();
+                      resendCode();
                     }
                   },
                 ),
@@ -168,13 +178,80 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
   }
 
   void sendVerificationCode() async {
-    if (pinCodeController.text == '1234') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => widget.page),
-      );
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (widget.fromPage == 0) {
+      var response = await AuthProvider().loginVerify(pinCodeController.text);
+      // TODO: Действие при авторизации пользователя...
+      print(response);
+      if (response['response_status'] == 'ok') {
+        // print(response['access_token']);
+        // prefs.setString("token", response['access_token']);
+        // prefs.setInt("user_id", response['user']['id']);
+        // prefs.setString("full_name", response['user']['name']);
+        // prefs.setBool('isLogedIn', true);
+        // print(response['token']);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => widget.page),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Извините, код введен неправильно. Попробуйте еще раз.",
+              style: TextStyle(fontSize: 20)),
+        ));
+      }
     } else {
-      print(pinCodeController.text);
+      var response =
+          await AuthProvider().registerVerify(pinCodeController.text);
+      // TODO: Действие при авторизации пользователя...
+      print(response);
+      if (response['response_status'] == 'ok') {
+        prefs.setString("token", response['access_token']);
+        prefs.setInt("user_id", response['user']['id']);
+        prefs.setString("user_name", response['user']['name']);
+        prefs.setString("user_surname", response['user']['surname']);
+        prefs.setString("user_email", response['user']['email']);
+        prefs.setString("user_phone", response['user']['phone']);
+        prefs.setString("user_phone_code", response['user']['phone_code']);
+        prefs.setBool('isLogedIn', true);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => widget.page),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Извините, код введен неправильно. Попробуйте еще раз.",
+              style: TextStyle(fontSize: 20)),
+        ));
+      }
+    }
+  }
+
+  void resendCode() async {
+    if (widget.fromPage == 0) {
+      var response = await AuthProvider().login(widget.phone, '7');
+      // TODO: Действие при отправке номера телефона пользователя...
+      if (response['response_status'] == 'ok') {
+        print("Sended!");
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text(response['message'], style: const TextStyle(fontSize: 20)),
+        ));
+      }
+    } else {
+      var response = await AuthProvider().register(
+          widget.phone, '7', widget.name, widget.surname, widget.email);
+      // TODO: Действие при отправке номера телефона пользователя...
+      if (response['response_status'] == 'ok') {
+        print("Sended!");
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text(response['message'], style: const TextStyle(fontSize: 20)),
+        ));
+      }
     }
   }
 }

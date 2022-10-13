@@ -110,6 +110,10 @@ flutter:
     - assets/icons/service_icon_5.svg
     - assets/icons/geolocation_info_icon.svg
     - assets/icons/geolocation_info_icon_accent.svg
+    - assets/icons/geolocation_info_icon_grey.svg
+    - assets/icons/geolocation_info_icon_checkmark.svg
+    - assets/icons/map_pin.svg
+    - assets/icons/timer.svg
     - assets/images/logo_word.svg
     - assets/images/logo_icon.svg
     - assets/images/auth_bg.svg

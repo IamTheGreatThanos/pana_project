@@ -13,7 +13,7 @@ class AppColors {
 }
 
 class AppConstants {
-  static const String baseUrl = "http://new.boszhan.kz/";
+  static const String baseUrl = "http://back-dev.pana.world/";
   static String appVersion = '0.1';
   static double cardBorderRadius = 25;
 }

@@ -1,3 +1,11 @@
 'token' - String => 'Token of user.'
 'user_id' - int => 'Users id.'
 'full_name' - String => 'Users full name.'
+
+prefs.setString("token", response['access_token']);
+prefs.setInt("user_id", response['user']['id']);
+prefs.setString("user_name", response['user']['name']);
+prefs.setString("user_surname", response['user']['surname']);
+prefs.setString("user_email", response['user']['email']);
+prefs.setString("user_phone", response['user']['phone']);
+prefs.setString("user_phone_code", response['user']['phone_code']);

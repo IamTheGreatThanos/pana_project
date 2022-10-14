@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/housing_card.dart';
-import 'package:pana_project/models/housing.dart';
+import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/housing/search_page.dart';
@@ -34,7 +34,7 @@ class _HomeHousingState extends State<HomeHousing>
     {'name': 'На дереве', 'asset': 'assets/icons/category_12.svg', 'id': 12},
   ];
 
-  List<Housing> housingList = [];
+  List<HousingCardModel> housingList = [];
 
   int selectedCategoryId = 1;
 
@@ -223,7 +223,7 @@ class _HomeHousingState extends State<HomeHousing>
     var response = await MainProvider().getHousingData(selectedCategoryId);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
-        housingList.add(Housing.fromJson(response['data'][i]));
+        housingList.add(HousingCardModel.fromJson(response['data'][i]));
       }
       setState(() {});
     } else {

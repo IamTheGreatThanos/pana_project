@@ -1,4 +1,4 @@
-class Housing {
+class HousingCardModel {
   int? id;
   City? city;
   Country? country;
@@ -7,7 +7,7 @@ class Housing {
   int? reviewsAvgBall;
   int? distance;
 
-  Housing(
+  HousingCardModel(
       {this.id,
       this.city,
       this.country,
@@ -16,7 +16,7 @@ class Housing {
       this.reviewsAvgBall,
       this.distance});
 
-  Housing.fromJson(Map<String, dynamic> json) {
+  HousingCardModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     city = json['city'] != null ? new City.fromJson(json['city']) : null;
     country =

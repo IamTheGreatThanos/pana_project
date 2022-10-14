@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/models/housing.dart';
+import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
 
 class HousingCard extends StatefulWidget {
   HousingCard(this.housing);
-  final Housing housing;
+  final HousingCardModel housing;
   @override
   _HousingCardState createState() => _HousingCardState();
 }
@@ -23,7 +23,9 @@ class _HousingCardState extends State<HousingCard> {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HousingInfo()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => HousingInfo(widget.housing)));
       },
       child: Container(
           decoration: BoxDecoration(

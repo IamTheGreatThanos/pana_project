@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/create_lock_code_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -284,12 +285,16 @@ class _EnterPersonalInformationPageState
                                     ),
                                   ),
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              CreateLockCodePage()),
-                                    );
+                                    if (selectedDate != 'Выбрать дату') {
+                                      saveData();
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        content: Text("Заполните все поля.",
+                                            style:
+                                                const TextStyle(fontSize: 20)),
+                                      ));
+                                    }
                                   },
                                   child: const Text("Сохранить",
                                       style: TextStyle(
@@ -312,7 +317,14 @@ class _EnterPersonalInformationPageState
                                   ),
                                 ),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          CreateLockCodePage()),
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -391,7 +403,7 @@ class _EnterPersonalInformationPageState
                       onDateTimeChanged: (DateTime newDateTime) {
                         setState(() {
                           selectedDate =
-                              DateFormat('dd/MM/yyyy').format(newDateTime);
+                              DateFormat('yyyy-MM-dd').format(newDateTime);
                         });
                       },
                     ),
@@ -413,6 +425,35 @@ class _EnterPersonalInformationPageState
         image = selectedImage;
         imageSelected = true;
       });
+      uploadAvatar(selectedImage);
+    }
+  }
+
+  void saveData() async {
+    var response = await AuthProvider().updateProfileOnRegister(
+        selectedSex == 1 ? 'male' : 'female', selectedDate);
+
+    if (response['response_status'] == 'ok') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CreateLockCodePage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void uploadAvatar(XFile image) async {
+    var response = await AuthProvider().changeAvatar(image);
+    if (response['response_status'] == 'ok') {
+      print('Successfully uploaded!');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Ошибка загрузки!', style: const TextStyle(fontSize: 20)),
+      ));
     }
   }
 }

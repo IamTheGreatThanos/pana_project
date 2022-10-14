@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider {
@@ -114,74 +118,62 @@ class AuthProvider {
     }
   }
 
-  Future<String> sendDeviceToken(String deviceToken) async {
+  Future<dynamic> updateProfileOnRegister(
+      String gender, String birthday) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
     final response = await http.post(
-      Uri.parse(API_URL + 'api/device-token'),
+      Uri.parse('${API_URL}api/mobile/user/update'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
       body: jsonEncode(<String, dynamic>{
-        "device_token": deviceToken,
+        "gender": gender,
+        "birth_date": birthday,
       }),
     );
 
-    // print(response.body);
-
-    if (response.statusCode == 200) {
-      return 'Success';
-    } else {
-      return 'Error';
-    }
-  }
-
-  Future<dynamic> getProfileInfo(int id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-
-    final response = await http.get(
-      Uri.parse(API_URL + 'api/driver/order/info'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-    );
+    print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> result = jsonDecode(response.body);
-      print(result);
+      result['response_status'] = 'ok';
       return result;
     } else {
-      final result = 'Error';
+      Map<String, dynamic> result = jsonDecode(response.body);
+      result['response_status'] = 'error';
       return result;
     }
   }
 
-  Future<String> sendLocation(double lat, double long) async {
+  Future<dynamic> changeAvatar(XFile imageFile) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    final response = await http.post(
-      Uri.parse(API_URL + 'api/position'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-      body: jsonEncode(<String, dynamic>{
-        "lat": lat,
-        "lng": long,
-      }),
-    );
+    var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+    var uri = Uri.parse('${API_URL}api/mobile/user/update');
+    var request = http.MultipartRequest("POST", uri);
+    request.headers['Authorization'] = "Bearer $token";
+    request.headers['Accept'] = "application/json";
 
-    print(response.body);
+    var multipartFile = http.MultipartFile('avatar', stream, length,
+        filename: basename(imageFile.path));
+
+    request.files.add(multipartFile);
+    var response = await request.send();
 
     if (response.statusCode == 200) {
-      return 'Success';
+      Map<String, dynamic> result = {};
+      result['response_status'] = 'ok';
+      return result;
     } else {
-      return 'Error';
+      Map<String, dynamic> result = {};
+      result['response_status'] = 'error';
+      return result;
     }
   }
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/views/auth/auth_page.dart';
+import 'package:pana_project/views/home/tabbar_page.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -37,7 +37,8 @@ class _SplashScreenState extends State<SplashScreen> {
         if (_start == 0) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AuthPage()),
+            MaterialPageRoute(builder: (context) => TabBarPage()),
+            // MaterialPageRoute(builder: (context) => AuthPage()),
           );
 
           setState(() {

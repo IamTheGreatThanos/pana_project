@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/models/housing.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
 
 class HousingCard extends StatefulWidget {
+  HousingCard(this.housing);
+  final Housing housing;
   @override
   _HousingCardState createState() => _HousingCardState();
 }
@@ -47,8 +50,9 @@ class _HousingCardState extends State<HousingCard> {
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: CachedNetworkImage(
                             fit: BoxFit.fitWidth,
-                            imageUrl:
-                                'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80',
+                            imageUrl: widget.housing.images != null
+                                ? widget.housing.images![0].path!
+                                : "https://roadmap-tech.com/wp-content/uploads/2019/04/placeholder-image.jpg",
                           ),
                         ),
                         Padding(
@@ -74,13 +78,13 @@ class _HousingCardState extends State<HousingCard> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Almaty, Kazakhstan',
+                      '${widget.housing.city!.name}, ${widget.housing.country!.name}',
                       style:
                           TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                     Spacer(),
                     Text(
-                      '4.9',
+                      widget.housing.reviewsAvgBall.toString(),
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ),
@@ -96,8 +100,8 @@ class _HousingCardState extends State<HousingCard> {
                 const SizedBox(
                   height: 8,
                 ),
-                const Text(
-                  '324 км от вас',
+                Text(
+                  '${widget.housing.distance} км от вас',
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,

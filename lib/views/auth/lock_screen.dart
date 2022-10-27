@@ -2,10 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LockScreen extends StatefulWidget {
-  // LockScreen(this.product);
-  // final Product product;
+  LockScreen(this.page);
+  final Widget page;
 
   @override
   _LockScreenState createState() => _LockScreenState();
@@ -13,6 +14,7 @@ class LockScreen extends StatefulWidget {
 
 class _LockScreenState extends State<LockScreen> {
   String secureCode = '';
+  var savedCode;
 
   double _width = 30;
   double _height = 5;
@@ -20,6 +22,7 @@ class _LockScreenState extends State<LockScreen> {
 
   @override
   void initState() {
+    getSavedCode();
     super.initState();
   }
 
@@ -529,10 +532,13 @@ class _LockScreenState extends State<LockScreen> {
     );
   }
 
-  void checkCode() {
+  void checkCode() async {
     if (secureCode.length == 4) {
-      if (secureCode == '1234') {
-        print('Success');
+      if (secureCode == savedCode) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => widget.page),
+        );
       } else {
         setState(() {
           _width = 40;
@@ -540,6 +546,17 @@ class _LockScreenState extends State<LockScreen> {
           _color = AppColors.black;
         });
       }
+    }
+  }
+
+  void getSavedCode() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    savedCode = prefs.getString('lock_code');
+    if (savedCode == null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => widget.page),
+      );
     }
   }
 }

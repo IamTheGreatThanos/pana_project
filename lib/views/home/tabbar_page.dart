@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/auth/lock_screen.dart';
 import 'package:pana_project/views/housing/home_housing.dart';
 import 'package:pana_project/views/impression/home_impression.dart';
 import 'package:pana_project/views/payment/payment_page.dart';
@@ -26,7 +25,7 @@ class _TabBarPageState extends State<TabBarPage> {
       HomeImpression(),
       HomeHousing(),
       PaymentPage(),
-      LockScreen(),
+      PaymentPage(),
     ];
   }
 

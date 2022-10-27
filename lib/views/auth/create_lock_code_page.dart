@@ -531,18 +531,11 @@ class _CreateLockCodePageState extends State<CreateLockCodePage> {
 
   void checkCode() {
     if (secureCode.length == 4) {
-      if (secureCode == '1234') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ReenterLockCodePage()),
-        );
-      } else {
-        setState(() {
-          _width = 40;
-          _height = 6;
-          _color = AppColors.black;
-        });
-      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ReenterLockCodePage(secureCode)),
+      );
     }
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReenterLockCodePage extends StatefulWidget {
-  // ReenterLockCodePage(this.product);
-  // final Product product;
+  ReenterLockCodePage(this.code);
+  final String code;
 
   @override
   _ReenterLockCodePageState createState() => _ReenterLockCodePageState();
@@ -502,9 +503,11 @@ class _ReenterLockCodePageState extends State<ReenterLockCodePage> {
     );
   }
 
-  void checkCode() {
+  void checkCode() async {
     if (secureCode.length == 4) {
-      if (secureCode == '1234') {
+      if (secureCode == widget.code) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('lock_code', widget.code);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => TabBarPage()),

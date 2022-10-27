@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/globalVariables.dart';
-import 'package:pana_project/views/home/tabbar_page.dart';
+import 'package:pana_project/views/auth/create_lock_code_page.dart';
+import 'package:pana_project/views/auth/lock_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -40,7 +41,8 @@ class _SplashScreenState extends State<SplashScreen> {
         if (_start == 0) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => TabBarPage()),
+            MaterialPageRoute(
+                builder: (context) => LockScreen(CreateLockCodePage())),
             // MaterialPageRoute(builder: (context) => AuthPage()),
           );
 
@@ -138,6 +140,7 @@ class _SplashScreenState extends State<SplashScreen> {
     var response = await MainProvider().getFavorites();
     if (response['response_status'] == 'ok') {
       GlobalVariables().favoritesHousing = response['data'];
+      print(response['data']);
     }
   }
 }

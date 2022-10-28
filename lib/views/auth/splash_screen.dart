@@ -6,6 +6,7 @@ import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/auth/create_lock_code_page.dart';
 import 'package:pana_project/views/auth/lock_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -25,6 +26,11 @@ class _SplashScreenState extends State<SplashScreen> {
     getListOfFavorites();
     super.initState();
     startTimer();
+  }
+
+  void removeData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('lock_code');
   }
 
   @override

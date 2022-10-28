@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,9 +14,23 @@ class LockScreen extends StatefulWidget {
   _LockScreenState createState() => _LockScreenState();
 }
 
+enum _SupportState {
+  unknown,
+  supported,
+  unsupported,
+}
+
 class _LockScreenState extends State<LockScreen> {
+  final LocalAuthentication auth = LocalAuthentication();
+  _SupportState _supportState = _SupportState.unknown;
+  bool? _canCheckBiometrics;
+  List<BiometricType>? _availableBiometrics;
+  String _authorized = 'Not Authorized';
+  bool _isAuthenticating = false;
+
   String secureCode = '';
   var savedCode;
+  var useBiometrics;
 
   double _width = 30;
   double _height = 5;
@@ -24,6 +40,120 @@ class _LockScreenState extends State<LockScreen> {
   void initState() {
     getSavedCode();
     super.initState();
+
+    auth.isDeviceSupported().then(
+          (bool isSupported) => setState(() => _supportState = isSupported
+              ? _SupportState.supported
+              : _SupportState.unsupported),
+        );
+  }
+
+  Future<void> _checkBiometrics() async {
+    late bool canCheckBiometrics;
+    try {
+      canCheckBiometrics = await auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      canCheckBiometrics = false;
+      print(e);
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _canCheckBiometrics = canCheckBiometrics;
+    });
+  }
+
+  Future<void> _getAvailableBiometrics() async {
+    late List<BiometricType> availableBiometrics;
+    try {
+      availableBiometrics = await auth.getAvailableBiometrics();
+    } on PlatformException catch (e) {
+      availableBiometrics = <BiometricType>[];
+      print(e);
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _availableBiometrics = availableBiometrics;
+    });
+  }
+
+  Future<void> _authenticate() async {
+    bool authenticated = false;
+    try {
+      setState(() {
+        _isAuthenticating = true;
+        _authorized = 'Authenticating';
+      });
+      authenticated = await auth.authenticate(
+        localizedReason: 'Let OS determine authentication method',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+        ),
+      );
+      setState(() {
+        _isAuthenticating = false;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = 'Error - ${e.message}';
+      });
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(
+        () => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
+  }
+
+  Future<void> _authenticateWithBiometrics() async {
+    bool authenticated = false;
+    try {
+      setState(() {
+        _isAuthenticating = true;
+        _authorized = 'Authenticating';
+      });
+      authenticated = await auth.authenticate(
+        localizedReason:
+            'Отсканируйте свой отпечаток пальца (или лицо) для аутентификации',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          biometricOnly: true,
+        ),
+      );
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = 'Authenticating';
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = 'Error - ${e.message}';
+      });
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+
+    final String message = authenticated ? 'Authorized' : 'Not Authorized';
+    setState(() {
+      _authorized = message;
+    });
+  }
+
+  Future<void> _cancelAuthentication() async {
+    await auth.stopAuthentication();
+    setState(() => _isAuthenticating = false);
   }
 
   @override
@@ -490,9 +620,17 @@ class _LockScreenState extends State<LockScreen> {
                   ],
                 ),
                 const SizedBox(height: 40),
-                SvgPicture.asset(
-                  'assets/icons/face_id.svg',
-                ),
+                _supportState == _SupportState.supported &&
+                        useBiometrics == true
+                    ? GestureDetector(
+                        onTap: () {
+                          authByBiometrics();
+                        },
+                        child: SvgPicture.asset(
+                          'assets/icons/face_id.svg',
+                        ),
+                      )
+                    : Container(),
                 const SizedBox(height: 40),
                 SizedBox(
                   height: 20,
@@ -552,11 +690,23 @@ class _LockScreenState extends State<LockScreen> {
   void getSavedCode() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     savedCode = prefs.getString('lock_code');
+    useBiometrics = prefs.getBool('isBiometricsUse');
     if (savedCode == null) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => widget.page),
       );
     }
+  }
+
+  void authByBiometrics() async {
+    _authenticateWithBiometrics().whenComplete(() {
+      if (_authorized == 'Authorized') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => widget.page),
+        );
+      }
+    });
   }
 }

@@ -10,3 +10,4 @@ prefs.setString("user_email", response['user']['email']);
 prefs.setString("user_phone", response['user']['phone']);
 prefs.setString("user_phone_code", response['user']['phone_code']);
 prefs.setString('lock_code', widget.code);
+prefs.setBool('isBiometricsUse', _switchValue);

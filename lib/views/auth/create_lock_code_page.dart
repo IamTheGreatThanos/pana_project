@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/reenter_lock_code_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateLockCodePage extends StatefulWidget {
   // CreateLockCodePage(this.product);
@@ -12,7 +14,15 @@ class CreateLockCodePage extends StatefulWidget {
   _CreateLockCodePageState createState() => _CreateLockCodePageState();
 }
 
+enum _SupportState {
+  unknown,
+  supported,
+  unsupported,
+}
+
 class _CreateLockCodePageState extends State<CreateLockCodePage> {
+  final LocalAuthentication auth = LocalAuthentication();
+  _SupportState _supportState = _SupportState.unknown;
   String secureCode = '';
 
   double _width = 30;
@@ -24,6 +34,11 @@ class _CreateLockCodePageState extends State<CreateLockCodePage> {
   @override
   void initState() {
     super.initState();
+    auth.isDeviceSupported().then(
+          (bool isSupported) => setState(() => _supportState = isSupported
+              ? _SupportState.supported
+              : _SupportState.unsupported),
+        );
   }
 
   @override
@@ -481,46 +496,50 @@ class _CreateLockCodePageState extends State<CreateLockCodePage> {
                   ],
                 ),
                 const SizedBox(height: 40),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                    height: 50,
-                    decoration: const BoxDecoration(
-                        color: AppColors.lightGray,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(width: 10),
-                        SvgPicture.asset(
-                          'assets/icons/face_id.svg',
-                        ),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Использовать Face ID',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
+                _supportState == _SupportState.supported
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Container(
+                          height: 50,
+                          decoration: const BoxDecoration(
+                              color: AppColors.lightGray,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(width: 10),
+                              SvgPicture.asset(
+                                'assets/icons/face_id.svg',
+                              ),
+                              const SizedBox(width: 10),
+                              const Text(
+                                'Использовать Face ID',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const Spacer(),
+                              Transform.scale(
+                                scale: 0.8,
+                                child: CupertinoSwitch(
+                                  value: _switchValue,
+                                  activeColor: AppColors.accent,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _switchValue = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 10)
+                            ],
                           ),
                         ),
-                        const Spacer(),
-                        Transform.scale(
-                          scale: 0.8,
-                          child: CupertinoSwitch(
-                            value: _switchValue,
-                            activeColor: AppColors.accent,
-                            onChanged: (value) {
-                              setState(() {
-                                _switchValue = value;
-                              });
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 10)
-                      ],
-                    ),
-                  ),
-                ),
+                      )
+                    : Container(),
               ],
             ),
           ),
@@ -529,8 +548,10 @@ class _CreateLockCodePageState extends State<CreateLockCodePage> {
     );
   }
 
-  void checkCode() {
+  void checkCode() async {
     if (secureCode.length == 4) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isBiometricsUse', _switchValue);
       Navigator.push(
         context,
         MaterialPageRoute(

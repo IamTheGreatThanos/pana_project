@@ -4,6 +4,7 @@ import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/housing/home_housing.dart';
 import 'package:pana_project/views/impression/home_impression.dart';
 import 'package:pana_project/views/payment/payment_page.dart';
+import 'package:pana_project/views/profile/profile_main.dart';
 import 'package:pana_project/views/travel/home_travel.dart';
 
 class TabBarPage extends StatefulWidget {
@@ -25,7 +26,7 @@ class _TabBarPageState extends State<TabBarPage> {
       HomeImpression(),
       HomeHousing(),
       PaymentPage(),
-      PaymentPage(),
+      ProfileMainPage(),
     ];
   }
 

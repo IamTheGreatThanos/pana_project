@@ -17,7 +17,6 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
   final DateRangePickerController _datePickerController =
       DateRangePickerController();
   String selectedRange = '';
-  bool justBool = true;
 
   @override
   void initState() {
@@ -36,170 +35,87 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: justBool
-            ? SingleChildScrollView(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 30),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              width: 50,
-                              height: 50,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: SvgPicture.asset(
-                                    'assets/icons/back_arrow.svg'),
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              children: const [
-                                Text(
-                                  'Выбрать номер',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  'Pana Boutiq Hotel',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black45,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Spacer(),
-                          SizedBox(width: 50)
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      Container(
-                        color: AppColors.lightGray,
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          children: [
-                            SizedBox(height: 20),
-                            for (int i = 0; i < 10; i++) RoomCard(),
-                            GestureDetector(
-                              onTap: () {
-                                showDatePicker();
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 30),
-                                child: Text(
-                                  'Выбрать другие даты',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
+        body: SingleChildScrollView(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                const SizedBox(height: 30),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child:
+                              SvgPicture.asset('assets/icons/back_arrow.svg'),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              )
-            : SingleChildScrollView(
-                child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 80,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        const Spacer(),
-                        SizedBox(
-                          width: 120,
-                          height: 120,
-                          child: SvgPicture.asset(
-                              'assets/images/placeholder_image.svg'),
-                        ),
-                        const Spacer(),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: const Text(
-                            'У вас пока нет запланированных поездок',
+                    ),
+                    const Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: const [
+                          Text(
+                            'Выбрать номер',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.w500,
                             ),
-                            textAlign: TextAlign.center,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: SizedBox(
-                            height: 60,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: AppColors.accent,
-                                minimumSize: const Size.fromHeight(50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(10), // <-- Radius
-                                ),
-                              ),
-                              onPressed: () {
-                                setState(() {});
-                              },
-                              child: const Text("Перейти к поиску жилья",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500)),
+                          SizedBox(height: 5),
+                          Text(
+                            'Pana Boutiq Hotel',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black45,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    SizedBox(width: 50)
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Container(
+                  color: AppColors.lightGray,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      for (int i = 0; i < 10; i++) RoomCard(),
+                      GestureDetector(
+                        onTap: () {
+                          showDatePicker();
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 30),
+                          child: Text(
+                            'Выбрать другие даты',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: SizedBox(
-                            height: 60,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: AppColors.white,
-                                minimumSize: const Size.fromHeight(50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(10), // <-- Radius
-                                ),
-                              ),
-                              onPressed: () {},
-                              child: const Text("Создать план",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500)),
-                            ),
-                          ),
-                        )
-                      ],
-                    )),
-              ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -119,6 +119,7 @@ flutter:
     - assets/images/logo_icon.svg
     - assets/images/auth_bg.svg
     - assets/images/register_bg.svg
+    - assets/images/profile_bg.svg
     - assets/images/add_photo_placeholder.svg
     - assets/images/placeholder_image.svg
     - assets/icons/face_id.svg
@@ -131,6 +132,12 @@ flutter:
     - assets/images/map_6.png
     - assets/gifs/loading.gif
     - assets/gifs/sms_code.gif
+    - assets/icons/profile_user.svg
+    - assets/icons/profile_card.svg
+    - assets/icons/profile_chat.svg
+    - assets/icons/profile_globe.svg
+    - assets/icons/profile_star.svg
+    - assets/icons/avatar_edit_icon.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

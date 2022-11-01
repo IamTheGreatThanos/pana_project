@@ -122,6 +122,7 @@ flutter:
     - assets/images/add_photo_placeholder.svg
     - assets/images/placeholder_image.svg
     - assets/icons/face_id.svg
+    - assets/icons/bed_icon.svg
     - assets/images/map_1.png
     - assets/images/map_2.png
     - assets/images/map_3.png

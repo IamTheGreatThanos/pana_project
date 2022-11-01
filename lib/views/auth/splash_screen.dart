@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/globalVariables.dart';
-import 'package:pana_project/views/auth/create_lock_code_page.dart';
-import 'package:pana_project/views/auth/lock_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'auth_page.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -47,9 +47,10 @@ class _SplashScreenState extends State<SplashScreen> {
         if (_start == 0) {
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) => LockScreen(CreateLockCodePage())),
-            // MaterialPageRoute(builder: (context) => AuthPage()),
+            // MaterialPageRoute(
+            //     builder: (context) =>
+            //         LockScreen(CreateLockCodePage())),
+            MaterialPageRoute(builder: (context) => AuthPage()),
           );
 
           setState(() {

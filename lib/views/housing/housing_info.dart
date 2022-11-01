@@ -9,9 +9,9 @@ import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/housing/select_room_page.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
-import 'package:pana_project/views/payment/payment_page.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
@@ -26,7 +26,7 @@ class HousingInfo extends StatefulWidget {
 class _HousingInfoState extends State<HousingInfo> {
   final storyController = StoryController();
 
-  late HousingDetailModel thisHousing;
+  HousingDetailModel thisHousing = HousingDetailModel();
 
   @override
   void initState() {
@@ -233,7 +233,7 @@ class _HousingInfoState extends State<HousingInfo> {
                 Padding(
                   padding: EdgeInsets.all(20),
                   child: Text(
-                    thisHousing.name!,
+                    thisHousing.name != null ? thisHousing.name! : '',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
@@ -683,7 +683,7 @@ class _HousingInfoState extends State<HousingInfo> {
                 const Padding(
                   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                   child: Text(
-                    'Правила дома',
+                    'Правила отмены',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
@@ -715,14 +715,14 @@ class _HousingInfoState extends State<HousingInfo> {
                           Row(
                             children: const [
                               Text(
-                                '\$324',
+                                'от \$324',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18,
                                     color: AppColors.black),
                               ),
                               Text(
-                                ' за ночь',
+                                ' за сутки',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 14,
@@ -757,10 +757,10 @@ class _HousingInfoState extends State<HousingInfo> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => PaymentPage()));
+                                    builder: (context) => SelectRoomPage()));
                           },
                           child: const Text(
-                            "Забронировать",
+                            "Выбрать номер",
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w500),
                           ),

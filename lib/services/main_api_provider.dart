@@ -21,7 +21,7 @@ class MainProvider {
       },
     );
 
-    print(jsonDecode(response.body));
+    // print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> result = {};

@@ -138,6 +138,9 @@ flutter:
     - assets/icons/profile_globe.svg
     - assets/icons/profile_star.svg
     - assets/icons/avatar_edit_icon.svg
+    - assets/icons/mobile_icon.svg
+    - assets/icons/mail_icon.svg
+    - assets/icons/lock_icon.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

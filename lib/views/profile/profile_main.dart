@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pana_project/components/profile_menu_item.dart';
 import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/views/payment/payment_page.dart';
+import 'package:pana_project/views/profile/personal_information_page.dart';
 
 import '../../utils/const.dart';
 
@@ -159,7 +160,7 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                         ),
                       ),
                       ProfileMenuItem('assets/icons/profile_user.svg',
-                          'Личная информация', PaymentPage()),
+                          'Личная информация', PersonalInformationPage()),
                       ProfileMenuItem('assets/icons/profile_card.svg',
                           'Мои транзакции', PaymentPage()),
                       ProfileMenuItem('assets/icons/profile_card.svg',

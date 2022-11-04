@@ -5,6 +5,7 @@ import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/profile/change_email.dart';
 import 'package:pana_project/views/profile/change_full_name.dart';
 import 'package:pana_project/views/profile/change_phone.dart';
+import 'package:pana_project/views/profile/login_settings.dart';
 
 class PersonalInformationPage extends StatefulWidget {
   @override
@@ -173,7 +174,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                         ),
                       ),
                       ProfileMenuItem('assets/icons/lock_icon.svg',
-                          'Настройки входа', PersonalInformationPage()),
+                          'Настройки входа', LoginSettingsPage()),
                     ],
                   ),
                 ),

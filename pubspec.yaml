@@ -141,6 +141,14 @@ flutter:
     - assets/icons/mobile_icon.svg
     - assets/icons/mail_icon.svg
     - assets/icons/lock_icon.svg
+    - assets/icons/pin_code_icon.svg
+    - assets/icons/visa_icon.svg
+    - assets/icons/mastercard_icon.svg
+    - assets/icons/radio_button_0.svg
+    - assets/icons/radio_button_1.svg
+    - assets/icons/kz_icon.svg
+    - assets/icons/ru_icon.svg
+    - assets/icons/en_icon.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

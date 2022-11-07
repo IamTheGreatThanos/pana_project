@@ -5,7 +5,6 @@ import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/components/facilities_widget.dart';
 import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/components/stories_card.dart';
-import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
@@ -16,8 +15,8 @@ import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
 class HousingInfo extends StatefulWidget {
-  HousingInfo(this.housing);
-  final HousingCardModel housing;
+  const HousingInfo(this.id);
+  final int id;
 
   @override
   _HousingInfoState createState() => _HousingInfoState();
@@ -27,6 +26,8 @@ class _HousingInfoState extends State<HousingInfo> {
   final storyController = StoryController();
 
   HousingDetailModel thisHousing = HousingDetailModel();
+  List<StoryItem?> thisStoryItems = [];
+  List<StoryItem?> mediaStoryItems = [];
 
   @override
   void initState() {
@@ -65,32 +66,7 @@ class _HousingInfoState extends State<HousingInfo> {
                         height: 300,
                         width: MediaQuery.of(context).size.width,
                         child: StoryView(
-                          storyItems: [
-                            StoryItem.pageImage(
-                              url:
-                                  "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
-                              controller: storyController,
-                              imageFit: BoxFit.fitHeight,
-                            ),
-                            StoryItem.pageImage(
-                              url:
-                                  "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
-                              controller: storyController,
-                              imageFit: BoxFit.fitHeight,
-                            ),
-                            StoryItem.pageImage(
-                              url:
-                                  "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
-                              controller: storyController,
-                              imageFit: BoxFit.fitHeight,
-                            ),
-                            StoryItem.pageImage(
-                              url:
-                                  "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
-                              controller: storyController,
-                              imageFit: BoxFit.fitHeight,
-                            ),
-                          ],
+                          storyItems: thisStoryItems,
                           onStoryShow: (s) {},
                           onComplete: () {},
                           progressPosition: ProgressPosition.bottom,
@@ -100,7 +76,8 @@ class _HousingInfoState extends State<HousingInfo> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MediaDetailPage()));
+                                    builder: (context) =>
+                                        MediaDetailPage(mediaStoryItems)));
                           },
                         )
                         // CarouselSlider.builder(
@@ -231,10 +208,10 @@ class _HousingInfoState extends State<HousingInfo> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   child: Text(
-                    thisHousing.name != null ? thisHousing.name! : '',
-                    style: TextStyle(
+                    thisHousing.name ?? '',
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
                     ),
@@ -242,11 +219,11 @@ class _HousingInfoState extends State<HousingInfo> {
                 ),
                 Row(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
                       child: Text(
-                        '324 км от вас',
-                        style: TextStyle(
+                        '${thisHousing.distance ?? 0} км от вас',
+                        style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.black45),
@@ -255,7 +232,7 @@ class _HousingInfoState extends State<HousingInfo> {
                     Padding(
                       padding: EdgeInsets.only(left: 10),
                       child: Text(
-                        '${thisHousing.city!.name}, Kazakhstan',
+                        '${thisHousing.city?.name ?? ''}, Kazakhstan',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -276,19 +253,19 @@ class _HousingInfoState extends State<HousingInfo> {
                           child: SvgPicture.asset('assets/icons/star.svg'),
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 5),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
                         child: Text(
-                          '4.9',
-                          style: TextStyle(
+                          thisHousing.star.toString(),
+                          style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
                         child: Text(
-                          '18 Отзывов',
-                          style: TextStyle(
+                          '${thisHousing.reviewsCount ?? 0} Отзыва',
+                          style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Colors.black45),
@@ -309,8 +286,8 @@ class _HousingInfoState extends State<HousingInfo> {
                           width: 70,
                           height: 70,
                           child: CachedNetworkImage(
-                            imageUrl:
-                                'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
+                            imageUrl: thisHousing.user?.avatar ?? '',
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
@@ -322,11 +299,11 @@ class _HousingInfoState extends State<HousingInfo> {
                             children: [
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.6,
-                                child: const Padding(
-                                  padding: EdgeInsets.only(left: 10),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
                                   child: Text(
-                                    'Dinmukhammed Muslim',
-                                    style: TextStyle(
+                                    '${thisHousing.user?.name ?? ''} ${thisHousing.user?.surname ?? ''}',
+                                    style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -382,8 +359,8 @@ class _HousingInfoState extends State<HousingInfo> {
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: Text(
-                      thisHousing.description!,
-                      style: TextStyle(
+                      thisHousing.description ?? '',
+                      style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Colors.black45),
@@ -404,13 +381,17 @@ class _HousingInfoState extends State<HousingInfo> {
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 20, bottom: 20, right: 10),
-                  child: Row(
-                    children: const [
-                      FacilitiesWidget(title: 'Wi-Fi'),
-                      SizedBox(width: 10),
-                      FacilitiesWidget(title: 'Кондиционер'),
-                      SizedBox(width: 10),
-                      FacilitiesWidget(title: 'Фен'),
+                  child: Wrap(
+                    children: [
+                      for (int k = 0; k < thisHousing.comforts!.length; k++)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            FacilitiesWidget(
+                                title: thisHousing.comforts![k].name ?? ''),
+                            const SizedBox(width: 10),
+                          ],
+                        ),
                     ],
                   ),
                 ),
@@ -469,39 +450,43 @@ class _HousingInfoState extends State<HousingInfo> {
                       padding:
                           const EdgeInsets.only(top: 10, left: 20, bottom: 10),
                       child: Row(
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Цена/Качество',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Text(
-                            '5.0',
-                            style: TextStyle(
+                            double.parse(thisHousing.reviewsPriceAvg ?? '0')
+                                .roundToDouble()
+                                .toString(),
+                            style: const TextStyle(
                               color: AppColors.black,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(width: 20),
+                          const SizedBox(width: 20),
                         ],
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(
+                    Padding(
+                      padding: const EdgeInsets.only(
                           top: 0, left: 20, bottom: 10, right: 20),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.all(
+                        borderRadius: const BorderRadius.all(
                           Radius.circular(5),
                         ),
                         child: LinearProgressIndicator(
                           backgroundColor: AppColors.grey,
                           color: AppColors.accent,
                           minHeight: 3,
-                          value: 1,
+                          value:
+                              double.parse(thisHousing.reviewsPriceAvg ?? '0') /
+                                  5,
                         ),
                       ),
                     ),
@@ -513,17 +498,67 @@ class _HousingInfoState extends State<HousingInfo> {
                       padding:
                           const EdgeInsets.only(top: 10, left: 20, bottom: 10),
                       child: Row(
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Чистота',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Text(
-                            '4.6',
+                            double.parse(thisHousing.reviewsPurityAvg ?? '0')
+                                .roundToDouble()
+                                .toString(),
+                            style: const TextStyle(
+                              color: AppColors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 0, left: 20, bottom: 10, right: 20),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                        child: LinearProgressIndicator(
+                          backgroundColor: AppColors.grey,
+                          color: AppColors.accent,
+                          minHeight: 3,
+                          value: double.parse(
+                                  thisHousing.reviewsPurityAvg ?? '0') /
+                              5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 20, bottom: 10),
+                      child: Row(
+                        children: [
+                          const Text(
+                            'Персонал',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            double.parse(thisHousing.reviewsStaffAvg ?? '0')
+                                .roundToDouble()
+                                .toString(),
                             style: TextStyle(
                               color: AppColors.black,
                               fontSize: 14,
@@ -534,18 +569,20 @@ class _HousingInfoState extends State<HousingInfo> {
                         ],
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(
+                    Padding(
+                      padding: const EdgeInsets.only(
                           top: 0, left: 20, bottom: 10, right: 20),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.all(
+                        borderRadius: const BorderRadius.all(
                           Radius.circular(5),
                         ),
                         child: LinearProgressIndicator(
                           backgroundColor: AppColors.grey,
                           color: AppColors.accent,
                           minHeight: 3,
-                          value: 4.6 / 5,
+                          value:
+                              double.parse(thisHousing.reviewsStaffAvg ?? '0') /
+                                  5,
                         ),
                       ),
                     ),
@@ -670,9 +707,9 @@ class _HousingInfoState extends State<HousingInfo> {
                       const EdgeInsets.only(left: 20, bottom: 20, right: 20),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
-                    child: const Text(
-                      'Заезд до 13:00, выезд до 12:00',
-                      style: TextStyle(
+                    child: Text(
+                      'Заезд до ${thisHousing.checkInFrom ?? ''}, выезд до ${thisHousing.checkOutFrom ?? ''}',
+                      style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Colors.black45),
@@ -713,15 +750,15 @@ class _HousingInfoState extends State<HousingInfo> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            children: const [
+                            children: [
                               Text(
-                                'от \$324',
-                                style: TextStyle(
+                                'от \$${thisHousing.basePriceMin}',
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18,
                                     color: AppColors.black),
                               ),
-                              Text(
+                              const Text(
                                 ' за сутки',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
@@ -757,7 +794,9 @@ class _HousingInfoState extends State<HousingInfo> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SelectRoomPage()));
+                                    builder: (context) => SelectRoomPage(
+                                        thisHousing.id!,
+                                        thisHousing.basePriceMin!)));
                           },
                           child: const Text(
                             "Выбрать номер",
@@ -778,10 +817,27 @@ class _HousingInfoState extends State<HousingInfo> {
   }
 
   void getHousingInfo() async {
-    var response = await MainProvider().getHousingDetail(widget.housing.id!);
+    var response = await MainProvider().getHousingDetail(widget.id);
     if (response['response_status'] == 'ok') {
       setState(() {
         thisHousing = HousingDetailModel.fromJson(response['data']);
+        for (int i = 0; i < thisHousing.images!.length; i++) {
+          thisStoryItems.add(
+            StoryItem.pageImage(
+              url: thisHousing.images![i].path!,
+              controller: storyController,
+              imageFit: BoxFit.fitHeight,
+            ),
+          );
+
+          mediaStoryItems.add(
+            StoryItem.pageImage(
+              url: thisHousing.images![i].path!,
+              controller: storyController,
+              imageFit: BoxFit.fitWidth,
+            ),
+          );
+        }
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

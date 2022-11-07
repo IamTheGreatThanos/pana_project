@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/housingCard.dart';
@@ -13,6 +14,9 @@ class HousingCard extends StatefulWidget {
 }
 
 class _HousingCardState extends State<HousingCard> {
+  final CarouselController _controller = CarouselController();
+  int _current = 0;
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +29,7 @@ class _HousingCardState extends State<HousingCard> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => HousingInfo(widget.housing)));
+                builder: (context) => HousingInfo(widget.housing.id!)));
       },
       child: Container(
           decoration: BoxDecoration(
@@ -50,11 +54,59 @@ class _HousingCardState extends State<HousingCard> {
                         SizedBox(
                           height: 200,
                           width: MediaQuery.of(context).size.width * 0.9,
-                          child: CachedNetworkImage(
-                            fit: BoxFit.fitWidth,
-                            imageUrl: widget.housing.images != null
-                                ? widget.housing.images![0].path!
-                                : "https://roadmap-tech.com/wp-content/uploads/2019/04/placeholder-image.jpg",
+                          child: CarouselSlider.builder(
+                            options: CarouselOptions(
+                              height: 200,
+                              aspectRatio: 16 / 9,
+                              viewportFraction: 1,
+                              initialPage: 0,
+                              enableInfiniteScroll: true,
+                              reverse: false,
+                              autoPlay: true,
+                              autoPlayInterval: const Duration(seconds: 3),
+                              autoPlayAnimationDuration:
+                                  const Duration(milliseconds: 800),
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enlargeCenterPage: false,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _current = index;
+                                });
+                              },
+                              scrollDirection: Axis.horizontal,
+                            ),
+                            itemCount: widget.housing.images?.length ?? 0,
+                            itemBuilder: (BuildContext context, int itemIndex,
+                                    int pageViewIndex) =>
+                                CachedNetworkImage(
+                              fit: BoxFit.fitHeight,
+                              imageUrl: widget.housing.images![itemIndex].path!,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 170),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: widget.housing.images!
+                                .asMap()
+                                .entries
+                                .map((entry) {
+                              return GestureDetector(
+                                onTap: () =>
+                                    _controller.animateToPage(entry.key),
+                                child: Container(
+                                  width: 8.0,
+                                  height: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 4.0),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: (Colors.white).withOpacity(
+                                          _current == entry.key ? 0.9 : 0.4)),
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ),
                         Padding(

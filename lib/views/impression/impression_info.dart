@@ -22,6 +22,7 @@ class ImpressionInfo extends StatefulWidget {
 
 class _ImpressionInfoState extends State<ImpressionInfo> {
   final storyController = StoryController();
+  List<StoryItem?> thisStoryItems = [];
 
   @override
   void initState() {
@@ -91,7 +92,8 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => MediaDetailPage()));
+                                      builder: (context) =>
+                                          MediaDetailPage(thisStoryItems)));
                             },
                           )
                           // CarouselSlider.builder(

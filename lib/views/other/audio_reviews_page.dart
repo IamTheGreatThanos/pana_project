@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/other/review_page.dart';
+import 'package:pana_project/views/other/audio_review_detail_page.dart';
 
 class AudioReviewsPage extends StatefulWidget {
   // AudioReviewsPage(this.product);
@@ -136,7 +136,7 @@ class _AudioReviewsPageState extends State<AudioReviewsPage> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        ReviewPage()));
+                                                        AudioReviewDetailPage()));
                                           },
                                           child: Row(
                                             children: [

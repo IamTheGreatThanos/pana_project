@@ -1,17 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/models/roomCard.dart';
 import 'package:pana_project/utils/const.dart';
 
 class RoomCard extends StatefulWidget {
-  // RoomCard(this.housing);
-  // final RoomCardModel housing;
+  RoomCard(this.room);
+  final RoomCardModel room;
 
   @override
   _RoomCardState createState() => _RoomCardState();
 }
 
 class _RoomCardState extends State<RoomCard> {
+  final CarouselController _controller = CarouselController();
+  int _current = 0;
+  int count = 1;
+  bool selected = false;
+
   @override
   void initState() {
     super.initState();
@@ -33,7 +40,7 @@ class _RoomCardState extends State<RoomCard> {
                 borderRadius:
                     BorderRadius.circular(AppConstants.cardBorderRadius),
                 color: AppColors.white),
-            height: 380,
+            // height: 380,
             width: MediaQuery.of(context).size.width,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -46,31 +53,85 @@ class _RoomCardState extends State<RoomCard> {
                       borderRadius: BorderRadius.all(
                         Radius.circular(AppConstants.cardBorderRadius),
                       ),
-                      child: SizedBox(
-                        height: 250,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        child: CachedNetworkImage(
-                          fit: BoxFit.fitWidth,
-                          imageUrl:
-                              // widget.housing.images != null
-                              //     ? widget.housing.images![0].path!
-                              //     :
-                              "https://roadmap-tech.com/wp-content/uploads/2019/04/placeholder-image.jpg",
-                        ),
+                      child: Stack(
+                        children: [
+                          SizedBox(
+                            height: 250,
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: CarouselSlider.builder(
+                              options: CarouselOptions(
+                                height: 250,
+                                aspectRatio: 16 / 9,
+                                viewportFraction: 1,
+                                initialPage: 0,
+                                enableInfiniteScroll: true,
+                                reverse: false,
+                                autoPlay: true,
+                                autoPlayInterval: const Duration(seconds: 3),
+                                autoPlayAnimationDuration:
+                                    const Duration(milliseconds: 800),
+                                autoPlayCurve: Curves.fastOutSlowIn,
+                                enlargeCenterPage: false,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _current = index;
+                                  });
+                                },
+                                scrollDirection: Axis.horizontal,
+                              ),
+                              itemCount: widget.room.images?.length ?? 0,
+                              itemBuilder: (BuildContext context, int itemIndex,
+                                      int pageViewIndex) =>
+                                  CachedNetworkImage(
+                                fit: BoxFit.fitHeight,
+                                imageUrl: widget.room.images![itemIndex].path!,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 220),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: widget.room.images!
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
+                                return GestureDetector(
+                                  onTap: () =>
+                                      _controller.animateToPage(entry.key),
+                                  child: Container(
+                                    width: 8.0,
+                                    height: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8.0, horizontal: 4.0),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: (Colors.white).withOpacity(
+                                            _current == entry.key ? 0.9 : 0.4)),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        // '${widget.housing.city!.name}, ${widget.housing.country!.name}',
-                        'Superior Twin',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 16),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: Text(
+                          widget.room.roomName?.name ?? '',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
-                      Spacer(),
-                      Text(
+                      const Spacer(),
+                      const Text(
                         '12-14 июля',
                         style: TextStyle(
                           fontSize: 14,
@@ -106,15 +167,15 @@ class _RoomCardState extends State<RoomCard> {
                     height: 8,
                   ),
                   Row(
-                    children: const [
+                    children: [
                       Text(
-                        '\$324',
-                        style: TextStyle(
+                        '\$${widget.room.basePrice}',
+                        style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16,
                             color: AppColors.black),
                       ),
-                      Text(
+                      const Text(
                         ' за сутки',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
@@ -123,10 +184,117 @@ class _RoomCardState extends State<RoomCard> {
                       ),
                     ],
                   ),
+                  const Divider(),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Text(
+                        'Выберите количество',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: minusFunction,
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 1.0,
+                              ),
+                            ],
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(16),
+                            ),
+                          ),
+                          child: const Icon(Icons.remove),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          count.toString(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: plusFunction,
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 1.0,
+                              ),
+                            ],
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(16),
+                            ),
+                          ),
+                          child: Icon(Icons.add),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+                    child: SizedBox(
+                      height: 48,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: selected ? AppColors.accent : AppColors.grey,
+                          minimumSize: const Size.fromHeight(50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selected = !selected;
+                          });
+                        },
+                        child: Text(
+                          "Выбрать этот номер",
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: selected
+                                  ? AppColors.white
+                                  : AppColors.blackWithOpacity),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             )),
       ),
     );
+  }
+
+  void plusFunction() {
+    setState(() {
+      count += 1;
+    });
+  }
+
+  void minusFunction() {
+    setState(() {
+      if (count > 1) {
+        count -= 1;
+      }
+    });
   }
 }

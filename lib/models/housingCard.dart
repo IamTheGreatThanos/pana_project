@@ -1,3 +1,7 @@
+import 'package:pana_project/models/city.dart';
+import 'package:pana_project/models/country.dart';
+import 'package:pana_project/models/images.dart';
+
 class HousingCardModel {
   int? id;
   City? city;
@@ -18,13 +22,13 @@ class HousingCardModel {
 
   HousingCardModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    city = json['city'] != null ? new City.fromJson(json['city']) : null;
+    city = json['city'] != null ? City.fromJson(json['city']) : null;
     country =
-        json['country'] != null ? new Country.fromJson(json['country']) : null;
+        json['country'] != null ? Country.fromJson(json['country']) : null;
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
-        images!.add(new Images.fromJson(v));
+        images!.add(Images.fromJson(v));
       });
     }
     inFavorite = json['in_favorite'];
@@ -47,75 +51,6 @@ class HousingCardModel {
     data['in_favorite'] = this.inFavorite;
     data['reviews_avg_ball'] = this.reviewsAvgBall;
     data['distance'] = this.distance;
-    return data;
-  }
-}
-
-class City {
-  int? id;
-  int? countryId;
-  String? name;
-
-  City({this.id, this.countryId, this.name});
-
-  City.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    countryId = json['country_id'];
-    name = json['name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['country_id'] = this.countryId;
-    data['name'] = this.name;
-    return data;
-  }
-}
-
-class Country {
-  int? id;
-  String? name;
-  Null? phoneCode;
-
-  Country({this.id, this.name, this.phoneCode});
-
-  Country.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    phoneCode = json['phone_code'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['phone_code'] = this.phoneCode;
-    return data;
-  }
-}
-
-class Images {
-  int? id;
-  int? housingId;
-  String? path;
-  Null? position;
-
-  Images({this.id, this.housingId, this.path, this.position});
-
-  Images.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    housingId = json['housing_id'];
-    path = json['path'];
-    position = json['position'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['housing_id'] = this.housingId;
-    data['path'] = this.path;
-    data['position'] = this.position;
     return data;
   }
 }

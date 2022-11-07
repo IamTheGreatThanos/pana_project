@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const Color black = Color(0xFF2B2B2B);
-  static final Color blackWithOpacity = const Color(0xFF2B2B2B).withAlpha(60);
+  static const Color blackWithOpacity = Colors.black45;
   static const Color accent = Color(0xFFE56553);
   static const Color white = Color(0xFFffffff);
   static const Color lightGray = Color(0xFFF5F5F5);

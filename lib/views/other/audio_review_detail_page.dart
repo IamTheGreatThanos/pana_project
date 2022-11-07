@@ -4,15 +4,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/utils/const.dart';
 
-class ReviewPage extends StatefulWidget {
-  // ReviewPage(this.product);
+class AudioReviewDetailPage extends StatefulWidget {
+  // AudioReviewDetailPage(this.product);
   // final Product product;
 
   @override
-  _ReviewPageState createState() => _ReviewPageState();
+  _AudioReviewDetailPageState createState() => _AudioReviewDetailPageState();
 }
 
-class _ReviewPageState extends State<ReviewPage> {
+class _AudioReviewDetailPageState extends State<AudioReviewDetailPage> {
   double audioReviewWidth = 0.0;
   bool playingState = false;
   @override
@@ -216,7 +216,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 100),
+                      const SizedBox(height: 50),
                       const Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: Divider(),

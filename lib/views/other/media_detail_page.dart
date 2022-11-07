@@ -5,8 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:story_view/story_view.dart';
 
 class MediaDetailPage extends StatefulWidget {
-  // MediaDetailPage(this.product);
-  // final Product product;
+  MediaDetailPage(this.items);
+  final List<StoryItem?> items;
 
   @override
   _MediaDetailPageState createState() => _MediaDetailPageState();
@@ -37,29 +37,7 @@ class _MediaDetailPageState extends State<MediaDetailPage> {
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: StoryView(
-                  storyItems: [
-                    StoryItem.pageImage(
-                      url:
-                          "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
-                      controller: storyController,
-                      imageFit: BoxFit.fitWidth,
-                    ),
-                    StoryItem.inlineImage(
-                      url:
-                          "https://images.unsplash.com/photo-1540122995631-7c74c671ff8d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80",
-                      controller: storyController,
-                    ),
-                    StoryItem.inlineImage(
-                      url:
-                          "https://images.unsplash.com/photo-1540122995631-7c74c671ff8d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80",
-                      controller: storyController,
-                    ),
-                    StoryItem.inlineImage(
-                      url:
-                          "https://images.unsplash.com/photo-1540122995631-7c74c671ff8d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80",
-                      controller: storyController,
-                    ),
-                  ],
+                  storyItems: widget.items,
                   onStoryShow: (s) {},
                   onComplete: () {},
                   progressPosition: ProgressPosition.bottom,
@@ -77,7 +55,7 @@ class _MediaDetailPageState extends State<MediaDetailPage> {
                     Navigator.of(context).pop();
                   },
                   child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                    borderRadius: const BorderRadius.all(Radius.circular(50)),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                       child: Container(

@@ -7,6 +7,8 @@ import 'package:pana_project/components/profile_menu_item.dart';
 import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/views/payment/payment_page.dart';
 import 'package:pana_project/views/profile/change_language.dart';
+import 'package:pana_project/views/profile/my_reviews.dart';
+import 'package:pana_project/views/profile/my_transactions.dart';
 import 'package:pana_project/views/profile/payment_methods.dart';
 import 'package:pana_project/views/profile/personal_information_page.dart';
 
@@ -164,15 +166,15 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                       ProfileMenuItem('assets/icons/profile_user.svg',
                           'Личная информация', PersonalInformationPage()),
                       ProfileMenuItem('assets/icons/profile_card.svg',
-                          'Мои транзакции', PaymentPage()),
+                          'Мои транзакции', MyTransactionsPage()),
                       ProfileMenuItem('assets/icons/profile_card.svg',
                           'Способы оплаты', PaymentMethodsPage()),
                       ProfileMenuItem('assets/icons/profile_chat.svg',
-                          'Служба поддержки', PaymentPage()),
+                          'Служба поддержки', PaymentMethodsPage()),
                       ProfileMenuItem('assets/icons/profile_globe.svg',
                           'Выбор языка', ChangeLanguagePage()),
                       ProfileMenuItem('assets/icons/profile_star.svg',
-                          'Мои отзывы', PaymentPage()),
+                          'Мои отзывы', MyReviewsPage()),
                       GestureDetector(
                         onTap: () {},
                         child: const Padding(

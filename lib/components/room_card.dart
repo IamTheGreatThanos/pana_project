@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/roomCard.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/housing/room_info.dart';
 
 class RoomCard extends StatefulWidget {
   RoomCard(this.room);
@@ -28,10 +29,8 @@ class _RoomCardState extends State<RoomCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => HousingInfo(widget.housing)));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => RoomInfoPage(widget.room)));
       },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 20),

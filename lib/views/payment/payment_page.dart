@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/components/paymentMethodCard.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
@@ -13,6 +15,8 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
+  var _switchValue = false;
+
   @override
   void initState() {
     super.initState();
@@ -300,6 +304,90 @@ class _PaymentPageState extends State<PaymentPage> {
                         ),
                       ),
                     ],
+                  ),
+                  const Divider(),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Text(
+                      'Способ оплаты',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  PaymentMethodCard(
+                      'assets/icons/visa_icon.svg', '**** 3254', '04/24', true),
+                  const Divider(),
+                  const SizedBox(height: 10),
+                  PaymentMethodCard('assets/icons/mastercard_icon.svg',
+                      '**** 3254', '04/24', false),
+                  const Divider(),
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () {},
+                    child: const Text(
+                      'Добавить карту',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.accent,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: AppColors.lightGray,
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: SvgPicture.asset(
+                                  'assets/icons/bonus_icon.svg'),
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Text(
+                                  'Использовать бонусы',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  '2156 тг',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: AppColors.blackWithOpacity,
+                                  ),
+                                )
+                              ],
+                            ),
+                            const Spacer(),
+                            Transform.scale(
+                              scale: 0.8,
+                              child: CupertinoSwitch(
+                                value: _switchValue,
+                                activeColor: AppColors.accent,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _switchValue = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                   const Divider(),
                   const Padding(

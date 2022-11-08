@@ -149,6 +149,8 @@ flutter:
     - assets/icons/kz_icon.svg
     - assets/icons/ru_icon.svg
     - assets/icons/en_icon.svg
+    - assets/icons/size_icon.svg
+    - assets/icons/bonus_icon.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -10,6 +10,7 @@ class RoomCardModel {
   RoomType? roomName;
   int? status;
   int? size;
+  String? description;
   int? basePrice;
   int? smoking;
   int? disabledPeople;
@@ -30,6 +31,7 @@ class RoomCardModel {
       this.roomName,
       this.status,
       this.size,
+      this.description,
       this.basePrice,
       this.smoking,
       this.disabledPeople,
@@ -52,6 +54,7 @@ class RoomCardModel {
         json['roomName'] != null ? RoomType.fromJson(json['roomName']) : null;
     status = json['status'];
     size = json['size'];
+    description = json['description'];
     basePrice = json['base_price'];
     smoking = json['smoking'];
     disabledPeople = json['disabled_people'];
@@ -93,6 +96,7 @@ class RoomCardModel {
     }
     data['status'] = status;
     data['size'] = size;
+    data['description'] = description;
     data['base_price'] = basePrice;
     data['smoking'] = smoking;
     data['disabled_people'] = disabledPeople;

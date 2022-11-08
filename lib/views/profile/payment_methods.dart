@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/components/paymentMethodCard.dart';
 import 'package:pana_project/utils/const.dart';
 
 class PaymentMethodsPage extends StatefulWidget {
@@ -90,70 +91,15 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              Row(
-                                children: [
-                                  const SizedBox(width: 10),
-                                  SvgPicture.asset(
-                                      'assets/icons/visa_icon.svg'),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: const [
-                                      Text(
-                                        '**** 3254',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        '04/24',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black45,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  SvgPicture.asset(
-                                      'assets/icons/radio_button_1.svg'),
-                                ],
-                              ),
+                              PaymentMethodCard('assets/icons/visa_icon.svg',
+                                  '**** 3254', '04/24', true),
                               const Divider(),
                               const SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  const SizedBox(width: 10),
-                                  SvgPicture.asset(
-                                      'assets/icons/mastercard_icon.svg'),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: const [
-                                      Text(
-                                        '**** 3254',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        '04/24',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black45,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  SvgPicture.asset(
-                                      'assets/icons/radio_button_0.svg'),
-                                ],
-                              ),
+                              PaymentMethodCard(
+                                  'assets/icons/mastercard_icon.svg',
+                                  '**** 3254',
+                                  '04/24',
+                                  false),
                               const Divider(),
                               const SizedBox(height: 10),
                               GestureDetector(

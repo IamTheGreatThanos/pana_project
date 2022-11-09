@@ -252,68 +252,68 @@ class _RoomInfoPageState extends State<RoomInfoPage> {
                   ),
                 ),
                 const Divider(),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'от \$${widget.room.basePrice}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18,
-                                    color: AppColors.black),
-                              ),
-                              const Text(
-                                ' за сутки',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                    color: Colors.black45),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            '12-14 июля',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                color: AppColors.black,
-                                decoration: TextDecoration.underline),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      SizedBox(
-                        height: 48,
-                        width: 150,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: AppColors.accent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(10), // <-- Radius
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            "Забронировать",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                //   child: Row(
+                //     children: [
+                //       Column(
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: [
+                //           Row(
+                //             children: [
+                //               Text(
+                //                 'от \$${widget.room.basePrice}',
+                //                 style: const TextStyle(
+                //                     fontWeight: FontWeight.w500,
+                //                     fontSize: 18,
+                //                     color: AppColors.black),
+                //               ),
+                //               const Text(
+                //                 ' за сутки',
+                //                 style: TextStyle(
+                //                     fontWeight: FontWeight.w500,
+                //                     fontSize: 14,
+                //                     color: Colors.black45),
+                //               ),
+                //             ],
+                //           ),
+                //           const SizedBox(height: 10),
+                //           const Text(
+                //             '12-14 июля',
+                //             style: TextStyle(
+                //                 fontWeight: FontWeight.w500,
+                //                 fontSize: 14,
+                //                 color: AppColors.black,
+                //                 decoration: TextDecoration.underline),
+                //           ),
+                //         ],
+                //       ),
+                //       const Spacer(),
+                //       SizedBox(
+                //         height: 48,
+                //         width: 150,
+                //         child: ElevatedButton(
+                //           style: ElevatedButton.styleFrom(
+                //             primary: AppColors.accent,
+                //             shape: RoundedRectangleBorder(
+                //               borderRadius:
+                //                   BorderRadius.circular(10), // <-- Radius
+                //             ),
+                //           ),
+                //           onPressed: () {
+                //             Navigator.of(context).pop();
+                //           },
+                //           child: const Text(
+                //             "Забронировать",
+                //             style: TextStyle(
+                //                 fontSize: 14, fontWeight: FontWeight.w500),
+                //           ),
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),

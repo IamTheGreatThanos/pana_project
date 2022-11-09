@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pana_project/components/profile_menu_item.dart';
 import 'package:pana_project/services/auth_api_provider.dart';
-import 'package:pana_project/views/payment/payment_page.dart';
 import 'package:pana_project/views/profile/change_language.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
 import 'package:pana_project/views/profile/my_transactions.dart';
@@ -131,10 +130,10 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PaymentPage()));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => PaymentPage()));
                           },
                           child: Container(
                             decoration: BoxDecoration(

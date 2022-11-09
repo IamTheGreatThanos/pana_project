@@ -172,4 +172,43 @@ class MainProvider {
       return result;
     }
   }
+
+  Future<dynamic> housingPayment(
+    int housingId,
+    String dateFrom,
+    String dateTo,
+    int peopleCount,
+    List<int> selectedRoomIds,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.post(
+      Uri.parse('${API_URL}api/mobile/favorite'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "housing_id": housingId,
+        "date_from": dateFrom,
+        "date_to": dateTo,
+        "count_people": peopleCount,
+        "rooms": selectedRoomIds,
+      }),
+    );
+
+    print(jsonDecode(response.body));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
 }

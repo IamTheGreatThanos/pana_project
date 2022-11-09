@@ -23,6 +23,8 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
   String selectedRange = '';
 
   List<RoomCardModel> roomsList = [];
+  List<int> selectedRoomIds = [];
+  List<RoomCardModel> selectedRooms = [];
 
   @override
   void initState() {
@@ -103,7 +105,55 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                     children: [
                       const SizedBox(height: 20),
                       for (int i = 0; i < roomsList.length; i++)
-                        RoomCard(roomsList[i]),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                    AppConstants.cardBorderRadius),
+                                color: AppColors.white),
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: [
+                                RoomCard(roomsList[i]),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25, vertical: 20),
+                                  child: SizedBox(
+                                    height: 48,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: selectedRoomIds
+                                                .contains(roomsList[i].id)
+                                            ? AppColors.accent
+                                            : AppColors.grey,
+                                        minimumSize: const Size.fromHeight(50),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        roomSelectionFunction(
+                                            roomsList[i].id!, roomsList[i]);
+                                      },
+                                      child: Text(
+                                        "Выбрать этот номер",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: selectedRoomIds
+                                                    .contains(roomsList[i].id)
+                                                ? AppColors.white
+                                                : AppColors.blackWithOpacity),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       Container(
                         color: Colors.white,
                         child: Padding(
@@ -165,8 +215,10 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                PaymentPage()));
+                                            builder: (context) => PaymentPage(
+                                                selectedRooms,
+                                                selectedRoomIds,
+                                                widget.housingId)));
                                   },
                                   child: const Text(
                                     "Забронировать",
@@ -293,5 +345,17 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
             Text(response['message'], style: const TextStyle(fontSize: 20)),
       ));
     }
+  }
+
+  void roomSelectionFunction(int id, RoomCardModel room) {
+    setState(() {
+      if (selectedRoomIds.contains(id)) {
+        selectedRoomIds.remove(id);
+        selectedRooms.remove(room);
+      } else {
+        selectedRoomIds.add(id);
+        selectedRooms.add(room);
+      }
+    });
   }
 }

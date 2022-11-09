@@ -3,12 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/paymentMethodCard.dart';
+import 'package:pana_project/models/roomCard.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class PaymentPage extends StatefulWidget {
-  // PaymentPage(this.product);
-  // final Product product;
+  PaymentPage(this.roomList, this.selectedRoomIds, this.housingId);
+  final List<RoomCardModel> roomList;
+  final List<int> selectedRoomIds;
+  final int housingId;
 
   @override
   _PaymentPageState createState() => _PaymentPageState();
@@ -16,9 +20,14 @@ class PaymentPage extends StatefulWidget {
 
 class _PaymentPageState extends State<PaymentPage> {
   var _switchValue = false;
+  double sum = 0;
+  String dateFrom = '2022-10-22';
+  String dateTo = '2022-10-24';
+  int peopleCount = 1;
 
   @override
   void initState() {
+    calcSum();
     super.initState();
   }
 
@@ -182,18 +191,18 @@ class _PaymentPageState extends State<PaymentPage> {
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Даты',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(
-                            '28 сен. - 2 окт.',
-                            style: TextStyle(
+                            '$dateFrom / $dateTo',
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: Colors.black45,
@@ -219,18 +228,18 @@ class _PaymentPageState extends State<PaymentPage> {
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Гости',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(
-                            '3 человека',
-                            style: TextStyle(
+                            '$peopleCount человека',
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: Colors.black45,
@@ -261,23 +270,26 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                     ),
                   ),
-                  for (int i = 0; i < 3; i++)
+                  for (int i = 0; i < widget.roomList.length; i++)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Row(
-                        children: const [
-                          Text(
-                            'Наименование услуги',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black45,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            child: Text(
+                              widget.roomList[i].roomName?.name ?? '',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black45,
+                              ),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Text(
-                            '\$324',
-                            style: TextStyle(
+                            '\$${widget.roomList[i].basePrice ?? 0}',
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -286,8 +298,8 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                     ),
                   Row(
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         'Итого',
                         style: TextStyle(
                           fontSize: 14,
@@ -295,10 +307,10 @@ class _PaymentPageState extends State<PaymentPage> {
                           color: Colors.black,
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Text(
-                        '\$1024',
-                        style: TextStyle(
+                        '\$$sum',
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -458,10 +470,11 @@ class _PaymentPageState extends State<PaymentPage> {
                           innerColor: AppColors.accent,
                           outerColor: AppColors.white,
                           onSubmit: () {
+                            sendOrder();
                             Future.delayed(
                               const Duration(seconds: 1),
                               () => _key.currentState!.reset(),
-                            );
+                            ).whenComplete(() => Navigator.of(context).pop());
                           },
                         );
                       },
@@ -474,5 +487,24 @@ class _PaymentPageState extends State<PaymentPage> {
         ),
       ),
     );
+  }
+
+  void calcSum() {
+    for (int i = 0; i < widget.roomList.length; i++) {
+      sum += widget.roomList[i].basePrice ?? 0;
+    }
+  }
+
+  void sendOrder() async {
+    var response = await MainProvider().housingPayment(widget.housingId,
+        dateFrom, dateTo, peopleCount, widget.selectedRoomIds);
+    if (response['response_status'] == 'ok') {
+      print('Successfully created!');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

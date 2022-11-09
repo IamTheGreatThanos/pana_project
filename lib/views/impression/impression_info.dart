@@ -8,7 +8,6 @@ import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
-import 'package:pana_project/views/payment/payment_page.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
@@ -1055,10 +1054,10 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                               ),
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => PaymentPage()));
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => PaymentPage()));
                             },
                             child: const Text(
                               "Забронировать",

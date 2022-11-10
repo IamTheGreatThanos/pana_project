@@ -49,6 +49,7 @@ dependencies:
   slide_to_act: ^2.0.1
   cached_video_player: ^2.0.3
   local_auth: ^2.1.2
+  google_maps_flutter: ^2.2.1
 
 dev_dependencies:
   flutter_test:
@@ -114,6 +115,7 @@ flutter:
     - assets/icons/geolocation_info_icon_grey.svg
     - assets/icons/geolocation_info_icon_checkmark.svg
     - assets/icons/map_pin.svg
+    - assets/icons/map_pin.png
     - assets/icons/timer.svg
     - assets/images/logo_word.svg
     - assets/images/logo_icon.svg

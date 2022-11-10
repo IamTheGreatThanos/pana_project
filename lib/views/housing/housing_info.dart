@@ -1,6 +1,11 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/components/facilities_widget.dart';
 import 'package:pana_project/components/impression_card.dart';
@@ -15,31 +20,45 @@ import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
 class HousingInfo extends StatefulWidget {
-  const HousingInfo(this.id);
+  const HousingInfo(this.id, this.thisStoryItems, this.mediaStoryItems);
   final int id;
+  final List<StoryItem?> thisStoryItems;
+  final List<StoryItem?> mediaStoryItems;
 
   @override
   _HousingInfoState createState() => _HousingInfoState();
 }
 
 class _HousingInfoState extends State<HousingInfo> {
-  final storyController = StoryController();
+  final _storyController = StoryController();
+  late GoogleMapController _mapController;
+
+  CameraPosition _initPosition =
+      CameraPosition(target: LatLng(43.236431, 76.917994), zoom: 14);
+  final Set<Marker> _markers = {};
 
   HousingDetailModel thisHousing = HousingDetailModel();
-  List<StoryItem?> thisStoryItems = [];
-  List<StoryItem?> mediaStoryItems = [];
 
   @override
   void initState() {
     getHousingInfo();
+    setupMarkers();
     super.initState();
   }
 
   @override
   void dispose() {
-    storyController.dispose();
+    _storyController.dispose();
     super.dispose();
   }
+
+  void _onMapCreated(GoogleMapController controller) {
+    setState(() {
+      _mapController = controller;
+    });
+  }
+
+  void setupMarkers() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -63,52 +82,24 @@ class _HousingInfoState extends State<HousingInfo> {
                 Stack(
                   children: [
                     SizedBox(
-                        height: 300,
-                        width: MediaQuery.of(context).size.width,
-                        child: StoryView(
-                          storyItems: thisStoryItems,
-                          onStoryShow: (s) {},
-                          onComplete: () {},
-                          progressPosition: ProgressPosition.bottom,
-                          repeat: true,
-                          controller: storyController,
-                          onVerticalSwipeComplete: (direction) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        MediaDetailPage(mediaStoryItems)));
-                          },
-                        )
-                        // CarouselSlider.builder(
-                        //   options: CarouselOptions(
-                        //     height: 300,
-                        //     aspectRatio: 16 / 9,
-                        //     viewportFraction: 1,
-                        //     initialPage: 0,
-                        //     enableInfiniteScroll: true,
-                        //     reverse: false,
-                        //     autoPlay: false,
-                        //     // autoPlayInterval: const Duration(seconds: 3),
-                        //     // autoPlayAnimationDuration:
-                        //     //     const Duration(milliseconds: 800),
-                        //     autoPlayCurve: Curves.fastOutSlowIn,
-                        //     enlargeCenterPage: false,
-                        //     onPageChanged: (index, reason) {
-                        //       imageChanged(index);
-                        //     },
-                        //     scrollDirection: Axis.horizontal,
-                        //   ),
-                        //   itemCount: lenOfList,
-                        //   itemBuilder: (BuildContext context, int itemIndex,
-                        //           int pageViewIndex) =>
-                        //       CachedNetworkImage(
-                        //     fit: BoxFit.fitHeight,
-                        //     imageUrl:
-                        //         'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80',
-                        //   ),
-                        // ),
-                        ),
+                      height: 300,
+                      width: MediaQuery.of(context).size.width,
+                      child: StoryView(
+                        storyItems: widget.thisStoryItems,
+                        onStoryShow: (s) {},
+                        onComplete: () {},
+                        progressPosition: ProgressPosition.bottom,
+                        repeat: true,
+                        controller: _storyController,
+                        onVerticalSwipeComplete: (direction) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MediaDetailPage(widget.mediaStoryItems)));
+                        },
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
                       child: Row(
@@ -383,12 +374,11 @@ class _HousingInfoState extends State<HousingInfo> {
                       const EdgeInsets.only(left: 20, bottom: 20, right: 10),
                   child: Wrap(
                     children: [
-                      for (int k = 0; k < thisHousing.comforts!.length; k++)
+                      for (var item in thisHousing.comforts ?? [])
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            FacilitiesWidget(
-                                title: thisHousing.comforts![k].name ?? ''),
+                            FacilitiesWidget(title: item.name ?? ''),
                             const SizedBox(width: 10),
                           ],
                         ),
@@ -416,6 +406,17 @@ class _HousingInfoState extends State<HousingInfo> {
                         Radius.circular(16),
                       ),
                       color: Colors.orange[50],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(16),
+                      ),
+                      child: GoogleMap(
+                        mapType: MapType.normal,
+                        initialCameraPosition: _initPosition,
+                        onMapCreated: _onMapCreated,
+                        markers: _markers,
+                      ),
                     ),
                   ),
                 ),
@@ -819,31 +820,47 @@ class _HousingInfoState extends State<HousingInfo> {
   void getHousingInfo() async {
     var response = await MainProvider().getHousingDetail(widget.id);
     if (response['response_status'] == 'ok') {
-      setState(() {
-        thisHousing = HousingDetailModel.fromJson(response['data']);
-        for (int i = 0; i < thisHousing.images!.length; i++) {
-          thisStoryItems.add(
-            StoryItem.pageImage(
-              url: thisHousing.images![i].path!,
-              controller: storyController,
-              imageFit: BoxFit.fitHeight,
-            ),
-          );
+      thisHousing = HousingDetailModel.fromJson(response['data']);
+      final Uint8List customMarker =
+          await getBytesFromAsset('assets/icons/map_pin.png', 150);
 
-          mediaStoryItems.add(
-            StoryItem.pageImage(
-              url: thisHousing.images![i].path!,
-              controller: storyController,
-              imageFit: BoxFit.fitWidth,
-            ),
-          );
-        }
-      });
+      _markers.add(Marker(
+        markerId: const MarkerId('point-1'),
+        position: LatLng(double.parse(thisHousing.lat ?? '43.236431'),
+            double.parse(thisHousing.lng ?? '76.917994')),
+        infoWindow: InfoWindow(
+          title: thisHousing.name,
+        ),
+        icon: BitmapDescriptor.fromBytes(customMarker),
+      ));
+
+      CameraPosition housingLocation = CameraPosition(
+        target: LatLng(
+          double.parse(thisHousing.lat ?? '43.236431'),
+          double.parse(thisHousing.lng ?? '76.917994'),
+        ),
+        zoom: 14,
+      );
+
+      _mapController
+          .animateCamera(CameraUpdate.newCameraPosition(housingLocation));
+
+      setState(() {});
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content:
             Text(response['message'], style: const TextStyle(fontSize: 20)),
       ));
     }
+  }
+
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
   }
 }

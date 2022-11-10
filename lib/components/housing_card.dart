@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
+import 'package:story_view/controller/story_controller.dart';
+import 'package:story_view/story_view.dart';
 
 class HousingCard extends StatefulWidget {
   HousingCard(this.housing);
@@ -15,10 +17,31 @@ class HousingCard extends StatefulWidget {
 
 class _HousingCardState extends State<HousingCard> {
   final CarouselController _controller = CarouselController();
+  final _storyController = StoryController();
   int _current = 0;
+
+  List<StoryItem?> thisStoryItems = [];
+  List<StoryItem?> mediaStoryItems = [];
 
   @override
   void initState() {
+    for (int i = 0; i < widget.housing.images!.length; i++) {
+      thisStoryItems.add(
+        StoryItem.pageImage(
+          url: widget.housing.images![i].path!,
+          controller: _storyController,
+          imageFit: BoxFit.fitHeight,
+        ),
+      );
+
+      mediaStoryItems.add(
+        StoryItem.pageImage(
+          url: widget.housing.images![i].path!,
+          controller: _storyController,
+          imageFit: BoxFit.fitWidth,
+        ),
+      );
+    }
     super.initState();
   }
 
@@ -29,7 +52,8 @@ class _HousingCardState extends State<HousingCard> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => HousingInfo(widget.housing.id!)));
+                builder: (context) => HousingInfo(
+                    widget.housing.id!, thisStoryItems, mediaStoryItems)));
       },
       child: Container(
           decoration: BoxDecoration(
@@ -62,7 +86,7 @@ class _HousingCardState extends State<HousingCard> {
                               initialPage: 0,
                               enableInfiniteScroll: true,
                               reverse: false,
-                              autoPlay: true,
+                              autoPlay: false,
                               autoPlayInterval: const Duration(seconds: 3),
                               autoPlayAnimationDuration:
                                   const Duration(milliseconds: 800),

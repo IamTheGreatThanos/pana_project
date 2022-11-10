@@ -21,6 +21,7 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   void initState() {
+    checkLogin();
     super.initState();
   }
 
@@ -463,6 +464,16 @@ class _AuthPageState extends State<AuthPage> {
         content:
             Text(response['message'], style: const TextStyle(fontSize: 20)),
       ));
+    }
+  }
+
+  void checkLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var isLogedIn = prefs.getBool('isLogedIn');
+    if (isLogedIn == true) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => TabBarPage()),
+          (Route<dynamic> route) => false);
     }
   }
 }

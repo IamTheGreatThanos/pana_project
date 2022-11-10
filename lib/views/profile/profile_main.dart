@@ -5,11 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pana_project/components/profile_menu_item.dart';
 import 'package:pana_project/services/auth_api_provider.dart';
+import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/profile/change_language.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
 import 'package:pana_project/views/profile/my_transactions.dart';
 import 'package:pana_project/views/profile/payment_methods.dart';
 import 'package:pana_project/views/profile/personal_information_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/const.dart';
 
@@ -175,7 +177,9 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                       ProfileMenuItem('assets/icons/profile_star.svg',
                           'Мои отзывы', MyReviewsPage()),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          logOut();
+                        },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 40),
                           child: Text(
@@ -220,5 +224,14 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
         content: Text('Ошибка загрузки!', style: const TextStyle(fontSize: 20)),
       ));
     }
+  }
+
+  void logOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLogedIn', false);
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => AuthPage()),
+        (Route<dynamic> route) => false);
   }
 }

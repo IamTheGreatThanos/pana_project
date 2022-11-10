@@ -197,6 +197,8 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
           context,
           MaterialPageRoute(builder: (context) => widget.page),
         );
+
+        prefs.setBool('isLogedIn', true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Извините, код введен неправильно. Попробуйте еще раз.",
@@ -222,6 +224,8 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
           context,
           MaterialPageRoute(builder: (context) => widget.page),
         );
+
+        prefs.setBool('isLogedIn', true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Извините, код введен неправильно. Попробуйте еще раз.",

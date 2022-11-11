@@ -225,7 +225,9 @@ class _HomeHousingState extends State<HomeHousing>
       for (int i = 0; i < response['data'].length; i++) {
         housingList.add(HousingCardModel.fromJson(response['data'][i]));
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content:

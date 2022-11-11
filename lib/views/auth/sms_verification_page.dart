@@ -191,6 +191,7 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
         prefs.setString("user_email", response['user']['email']);
         prefs.setString("user_phone", response['user']['phone']);
         prefs.setInt("user_phone_code", response['user']['phone_code']);
+        prefs.setString("user_avatar", response['user']['avatar']);
         prefs.setBool('isLogedIn', true);
 
         Navigator.push(
@@ -209,7 +210,6 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
       var response =
           await AuthProvider().registerVerify(pinCodeController.text);
       // TODO: Действие при авторизации пользователя...
-      print(response);
       if (response['response_status'] == 'ok') {
         prefs.setString("token", response['access_token']);
         prefs.setInt("user_id", response['user']['id']);
@@ -218,6 +218,7 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
         prefs.setString("user_email", response['user']['email']);
         prefs.setString("user_phone", response['user']['phone']);
         prefs.setInt("user_phone_code", response['user']['phone_code']);
+        prefs.setString("user_avatar", response['user']['avatar']);
         prefs.setBool('isLogedIn', true);
 
         Navigator.push(

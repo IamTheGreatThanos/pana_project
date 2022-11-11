@@ -18,7 +18,7 @@ class _HomeTravelState extends State<HomeTravel> {
       DateRangePickerController();
   TextEditingController _titleController = TextEditingController();
   String selectedRange = '';
-  bool justBool = true;
+  bool justBool = false;
 
   @override
   void initState() {

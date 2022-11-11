@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/story_view.dart';
 
@@ -22,6 +24,8 @@ class _HousingCardState extends State<HousingCard> {
 
   List<StoryItem?> thisStoryItems = [];
   List<StoryItem?> mediaStoryItems = [];
+
+  bool isLogedIn = false;
 
   @override
   void initState() {
@@ -42,6 +46,8 @@ class _HousingCardState extends State<HousingCard> {
         ),
       );
     }
+
+    checkIsLogedIn();
     super.initState();
   }
 
@@ -49,11 +55,16 @@ class _HousingCardState extends State<HousingCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => HousingInfo(
-                    widget.housing.id!, thisStoryItems, mediaStoryItems)));
+        if (isLogedIn == true) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HousingInfo(
+                      widget.housing.id!, thisStoryItems, mediaStoryItems)));
+        } else {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AuthPage()));
+        }
       },
       child: Container(
           decoration: BoxDecoration(
@@ -210,5 +221,14 @@ class _HousingCardState extends State<HousingCard> {
             ),
           )),
     );
+  }
+
+  void checkIsLogedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('isLogedIn') == true) {
+      isLogedIn = true;
+    } else {
+      isLogedIn = false;
+    }
   }
 }

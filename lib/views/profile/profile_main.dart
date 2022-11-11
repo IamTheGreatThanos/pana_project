@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +17,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/const.dart';
 
 class ProfileMainPage extends StatefulWidget {
+  const ProfileMainPage(this.onButtonPressed);
+  final void Function() onButtonPressed;
   @override
   _ProfileMainPageState createState() => _ProfileMainPageState();
 }
@@ -23,10 +26,14 @@ class ProfileMainPage extends StatefulWidget {
 class _ProfileMainPageState extends State<ProfileMainPage> {
   final ImagePicker _picker = ImagePicker();
   XFile? image;
-  String name = 'Dinmukhammed Mussilim';
+  String name = 'Пользователь';
+  String avatarUrl = '';
+
+  bool isLogedIn = false;
 
   @override
   void initState() {
+    checkIsLogedIn();
     super.initState();
   }
 
@@ -88,8 +95,13 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                                               File(image!.path),
                                               fit: BoxFit.fitWidth,
                                             )
-                                          : SvgPicture.asset(
-                                              'assets/images/add_photo_placeholder.svg'),
+                                          : avatarUrl != ''
+                                              ? CachedNetworkImage(
+                                                  imageUrl: avatarUrl,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : SvgPicture.asset(
+                                                  'assets/images/add_photo_placeholder.svg'),
                                     ),
                                   ),
                                 ),
@@ -99,7 +111,9 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                                     const EdgeInsets.fromLTRB(70, 70, 0, 0),
                                 child: GestureDetector(
                                   onTap: () {
-                                    changeAvatar();
+                                    if (isLogedIn = true) {
+                                      changeAvatar();
+                                    }
                                   },
                                   child: SvgPicture.asset(
                                     'assets/icons/avatar_edit_icon.svg',
@@ -233,5 +247,53 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => AuthPage()),
         (Route<dynamic> route) => false);
+  }
+
+  void checkIsLogedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('isLogedIn') == true) {
+      isLogedIn = true;
+      name = (prefs.getString('user_name') ?? '') +
+          ' ' +
+          (prefs.getString('user_surname') ?? '');
+      avatarUrl = prefs.getString('user_avatar') ?? '';
+      setState(() {});
+    } else {
+      isLogedIn = false;
+      showAlertDialog(context);
+    }
+  }
+
+  showAlertDialog(BuildContext context) {
+    Widget cancelButton = TextButton(
+      child: Text("Отмена"),
+      onPressed: () {
+        widget.onButtonPressed();
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Да"),
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AuthPage()));
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Внимание"),
+      content: Text("Вы не вошли в аккаунт. Войти?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    ).whenComplete(() => widget.onButtonPressed());
   }
 }

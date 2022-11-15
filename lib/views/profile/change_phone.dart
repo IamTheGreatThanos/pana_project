@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChangePhonePage extends StatefulWidget {
   @override
@@ -12,7 +14,14 @@ class _ChangePhonePageState extends State<ChangePhonePage> {
 
   @override
   void initState() {
+    loadData();
     super.initState();
+  }
+
+  void loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    phoneController.text = prefs.getString('user_phone') ?? '';
+    setState(() {});
   }
 
   @override
@@ -166,13 +175,14 @@ class _ChangePhonePageState extends State<ChangePhonePage> {
                               ),
                             ),
                             onPressed: () {
-                              if (true) {
-                              } else {
+                              if (phoneController.text == '') {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("Заполните все поля.",
                                       style: const TextStyle(fontSize: 20)),
                                 ));
+                              } else {
+                                saveChanges();
                               }
                             },
                             child: const Text("Сохранить",
@@ -190,5 +200,20 @@ class _ChangePhonePageState extends State<ChangePhonePage> {
         ),
       ),
     );
+  }
+
+  void saveChanges() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var response = await AuthProvider().changePhone(phoneController.text);
+
+    if (response['response_status'] == 'ok') {
+      prefs.setString("user_phone", phoneController.text);
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

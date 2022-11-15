@@ -6,6 +6,7 @@ import 'package:pana_project/views/profile/change_email.dart';
 import 'package:pana_project/views/profile/change_full_name.dart';
 import 'package:pana_project/views/profile/change_phone.dart';
 import 'package:pana_project/views/profile/login_settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PersonalInformationPage extends StatefulWidget {
   @override
@@ -14,9 +15,20 @@ class PersonalInformationPage extends StatefulWidget {
 }
 
 class _PersonalInformationPageState extends State<PersonalInformationPage> {
+  String phone = '';
+  String email = '';
+
   @override
   void initState() {
+    loadData();
     super.initState();
+  }
+
+  void loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    phone = '+7' + (prefs.getString('user_phone') ?? '');
+    email = prefs.getString('user_email') ?? '';
+    setState(() {});
   }
 
   @override
@@ -54,8 +66,8 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                       ),
                     ),
                     const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
+                    const Padding(
+                      padding: EdgeInsets.all(20),
                       child: Text(
                         'Личная информация',
                         style: TextStyle(
@@ -65,7 +77,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                       ),
                     ),
                     const Spacer(),
-                    SizedBox(width: 50)
+                    const SizedBox(width: 50)
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -87,7 +99,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                                     builder: (context) => ChangePhonePage()));
                           },
                           child: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.white,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8)),
@@ -99,26 +111,26 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                                 children: [
                                   SvgPicture.asset(
                                       'assets/icons/mobile_icon.svg'),
-                                  SizedBox(width: 20),
+                                  const SizedBox(width: 20),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Телефон',
                                         style: TextStyle(fontSize: 14),
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Text(
-                                        '+7 705 356-24-67',
-                                        style: TextStyle(
+                                        phone,
+                                        style: const TextStyle(
                                             fontSize: 12,
                                             color: Colors.black45),
                                       ),
                                     ],
                                   ),
-                                  Spacer(),
-                                  Icon(Icons.arrow_forward_ios),
+                                  const Spacer(),
+                                  const Icon(Icons.arrow_forward_ios),
                                 ],
                               ),
                             ),
@@ -135,7 +147,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                                     builder: (context) => ChangeEmailPage()));
                           },
                           child: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.white,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8)),
@@ -147,26 +159,26 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                                 children: [
                                   SvgPicture.asset(
                                       'assets/icons/mail_icon.svg'),
-                                  SizedBox(width: 20),
+                                  const SizedBox(width: 20),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Email',
                                         style: TextStyle(fontSize: 14),
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Text(
-                                        'example@gmail.com',
-                                        style: TextStyle(
+                                        email,
+                                        style: const TextStyle(
                                             fontSize: 12,
                                             color: Colors.black45),
                                       ),
                                     ],
                                   ),
-                                  Spacer(),
-                                  Icon(Icons.arrow_forward_ios),
+                                  const Spacer(),
+                                  const Icon(Icons.arrow_forward_ios),
                                 ],
                               ),
                             ),

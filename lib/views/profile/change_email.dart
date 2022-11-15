@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChangeEmailPage extends StatefulWidget {
   @override
@@ -8,11 +10,18 @@ class ChangeEmailPage extends StatefulWidget {
 }
 
 class _ChangeEmailPageState extends State<ChangeEmailPage> {
-  TextEditingController phoneController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
 
   @override
   void initState() {
+    loadData();
     super.initState();
+  }
+
+  void loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    emailController.text = prefs.getString('user_email') ?? '';
+    setState(() {});
   }
 
   @override
@@ -111,7 +120,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 4),
                                       child: TextField(
-                                        controller: phoneController,
+                                        controller: emailController,
                                         keyboardType: TextInputType.number,
                                         maxLength: 10,
                                         decoration: const InputDecoration(
@@ -151,13 +160,14 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                               ),
                             ),
                             onPressed: () {
-                              if (true) {
-                              } else {
+                              if (emailController.text == '') {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("Заполните все поля.",
                                       style: const TextStyle(fontSize: 20)),
                                 ));
+                              } else {
+                                saveChanges();
                               }
                             },
                             child: const Text("Сохранить",
@@ -175,5 +185,20 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
         ),
       ),
     );
+  }
+
+  void saveChanges() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var response = await AuthProvider().changeEmail(emailController.text);
+
+    if (response['response_status'] == 'ok') {
+      prefs.setString("user_email", emailController.text);
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

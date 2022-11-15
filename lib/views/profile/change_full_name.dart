@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChangeFullNamePage extends StatefulWidget {
   @override
@@ -13,7 +15,15 @@ class _ChangeFullNamePageState extends State<ChangeFullNamePage> {
 
   @override
   void initState() {
+    loadData();
     super.initState();
+  }
+
+  void loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    nameController.text = prefs.getString('user_name') ?? '';
+    surnameController.text = prefs.getString('user_surname') ?? '';
+    setState(() {});
   }
 
   @override
@@ -210,13 +220,15 @@ class _ChangeFullNamePageState extends State<ChangeFullNamePage> {
                               ),
                             ),
                             onPressed: () {
-                              if (true) {
-                              } else {
+                              if (nameController.text == '' ||
+                                  surnameController.text == '') {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("Заполните все поля.",
                                       style: const TextStyle(fontSize: 20)),
                                 ));
+                              } else {
+                                saveChanges();
                               }
                             },
                             child: const Text("Сохранить",
@@ -234,5 +246,22 @@ class _ChangeFullNamePageState extends State<ChangeFullNamePage> {
         ),
       ),
     );
+  }
+
+  void saveChanges() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var response = await AuthProvider()
+        .changeFullName(nameController.text, surnameController.text);
+
+    if (response['response_status'] == 'ok') {
+      prefs.setString("user_name", nameController.text);
+      prefs.setString("user_surname", surnameController.text);
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

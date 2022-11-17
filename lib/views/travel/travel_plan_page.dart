@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pana_project/utils/const.dart';
 
 class TravelPlanePage extends StatefulWidget {
@@ -13,9 +14,20 @@ class TravelPlanePage extends StatefulWidget {
 
 class _TravelPlanePageState extends State<TravelPlanePage> {
   TextEditingController _titleController = TextEditingController();
+  late GoogleMapController _mapController;
+  CameraPosition _initPosition =
+      CameraPosition(target: LatLng(43.236431, 76.917994), zoom: 14);
+  final Set<Marker> _markers = {};
+
   @override
   void initState() {
     super.initState();
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    setState(() {
+      _mapController = controller;
+    });
   }
 
   @override
@@ -178,10 +190,10 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.asset('assets/icons/timer.svg'),
+                            SvgPicture.asset('assets/icons/user_icon.svg'),
                             const SizedBox(width: 5),
                             const Text(
-                              '3.5 часа',
+                              '1 человек',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -206,24 +218,12 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                   ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.only(top: 20, left: 20),
+                  padding: EdgeInsets.only(top: 20, left: 20, bottom: 20),
                   child: Text(
                     'Расписание поездки',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                const Padding(
-                  padding:
-                      EdgeInsets.only(top: 15, left: 20, right: 20, bottom: 10),
-                  child: Text(
-                    'Отсортируйте вашу поездку в такой последовательности, в которой вы планируете провести свое путешествие',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black45,
                     ),
                   ),
                 ),
@@ -749,7 +749,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                                         Icon(Icons.add, color: Colors.black45),
                                         SizedBox(width: 10),
                                         Text(
-                                          'Добавить поездку',
+                                          'Добавить план',
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600,
@@ -801,7 +801,17 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                             borderRadius: const BorderRadius.all(
                               Radius.circular(16),
                             ),
-                            color: Colors.orange[50],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(16),
+                            ),
+                            child: GoogleMap(
+                              mapType: MapType.normal,
+                              initialCameraPosition: _initPosition,
+                              onMapCreated: _onMapCreated,
+                              markers: _markers,
+                            ),
                           ),
                         ),
                       ),
@@ -973,6 +983,23 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                         ),
                       ),
                     ],
+                  ),
+                ),
+                Center(
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 40),
+                      child: Text(
+                        'Удалить поездку',
+                        style: TextStyle(
+                          color: Colors.black45,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 30)

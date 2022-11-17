@@ -6,6 +6,7 @@ import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/create_lock_code_page.dart';
 import 'package:pana_project/views/auth/lock_screen.dart';
 import 'package:pana_project/views/profile/change_password.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginSettingsPage extends StatefulWidget {
   @override
@@ -17,7 +18,19 @@ class _LoginSettingsPageState extends State<LoginSettingsPage> {
 
   @override
   void initState() {
+    loadData();
     super.initState();
+  }
+
+  void loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _switchValue = prefs.getBool('isBiometricsUse') ?? false;
+    setState(() {});
+  }
+
+  void setSwitchValue() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isBiometricsUse', _switchValue);
   }
 
   @override
@@ -114,6 +127,7 @@ class _LoginSettingsPageState extends State<LoginSettingsPage> {
                                   value: _switchValue,
                                   activeColor: AppColors.accent,
                                   onChanged: (value) {
+                                    setSwitchValue();
                                     setState(() {
                                       _switchValue = value;
                                     });

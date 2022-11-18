@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/travel/my_plan_detail.dart';
 
 class TravelPlanePage extends StatefulWidget {
   // TravelPlanePage(this.product);
@@ -71,7 +72,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                       const Padding(
                         padding: EdgeInsets.all(20),
                         child: Text(
-                          'Мой план',
+                          'Поездка',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
@@ -1117,8 +1118,12 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.of(context).pop();
                             print(_titleController.text);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyPlanDetailPage()));
+                            // builder: (context) => AddNewPlanPage()));
                           },
                           child: const Text(
                             "Далее",

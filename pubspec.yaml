@@ -154,6 +154,8 @@ flutter:
     - assets/icons/size_icon.svg
     - assets/icons/bonus_icon.svg
     - assets/icons/user_icon.svg
+    - assets/images/calendar_image.svg
+    - assets/icons/calendar_icon.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

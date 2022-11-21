@@ -20,11 +20,14 @@ class SelectRoomPage extends StatefulWidget {
 class _SelectRoomPageState extends State<SelectRoomPage> {
   final DateRangePickerController _datePickerController =
       DateRangePickerController();
-  String selectedRange = '';
+  String selectedRange = 'Выбрать даты';
 
   List<RoomCardModel> roomsList = [];
   List<int> selectedRoomIds = [];
   List<RoomCardModel> selectedRooms = [];
+
+  String startDate = '';
+  String endDate = '';
 
   @override
   void initState() {
@@ -188,9 +191,9 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                                     onTap: () {
                                       showDatePicker();
                                     },
-                                    child: const Text(
-                                      '12-14 июля',
-                                      style: TextStyle(
+                                    child: Text(
+                                      selectedRange,
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 14,
                                           color: AppColors.black,
@@ -218,7 +221,9 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                                             builder: (context) => PaymentPage(
                                                 selectedRooms,
                                                 selectedRoomIds,
-                                                widget.housingId)));
+                                                widget.housingId,
+                                                startDate,
+                                                endDate)));
                                   },
                                   child: const Text(
                                     "Забронировать",
@@ -287,7 +292,9 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).pop();
-                            print(selectedRange);
+                            if (startDate != '') {
+                              getRoomListByDate();
+                            }
                           },
                           child: const Text(
                             'Готово',
@@ -328,12 +335,34 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
             '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
             // ignore: lines_longer_than_80_chars
             ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        if (args.value.startDate != null && args.value.endDate != null) {
+          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+          endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
+        }
       }
     });
   }
 
   void getRoomsList() async {
+    roomsList = [];
     var response = await MainProvider().getRoomsList(widget.housingId);
+    if (response['response_status'] == 'ok') {
+      for (int i = 0; i < response['data'].length; i++) {
+        roomsList.add(RoomCardModel.fromJson(response['data'][i]));
+      }
+      setState(() {});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void getRoomListByDate() async {
+    roomsList = [];
+    var response = await MainProvider()
+        .getRoomsListByDate(widget.housingId, startDate, endDate);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         roomsList.add(RoomCardModel.fromJson(response['data'][i]));

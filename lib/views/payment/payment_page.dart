@@ -9,10 +9,13 @@ import 'package:pana_project/utils/const.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class PaymentPage extends StatefulWidget {
-  PaymentPage(this.roomList, this.selectedRoomIds, this.housingId);
+  PaymentPage(this.roomList, this.selectedRoomIds, this.housingId,
+      this.startDate, this.endDate);
   final List<RoomCardModel> roomList;
   final List<int> selectedRoomIds;
   final int housingId;
+  final String startDate;
+  final String endDate;
 
   @override
   _PaymentPageState createState() => _PaymentPageState();
@@ -21,12 +24,17 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   var _switchValue = false;
   double sum = 0;
-  String dateFrom = '2022-10-22';
-  String dateTo = '2022-10-24';
+  String dateFrom = '-';
+  String dateTo = '-';
   int peopleCount = 1;
 
   @override
   void initState() {
+    if (widget.startDate != '') {
+      dateFrom = widget.startDate;
+      dateTo = widget.endDate;
+    }
+
     calcSum();
     super.initState();
   }
@@ -209,15 +217,6 @@ class _PaymentPageState extends State<PaymentPage> {
                             ),
                           ),
                         ],
-                      ),
-                      const Spacer(),
-                      const Text(
-                        'Изменить',
-                        style: TextStyle(
-                          color: AppColors.accent,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
                       ),
                     ],
                   ),

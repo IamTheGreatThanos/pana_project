@@ -19,6 +19,8 @@ class _SearchPageState extends State<SearchPage> {
   int petsCount = 0;
 
   String selectedRange = 'Выбрать даты';
+  String startDate = '';
+  String endDate = '';
 
   List<Map<String, String>> continents = [
     {'name': 'Гибкий поиск', 'asset': 'assets/images/map_1.png'},
@@ -94,7 +96,7 @@ class _SearchPageState extends State<SearchPage> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).pop();
+                                  Navigator.pop(context);
                                 },
                                 child: const Padding(
                                   padding: EdgeInsets.symmetric(
@@ -675,7 +677,18 @@ class _SearchPageState extends State<SearchPage> {
                                       BorderRadius.circular(10), // <-- Radius
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pop(context, [
+                                  selectedContinentIndex,
+                                  adultCount,
+                                  childAfter4Count,
+                                  childBefore4Count,
+                                  petsCount,
+                                  selectedRange,
+                                  startDate,
+                                  endDate,
+                                ]);
+                              },
                               child: const Text("Показать результаты",
                                   style: TextStyle(
                                       fontSize: 14,
@@ -805,6 +818,10 @@ class _SearchPageState extends State<SearchPage> {
             '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
             // ignore: lines_longer_than_80_chars
             ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        if (args.value.startDate != null && args.value.endDate != null) {
+          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+          endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
+        }
       }
     });
   }

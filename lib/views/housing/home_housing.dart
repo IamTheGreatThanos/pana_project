@@ -34,9 +34,21 @@ class _HomeHousingState extends State<HomeHousing>
     {'name': 'На дереве', 'asset': 'assets/icons/category_12.svg', 'id': 12},
   ];
 
+  List<String> continentNames = [
+    'Гибкий поиск',
+    'Казахстан',
+    'Россия',
+    'Узбекистан',
+    'Турция',
+    'ОАЭ',
+  ];
+
   List<HousingCardModel> housingList = [];
 
   int selectedCategoryId = 1;
+
+  String selectedRange = '';
+  int selectedCountryId = 0;
 
   @override
   void initState() {
@@ -78,10 +90,7 @@ class _HomeHousingState extends State<HomeHousing>
                     const Spacer(),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SearchPage()));
+                        openSearchPage();
                       },
                       child: Container(
                         height: 50,
@@ -109,13 +118,39 @@ class _HomeHousingState extends State<HomeHousing>
                                   vertical: 5, horizontal: 10),
                               child: Icon(Icons.search),
                             ),
-                            const Text(
-                              'Поиск...',
-                              style: TextStyle(
-                                  color: Colors.black45,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500),
-                            ),
+                            selectedRange == ''
+                                ? const Text(
+                                    'Поиск...',
+                                    style: TextStyle(
+                                        color: Colors.black45,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  )
+                                : SizedBox(
+                                    height: 50,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          continentNames[selectedCountryId],
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          selectedRange,
+                                          style: const TextStyle(
+                                              color: Colors.black45,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w500),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                             Spacer(),
                             const Padding(
                               padding: EdgeInsets.symmetric(
@@ -220,6 +255,7 @@ class _HomeHousingState extends State<HomeHousing>
   }
 
   void getHousingList() async {
+    housingList = [];
     var response = await MainProvider().getHousingData(selectedCategoryId);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
@@ -233,6 +269,60 @@ class _HomeHousingState extends State<HomeHousing>
         content:
             Text(response['message'], style: const TextStyle(fontSize: 20)),
       ));
+    }
+  }
+
+  void searchHousingList(List<dynamic> params) async {
+    housingList = [];
+    var response = await MainProvider().getHousingFromSearch(
+      params[0],
+      params[1],
+      params[2],
+      params[3],
+      params[4],
+      params[6],
+      params[7],
+    );
+    if (response['response_status'] == 'ok') {
+      for (int i = 0; i < response['data'].length; i++) {
+        housingList.add(HousingCardModel.fromJson(response['data'][i]));
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void openSearchPage() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchPage(),
+      ),
+    );
+
+    if (mounted) {
+      if (result != null) {
+        searchHousingList(result);
+        setState(() {
+          selectedCountryId = result[0];
+          if (result[5] != 'Выбрать даты') {
+            selectedRange = result[5];
+          } else {
+            selectedRange = '';
+          }
+        });
+      } else {
+        setState(() {
+          selectedCountryId = 0;
+          selectedRange = '';
+        });
+      }
     }
   }
 }

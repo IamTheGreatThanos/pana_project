@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/travel/my_plan_detail.dart';
+import 'package:pana_project/views/travel/add_new_plan_page.dart';
+import 'package:pana_project/views/travel/booked_plans_page.dart';
 
 class TravelPlanePage extends StatefulWidget {
   // TravelPlanePage(this.product);
@@ -14,7 +15,6 @@ class TravelPlanePage extends StatefulWidget {
 }
 
 class _TravelPlanePageState extends State<TravelPlanePage> {
-  TextEditingController _titleController = TextEditingController();
   late GoogleMapController _mapController;
   CameraPosition _initPosition =
       CameraPosition(target: LatLng(43.236431, 76.917994), zoom: 14);
@@ -1028,115 +1028,70 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: const Text(
-                      'Добавить поездку',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(width: 1, color: AppColors.grey),
-                      ),
-                      child: SizedBox(
-                        height: 40,
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 10),
-                          child: TextField(
-                            controller: _titleController,
-                            maxLength: 10,
-                            decoration: const InputDecoration(
-                              counterStyle: TextStyle(
-                                height: double.minPositive,
-                              ),
-                              counterText: "",
-                              border: InputBorder.none,
-                              hintText: 'Введите название',
-                              hintStyle: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                  const Text(
+                    'Добавить план',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   const SizedBox(height: 40),
-                  Row(
-                    children: [
-                      const Spacer(),
-                      SizedBox(
-                        height: 60,
-                        width: 150,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: AppColors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(10), // <-- Radius
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            "Отмена",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                  SizedBox(
+                    height: 60,
+                    width: 250,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: AppColors.accent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10), // <-- Radius
                         ),
                       ),
-                      const Spacer(),
-                      SizedBox(
-                        height: 60,
-                        width: 150,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: AppColors.accent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(10), // <-- Radius
-                            ),
-                          ),
-                          onPressed: () {
-                            print(_titleController.text);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MyPlanDetailPage()));
-                            // builder: (context) => AddNewPlanPage()));
-                          },
-                          child: const Text(
-                            "Далее",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BookedPlansPage()));
+                      },
+                      child: const Text(
+                        "Забронированные",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const Spacer(),
-                    ],
-                  )
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 60,
+                    width: 250,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: AppColors.accent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10), // <-- Radius
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddNewPlanPage()));
+                      },
+                      child: const Text(
+                        "Личный план",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

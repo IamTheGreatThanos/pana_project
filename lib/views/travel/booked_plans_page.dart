@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/components/housing_card.dart';
+import 'package:pana_project/components/booked_housing_card.dart';
+import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
@@ -120,25 +121,25 @@ class _BookedPlansPageState extends State<BookedPlansPage> {
                           height: MediaQuery.of(context).size.height - 120,
                           child: TabBarView(
                             children: [
-                              // TODO: Аудио отзывы
+                              // TODO: Жилье
                               ListView(
                                 children: [
                                   for (int i = 0; i < housingList.length; i++)
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 20),
-                                      child: HousingCard(housingList[i]),
+                                      child: BookedHousingCard(housingList[i]),
                                     )
                                 ],
                               ),
-                              // TODO: Текстовые отзывы
+                              // TODO: Впечатления
                               ListView(
                                 children: [
                                   for (int i = 0; i < housingList.length; i++)
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 20),
-                                      child: HousingCard(housingList[i]),
+                                      child: ImpressionCard(),
                                     )
                                 ],
                               ),

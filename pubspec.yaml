@@ -159,6 +159,9 @@ flutter:
     - assets/icons/calendar_icon.svg
     - assets/icons/micro_icon.svg
     - assets/icons/text_icon.svg
+    - assets/icons/start_record.svg
+    - assets/icons/stop_record.svg
+    - assets/icons/re_record.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

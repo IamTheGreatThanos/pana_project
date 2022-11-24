@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/travel/send_audio_review.dart';
 import 'package:pana_project/views/travel/send_text_review.dart';
 
 class BookedObjectPage extends StatefulWidget {
@@ -412,31 +413,40 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                         Row(
                           children: [
                             const Spacer(),
-                            Container(
-                              width: 162,
-                              height: 83,
-                              decoration: const BoxDecoration(
-                                color: AppColors.lightGray,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8),
-                                ),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                      'assets/icons/micro_icon.svg'),
-                                  const SizedBox(height: 5),
-                                  const Text(
-                                    'Голосовой',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SendAudioReviewPage()));
+                              },
+                              child: Container(
+                                width: 162,
+                                height: 83,
+                                decoration: const BoxDecoration(
+                                  color: AppColors.lightGray,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8),
                                   ),
-                                ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                        'assets/icons/micro_icon.svg'),
+                                    const SizedBox(height: 5),
+                                    const Text(
+                                      'Голосовой',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             const SizedBox(width: 10),

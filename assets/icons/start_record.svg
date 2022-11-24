@@ -1,0 +1,23 @@
+<svg width="95" height="95" viewBox="0 0 95 95" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_b_2419_8725)">
+<g clip-path="url(#clip0_2419_8725)">
+<rect width="95" height="95" rx="47.5" fill="#E56553"/>
+<path d="M15.5 -3.5L15.5 -0.5" stroke="#2B2B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M19.5 0.5L11.5 0.5" stroke="#2B2B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M45.375 64.5L45.375 58.125C45.375 56.9514 46.3264 56 47.5 56C48.6736 56 49.625 56.9514 49.625 58.125L49.625 64.5C49.625 65.6736 48.6736 66.625 47.5 66.625C46.3264 66.625 45.375 65.6736 45.375 64.5Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M58.125 66.625C58.125 67.7986 57.1736 68.75 56 68.75H39C37.8264 68.75 36.875 67.7986 36.875 66.625C36.875 65.4514 37.8264 64.5 39 64.5H56C57.1736 64.5 58.125 65.4514 58.125 66.625Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M35.8125 36.875C35.8125 30.4202 41.0452 25.1875 47.5 25.1875C53.9548 25.1875 59.1875 30.4202 59.1875 36.875V47.5C59.1875 53.9548 53.9548 59.1875 47.5 59.1875C41.0452 59.1875 35.8125 53.9548 35.8125 47.5V36.875ZM47.5 29.4375C43.3924 29.4375 40.0625 32.7674 40.0625 36.875V47.5C40.0625 51.6076 43.3924 54.9375 47.5 54.9375C51.6076 54.9375 54.9375 51.6076 54.9375 47.5V36.875C54.9375 32.7674 51.6076 29.4375 47.5 29.4375Z" fill="white"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_b_2419_8725" x="-16" y="-16" width="127" height="127" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feGaussianBlur in="BackgroundImageFix" stdDeviation="8"/>
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_2419_8725"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_2419_8725" result="shape"/>
+</filter>
+<clipPath id="clip0_2419_8725">
+<rect width="95" height="95" rx="47.5" fill="white"/>
+</clipPath>
+</defs>
+</svg>

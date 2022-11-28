@@ -1,14 +1,19 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pana_project/components/travel_booked_card.dart';
+import 'package:pana_project/components/travel_user_card.dart';
+import 'package:pana_project/models/travelCard.dart';
+import 'package:pana_project/models/travelPlan.dart';
+import 'package:pana_project/models/user.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/travel/add_new_plan_page.dart';
 import 'package:pana_project/views/travel/booked_plans_page.dart';
 
 class TravelPlanePage extends StatefulWidget {
-  // TravelPlanePage(this.product);
-  // final Product product;
+  TravelPlanePage(this.travel);
+  final TravelCardModel travel;
 
   @override
   _TravelPlanePageState createState() => _TravelPlanePageState();
@@ -16,12 +21,31 @@ class TravelPlanePage extends StatefulWidget {
 
 class _TravelPlanePageState extends State<TravelPlanePage> {
   late GoogleMapController _mapController;
-  CameraPosition _initPosition =
-      CameraPosition(target: LatLng(43.236431, 76.917994), zoom: 14);
+  CameraPosition _initPosition = const CameraPosition(
+      target: const LatLng(43.236431, 76.917994), zoom: 14);
   final Set<Marker> _markers = {};
+
+  List<TravelPlanModel> thisTravelPlans = [];
+  List<User> userList = [];
+
+  Map<String, dynamic> startLoc = {
+    'isExist': false,
+    'title': 'Начальная локация',
+    'subtitle': 'Выберите город, с которого вы начнете поездку',
+    'status': 3
+  };
+
+  Map<String, dynamic> finishLoc = {
+    'isExist': false,
+    'title': 'Финальная локация',
+    'subtitle': 'Выберите город, в котором вы завершите поездку',
+    'status': 3
+  };
 
   @override
   void initState() {
+    getTravelPlans();
+    getTravelUsers();
     super.initState();
   }
 
@@ -105,11 +129,11 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                   ),
                   child: Column(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(20),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
                         child: Text(
-                          'Отдых с семьей',
-                          style: TextStyle(
+                          widget.travel.name ?? '',
+                          style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.w500,
                           ),
@@ -130,16 +154,17 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Text(
-                                  '29.07.2022',
-                                  style: TextStyle(
+                                  widget.travel.dateStart?.substring(0, 10) ??
+                                      '',
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                SizedBox(height: 5),
-                                Text(
+                                const SizedBox(height: 5),
+                                const Text(
                                   'Начало поездки',
                                   style: TextStyle(
                                     fontSize: 12,
@@ -163,16 +188,16 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Text(
-                                  '29.07.2022',
-                                  style: TextStyle(
+                                  widget.travel.dateEnd?.substring(0, 10) ?? '',
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                SizedBox(height: 5),
-                                Text(
+                                const SizedBox(height: 5),
+                                const Text(
                                   'Конец поездки',
                                   style: TextStyle(
                                     fontSize: 12,
@@ -193,9 +218,9 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                           children: [
                             SvgPicture.asset('assets/icons/user_icon.svg'),
                             const SizedBox(width: 5),
-                            const Text(
-                              '1 человек',
-                              style: TextStyle(
+                            Text(
+                              '${widget.travel.usersCount} человек',
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black45,
@@ -204,9 +229,9 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                             const SizedBox(width: 15),
                             SvgPicture.asset('assets/icons/map_pin.svg'),
                             const SizedBox(width: 5),
-                            const Text(
-                              '3 локации',
-                              style: TextStyle(
+                            Text(
+                              '${widget.travel.routeCount} локации',
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black45,
@@ -279,436 +304,178 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                                   child: SizedBox(
                                     width: 16,
                                     height: 16,
-                                    child: SvgPicture.asset(
-                                        'assets/icons/geolocation_info_icon_checkmark.svg'),
+                                    child: startLoc['status'] == 1
+                                        ? SvgPicture.asset(
+                                            'assets/icons/geolocation_info_icon_checkmark.svg')
+                                        : startLoc['status'] == 2
+                                            ? SvgPicture.asset(
+                                                'assets/icons/geolocation_info_icon_accent.svg')
+                                            : SvgPicture.asset(
+                                                'assets/icons/geolocation_info_icon_grey.svg'),
                                   ),
                                 ),
                               ),
                               const Spacer(),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8),
+                              GestureDetector(
+                                onTap: () {
+                                  if (!startLoc['isExist']) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text('Choose city',
+                                          style: const TextStyle(fontSize: 20)),
+                                    ));
+                                  }
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8),
+                                    ),
+                                    color: Colors.white,
                                   ),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Вылет из Алматы, Казахстан',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          startLoc['title'],
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: const [
-                                          Text(
-                                            'Время ',
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black45,
-                                            ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          startLoc['subtitle'],
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w500,
+                                            color: startLoc['isExist']
+                                                ? Colors.black45
+                                                : AppColors.accent,
                                           ),
-                                          Text(
-                                            '29.07.2022 - 18:00',
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 20)
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 15),
-                              Container(
-                                width: 22,
-                                height: 22,
-                                decoration: const BoxDecoration(
-                                    color: AppColors.lightGray,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(3),
-                                  child: SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: SvgPicture.asset(
-                                        'assets/icons/geolocation_info_icon_accent.svg'),
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8),
-                                  ),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 15),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(12)),
-                                              child: SizedBox(
-                                                width: 64,
-                                                height: 64,
-                                                child: CachedNetworkImage(
-                                                  fit: BoxFit.fitHeight,
-                                                  imageUrl:
-                                                      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80',
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.4,
-                                                child: const Text(
-                                                  'Название отеля или места жилья...',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 2,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 10),
-                                              Row(
-                                                children: const [
-                                                  Text(
-                                                    'Дата ',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.black45,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '29.07.2022 - 04.08.2022',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 5),
-                                              Row(
-                                                children: const [
-                                                  Text(
-                                                    'Время ',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.black45,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '15:00 - 18:00',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      const Divider(),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 6,
-                                            height: 6,
-                                            decoration: const BoxDecoration(
-                                              color: AppColors.black,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(3),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 5),
-                                          const Text(
-                                            'Посещено',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black45,
-                                            ),
-                                          ),
-                                          const Spacer(),
-                                          const Text(
-                                            'Добавить воспоминание',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.accent,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 20)
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 15),
-                              Container(
-                                width: 22,
-                                height: 22,
-                                decoration: const BoxDecoration(
-                                    color: AppColors.lightGray,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(3),
-                                  child: SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: SvgPicture.asset(
-                                        'assets/icons/geolocation_info_icon_grey.svg'),
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8),
-                                  ),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 15),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(12)),
-                                              child: SizedBox(
-                                                width: 64,
-                                                height: 64,
-                                                child: CachedNetworkImage(
-                                                  fit: BoxFit.fitHeight,
-                                                  imageUrl:
-                                                      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80',
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.4,
-                                                child: const Text(
-                                                  'Отдых с семьей',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 2,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 10),
-                                              Row(
-                                                children: const [
-                                                  Text(
-                                                    'Дата ',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.black45,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '29.07.2022 - 04.08.2022',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 5),
-                                              Row(
-                                                children: const [
-                                                  Text(
-                                                    'Время ',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.black45,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '15:00 - 18:00',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 20)
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 15),
-                              Container(
-                                width: 22,
-                                height: 22,
-                                decoration: const BoxDecoration(
-                                    color: AppColors.lightGray,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(3),
-                                  child: SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: SvgPicture.asset(
-                                        'assets/icons/geolocation_info_icon_grey.svg'),
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8),
-                                  ),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Вылет из Алматы, Казахстан',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
                                         ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: const [
-                                          Text(
-                                            'Время ',
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black45,
-                                            ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 20)
+                            ],
+                          ),
+                        ),
+                        for (int i = 1; i < thisTravelPlans.length - 1; i++)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 15),
+                                Container(
+                                  width: 22,
+                                  height: 22,
+                                  decoration: const BoxDecoration(
+                                      color: AppColors.lightGray,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(3),
+                                    child: SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: thisTravelPlans[i].status == 1
+                                            ? SvgPicture.asset(
+                                                'assets/icons/geolocation_info_icon_checkmark.svg')
+                                            : thisTravelPlans[i].status == 2
+                                                ? SvgPicture.asset(
+                                                    'assets/icons/geolocation_info_icon_accent.svg')
+                                                : SvgPicture.asset(
+                                                    'assets/icons/geolocation_info_icon_grey.svg')),
+                                  ),
+                                ),
+                                const Spacer(),
+                                TravelBookedCard(thisTravelPlans[i]),
+                                const SizedBox(width: 20)
+                              ],
+                            ),
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 15),
+                              Container(
+                                width: 22,
+                                height: 22,
+                                decoration: const BoxDecoration(
+                                    color: AppColors.lightGray,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: startLoc['status'] == 1
+                                        ? SvgPicture.asset(
+                                            'assets/icons/geolocation_info_icon_checkmark.svg')
+                                        : startLoc['status'] == 2
+                                            ? SvgPicture.asset(
+                                                'assets/icons/geolocation_info_icon_accent.svg')
+                                            : SvgPicture.asset(
+                                                'assets/icons/geolocation_info_icon_grey.svg'),
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  if (!finishLoc['isExist']) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text('Choose city',
+                                          style: const TextStyle(fontSize: 20)),
+                                    ));
+                                  }
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8),
+                                    ),
+                                    color: Colors.white,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          finishLoc['title'],
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                          Text(
-                                            '29.07.2022 - 18:00',
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black,
-                                            ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          finishLoc['subtitle'],
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w500,
+                                            color: finishLoc['isExist']
+                                                ? Colors.black45
+                                                : AppColors.accent,
                                           ),
-                                        ],
-                                      ),
-                                    ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -798,8 +565,8 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                           width: MediaQuery.of(context).size.width * 0.9,
                           height:
                               MediaQuery.of(context).size.width * 0.9 / 1.23,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(
                               Radius.circular(16),
                             ),
                           ),
@@ -853,94 +620,8 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, top: 10, bottom: 20, right: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(16),
-                              ),
-                              border:
-                                  Border.all(width: 1, color: AppColors.grey)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 15),
-                                  child: ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(12)),
-                                    child: SizedBox(
-                                      width: 44,
-                                      height: 44,
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.38,
-                                            child: const Text(
-                                              'Dinmukhammed Muslim',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          SizedBox(
-                                            width: 75,
-                                            child: const Text(
-                                              'Организатор',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.black45,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.5,
-                                      child: const Text(
-                                        '+7 705 345-53-12',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                      TravelUserCard(widget.travel.user!, true),
+                      for (var user in userList) TravelUserCard(user, false),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
@@ -988,7 +669,9 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                 ),
                 Center(
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      showAlertDialog(context);
+                    },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 40),
                       child: Text(
@@ -1050,10 +733,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BookedPlansPage()));
+                        goToBookedObjects();
                       },
                       child: const Text(
                         "Забронированные",
@@ -1077,10 +757,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddNewPlanPage()));
+                        goToAddMyPlan();
                       },
                       child: const Text(
                         "Личный план",
@@ -1099,5 +776,121 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
         );
       },
     );
+  }
+
+  void goToBookedObjects() async {
+    await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => BookedPlansPage()));
+
+    getTravelPlans();
+  }
+
+  void goToAddMyPlan() async {
+    await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => AddNewPlanPage()));
+
+    getTravelPlans();
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: const Text("Отмена"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: const Text("Да"),
+      onPressed: () {
+        deleteTravel();
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Внимание"),
+      content: const Text("Вы точно хотите удалить поездку?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void deleteTravel() async {
+    var response = await MainProvider().deleteTravel(widget.travel.id!);
+    if (response['response_status'] == 'ok') {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void getTravelPlans() async {
+    thisTravelPlans = [];
+    var response = await MainProvider().getTravelPlans(widget.travel.id!);
+    if (response['response_status'] == 'ok') {
+      for (var object in response['data']) {
+        thisTravelPlans.add(TravelPlanModel.fromJson(object));
+      }
+
+      if (thisTravelPlans.length > 0) {
+        if (thisTravelPlans[0].city != null) {
+          startLoc['isExist'] = true;
+          startLoc['title'] =
+              '${thisTravelPlans[0].city!.name ?? ''}, ${AppConstants.countries[(thisTravelPlans[0].city!.countryId ?? 1) - 1]}';
+          startLoc['subtitle'] = 'Начальная локация';
+          startLoc['status'] = thisTravelPlans[0].status;
+        }
+      }
+
+      if (thisTravelPlans.length > 1) {
+        if (thisTravelPlans[thisTravelPlans.length - 1].city != null) {
+          finishLoc['isExist'] = true;
+          finishLoc['title'] =
+              '${thisTravelPlans[thisTravelPlans.length - 1].city!.name ?? ''}, ${AppConstants.countries[(thisTravelPlans[thisTravelPlans.length - 1].city!.countryId ?? 1) - 1]}';
+          finishLoc['subtitle'] = 'Финальная локация';
+          finishLoc['status'] =
+              thisTravelPlans[thisTravelPlans.length - 1].status;
+        }
+      }
+
+      setState(() {});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void getTravelUsers() async {
+    userList = [];
+    var response = await MainProvider().getTravelUsers(widget.travel.id!);
+    if (response['response_status'] == 'ok') {
+      for (var object in response['data']) {
+        userList.add(User.fromJson(object));
+      }
+
+      setState(() {});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

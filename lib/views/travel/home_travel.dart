@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:pana_project/components/travel_card.dart';
+import 'package:pana_project/models/travelCard.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/travel/travel_plan_page.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HomeTravel extends StatefulWidget {
@@ -18,10 +21,14 @@ class _HomeTravelState extends State<HomeTravel> {
       DateRangePickerController();
   TextEditingController _titleController = TextEditingController();
   String selectedRange = '';
-  bool justBool = true;
+  String startDate = '';
+  String endDate = '';
+
+  List<TravelCardModel> travelList = [];
 
   @override
   void initState() {
+    getTravelList();
     super.initState();
   }
 
@@ -37,7 +44,7 @@ class _HomeTravelState extends State<HomeTravel> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: justBool
+        body: travelList.isNotEmpty
             ? SingleChildScrollView(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
@@ -108,8 +115,12 @@ class _HomeTravelState extends State<HomeTravel> {
                                 ),
                               ),
                             ),
-                            for (int i = 0; i < 10; i++)
-                              TravelCard('Отдых с семьей')
+                            for (int i = 0; i < travelList.length; i++)
+                              GestureDetector(
+                                  onTap: () {
+                                    goToTravelPlan(travelList[i]);
+                                  },
+                                  child: TravelCard(travelList[i]))
                           ],
                         ),
                       ),
@@ -321,9 +332,10 @@ class _HomeTravelState extends State<HomeTravel> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.of(context).pop();
-                            print(_titleController.text);
-                            showDatePicker();
+                            if (_titleController.text != '') {
+                              Navigator.of(context).pop();
+                              showDatePicker();
+                            }
                           },
                           child: const Text(
                             "Далее",
@@ -389,8 +401,10 @@ class _HomeTravelState extends State<HomeTravel> {
                         const Spacer(),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).pop();
-                            print(selectedRange);
+                            if (startDate != '' && endDate != '') {
+                              Navigator.of(context).pop();
+                              createNewTravel();
+                            }
                           },
                           child: const Text(
                             'Готово',
@@ -428,10 +442,60 @@ class _HomeTravelState extends State<HomeTravel> {
     setState(() {
       if (args.value is PickerDateRange) {
         selectedRange =
-            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
-            // ignore: lines_longer_than_80_chars
-            ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        if (args.value.startDate != null && args.value.endDate != null) {
+          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+          endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
+        }
       }
     });
+  }
+
+  void getTravelList() async {
+    travelList = [];
+    var response = await MainProvider().getTravelList();
+    print(response);
+    if (response['response_status'] == 'ok') {
+      for (int i = 0; i < response['data'].length; i++) {
+        travelList.add(TravelCardModel.fromJson(response['data'][i]));
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void goToTravelPlan(TravelCardModel travel) async {
+    await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => TravelPlanePage(travel)));
+    if (mounted) {
+      getTravelList();
+    }
+  }
+
+  void createNewTravel() async {
+    var response = await MainProvider()
+        .createTravel(_titleController.text, startDate, endDate);
+    if (response['response_status'] == 'ok') {
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  TravelPlanePage(TravelCardModel.fromJson(response['data']))));
+
+      if (mounted) {
+        getTravelList();
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

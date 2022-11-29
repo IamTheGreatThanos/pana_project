@@ -733,6 +733,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                         ),
                       ),
                       onPressed: () {
+                        Navigator.pop(context);
                         goToBookedObjects();
                       },
                       child: const Text(
@@ -757,6 +758,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                         ),
                       ),
                       onPressed: () {
+                        Navigator.pop(context);
                         goToAddMyPlan();
                       },
                       child: const Text(
@@ -787,7 +789,9 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
 
   void goToAddMyPlan() async {
     await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => AddNewPlanPage()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddNewPlanPage(widget.travel.id!)));
 
     getTravelPlans();
   }

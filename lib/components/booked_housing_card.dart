@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/travel/booked_object_page.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/story_view.dart';
 
@@ -49,10 +48,7 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => BookedObjectPage(widget.housing.id!)));
+        createBookedPlan();
       },
       child: Container(
           decoration: BoxDecoration(
@@ -209,5 +205,9 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
             ),
           )),
     );
+  }
+
+  void createBookedPlan() async {
+    Navigator.pop(context);
   }
 }

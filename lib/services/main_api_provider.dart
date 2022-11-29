@@ -342,8 +342,8 @@ class MainProvider {
       },
       body: jsonEncode(<String, dynamic>{
         "name": title,
-        "date_end": startDate,
-        "date_start": endDate,
+        "date_end": endDate,
+        "date_start": startDate,
       }),
     );
 
@@ -425,6 +425,41 @@ class MainProvider {
         'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> createOwnPlan(int tripId, String title, String startDate,
+      String endDate, int isPrivate) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.post(
+      Uri.parse('${API_URL}api/mobile/trip-plan'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "name": title,
+        "date_end": endDate,
+        "date_start": startDate,
+        "private": isPrivate,
+        "trip_id": tripId,
+        "type": 1,
+      }),
     );
 
     if (response.statusCode == 200) {

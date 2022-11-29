@@ -4,23 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/stories_card.dart';
+import 'package:pana_project/models/travelPlan.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/travel/send_audio_review.dart';
 import 'package:pana_project/views/travel/send_text_review.dart';
 
 class BookedObjectPage extends StatefulWidget {
-  BookedObjectPage(this.housingId);
-  final int housingId;
+  BookedObjectPage(this.plan);
+  final TravelPlanModel plan;
 
   @override
   _BookedObjectPageState createState() => _BookedObjectPageState();
 }
 
 class _BookedObjectPageState extends State<BookedObjectPage> {
-  double sum = 0;
-  String dateFrom = '-';
-  String dateTo = '-';
-
   @override
   void initState() {
     super.initState();
@@ -64,11 +61,11 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                         ),
                       ),
                       const Spacer(),
-                      const Padding(
-                        padding: EdgeInsets.all(20),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
                         child: Text(
-                          'Жилье',
-                          style: TextStyle(
+                          widget.plan.status == 2 ? 'Жилье' : 'Впечатление',
+                          style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
                           ),
@@ -108,8 +105,10 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                 width: 86,
                                 height: 86,
                                 child: CachedNetworkImage(
-                                  imageUrl:
-                                      'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
+                                  imageUrl: widget
+                                          .plan.housing!.images!.isNotEmpty
+                                      ? widget.plan.housing!.images![0].path!
+                                      : '',
                                 ),
                               ),
                             ),
@@ -120,9 +119,9 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.6,
-                                  child: const Text(
-                                    'Домик на берегу моря',
-                                    style: TextStyle(
+                                  child: Text(
+                                    widget.plan.housing!.name ?? '',
+                                    style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -132,9 +131,9 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.6,
-                                  child: const Text(
-                                    'Almaty, Kazakhstan',
-                                    style: TextStyle(
+                                  child: Text(
+                                    '${widget.plan.city?.name ?? ''} , ${AppConstants.countries[(widget.plan.city?.countryId ?? 1) - 1]}',
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black45,
@@ -155,11 +154,12 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                               'assets/icons/star.svg'),
                                         ),
                                       ),
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 5),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 5),
                                         child: Text(
-                                          '4.9',
-                                          style: TextStyle(
+                                          widget.plan.housing?.reviewsBallAvg ??
+                                              '0',
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500),
                                         ),
@@ -197,16 +197,17 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
+                                children: [
                                   Text(
-                                    '29.07.2022',
-                                    style: TextStyle(
+                                    widget.plan.dateStart?.substring(0, 10) ??
+                                        '-',
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  SizedBox(height: 5),
-                                  Text(
+                                  const SizedBox(height: 5),
+                                  const Text(
                                     'Заезд',
                                     style: TextStyle(
                                       fontSize: 12,
@@ -230,16 +231,17 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
+                                children: [
                                   Text(
-                                    '29.07.2022',
-                                    style: TextStyle(
+                                    widget.plan.dateEnd?.substring(0, 10) ??
+                                        '-',
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  SizedBox(height: 5),
-                                  Text(
+                                  const SizedBox(height: 5),
+                                  const Text(
                                     'Выезд',
                                     style: TextStyle(
                                       fontSize: 12,

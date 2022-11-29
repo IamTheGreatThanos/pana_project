@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pana_project/models/travelPlan.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/travel/booked_object_page.dart';
 
 class TravelBookedCard extends StatefulWidget {
   const TravelBookedCard(this.plan);
@@ -144,12 +145,21 @@ class _TravelBookedCardState extends State<TravelBookedCard> {
                             ),
                           ),
                           const Spacer(),
-                          const Text(
-                            'Добавить воспоминание',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.accent,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BookedObjectPage(widget.plan)));
+                            },
+                            child: const Text(
+                              'Добавить воспоминание',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.accent,
+                              ),
                             ),
                           ),
                         ],

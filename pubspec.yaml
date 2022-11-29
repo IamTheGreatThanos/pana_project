@@ -51,6 +51,7 @@ dependencies:
   local_auth: ^2.1.2
   google_maps_flutter: ^2.2.1
   dotted_border: ^2.0.0+3
+  time_range_picker: ^2.2.0
 
 dev_dependencies:
   flutter_test:

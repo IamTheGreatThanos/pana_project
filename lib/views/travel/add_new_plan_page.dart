@@ -1,24 +1,36 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:time_range_picker/time_range_picker.dart';
 
 class AddNewPlanPage extends StatefulWidget {
-  // AddNewPlanPage(this.product);
-  // final Product product;
+  AddNewPlanPage(this.id);
+  final int id;
 
   @override
   _AddNewPlanPageState createState() => _AddNewPlanPageState();
 }
 
 class _AddNewPlanPageState extends State<AddNewPlanPage> {
+  final DateRangePickerController _datePickerController =
+      DateRangePickerController();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _toDoItemController = TextEditingController();
 
   var _switchValue = false;
 
   List<String> toDoList = [];
+
+  String selectedRange = 'Выбрать даты';
+  String startDate = '';
+  String endDate = '';
+
+  String startTime = '';
+  String endTime = '';
 
   @override
   void initState() {
@@ -137,7 +149,7 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                                   vertical: 4, horizontal: 10),
                               child: TextField(
                                 controller: _titleController,
-                                maxLength: 10,
+                                maxLength: 100,
                                 decoration: const InputDecoration(
                                   counterStyle: TextStyle(
                                     height: double.minPositive,
@@ -218,14 +230,19 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                           textAlign: TextAlign.center,
                         ),
                         Spacer(),
-                        const Text(
-                          'Выбрать город',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.blackWithOpacity,
+                        GestureDetector(
+                          onTap: () {
+                            showDatePicker();
+                          },
+                          child: Text(
+                            selectedRange,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.blackWithOpacity,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
@@ -307,7 +324,7 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                                   vertical: 4, horizontal: 10),
                               child: TextField(
                                 controller: _toDoItemController,
-                                maxLength: 10,
+                                maxLength: 100,
                                 decoration: const InputDecoration(
                                   counterStyle: TextStyle(
                                     height: double.minPositive,
@@ -420,13 +437,15 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                         ),
                       ),
                       onPressed: () {
-                        if (_titleController.text == '') {
+                        if (_titleController.text != '' &&
+                            toDoList.isNotEmpty &&
+                            selectedRange != 'Выбрать даты') {
+                          saveChanges();
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("Заполните все поля.",
                                 style: const TextStyle(fontSize: 20)),
                           ));
-                        } else {
-                          saveChanges();
                         }
                       },
                       child: const Text("Сохранить план",
@@ -443,18 +462,154 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
     );
   }
 
+  void showDatePicker() async {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: SizedBox(
+            height: 370,
+            child: Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Назад',
+                            style: TextStyle(
+                                color: Colors.black45,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const Spacer(),
+                        const Text(
+                          'Выбрать даты',
+                          style: TextStyle(
+                              color: AppColors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            showHours();
+                          },
+                          child: const Text(
+                            'Готово',
+                            style: TextStyle(
+                                color: AppColors.accent,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  SfDateRangePicker(
+                    controller: _datePickerController,
+                    onSelectionChanged: _onSelectionChanged,
+                    startRangeSelectionColor: Colors.black,
+                    endRangeSelectionColor: Colors.black,
+                    rangeSelectionColor: Colors.black12,
+                    selectionColor: AppColors.accent,
+                    headerStyle: const DateRangePickerHeaderStyle(
+                        textAlign: TextAlign.center),
+                    selectionMode: DateRangePickerSelectionMode.range,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      if (args.value is PickerDateRange) {
+        selectedRange =
+            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
+            // ignore: lines_longer_than_80_chars
+            ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        if (args.value.startDate != null && args.value.endDate != null) {
+          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+          endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
+        }
+      }
+    });
+  }
+
+  void showHours() async {
+    TimeRange result = await showTimeRangePicker(
+      context: context,
+      interval: const Duration(minutes: 5),
+      fromText: 'начало',
+      toText: 'конец',
+    );
+
+    if (result != null) {
+      if (result.startTime.hour > 9) {
+        if (result.startTime.minute > 9) {
+          startTime = ' ${result.startTime.hour}:${result.startTime.minute}';
+        } else {
+          startTime = ' ${result.startTime.hour}:0${result.startTime.minute}';
+        }
+      } else {
+        if (result.startTime.minute > 9) {
+          startTime = ' 0${result.startTime.hour}:${result.startTime.minute}';
+        } else {
+          startTime = ' 0${result.startTime.hour}:0${result.startTime.minute}';
+        }
+      }
+
+      if (result.endTime.hour > 9) {
+        if (result.endTime.minute > 9) {
+          endTime = ' ${result.endTime.hour}:${result.endTime.minute}';
+        } else {
+          endTime = ' ${result.endTime.hour}:0${result.endTime.minute}';
+        }
+      } else {
+        if (result.endTime.minute > 9) {
+          endTime = ' 0${result.endTime.hour}:${result.endTime.minute}';
+        } else {
+          endTime = ' 0${result.endTime.hour}:0${result.endTime.minute}';
+        }
+      }
+    }
+  }
+
   void saveChanges() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var response = await AuthProvider()
-    //     .changeFullName(nameController.text, surnameController.text);
-    //
-    // if (response['response_status'] == 'ok') {
-    //   Navigator.of(context).pop();
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content:
-    //     Text(response['message'], style: const TextStyle(fontSize: 20)),
-    //   ));
-    // }
+    var response = await MainProvider().createOwnPlan(
+        widget.id,
+        _titleController.text,
+        startDate + (startTime == '' ? ' 10:00' : startTime),
+        endDate + (endTime == '' ? ' 10:00' : endTime),
+        _switchValue == false ? 0 : 1);
+    print(response['data']);
+
+    if (response['response_status'] == 'ok') {
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

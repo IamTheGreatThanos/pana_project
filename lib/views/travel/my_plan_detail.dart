@@ -1,27 +1,51 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:pana_project/models/travelPlan.dart';
+import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:time_range_picker/time_range_picker.dart';
 
 class MyPlanDetailPage extends StatefulWidget {
-  // MyPlanDetailPage(this.product);
-  // final Product product;
+  MyPlanDetailPage(this.plan);
+  final TravelPlanModel plan;
 
   @override
   _MyPlanDetailPageState createState() => _MyPlanDetailPageState();
 }
 
 class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
+  final DateRangePickerController _datePickerController =
+      DateRangePickerController();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _toDoItemController = TextEditingController();
 
   var _switchValue = false;
 
+  List<String> baseToDoList = [];
   List<String> toDoList = [];
+
+  String selectedRange = '';
+  String startDate = '';
+  String endDate = '';
+
+  String startTime = '';
+  String endTime = '';
 
   @override
   void initState() {
+    getToDoList();
+    _switchValue = widget.plan.private == 1 ? true : false;
+    startDate = widget.plan.dateStart?.substring(0, 10) ?? '';
+    endDate = widget.plan.dateEnd?.substring(0, 10) ?? '';
+    startTime = ' ${widget.plan.dateStart?.substring(11, 16) ?? ''}';
+    endTime = ' ${widget.plan.dateEnd?.substring(11, 16) ?? ''}';
+
+    selectedRange =
+        '${widget.plan.dateStart?.substring(0, 10) ?? ''} - ${widget.plan.dateEnd?.substring(0, 10) ?? ''}';
+
     super.initState();
   }
 
@@ -84,7 +108,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.white,
@@ -110,9 +134,9 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            const Text(
-                              'Милан',
-                              style: TextStyle(
+                            Text(
+                              widget.plan.city?.name ?? '',
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.blackWithOpacity,
@@ -121,7 +145,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                             ),
                           ],
                         ),
-                        Spacer(),
+                        const Spacer(),
                         const Text(
                           'Изменить',
                           style: TextStyle(
@@ -135,7 +159,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.white,
@@ -161,9 +185,9 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            const Text(
-                              '03.08.22',
-                              style: TextStyle(
+                            Text(
+                              selectedRange,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.blackWithOpacity,
@@ -172,21 +196,26 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                             ),
                           ],
                         ),
-                        Spacer(),
-                        const Text(
-                          'Изменить',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.accent,
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            showDatePicker();
+                          },
+                          child: const Text(
+                            'Изменить',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.accent,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.white,
@@ -262,7 +291,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                                   vertical: 4, horizontal: 10),
                               child: TextField(
                                 controller: _toDoItemController,
-                                maxLength: 10,
+                                maxLength: 100,
                                 decoration: const InputDecoration(
                                   counterStyle: TextStyle(
                                     height: double.minPositive,
@@ -374,14 +403,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                         ),
                       ),
                       onPressed: () {
-                        if (_titleController.text == '') {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("Заполните все поля.",
-                                style: const TextStyle(fontSize: 20)),
-                          ));
-                        } else {
-                          saveChanges();
-                        }
+                        saveChanges();
                       },
                       child: const Text("Сохранить план",
                           style: TextStyle(
@@ -391,7 +413,9 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                 ),
                 Center(
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      deletePlan();
+                    },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 40),
                       child: Text(
@@ -414,18 +438,201 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
     );
   }
 
+  void getToDoList() async {
+    var response = await TravelProvider().getPlanToDoList(widget.plan.id!);
+
+    if (response['response_status'] == 'ok') {
+      for (var i in response['data']) {
+        baseToDoList.add(i['name']);
+        toDoList.add(i['name']);
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
   void saveChanges() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var response = await AuthProvider()
-    //     .changeFullName(nameController.text, surnameController.text);
-    //
-    // if (response['response_status'] == 'ok') {
-    //   Navigator.of(context).pop();
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content:
-    //     Text(response['message'], style: const TextStyle(fontSize: 20)),
-    //   ));
-    // }
+    var response = await TravelProvider().updateOwnPlan(
+        widget.plan.id!,
+        startDate + startTime,
+        endDate + endTime,
+        _switchValue == false ? 0 : 1,
+        1);
+    print(startDate + (startTime == '' ? ' 10:00' : startTime));
+
+    if (response['response_status'] == 'ok') {
+      addToDoList();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void addToDoList() async {
+    for (var i in toDoList) {
+      if (!baseToDoList.contains(i)) {
+        var response =
+            await TravelProvider().addItemToPlansToDoList(widget.plan.id!, i);
+        if (response['response_status'] == 'ok') {
+          print('Added Item!');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(response['data']['message'],
+                style: const TextStyle(fontSize: 20)),
+          ));
+        }
+      }
+    }
+
+    Navigator.of(context).pop();
+  }
+
+  void deletePlan() async {
+    var response = await TravelProvider().deletePlan(widget.plan.id!);
+
+    if (response['response_status'] == 'ok') {
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void showDatePicker() async {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: SizedBox(
+            height: 370,
+            child: Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Назад',
+                            style: TextStyle(
+                                color: Colors.black45,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const Spacer(),
+                        const Text(
+                          'Выбрать даты',
+                          style: TextStyle(
+                              color: AppColors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            showHours();
+                          },
+                          child: const Text(
+                            'Готово',
+                            style: TextStyle(
+                                color: AppColors.accent,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  SfDateRangePicker(
+                    controller: _datePickerController,
+                    onSelectionChanged: _onSelectionChanged,
+                    startRangeSelectionColor: Colors.black,
+                    endRangeSelectionColor: Colors.black,
+                    rangeSelectionColor: Colors.black12,
+                    selectionColor: AppColors.accent,
+                    headerStyle: const DateRangePickerHeaderStyle(
+                        textAlign: TextAlign.center),
+                    selectionMode: DateRangePickerSelectionMode.range,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      if (args.value is PickerDateRange) {
+        selectedRange =
+            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        if (args.value.startDate != null && args.value.endDate != null) {
+          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+          endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
+        }
+      }
+    });
+  }
+
+  void showHours() async {
+    TimeRange result = await showTimeRangePicker(
+      context: context,
+      interval: const Duration(minutes: 5),
+      fromText: 'начало',
+      toText: 'конец',
+    );
+
+    if (result != null) {
+      if (result.startTime.hour > 9) {
+        if (result.startTime.minute > 9) {
+          startTime = ' ${result.startTime.hour}:${result.startTime.minute}';
+        } else {
+          startTime = ' ${result.startTime.hour}:0${result.startTime.minute}';
+        }
+      } else {
+        if (result.startTime.minute > 9) {
+          startTime = ' 0${result.startTime.hour}:${result.startTime.minute}';
+        } else {
+          startTime = ' 0${result.startTime.hour}:0${result.startTime.minute}';
+        }
+      }
+
+      if (result.endTime.hour > 9) {
+        if (result.endTime.minute > 9) {
+          endTime = ' ${result.endTime.hour}:${result.endTime.minute}';
+        } else {
+          endTime = ' ${result.endTime.hour}:0${result.endTime.minute}';
+        }
+      } else {
+        if (result.endTime.minute > 9) {
+          endTime = ' 0${result.endTime.hour}:${result.endTime.minute}';
+        } else {
+          endTime = ' 0${result.endTime.hour}:0${result.endTime.minute}';
+        }
+      }
+    }
   }
 }

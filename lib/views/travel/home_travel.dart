@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:pana_project/components/travel_card.dart';
 import 'package:pana_project/models/travelCard.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/travel/travel_plan_page.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -453,7 +453,7 @@ class _HomeTravelState extends State<HomeTravel> {
 
   void getTravelList() async {
     travelList = [];
-    var response = await MainProvider().getTravelList();
+    var response = await TravelProvider().getTravelList();
     print(response);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
@@ -479,7 +479,7 @@ class _HomeTravelState extends State<HomeTravel> {
   }
 
   void createNewTravel() async {
-    var response = await MainProvider()
+    var response = await TravelProvider()
         .createTravel(_titleController.text, startDate, endDate);
     if (response['response_status'] == 'ok') {
       await Navigator.push(

@@ -264,7 +264,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                               ),
                               child: CachedNetworkImage(
                                 imageUrl:
-                                    'https://www.w3schools.com/w3images/avatar2.png',
+                                    widget.plan.housing?.user?.avatar ?? '',
                                 height: 44,
                                 width: 44,
                               ),
@@ -288,9 +288,9 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.5,
-                                  child: const Text(
-                                    'Dinmukhammed Mussilim',
-                                    style: TextStyle(
+                                  child: Text(
+                                    '${widget.plan.housing?.user?.name ?? ''} ${widget.plan.housing?.user?.surname ?? ''}',
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,

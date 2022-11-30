@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pana_project/components/travel_booked_card.dart';
+import 'package:pana_project/components/travel_own_card.dart';
 import 'package:pana_project/components/travel_user_card.dart';
 import 'package:pana_project/models/travelCard.dart';
 import 'package:pana_project/models/travelPlan.dart';
 import 'package:pana_project/models/user.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/travel/add_new_plan_page.dart';
 import 'package:pana_project/views/travel/booked_plans_page.dart';
+import 'package:pana_project/views/travel/my_plan_detail.dart';
 
 class TravelPlanePage extends StatefulWidget {
   TravelPlanePage(this.travel);
@@ -369,39 +371,92 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                           ),
                         ),
                         for (int i = 1; i < thisTravelPlans.length - 1; i++)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 15),
-                                Container(
-                                  width: 22,
-                                  height: 22,
-                                  decoration: const BoxDecoration(
-                                      color: AppColors.lightGray,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(3),
-                                    child: SizedBox(
-                                        width: 16,
-                                        height: 16,
-                                        child: thisTravelPlans[i].status == 1
-                                            ? SvgPicture.asset(
-                                                'assets/icons/geolocation_info_icon_checkmark.svg')
-                                            : thisTravelPlans[i].status == 2
-                                                ? SvgPicture.asset(
-                                                    'assets/icons/geolocation_info_icon_accent.svg')
-                                                : SvgPicture.asset(
-                                                    'assets/icons/geolocation_info_icon_grey.svg')),
+                          thisTravelPlans[i].type == 1
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 15),
+                                      Container(
+                                        width: 22,
+                                        height: 22,
+                                        decoration: const BoxDecoration(
+                                            color: AppColors.lightGray,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(3),
+                                          child: SizedBox(
+                                              width: 16,
+                                              height: 16,
+                                              child: thisTravelPlans[i]
+                                                          .status ==
+                                                      1
+                                                  ? SvgPicture.asset(
+                                                      'assets/icons/geolocation_info_icon_checkmark.svg')
+                                                  : thisTravelPlans[i].status ==
+                                                          2
+                                                      ? SvgPicture.asset(
+                                                          'assets/icons/geolocation_info_icon_accent.svg')
+                                                      : SvgPicture.asset(
+                                                          'assets/icons/geolocation_info_icon_grey.svg')),
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      GestureDetector(
+                                        onTap: () {
+                                          goToMyPlanDetail(thisTravelPlans[i]);
+                                        },
+                                        child: TravelOwnCard(
+                                            thisTravelPlans[i].name ?? '',
+                                            '${thisTravelPlans[i].city?.name ?? ''}, ${AppConstants.countries[(thisTravelPlans[i].city?.countryId ?? 1) - 1]}',
+                                            thisTravelPlans[i]
+                                                    .dateStart
+                                                    ?.substring(0, 16) ??
+                                                ''),
+                                      ),
+                                      const SizedBox(width: 20)
+                                    ],
+                                  ),
+                                )
+                              : Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 15),
+                                      Container(
+                                        width: 22,
+                                        height: 22,
+                                        decoration: const BoxDecoration(
+                                            color: AppColors.lightGray,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(3),
+                                          child: SizedBox(
+                                              width: 16,
+                                              height: 16,
+                                              child: thisTravelPlans[i]
+                                                          .status ==
+                                                      1
+                                                  ? SvgPicture.asset(
+                                                      'assets/icons/geolocation_info_icon_checkmark.svg')
+                                                  : thisTravelPlans[i].status ==
+                                                          2
+                                                      ? SvgPicture.asset(
+                                                          'assets/icons/geolocation_info_icon_accent.svg')
+                                                      : SvgPicture.asset(
+                                                          'assets/icons/geolocation_info_icon_grey.svg')),
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      TravelBookedCard(thisTravelPlans[i]),
+                                      const SizedBox(width: 20)
+                                    ],
                                   ),
                                 ),
-                                const Spacer(),
-                                TravelBookedCard(thisTravelPlans[i]),
-                                const SizedBox(width: 20)
-                              ],
-                            ),
-                          ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Row(
@@ -796,6 +851,13 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
     getTravelPlans();
   }
 
+  void goToMyPlanDetail(TravelPlanModel plan) async {
+    await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => MyPlanDetailPage(plan)));
+
+    getTravelPlans();
+  }
+
   showAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
@@ -832,7 +894,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
   }
 
   void deleteTravel() async {
-    var response = await MainProvider().deleteTravel(widget.travel.id!);
+    var response = await TravelProvider().deleteTravel(widget.travel.id!);
     if (response['response_status'] == 'ok') {
       Navigator.pop(context);
     } else {
@@ -845,7 +907,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
 
   void getTravelPlans() async {
     thisTravelPlans = [];
-    var response = await MainProvider().getTravelPlans(widget.travel.id!);
+    var response = await TravelProvider().getTravelPlans(widget.travel.id!);
     if (response['response_status'] == 'ok') {
       for (var object in response['data']) {
         thisTravelPlans.add(TravelPlanModel.fromJson(object));
@@ -883,7 +945,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
 
   void getTravelUsers() async {
     userList = [];
-    var response = await MainProvider().getTravelUsers(widget.travel.id!);
+    var response = await TravelProvider().getTravelUsers(widget.travel.id!);
     if (response['response_status'] == 'ok') {
       for (var object in response['data']) {
         userList.add(User.fromJson(object));

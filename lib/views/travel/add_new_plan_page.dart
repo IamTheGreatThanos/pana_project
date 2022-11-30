@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:time_range_picker/time_range_picker.dart';
@@ -439,7 +439,8 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                       onPressed: () {
                         if (_titleController.text != '' &&
                             toDoList.isNotEmpty &&
-                            selectedRange != 'Выбрать даты') {
+                            selectedRange != 'Выбрать даты' &&
+                            endDate != '') {
                           saveChanges();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -595,21 +596,39 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
   }
 
   void saveChanges() async {
-    var response = await MainProvider().createOwnPlan(
+    var response = await TravelProvider().createOwnPlan(
         widget.id,
         _titleController.text,
         startDate + (startTime == '' ? ' 10:00' : startTime),
         endDate + (endTime == '' ? ' 10:00' : endTime),
-        _switchValue == false ? 0 : 1);
-    print(response['data']);
+        _switchValue == false ? 0 : 1,
+        1);
+    print(startDate + (startTime == '' ? ' 10:00' : startTime));
 
     if (response['response_status'] == 'ok') {
-      Navigator.of(context).pop();
+      addToDoList();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
             style: const TextStyle(fontSize: 20)),
       ));
     }
+  }
+
+  void addToDoList() async {
+    for (var i in toDoList) {
+      var response =
+          await TravelProvider().addItemToPlansToDoList(widget.id, i);
+      if (response['response_status'] == 'ok') {
+        print('Created!');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 20)),
+        ));
+      }
+    }
+
+    Navigator.of(context).pop();
   }
 }

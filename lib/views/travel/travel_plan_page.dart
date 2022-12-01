@@ -29,6 +29,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
 
   List<TravelPlanModel> thisTravelPlans = [];
   List<User> userList = [];
+  int lenOfRoadLine = 0;
 
   Map<String, dynamic> startLoc = {
     'isExist': false,
@@ -139,6 +140,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                             fontSize: 32,
                             fontWeight: FontWeight.w500,
                           ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       Row(
@@ -270,7 +272,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                               color: AppColors.lightGray,
                             ),
                           ),
-                          for (int i = 0; i < 23; i++)
+                          for (int i = 0; i < lenOfRoadLine; i++)
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 3),
                               child: Container(
@@ -462,27 +464,40 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                           child: Row(
                             children: [
                               const SizedBox(width: 15),
-                              Container(
-                                width: 22,
-                                height: 22,
-                                decoration: const BoxDecoration(
-                                    color: AppColors.lightGray,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(3),
-                                  child: SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: startLoc['status'] == 1
-                                        ? SvgPicture.asset(
-                                            'assets/icons/geolocation_info_icon_checkmark.svg')
-                                        : startLoc['status'] == 2
-                                            ? SvgPicture.asset(
-                                                'assets/icons/geolocation_info_icon_accent.svg')
-                                            : SvgPicture.asset(
-                                                'assets/icons/geolocation_info_icon_grey.svg'),
-                                  ),
+                              SizedBox(
+                                height: 85,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      width: 22,
+                                      height: 22,
+                                      decoration: const BoxDecoration(
+                                          color: AppColors.lightGray,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(3),
+                                        child: SizedBox(
+                                          width: 16,
+                                          height: 16,
+                                          child: startLoc['status'] == 1
+                                              ? SvgPicture.asset(
+                                                  'assets/icons/geolocation_info_icon_checkmark.svg')
+                                              : startLoc['status'] == 2
+                                                  ? SvgPicture.asset(
+                                                      'assets/icons/geolocation_info_icon_accent.svg')
+                                                  : SvgPicture.asset(
+                                                      'assets/icons/geolocation_info_icon_grey.svg'),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 22,
+                                      height: 35,
+                                      color: AppColors.lightGray,
+                                    ),
+                                  ],
                                 ),
                               ),
                               const Spacer(),
@@ -837,7 +852,9 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
 
   void goToBookedObjects() async {
     await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => BookedPlansPage()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => BookedPlansPage(widget.travel.id!)));
 
     getTravelPlans();
   }
@@ -907,10 +924,17 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
 
   void getTravelPlans() async {
     thisTravelPlans = [];
+    lenOfRoadLine = 0;
     var response = await TravelProvider().getTravelPlans(widget.travel.id!);
     if (response['response_status'] == 'ok') {
       for (var object in response['data']) {
-        thisTravelPlans.add(TravelPlanModel.fromJson(object));
+        TravelPlanModel planObject = TravelPlanModel.fromJson(object);
+        thisTravelPlans.add(planObject);
+        if (planObject.type == 1) {
+          lenOfRoadLine += 5;
+        } else {
+          lenOfRoadLine += 9;
+        }
       }
 
       if (thisTravelPlans.length > 0) {

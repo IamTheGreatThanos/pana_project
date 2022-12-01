@@ -89,12 +89,27 @@ class _LoginSettingsPageState extends State<LoginSettingsPage> {
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: [
-                      ProfileMenuItem('assets/icons/lock_icon.svg',
-                          'Сменить пароль', ChangePasswordPage()),
-                      ProfileMenuItem(
-                          'assets/icons/pin_code_icon.svg',
-                          'Изменить код-пароль',
-                          LockScreen(CreateLockCodePage())),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChangePasswordPage()));
+                        },
+                        child: ProfileMenuItem(
+                            'assets/icons/lock_icon.svg', 'Сменить пароль'),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      LockScreen(CreateLockCodePage())));
+                        },
+                        child: ProfileMenuItem('assets/icons/pin_code_icon.svg',
+                            'Изменить код-пароль'),
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 20),

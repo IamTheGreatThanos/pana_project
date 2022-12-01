@@ -87,16 +87,25 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: [
-                      ProfileMenuItem('assets/icons/profile_user.svg',
-                          'Имя и фамилия', ChangeFullNamePage()),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChangeFullNamePage()));
+                        },
+                        child: ProfileMenuItem(
+                            'assets/icons/profile_user.svg', 'Имя и фамилия'),
+                      ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ChangePhonePage()));
+                            loadData();
                           },
                           child: Container(
                             decoration: const BoxDecoration(
@@ -140,11 +149,12 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ChangeEmailPage()));
+                            loadData();
                           },
                           child: Container(
                             decoration: const BoxDecoration(
@@ -185,8 +195,16 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                           ),
                         ),
                       ),
-                      ProfileMenuItem('assets/icons/lock_icon.svg',
-                          'Настройки входа', LoginSettingsPage()),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginSettingsPage()));
+                        },
+                        child: ProfileMenuItem(
+                            'assets/icons/lock_icon.svg', 'Настройки входа'),
+                      ),
                     ],
                   ),
                 ),

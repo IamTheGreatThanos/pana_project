@@ -603,10 +603,10 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
         endDate + (endTime == '' ? ' 10:00' : endTime),
         _switchValue == false ? 0 : 1,
         1);
-    print(startDate + (startTime == '' ? ' 10:00' : startTime));
+    print(response['data']);
 
     if (response['response_status'] == 'ok') {
-      addToDoList();
+      addToDoList(response['data']['id']);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
@@ -615,10 +615,9 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
     }
   }
 
-  void addToDoList() async {
+  void addToDoList(int planId) async {
     for (var i in toDoList) {
-      var response =
-          await TravelProvider().addItemToPlansToDoList(widget.id, i);
+      var response = await TravelProvider().addItemToPlansToDoList(planId, i);
       if (response['response_status'] == 'ok') {
         print('Created!');
       } else {

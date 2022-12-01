@@ -428,7 +428,7 @@ class _AuthPageState extends State<AuthPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('user_name', nameController.text);
 
-    var response = await AuthProvider().register(authPhoneController.text, '7',
+    var response = await AuthProvider().register(phoneController.text, '7',
         nameController.text, lastNameController.text, emailController.text);
     // TODO: Действие при отправке номера телефона пользователя...
     if (response['response_status'] == 'ok') {

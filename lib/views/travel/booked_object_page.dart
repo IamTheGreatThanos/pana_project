@@ -340,7 +340,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                               DottedBorder(
                                 color: AppColors.accent,
                                 strokeWidth: 1,
-                                dashPattern: [6, 2],
+                                dashPattern: const [6, 2],
                                 strokeCap: StrokeCap.round,
                                 borderType: BorderType.RRect,
                                 radius: const Radius.circular(15),
@@ -390,8 +390,8 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          children: [
-                            const Text(
+                          children: const [
+                            Text(
                               'Оставить отзыв',
                               style: TextStyle(
                                 fontSize: 18,
@@ -399,8 +399,8 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            const Spacer(),
-                            const Text(
+                            Spacer(),
+                            Text(
                               'Мои отзывы',
                               style: TextStyle(
                                 fontSize: 14,
@@ -458,7 +458,8 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            SendTextReviewPage()));
+                                            SendTextReviewPage(
+                                                widget.plan.housing!.id!)));
                               },
                               child: Container(
                                 width: 162,

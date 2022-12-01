@@ -4,12 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/booked_housing_card.dart';
 import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/models/housingCard.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 
 class BookedPlansPage extends StatefulWidget {
-  // BookedPlansPage(this.product);
-  // final Product product;
+  BookedPlansPage(this.travelId);
+  final int travelId;
 
   @override
   _BookedPlansPageState createState() => _BookedPlansPageState();
@@ -128,7 +128,8 @@ class _BookedPlansPageState extends State<BookedPlansPage> {
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 20),
-                                      child: BookedHousingCard(housingList[i]),
+                                      child: BookedHousingCard(
+                                          housingList[i], widget.travelId),
                                     )
                                 ],
                               ),
@@ -161,7 +162,7 @@ class _BookedPlansPageState extends State<BookedPlansPage> {
 
   void getHousingList() async {
     housingList = [];
-    var response = await MainProvider().getHousingData(1);
+    var response = await TravelProvider().getBookedHousing();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         housingList.add(HousingCardModel.fromJson(response['data'][i]));

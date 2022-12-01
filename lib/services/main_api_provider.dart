@@ -133,14 +133,14 @@ class MainProvider {
       }),
     );
 
-    print(jsonDecode(response.body));
-
     if (response.statusCode == 200) {
-      Map<String, dynamic> result = jsonDecode(response.body);
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
       result['response_status'] = 'ok';
       return result;
     } else {
-      Map<String, dynamic> result = jsonDecode(response.body);
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
       result['response_status'] = 'error';
       return result;
     }
@@ -159,14 +159,14 @@ class MainProvider {
       },
     );
 
-    print(jsonDecode(response.body));
-
     if (response.statusCode == 200) {
-      Map<String, dynamic> result = jsonDecode(response.body);
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
       result['response_status'] = 'ok';
       return result;
     } else {
-      Map<String, dynamic> result = jsonDecode(response.body);
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
       result['response_status'] = 'error';
       return result;
     }
@@ -184,8 +184,6 @@ class MainProvider {
         'Authorization': "Bearer $token"
       },
     );
-
-    print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> result = {};
@@ -297,6 +295,49 @@ class MainProvider {
       return result;
     } else {
       Map<String, dynamic> result = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> sendTextReview(
+    int housingId,
+    String date,
+    String review,
+    int price,
+    int field,
+    int purity,
+    int staff,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.post(
+      Uri.parse('${API_URL}api/mobile/favorite'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "housing_id": housingId,
+        "date": date,
+        "description": review,
+        "price": price,
+        "sphere": field,
+        "purity": purity,
+        "staff": staff,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
       result['response_status'] = 'error';
       return result;
     }

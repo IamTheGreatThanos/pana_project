@@ -34,6 +34,7 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
   @override
   void initState() {
     checkIsLogedIn();
+    getProfile();
     super.initState();
   }
 
@@ -73,7 +74,7 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                       Row(
                         children: [
                           const Spacer(),
-                          SizedBox(width: 15),
+                          const SizedBox(width: 15),
                           Stack(
                             children: [
                               Container(
@@ -152,16 +153,16 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                             //         builder: (context) => PaymentPage()));
                           },
                           child: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.black87,
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
+                                  BorderRadius.all(const Radius.circular(8)),
                             ),
                             child: Padding(
                               padding:
                                   const EdgeInsets.fromLTRB(15, 70, 15, 20),
                               child: Row(
-                                children: [
+                                children: const [
                                   Text(
                                     'Программа лояльности',
                                     style: TextStyle(
@@ -178,18 +179,68 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                           ),
                         ),
                       ),
-                      ProfileMenuItem('assets/icons/profile_user.svg',
-                          'Личная информация', PersonalInformationPage()),
-                      ProfileMenuItem('assets/icons/profile_card.svg',
-                          'Мои транзакции', MyTransactionsPage()),
-                      ProfileMenuItem('assets/icons/profile_card.svg',
-                          'Способы оплаты', PaymentMethodsPage()),
-                      ProfileMenuItem('assets/icons/profile_chat.svg',
-                          'Служба поддержки', PaymentMethodsPage()),
-                      ProfileMenuItem('assets/icons/profile_globe.svg',
-                          'Выбор языка', ChangeLanguagePage()),
-                      ProfileMenuItem('assets/icons/profile_star.svg',
-                          'Мои отзывы', MyReviewsPage()),
+                      GestureDetector(
+                        onTap: () async {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      PersonalInformationPage()));
+                          getProfile();
+                        },
+                        child: ProfileMenuItem('assets/icons/profile_user.svg',
+                            'Личная информация'),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyTransactionsPage()));
+                        },
+                        child: ProfileMenuItem(
+                            'assets/icons/profile_card.svg', 'Мои транзакции'),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PaymentMethodsPage()));
+                        },
+                        child: ProfileMenuItem(
+                            'assets/icons/profile_card.svg', 'Способы оплаты'),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PaymentMethodsPage()));
+                        },
+                        child: ProfileMenuItem('assets/icons/profile_chat.svg',
+                            'Служба поддержки'),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChangeLanguagePage()));
+                        },
+                        child: ProfileMenuItem(
+                            'assets/icons/profile_globe.svg', 'Выбор языка'),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyReviewsPage()));
+                        },
+                        child: ProfileMenuItem(
+                            'assets/icons/profile_star.svg', 'Мои отзывы'),
+                      ),
                       GestureDetector(
                         onTap: () {
                           logOut();
@@ -233,16 +284,33 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
     var response = await AuthProvider().changeAvatar(image);
     if (response['response_status'] == 'ok') {
       print('Successfully uploaded!');
+      getProfile();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Ошибка загрузки!', style: const TextStyle(fontSize: 20)),
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Ошибка загрузки!', style: TextStyle(fontSize: 20)),
       ));
+    }
+  }
+
+  void getProfile() async {
+    var response = await AuthProvider().getProfileData();
+    if (response['response_status'] == 'ok') {
+      if (response['data']['avatar'] != null) {
+        avatarUrl = response['data']['avatar'];
+      }
+      name = '${response['data']['name']} ${response['data']['surname']}';
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
   void logOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isLogedIn', false);
+    prefs.remove('user_avatar');
+    prefs.remove('user_name');
+    prefs.remove('user_surname');
 
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => AuthPage()),
@@ -266,14 +334,14 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
 
   showAlertDialog(BuildContext context) {
     Widget cancelButton = TextButton(
-      child: Text("Отмена"),
+      child: const Text("Отмена"),
       onPressed: () {
         widget.onButtonPressed();
         Navigator.of(context).pop();
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Да"),
+      child: const Text("Да"),
       onPressed: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => AuthPage()));
@@ -281,8 +349,8 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
     );
 
     AlertDialog alert = AlertDialog(
-      title: Text("Внимание"),
-      content: Text("Вы не вошли в аккаунт. Войти?"),
+      title: const Text("Внимание"),
+      content: const Text("Вы не вошли в аккаунт. Войти?"),
       actions: [
         cancelButton,
         continueButton,

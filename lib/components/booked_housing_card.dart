@@ -3,13 +3,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/housingCard.dart';
+import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/story_view.dart';
 
 class BookedHousingCard extends StatefulWidget {
-  BookedHousingCard(this.housing);
+  BookedHousingCard(this.housing, this.travelId);
   final HousingCardModel housing;
+  final int travelId;
+
   @override
   _BookedHousingCardState createState() => _BookedHousingCardState();
 }
@@ -98,7 +101,7 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
                             itemBuilder: (BuildContext context, int itemIndex,
                                     int pageViewIndex) =>
                                 CachedNetworkImage(
-                              fit: BoxFit.fitHeight,
+                              fit: BoxFit.fitWidth,
                               imageUrl: widget.housing.images![itemIndex].path!,
                             ),
                           ),
@@ -126,21 +129,6 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
                                 ),
                               );
                             }).toList(),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 15,
-                              left:
-                                  MediaQuery.of(context).size.width * 0.9 - 70),
-                          child: SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: SvgPicture.asset(
-                                  'assets/icons/heart_empty_2.svg'),
-                            ),
                           ),
                         ),
                       ],
@@ -208,6 +196,19 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
   }
 
   void createBookedPlan() async {
-    Navigator.pop(context);
+    var response = await TravelProvider().createBookedPlan(
+      widget.travelId,
+      widget.housing.id!,
+    );
+    print(response['data']);
+
+    if (response['response_status'] == 'ok') {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

@@ -217,8 +217,11 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
         prefs.setString("user_surname", response['user']['surname']);
         prefs.setString("user_email", response['user']['email']);
         prefs.setString("user_phone", response['user']['phone']);
-        prefs.setInt("user_phone_code", response['user']['phone_code']);
-        prefs.setString("user_avatar", response['user']['avatar']);
+        prefs.setString("user_phone_code", response['user']['phone_code']);
+        if (response['user']['avatar'] != null) {
+          prefs.setString("user_avatar", response['user']['avatar']);
+        }
+
         prefs.setBool('isLogedIn', true);
 
         Navigator.push(

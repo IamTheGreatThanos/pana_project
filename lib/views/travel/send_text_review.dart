@@ -2,20 +2,32 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SendTextReviewPage extends StatefulWidget {
-  // SendTextReviewPage(this.product);
-  // final Product product;
+  SendTextReviewPage(this.housingId);
+  final int housingId;
 
   @override
   _SendTextReviewPageState createState() => _SendTextReviewPageState();
 }
 
 class _SendTextReviewPageState extends State<SendTextReviewPage> {
-  TextEditingController _dateController = TextEditingController();
-  TextEditingController _reviewController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _reviewController = TextEditingController();
+
+  var dateMaskFormatter = MaskTextInputFormatter(
+    mask: '##/##/####',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
+
+  int priceBall = 3;
+  int fieldBall = 3;
+  int purityBall = 3;
+  int staffBall = 3;
 
   @override
   void initState() {
@@ -117,7 +129,9 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                 vertical: 4, horizontal: 10),
                             child: TextField(
                               controller: _dateController,
+                              inputFormatters: [dateMaskFormatter],
                               maxLength: 10,
+                              keyboardType: TextInputType.number,
                               decoration: const InputDecoration(
                                 counterStyle: TextStyle(
                                   height: double.minPositive,
@@ -180,7 +194,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
@@ -206,23 +220,37 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                               textAlign: TextAlign.center,
                             ),
                             const Spacer(),
-                            for (int i = 0; i < 3; i++)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: SvgPicture.asset(
-                                  'assets/icons/star.svg',
-                                  width: 28,
-                                  height: 28,
+                            for (int i = 0; i < priceBall; i++)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    priceBall = i + 1;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/star.svg',
+                                    width: 28,
+                                    height: 28,
+                                  ),
                                 ),
                               ),
-                            for (int i = 0; i < 2; i++)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: SvgPicture.asset(
-                                  'assets/icons/star.svg',
-                                  width: 28,
-                                  height: 28,
-                                  color: AppColors.lightGray,
+                            for (int i = 0; i < 5 - priceBall; i++)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    priceBall += i + 1;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/star.svg',
+                                    width: 28,
+                                    height: 28,
+                                    color: AppColors.lightGray,
+                                  ),
                                 ),
                               ),
                           ],
@@ -240,23 +268,37 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                               textAlign: TextAlign.center,
                             ),
                             const Spacer(),
-                            for (int i = 0; i < 3; i++)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: SvgPicture.asset(
-                                  'assets/icons/star.svg',
-                                  width: 28,
-                                  height: 28,
+                            for (int i = 0; i < fieldBall; i++)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    fieldBall = i + 1;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/star.svg',
+                                    width: 28,
+                                    height: 28,
+                                  ),
                                 ),
                               ),
-                            for (int i = 0; i < 2; i++)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: SvgPicture.asset(
-                                  'assets/icons/star.svg',
-                                  width: 28,
-                                  height: 28,
-                                  color: AppColors.lightGray,
+                            for (int i = 0; i < 5 - fieldBall; i++)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    fieldBall += i + 1;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/star.svg',
+                                    width: 28,
+                                    height: 28,
+                                    color: AppColors.lightGray,
+                                  ),
                                 ),
                               ),
                           ],
@@ -274,23 +316,37 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                               textAlign: TextAlign.center,
                             ),
                             const Spacer(),
-                            for (int i = 0; i < 3; i++)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: SvgPicture.asset(
-                                  'assets/icons/star.svg',
-                                  width: 28,
-                                  height: 28,
+                            for (int i = 0; i < purityBall; i++)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    purityBall = i + 1;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/star.svg',
+                                    width: 28,
+                                    height: 28,
+                                  ),
                                 ),
                               ),
-                            for (int i = 0; i < 2; i++)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: SvgPicture.asset(
-                                  'assets/icons/star.svg',
-                                  width: 28,
-                                  height: 28,
-                                  color: AppColors.lightGray,
+                            for (int i = 0; i < 5 - purityBall; i++)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    purityBall += i + 1;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/star.svg',
+                                    width: 28,
+                                    height: 28,
+                                    color: AppColors.lightGray,
+                                  ),
                                 ),
                               ),
                           ],
@@ -308,23 +364,37 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                               textAlign: TextAlign.center,
                             ),
                             const Spacer(),
-                            for (int i = 0; i < 3; i++)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: SvgPicture.asset(
-                                  'assets/icons/star.svg',
-                                  width: 28,
-                                  height: 28,
+                            for (int i = 0; i < staffBall; i++)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    staffBall = i + 1;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/star.svg',
+                                    width: 28,
+                                    height: 28,
+                                  ),
                                 ),
                               ),
-                            for (int i = 0; i < 2; i++)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: SvgPicture.asset(
-                                  'assets/icons/star.svg',
-                                  width: 28,
-                                  height: 28,
-                                  color: AppColors.lightGray,
+                            for (int i = 0; i < 5 - staffBall; i++)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    staffBall += i + 1;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/star.svg',
+                                    width: 28,
+                                    height: 28,
+                                    color: AppColors.lightGray,
+                                  ),
                                 ),
                               ),
                           ],
@@ -415,14 +485,15 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                         ),
                       ),
                       onPressed: () {
-                        if (true) {
+                        if (_dateController.text.length == 10 &&
+                            _reviewController.text.isNotEmpty) {
+                          saveChanges();
+                        } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             content: Text("Заполните все поля.",
                                 style: TextStyle(fontSize: 20)),
                           ));
-                        } else {
-                          saveChanges();
                         }
                       },
                       child: const Text("Опубликовать отзыв",
@@ -441,17 +512,22 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
   }
 
   void saveChanges() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var response = await AuthProvider()
-    //     .changeFullName(nameController.text, surnameController.text);
-    //
-    // if (response['response_status'] == 'ok') {
-    //   Navigator.of(context).pop();
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content:
-    //     Text(response['message'], style: const TextStyle(fontSize: 20)),
-    //   ));
-    // }
+    var response = await MainProvider().sendTextReview(
+        widget.housingId,
+        _dateController.text,
+        _reviewController.text,
+        priceBall,
+        fieldBall,
+        purityBall,
+        staffBall);
+
+    if (response['response_status'] == 'ok') {
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

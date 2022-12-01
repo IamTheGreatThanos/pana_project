@@ -230,7 +230,7 @@ class _HomeTravelState extends State<HomeTravel> {
       builder: (BuildContext context) {
         return SingleChildScrollView(
           child: SizedBox(
-            height: 400,
+            height: 600,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: Column(
@@ -264,7 +264,7 @@ class _HomeTravelState extends State<HomeTravel> {
                               vertical: 4, horizontal: 10),
                           child: TextField(
                             controller: _titleController,
-                            maxLength: 10,
+                            maxLength: 100,
                             decoration: const InputDecoration(
                               counterStyle: TextStyle(
                                 height: double.minPositive,
@@ -454,7 +454,6 @@ class _HomeTravelState extends State<HomeTravel> {
   void getTravelList() async {
     travelList = [];
     var response = await TravelProvider().getTravelList();
-    print(response);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         travelList.add(TravelCardModel.fromJson(response['data'][i]));

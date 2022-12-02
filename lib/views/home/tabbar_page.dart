@@ -5,7 +5,7 @@ import 'package:pana_project/views/housing/home_housing.dart';
 import 'package:pana_project/views/impression/home_impression.dart';
 import 'package:pana_project/views/profile/profile_main.dart';
 import 'package:pana_project/views/travel/home_travel.dart';
-import 'package:pana_project/views/travel/send_text_review.dart';
+import 'package:pana_project/views/travel/send_audio_review.dart';
 
 class TabBarPage extends StatefulWidget {
   @override
@@ -25,7 +25,7 @@ class _TabBarPageState extends State<TabBarPage> {
       HomeTravel(changeTabMethod),
       HomeImpression(),
       HomeHousing(),
-      SendTextReviewPage(1),
+      SendAudioReviewPage(1),
       ProfileMainPage(changeTabMethod),
     ];
   }

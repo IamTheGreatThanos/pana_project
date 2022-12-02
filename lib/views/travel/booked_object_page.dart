@@ -421,7 +421,8 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            SendAudioReviewPage()));
+                                            SendAudioReviewPage(
+                                                widget.plan.housing!.id!)));
                               },
                               child: Container(
                                 width: 162,

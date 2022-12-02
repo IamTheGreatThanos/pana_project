@@ -3,7 +3,17 @@
 <plist version="1.0">
 <dict>
     <key>NSFaceIDUsageDescription</key>
-    <string>Why is my app authenticating using face id?</string>
+    <string>${PRODUCT_NAME} Face ID Usage</string>
+
+    <key>NSMicrophoneUsageDescription</key>
+    <string>${PRODUCT_NAME} Microphone Usage</string>
+
+    <key>kTCCServiceMediaLibrary</key>
+    <string>${PRODUCT_NAME} MediaLibrary Usage</string>
+
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>${PRODUCT_NAME} PhotoLibrary Usage</string>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

@@ -53,6 +53,9 @@ dependencies:
   dotted_border: ^2.0.0+3
   time_range_picker: ^2.2.0
   mask_text_input_formatter: ^2.4.0
+  flutter_sound: ^9.2.13
+  permission_handler: ^10.2.0
+  audio_session: ^0.1.11
 
 dev_dependencies:
   flutter_test:

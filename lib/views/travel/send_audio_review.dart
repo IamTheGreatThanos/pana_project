@@ -1,21 +1,39 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+const theSource = AudioSource.microphone;
 
 class SendAudioReviewPage extends StatefulWidget {
-  // SendAudioReviewPage(this.product);
-  // final Product product;
+  SendAudioReviewPage(this.housingId);
+  final int housingId;
 
   @override
   _SendAudioReviewPageState createState() => _SendAudioReviewPageState();
 }
 
 class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
+  Codec _codec = Codec.aacMP4;
+  final String _mPath = 'file.mp4';
+  FlutterSoundRecorder? _mRecorder = FlutterSoundRecorder();
+  bool _mRecorderIsInited = false;
+
+  late File audioFile;
+
+  String completePath = "";
+
   String recordTime = '00:00:00';
   double seekWidth = 0;
   int recordState = 0;
@@ -29,6 +47,11 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
 
   @override
   void initState() {
+    openTheRecorder().then((value) {
+      setState(() {
+        _mRecorderIsInited = true;
+      });
+    });
     super.initState();
   }
 
@@ -36,7 +59,78 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
   void dispose() {
     _timer.cancel();
     _timerForTime.cancel();
+
+    _mRecorder!.closeRecorder();
+    _mRecorder = null;
+
     super.dispose();
+  }
+
+  Future<void> openTheRecorder() async {
+    if (!kIsWeb) {
+      var status = await Permission.microphone.request();
+      if (status != PermissionStatus.granted) {
+        throw RecordingPermissionException('Microphone permission not granted');
+      }
+    }
+    await _mRecorder!.openRecorder();
+    if (!await _mRecorder!.isEncoderSupported(_codec) && kIsWeb) {
+      _codec = Codec.opusWebM;
+      if (!await _mRecorder!.isEncoderSupported(_codec) && kIsWeb) {
+        _mRecorderIsInited = true;
+        return;
+      }
+    }
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
+      avAudioSessionCategoryOptions:
+          AVAudioSessionCategoryOptions.allowBluetooth |
+              AVAudioSessionCategoryOptions.defaultToSpeaker,
+      avAudioSessionMode: AVAudioSessionMode.spokenAudio,
+      avAudioSessionRouteSharingPolicy:
+          AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+      androidAudioAttributes: const AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.speech,
+        flags: AndroidAudioFlags.none,
+        usage: AndroidAudioUsage.voiceCommunication,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+      androidWillPauseWhenDucked: true,
+    ));
+
+    _mRecorderIsInited = true;
+
+    var directory = await getApplicationDocumentsDirectory();
+    var directoryPath = '${directory.path}/records/';
+    bool isDirectoryCreated = await Directory(directoryPath).exists();
+    if (!isDirectoryCreated) {
+      Directory(directoryPath).create().then((Directory directory) {
+        print("DIRECTORY CREATED AT : " + directory.path);
+      });
+    }
+    completePath = directoryPath + _mPath;
+  }
+
+  void record() {
+    _mRecorder!
+        .startRecorder(
+      toFile: completePath,
+      codec: _codec,
+      audioSource: theSource,
+    )
+        .then((value) {
+      setState(() {});
+    });
+  }
+
+  void stopRecorder() async {
+    await _mRecorder!.stopRecorder().then((value) {
+      setState(() {
+        audioFile = File(completePath);
+      });
+    });
   }
 
   @override
@@ -108,7 +202,7 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 18),
                           child: AnimatedContainer(
-                            duration: const Duration(seconds: 2),
+                            duration: const Duration(milliseconds: 1000),
                             curve: Curves.easeInOut,
                             width: MediaQuery.of(context).size.width * 0.48 -
                                 seekWidth,
@@ -119,7 +213,7 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 18),
                           child: AnimatedContainer(
-                            duration: const Duration(seconds: 2),
+                            duration: const Duration(milliseconds: 1000),
                             curve: Curves.easeInOut,
                             width: seekWidth,
                             height: 4,
@@ -162,7 +256,7 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
                 const Spacer(),
                 Text(
                   recordTime,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -186,7 +280,7 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
                         : recordState == 1
                             ? 'Нажмите, чтобы остановить запись'
                             : 'Нажмите, чтобы перезаписать отзыв',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
                     ),
@@ -207,14 +301,14 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
                         ),
                       ),
                       onPressed: () {
-                        if (true) {
+                        if (audioFile != null && recordState == 2) {
+                          saveChanges();
+                        } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
-                            content: Text("Заполните все поля.",
+                            content: Text("Сперва запишите аудио.",
                                 style: TextStyle(fontSize: 20)),
                           ));
-                        } else {
-                          saveChanges();
                         }
                       },
                       child: const Text("Опубликовать отзыв",
@@ -233,22 +327,31 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
   }
 
   void recordAction() async {
-    if (recordState == 0) {
-      recordState = 1;
-      seekWidth = MediaQuery.of(context).size.width * 0.48;
-      addBars();
-      addSeconds();
-    } else if (recordState == 1) {
-      recordState = 2;
-      _timer.cancel();
-      _timerForTime.cancel();
+    if (_mRecorderIsInited == true) {
+      if (recordState == 0) {
+        recordState = 1;
+        seekWidth = MediaQuery.of(context).size.width * 0.48;
+        addBars();
+        addSeconds();
+        record();
+      } else if (recordState == 1) {
+        recordState = 2;
+        _timer.cancel();
+        _timerForTime.cancel();
+        stopRecorder();
+      } else {
+        seekWidth = 0;
+        bars = [const Spacer()];
+        recordState = 0;
+        recordTime = '00:00:00';
+      }
+      setState(() {});
     } else {
-      seekWidth = 0;
-      bars = [const Spacer()];
-      recordState = 0;
-      recordTime = '00:00:00';
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Предоставьте доступ к микрофону.",
+            style: TextStyle(fontSize: 20)),
+      ));
     }
-    setState(() {});
   }
 
   void addSeconds() {
@@ -307,7 +410,7 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
 
   void addBars() {
     _timer = Timer.periodic(
-      const Duration(milliseconds: 200),
+      const Duration(milliseconds: 100),
       (Timer timer) {
         if (bars.length > (MediaQuery.of(context).size.width * 0.48) / 13) {
           bars.removeAt(1);
@@ -333,17 +436,18 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
   }
 
   void saveChanges() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var response = await AuthProvider()
-    //     .changeFullName(nameController.text, surnameController.text);
-    //
-    // if (response['response_status'] == 'ok') {
-    //   Navigator.of(context).pop();
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content:
-    //     Text(response['message'], style: const TextStyle(fontSize: 20)),
-    //   ));
-    // }
+    var response =
+        await MainProvider().sendAudioReview(widget.housingId, audioFile);
+
+    print(response['data']);
+
+    if (response['response_status'] == 'ok') {
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

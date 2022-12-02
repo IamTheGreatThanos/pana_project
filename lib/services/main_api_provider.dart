@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainProvider {
@@ -308,36 +312,78 @@ class MainProvider {
     int field,
     int purity,
     int staff,
+    List<XFile> images,
   ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    final response = await http.post(
-      Uri.parse('${API_URL}api/mobile/favorite'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept': 'application/json',
-        'Authorization': "Bearer $token"
-      },
-      body: jsonEncode(<String, dynamic>{
-        "housing_id": housingId,
-        "date": date,
-        "description": review,
-        "price": price,
-        "sphere": field,
-        "purity": purity,
-        "staff": staff,
-      }),
-    );
+    var uri = Uri.parse('${API_URL}api/mobile/review');
+    var request = http.MultipartRequest("POST", uri);
+    request.headers['Authorization'] = "Bearer $token";
+    request.headers['Accept'] = "application/json";
+
+    request.fields['housing_id'] = housingId.toString();
+    request.fields['was_at'] = date;
+    request.fields['description'] = review;
+    request.fields['price'] = price.toString();
+    request.fields['atmosphere'] = field.toString();
+    request.fields['purity'] = purity.toString();
+    request.fields['staff'] = staff.toString();
+
+    for (XFile item in images) {
+      var stream = http.ByteStream(DelegatingStream.typed(item.openRead()));
+      var length = await item.length();
+      var multipartFile = http.MultipartFile('images', stream, length,
+          filename: basename(item.path));
+      request.files.add(multipartFile);
+    }
+
+    var response = await request.send();
+    final responseString = await response.stream.bytesToString();
 
     if (response.statusCode == 200) {
       Map<String, dynamic> result = {};
-      result['data'] = jsonDecode(response.body);
+      result['data'] = jsonDecode(responseString);
       result['response_status'] = 'ok';
       return result;
     } else {
       Map<String, dynamic> result = {};
-      result['data'] = jsonDecode(response.body);
+      result['data'] = jsonDecode(responseString);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> sendAudioReview(
+    int housingId,
+    File audio,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    var uri = Uri.parse('${API_URL}api/mobile/review');
+    var request = http.MultipartRequest("POST", uri);
+    request.headers['Authorization'] = "Bearer $token";
+    request.headers['Accept'] = "application/json";
+
+    request.fields['housing_id'] = housingId.toString();
+    var stream = http.ByteStream(DelegatingStream.typed(audio.openRead()));
+    var length = await audio.length();
+    var multipartFile = http.MultipartFile('images', stream, length,
+        filename: basename(audio.path));
+    request.files.add(multipartFile);
+
+    var response = await request.send();
+    final responseString = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(responseString);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(responseString);
       result['response_status'] = 'error';
       return result;
     }

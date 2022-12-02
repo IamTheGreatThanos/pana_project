@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
@@ -18,11 +21,15 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _reviewController = TextEditingController();
 
+  final ImagePicker _picker = ImagePicker();
+
   var dateMaskFormatter = MaskTextInputFormatter(
     mask: '##/##/####',
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy,
   );
+
+  List<XFile> images = [];
 
   int priceBall = 3;
   int fieldBall = 3;
@@ -430,40 +437,63 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                         Container(
                           margin: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 10),
-                          height: 150,
+                          height: 120,
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: <Widget>[
-                              DottedBorder(
-                                color: AppColors.accent,
-                                strokeWidth: 1,
-                                dashPattern: [6, 2],
-                                strokeCap: StrokeCap.round,
-                                borderType: BorderType.RRect,
-                                radius: const Radius.circular(15),
-                                child: Container(
-                                  width: 85,
-                                  height: 150,
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.white,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Icon(Icons.add, color: AppColors.accent),
-                                      Text(
-                                        'Добавить',
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
+                              GestureDetector(
+                                onTap: () {
+                                  addImage();
+                                },
+                                child: DottedBorder(
+                                  color: AppColors.accent,
+                                  strokeWidth: 1,
+                                  dashPattern: [6, 2],
+                                  strokeCap: StrokeCap.round,
+                                  borderType: BorderType.RRect,
+                                  radius: const Radius.circular(15),
+                                  child: Container(
+                                    width: 120,
+                                    height: 120,
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.white,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Icon(Icons.add,
                                             color: AppColors.accent),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
+                                        Text(
+                                          'Добавить',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.accent),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 5),
+                              const SizedBox(width: 10),
+                              for (var image in images)
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(15)),
+                                    child: SizedBox(
+                                      height: 120,
+                                      width: 120,
+                                      child: Image.file(
+                                        File(image.path),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                             ],
                           ),
                         ),
@@ -511,23 +541,57 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
     );
   }
 
+  void addImage() async {
+    final XFile? selectedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (selectedImage != null) {
+      setState(() {
+        images.add(selectedImage);
+      });
+    }
+  }
+
   void saveChanges() async {
+    showLoaderDialog(context);
+
     var response = await MainProvider().sendTextReview(
-        widget.housingId,
-        _dateController.text,
-        _reviewController.text,
-        priceBall,
-        fieldBall,
-        purityBall,
-        staffBall);
+      widget.housingId,
+      _dateController.text,
+      _reviewController.text,
+      priceBall,
+      fieldBall,
+      purityBall,
+      staffBall,
+      images,
+    );
 
     if (response['response_status'] == 'ok') {
       Navigator.of(context).pop();
+      Navigator.of(context).pop();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Ошибка загрузки...', style: TextStyle(fontSize: 20)),
       ));
     }
+  }
+
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        children: const [
+          CircularProgressIndicator(),
+          SizedBox(width: 10),
+          Text("Загрузка..."),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

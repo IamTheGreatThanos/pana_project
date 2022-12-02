@@ -34,7 +34,7 @@ class _HousingCardState extends State<HousingCard> {
         StoryItem.pageImage(
           url: widget.housing.images![i].path!,
           controller: _storyController,
-          imageFit: BoxFit.fitHeight,
+          imageFit: BoxFit.cover,
         ),
       );
 
@@ -114,7 +114,7 @@ class _HousingCardState extends State<HousingCard> {
                             itemBuilder: (BuildContext context, int itemIndex,
                                     int pageViewIndex) =>
                                 CachedNetworkImage(
-                              fit: BoxFit.fitWidth,
+                              fit: BoxFit.cover,
                               imageUrl: widget.housing.images![itemIndex].path!,
                             ),
                           ),

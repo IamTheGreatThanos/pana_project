@@ -154,7 +154,7 @@ class MainProvider {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    final response = await http.post(
+    final response = await http.delete(
       Uri.parse('${API_URL}api/mobile/favorite/$housing_id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

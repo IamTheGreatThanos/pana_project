@@ -108,6 +108,7 @@ flutter:
     - assets/icons/share.svg
     - assets/icons/back_arrow.svg
     - assets/icons/heart_empty_2.svg
+    - assets/icons/heart_full.svg
     - assets/icons/chat.svg
     - assets/icons/like_review.svg
     - assets/icons/dislike_review.svg
@@ -167,6 +168,7 @@ flutter:
     - assets/icons/start_record.svg
     - assets/icons/stop_record.svg
     - assets/icons/re_record.svg
+    - assets/images/favorites_empty.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -13,6 +13,7 @@ import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/housing/select_room_page.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
@@ -166,7 +167,7 @@ class _HousingInfoState extends State<HousingInfo> {
                           const SizedBox(width: 20),
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).pop();
+                              tapFavoritesButton();
                             },
                             child: Container(
                               width: 50,
@@ -188,8 +189,12 @@ class _HousingInfoState extends State<HousingInfo> {
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(12),
-                                child: SvgPicture.asset(
-                                    'assets/icons/heart_empty.svg'),
+                                child: GlobalVariables.favoritesHousing
+                                        .contains(widget.id)
+                                    ? SvgPicture.asset(
+                                        'assets/icons/heart_full.svg')
+                                    : SvgPicture.asset(
+                                        'assets/icons/heart_empty.svg'),
                               ),
                             ),
                           ),
@@ -851,6 +856,36 @@ class _HousingInfoState extends State<HousingInfo> {
         content:
             Text(response['message'], style: const TextStyle(fontSize: 20)),
       ));
+    }
+  }
+
+  void tapFavoritesButton() async {
+    if (GlobalVariables.favoritesHousing.contains(widget.id)) {
+      var response = await MainProvider().deleteFavorite(widget.id);
+      if (response['response_status'] == 'ok') {
+        GlobalVariables.favoritesHousing.remove(widget.id);
+        if (mounted) {
+          setState(() {});
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 20)),
+        ));
+      }
+    } else {
+      var response = await MainProvider().addToFavorite(widget.id);
+      if (response['response_status'] == 'ok') {
+        GlobalVariables.favoritesHousing.add(widget.id);
+        if (mounted) {
+          setState(() {});
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 20)),
+        ));
+      }
     }
   }
 

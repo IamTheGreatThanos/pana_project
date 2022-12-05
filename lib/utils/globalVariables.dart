@@ -1,3 +1,3 @@
 class GlobalVariables {
-  List<dynamic> favoritesHousing = [];
+  static List<dynamic> favoritesHousing = [];
 }

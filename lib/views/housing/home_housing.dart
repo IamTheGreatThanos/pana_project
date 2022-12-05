@@ -4,8 +4,13 @@ import 'package:pana_project/components/housing_card.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/auth/auth_page.dart';
+import 'package:pana_project/views/housing/housing_info.dart';
 import 'package:pana_project/views/housing/search_page.dart';
+import 'package:pana_project/views/other/favorites_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_view/controller/story_controller.dart';
+import 'package:story_view/widgets/story_view.dart';
 
 import '../../components/stories_card.dart';
 
@@ -49,10 +54,12 @@ class _HomeHousingState extends State<HomeHousing>
 
   String selectedRange = '';
   int selectedCountryId = 0;
+  bool isLogedIn = false;
 
   @override
   void initState() {
     getHousingList();
+    checkIsLogedIn();
     super.initState();
     _tabController = TabController(vsync: this, length: 12);
   }
@@ -61,6 +68,15 @@ class _HomeHousingState extends State<HomeHousing>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void checkIsLogedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('isLogedIn') == true) {
+      isLogedIn = true;
+    } else {
+      isLogedIn = false;
+    }
   }
 
   @override
@@ -167,26 +183,33 @@ class _HomeHousingState extends State<HomeHousing>
                       ),
                     ),
                     const Spacer(),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(50),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            spreadRadius: 0,
-                            blurRadius: 24,
-                            offset: Offset(0, 4), // changes position of shadow
+                    GestureDetector(
+                      onTap: () {
+                        goToFavorites();
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(50),
                           ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: SvgPicture.asset('assets/icons/heart_empty.svg'),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              spreadRadius: 0,
+                              blurRadius: 24,
+                              offset:
+                                  Offset(0, 4), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child:
+                              SvgPicture.asset('assets/icons/heart_empty.svg'),
+                        ),
                       ),
                     ),
                     const Spacer(),
@@ -241,7 +264,51 @@ class _HomeHousingState extends State<HomeHousing>
                       for (int i = 0; i < housingList.length; i++)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 20),
-                          child: HousingCard(housingList[i]),
+                          child: GestureDetector(
+                            onTap: () async {
+                              if (isLogedIn == true) {
+                                StoryController _storyController =
+                                    StoryController();
+                                List<StoryItem?> thisStoryItems = [];
+                                List<StoryItem?> mediaStoryItems = [];
+
+                                for (int j = 0;
+                                    j < housingList[i].images!.length;
+                                    j++) {
+                                  thisStoryItems.add(
+                                    StoryItem.pageImage(
+                                      url: housingList[i].images![j].path!,
+                                      controller: _storyController,
+                                      imageFit: BoxFit.cover,
+                                    ),
+                                  );
+
+                                  mediaStoryItems.add(
+                                    StoryItem.pageImage(
+                                      url: housingList[i].images![j].path!,
+                                      controller: _storyController,
+                                      imageFit: BoxFit.fitWidth,
+                                    ),
+                                  );
+                                }
+
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HousingInfo(
+                                            housingList[i].id!,
+                                            thisStoryItems,
+                                            mediaStoryItems)));
+                                setState(() {});
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AuthPage()));
+                              }
+                            },
+                            child: HousingCard(housingList[i], () {}),
+                          ),
                         )
                     ],
                   ),
@@ -252,6 +319,17 @@ class _HomeHousingState extends State<HomeHousing>
         ),
       ),
     );
+  }
+
+  void goToFavorites() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FavoritesPage(),
+      ),
+    );
+
+    setState(() {});
   }
 
   void getHousingList() async {

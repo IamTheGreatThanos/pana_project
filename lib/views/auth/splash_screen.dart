@@ -143,10 +143,14 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void getListOfFavorites() async {
+    GlobalVariables.favoritesHousing = [];
     var response = await MainProvider().getFavorites();
     if (response['response_status'] == 'ok') {
-      GlobalVariables().favoritesHousing = response['data'];
-      print(response['data']);
+      for (var item in response['data']) {
+        GlobalVariables.favoritesHousing.add(item['id']);
+        setState(() {});
+      }
+      print(GlobalVariables.favoritesHousing);
     }
   }
 }

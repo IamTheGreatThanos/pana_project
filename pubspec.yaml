@@ -169,6 +169,19 @@ flutter:
     - assets/icons/stop_record.svg
     - assets/icons/re_record.svg
     - assets/images/favorites_empty.svg
+    - assets/images/smile.svg
+    - assets/icons/m_message_0.svg
+    - assets/icons/m_message_1.svg
+    - assets/icons/m_housing_0.svg
+    - assets/icons/m_housing_1.svg
+    - assets/icons/m_impression_0.svg
+    - assets/icons/m_impression_1.svg
+    - assets/icons/m_percent_0.svg
+    - assets/icons/m_percent_1.svg
+    - assets/icons/m_location_0.svg
+    - assets/icons/m_location_1.svg
+    - assets/icons/m_plan_0.svg
+    - assets/icons/m_plan_1.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

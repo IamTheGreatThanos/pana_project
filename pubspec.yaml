@@ -182,6 +182,7 @@ flutter:
     - assets/icons/m_location_1.svg
     - assets/icons/m_plan_0.svg
     - assets/icons/m_plan_1.svg
+    - assets/icons/chat_support.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

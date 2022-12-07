@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/messages_card.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/messages/list_of_chats.dart';
 
 class MessagesPage extends StatefulWidget {
   @override
@@ -60,36 +61,39 @@ class _MessagesPageState extends State<MessagesPage> {
                           ),
                         ),
                       ),
-                      Container(
-                        height: 70,
-                        color: isHaveNewMessages
-                            ? AppColors.accent
-                            : AppColors.black,
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 20),
-                            SizedBox(
-                                width: 34,
-                                height: 34,
-                                child: SvgPicture.asset(
-                                    'assets/icons/m_message_${isHaveNewMessages ? '1' : '0'}.svg')),
-                            const SizedBox(width: 10),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.72,
-                              child: Text(
-                                isHaveNewMessages
-                                    ? '$newMessageCount новых сообщения'
-                                    : 'Нет новых сообщений',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.white,
+                      GestureDetector(
+                        onTap: goToChats,
+                        child: Container(
+                          height: 70,
+                          color: isHaveNewMessages
+                              ? AppColors.accent
+                              : AppColors.black,
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 20),
+                              SizedBox(
+                                  width: 34,
+                                  height: 34,
+                                  child: SvgPicture.asset(
+                                      'assets/icons/m_message_${isHaveNewMessages ? '1' : '0'}.svg')),
+                              const SizedBox(width: 10),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.72,
+                                child: Text(
+                                  isHaveNewMessages
+                                      ? '$newMessageCount новых сообщения'
+                                      : 'Нет новых сообщений',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.white,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
                                 ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       for (int i = 0; i < 3; i++)
@@ -161,5 +165,16 @@ class _MessagesPageState extends State<MessagesPage> {
         ),
       ),
     );
+  }
+
+  void goToChats() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ListOfChatsPage(),
+      ),
+    );
+
+    setState(() {});
   }
 }

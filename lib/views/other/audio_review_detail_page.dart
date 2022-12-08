@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/utils/const.dart';
 
 class AudioReviewDetailPage extends StatefulWidget {
@@ -13,8 +12,8 @@ class AudioReviewDetailPage extends StatefulWidget {
 }
 
 class _AudioReviewDetailPageState extends State<AudioReviewDetailPage> {
-  double audioReviewWidth = 0.0;
   bool playingState = false;
+
   @override
   void initState() {
     super.initState();
@@ -32,16 +31,15 @@ class _AudioReviewDetailPageState extends State<AudioReviewDetailPage> {
       },
       child: Scaffold(
         backgroundColor: AppColors.lightGray,
-        body: SingleChildScrollView(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              Container(
+                color: AppColors.white,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
                   child: Row(
                     children: [
                       GestureDetector(
@@ -52,7 +50,7 @@ class _AudioReviewDetailPageState extends State<AudioReviewDetailPage> {
                           width: 50,
                           height: 50,
                           decoration: const BoxDecoration(
-                            color: AppColors.lightGray,
+                            color: AppColors.white,
                             borderRadius: BorderRadius.all(
                               Radius.circular(50),
                             ),
@@ -65,16 +63,26 @@ class _AudioReviewDetailPageState extends State<AudioReviewDetailPage> {
                         ),
                       ),
                       const Spacer(),
-                      const Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Text(
-                          'Отзыв',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
+                      Column(
+                        children: const [
+                          Text(
+                            'Отзыв',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
+                          SizedBox(height: 5),
+                          Text(
+                            "29.07.2022",
+                            style: TextStyle(
+                              color: AppColors.blackWithOpacity,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                       const Spacer(),
                       const Padding(
@@ -87,176 +95,230 @@ class _AudioReviewDetailPageState extends State<AudioReviewDetailPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: AudioReviewCard(),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(AppConstants.cardBorderRadius),
+                      topLeft: Radius.circular(AppConstants.cardBorderRadius)),
+                  color: AppColors.white,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                  child: Row(
-                    children: const [
-                      Spacer(),
-                      Text(
-                        "Отзыв оставлен ",
-                        style: TextStyle(
-                          color: Colors.black45,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        "29.07.2022",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Spacer(),
-                    ],
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topRight:
-                            Radius.circular(AppConstants.cardBorderRadius),
-                        topLeft:
-                            Radius.circular(AppConstants.cardBorderRadius)),
-                    color: AppColors.white,
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(12)),
-                              child: SizedBox(
-                                width: 60,
-                                height: 60,
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.82,
+                child: Column(
+                  children: [
+                    playingState
+                        ? Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Row(
                                   children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                      child: const Padding(
-                                        padding: EdgeInsets.only(left: 10),
-                                        child: Text(
-                                          'Dinmukhammed Muslim',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(12)),
+                                      child: SizedBox(
+                                        width: 60,
+                                        height: 60,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
                                         ),
                                       ),
                                     ),
-                                    // Padding(
-                                    //   padding:
-                                    //       const EdgeInsets.only(bottom: 2, left: 5),
-                                    //   child: SizedBox(
-                                    //     width: 15,
-                                    //     height: 15,
-                                    //     child: SvgPicture.asset(
-                                    //         'assets/icons/star.svg'),
-                                    //   ),
-                                    // ),
+                                    const SizedBox(width: 10),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.6,
+                                          child: const Padding(
+                                            padding: EdgeInsets.only(left: 10),
+                                            child: Text(
+                                              'Dinmukhammed Muslim',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: const [
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 10),
+                                              child: Text(
+                                                'Ответ от владельца',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.accent,
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 10),
+                                              child: Text(
+                                                '30.09.2021',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppColors
+                                                      .blackWithOpacity,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
-                                const SizedBox(height: 10),
-                                SizedBox(
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                                child: Divider(),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, bottom: 20, right: 20),
+                                child: SizedBox(
                                   width:
-                                      MediaQuery.of(context).size.width * 0.65,
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: Text(
-                                      'Ответ от владельца',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black45,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                        child: Divider(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, bottom: 20, right: 20),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: const Text(
-                            'Отклонение проецирует суммарный поворот. Гировертикаль, в силу третьего закона Ньютона, даёт большую проекцию на оси, чем тангаж. Ротор безусловно заставляет иначе взглянуть на то, что такое уходящий ньютонометр, сводя задачу к квадратурам.',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 50),
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: Divider(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              child: const Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text(
-                                  'Этот отзыв был полезен?',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
+                                      MediaQuery.of(context).size.width * 0.9,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.45,
+                                  child: const Text(
+                                    'Отклонение проецирует суммарный поворот. Гировертикаль, в силу третьего закона Ньютона, даёт большую проекцию на оси, чем тангаж. Ротор безусловно заставляет иначе взглянуть на то, что такое уходящий ньютонометр, сводя задачу к квадратурам.',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
                                   ),
                                 ),
                               ),
+                            ],
+                          )
+                        : SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.65,
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 30),
+                                SvgPicture.asset(
+                                    'assets/images/review_no_answer.svg'),
+                                const Padding(
+                                  padding: EdgeInsets.all(30),
+                                  child: Text(
+                                    'Мы еще не получили ответ от владельца',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                              ],
                             ),
-                            const Spacer(),
-                            SvgPicture.asset('assets/icons/like_review.svg'),
-                            const SizedBox(
-                              width: 12,
-                              height: 40,
-                              child: VerticalDivider(),
+                          ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              playAudioReview();
+                            },
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: AppColors.black,
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40))),
+                              width: 65,
+                              height: 65,
+                              child: Center(
+                                child: SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: !playingState
+                                      ? SvgPicture.asset(
+                                          'assets/icons/play_audio.svg',
+                                          color: AppColors.white,
+                                        )
+                                      : SvgPicture.asset(
+                                          'assets/icons/pause_audio.svg',
+                                          color: AppColors.white,
+                                        ),
+                                ),
+                              ),
                             ),
-                            SvgPicture.asset('assets/icons/dislike_review.svg'),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(12)),
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.7,
+                                  height: 65,
+                                  child: const LinearProgressIndicator(
+                                    value: 0.8,
+                                    color: AppColors.blackWithOpacity,
+                                    backgroundColor: AppColors.lightGray,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 65,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    SizedBox(width: 20),
+                                    Text(
+                                      '03:01',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      ' / 03:01',
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
+  }
+
+  void playAudioReview() async {
+    setState(() {
+      playingState = !playingState;
+    });
   }
 }

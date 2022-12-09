@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/other/text_review_detail_page.dart';
 
 class MyTextReviewCard extends StatefulWidget {
-  // MyTextReviewCard(this.product);
-  // final Product product;
+  MyTextReviewCard(this.review);
+  final TextReviewModel review;
 
   @override
   _MyTextReviewCardState createState() => _MyTextReviewCardState();
@@ -21,107 +22,136 @@ class _MyTextReviewCardState extends State<MyTextReviewCard> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
-            color: AppColors.white),
-        height: 290,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-              child: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(12)),
-                    child: SizedBox(
-                      width: 64,
-                      height: 64,
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        child: const Text(
-                          'Домик на берегу моря',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        child: const Text(
-                          'Almaty, Kazakhstan',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.blackWithOpacity,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Divider(),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child: SizedBox(
-                height: 80,
-                child: Text(
-                  'Отклонение проецирует суммарный поворот. Гировертикаль, в силу третьего закона Ньютона, даёт большую проекцию на оси, чем тангаж. Ротор безусловно заставляет иначе взглянуть на то, что такое уходящий ньютонометр, сводя задачу к квадратурам.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.blackWithOpacity,
-                  ),
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Divider(),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TextReviewDetailPage()));
-                },
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => TextReviewDetailPage(widget.review)));
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius:
+                  BorderRadius.circular(AppConstants.cardBorderRadius),
+              color: AppColors.white),
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                 child: Row(
                   children: [
-                    const Text(
-                      "Открыть отзыв",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                    ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
+                      child: SizedBox(
+                        width: 64,
+                        height: 64,
+                        child: CachedNetworkImage(
+                          imageUrl: widget.review.user?.avatar ?? '',
+                        ),
                       ),
                     ),
-                    const Spacer(),
-                    Icon(Icons.arrow_forward_ios),
+                    const SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: Text(
+                            '${widget.review.user?.name ?? ''} ${widget.review.user?.surname ?? ''}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: Text(
+                            '${widget.review.housing?.city?.name ?? ''}, ${AppConstants.countries[(widget.review.housing?.city?.countryId ?? 1) - 1]}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.blackWithOpacity,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
-            )
-          ],
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: SizedBox(
+                  child: Text(
+                    widget.review.description ?? '',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppColors.blackWithOpacity,
+                    ),
+                    maxLines: 5,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              (widget.review.images?.length ?? 0) > 0
+                  ? Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 10),
+                      height: 70,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          for (int i = 0;
+                              i < (widget.review.images?.length ?? 0);
+                              i++)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: ClipRRect(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(12)),
+                                child: SizedBox(
+                                  width: 70,
+                                  height: 70,
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          const SizedBox(width: 10),
+                          (widget.review.images?.length ?? 0) > 3
+                              ? ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(12)),
+                                  child: Container(
+                                    color: AppColors.grey,
+                                    width: 70,
+                                    height: 70,
+                                    child: Center(
+                                      child: Text(
+                                        '+ ${(widget.review.images?.length ?? 3) - 3}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    )
+                  : Container(),
+            ],
+          ),
         ),
       ),
     );

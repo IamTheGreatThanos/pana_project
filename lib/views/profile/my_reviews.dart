@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/my_audio_review_card.dart';
 import 'package:pana_project/components/my_text_review_card.dart';
+import 'package:pana_project/models/textReview.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 
 class MyReviewsPage extends StatefulWidget {
@@ -12,8 +14,13 @@ class MyReviewsPage extends StatefulWidget {
 class _MyReviewsPageState extends State<MyReviewsPage> {
   TextEditingController phoneController = TextEditingController();
 
+  List<TextReviewModel> textReviews = [];
+  List<TextReviewModel> audioReviews = [];
+
   @override
   void initState() {
+    getTextReviews();
+    getAudioReviews();
     super.initState();
   }
 
@@ -111,8 +118,8 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
                               // TODO: Текстовые отзывы
                               ListView(
                                 children: [
-                                  for (int i = 0; i < 10; i++)
-                                    MyTextReviewCard(),
+                                  for (int i = 0; i < textReviews.length; i++)
+                                    MyTextReviewCard(textReviews[i]),
                                   const SizedBox(height: 20)
                                 ],
                               ),
@@ -129,5 +136,41 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
         ),
       ),
     );
+  }
+
+  void getTextReviews() async {
+    textReviews = [];
+    var response = await MainProvider().getTextReviews();
+    if (response['response_status'] == 'ok') {
+      for (int i = 0; i < response['data'].length; i++) {
+        textReviews.add(TextReviewModel.fromJson(response['data'][i]));
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void getAudioReviews() async {
+    audioReviews = [];
+    var response = await MainProvider().getAudioReviews();
+    if (response['response_status'] == 'ok') {
+      for (int i = 0; i < response['data'].length; i++) {
+        textReviews.add(TextReviewModel.fromJson(response['data'][i]));
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

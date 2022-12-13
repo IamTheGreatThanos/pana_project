@@ -5,8 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:story_view/controller/story_controller.dart';
-import 'package:story_view/story_view.dart';
 
 class BookedHousingCard extends StatefulWidget {
   BookedHousingCard(this.housing, this.travelId);
@@ -19,31 +17,10 @@ class BookedHousingCard extends StatefulWidget {
 
 class _BookedHousingCardState extends State<BookedHousingCard> {
   final CarouselController _controller = CarouselController();
-  final _storyController = StoryController();
   int _current = 0;
-
-  List<StoryItem?> thisStoryItems = [];
-  List<StoryItem?> mediaStoryItems = [];
 
   @override
   void initState() {
-    for (int i = 0; i < widget.housing.images!.length; i++) {
-      thisStoryItems.add(
-        StoryItem.pageImage(
-          url: widget.housing.images![i].path!,
-          controller: _storyController,
-          imageFit: BoxFit.fitHeight,
-        ),
-      );
-
-      mediaStoryItems.add(
-        StoryItem.pageImage(
-          url: widget.housing.images![i].path!,
-          controller: _storyController,
-          imageFit: BoxFit.fitWidth,
-        ),
-      );
-    }
     super.initState();
   }
 
@@ -101,7 +78,7 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
                             itemBuilder: (BuildContext context, int itemIndex,
                                     int pageViewIndex) =>
                                 CachedNetworkImage(
-                              fit: BoxFit.fitWidth,
+                              fit: BoxFit.cover,
                               imageUrl: widget.housing.images![itemIndex].path!,
                             ),
                           ),
@@ -140,14 +117,14 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
                   children: [
                     Text(
                       '${widget.housing.city!.name}, ${widget.housing.country!.name}',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Text(
                       widget.housing.reviewsAvgBall.toString(),
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w500),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 2, left: 5),
@@ -163,7 +140,7 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
                 ),
                 Text(
                   '${widget.housing.distance} км от вас',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                       color: Colors.black45),

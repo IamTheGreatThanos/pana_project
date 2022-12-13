@@ -464,40 +464,27 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                           child: Row(
                             children: [
                               const SizedBox(width: 15),
-                              SizedBox(
-                                height: 85,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      width: 22,
-                                      height: 22,
-                                      decoration: const BoxDecoration(
-                                          color: AppColors.lightGray,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10))),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(3),
-                                        child: SizedBox(
-                                          width: 16,
-                                          height: 16,
-                                          child: startLoc['status'] == 1
-                                              ? SvgPicture.asset(
-                                                  'assets/icons/geolocation_info_icon_checkmark.svg')
-                                              : startLoc['status'] == 2
-                                                  ? SvgPicture.asset(
-                                                      'assets/icons/geolocation_info_icon_accent.svg')
-                                                  : SvgPicture.asset(
-                                                      'assets/icons/geolocation_info_icon_grey.svg'),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 22,
-                                      height: 35,
-                                      color: AppColors.lightGray,
-                                    ),
-                                  ],
+                              Container(
+                                width: 22,
+                                height: 22,
+                                decoration: const BoxDecoration(
+                                    color: AppColors.lightGray,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: startLoc['status'] == 1
+                                        ? SvgPicture.asset(
+                                            'assets/icons/geolocation_info_icon_checkmark.svg')
+                                        : startLoc['status'] == 2
+                                            ? SvgPicture.asset(
+                                                'assets/icons/geolocation_info_icon_accent.svg')
+                                            : SvgPicture.asset(
+                                                'assets/icons/geolocation_info_icon_grey.svg'),
+                                  ),
                                 ),
                               ),
                               const Spacer(),

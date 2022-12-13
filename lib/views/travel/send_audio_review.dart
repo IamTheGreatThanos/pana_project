@@ -25,8 +25,8 @@ class SendAudioReviewPage extends StatefulWidget {
 }
 
 class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
-  Codec _codec = Codec.aacMP4;
-  final String _mPath = 'file.mp4';
+  Codec _codec = Codec.pcm16WAV;
+  final String _mPath = 'file.wav';
   FlutterSoundRecorder? _mRecorder = FlutterSoundRecorder();
   bool _mRecorderIsInited = false;
 

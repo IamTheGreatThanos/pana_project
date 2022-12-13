@@ -1,35 +1,53 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/models/audioReview.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/other/audio_review_detail_page.dart';
 
 class MyAudioReviewCard extends StatefulWidget {
-  // MyAudioReviewCard(this.product);
-  // final Product product;
+  MyAudioReviewCard(this.review);
+  final AudioReviewModel review;
 
   @override
   _MyAudioReviewCardState createState() => _MyAudioReviewCardState();
 }
 
-class _MyAudioReviewCardState extends State<MyAudioReviewCard>
-    with TickerProviderStateMixin {
-  late AnimationController controller;
+class _MyAudioReviewCardState extends State<MyAudioReviewCard> {
+  final audioPlayer = AudioPlayer();
+  Duration duration = const Duration(seconds: 1);
+  Duration position = const Duration(seconds: 1);
   bool playingState = false;
+
   @override
   void initState() {
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 5),
-    )..addListener(() {
-        setState(() {});
-      });
+    initPlayer();
     super.initState();
+  }
+
+  void initPlayer() async {
+    audioPlayer.onPlayerStateChanged.listen((state) {
+      setState(() {
+        playingState = state == PlayerState.playing;
+      });
+    });
+
+    audioPlayer.onDurationChanged.listen((newDuration) {
+      setState(() {
+        duration = newDuration;
+      });
+    });
+
+    audioPlayer.onPositionChanged.listen((newPosition) {
+      setState(() {
+        position = newPosition;
+      });
+    });
   }
 
   @override
   void dispose() {
-    controller.dispose();
     super.dispose();
   }
 
@@ -39,8 +57,10 @@ class _MyAudioReviewCardState extends State<MyAudioReviewCard>
       padding: const EdgeInsets.only(top: 20),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AudioReviewDetailPage()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AudioReviewDetailPage(widget.review)));
         },
         child: Container(
           decoration: BoxDecoration(
@@ -61,8 +81,7 @@ class _MyAudioReviewCardState extends State<MyAudioReviewCard>
                         width: 64,
                         height: 64,
                         child: CachedNetworkImage(
-                          imageUrl:
-                              'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
+                          imageUrl: widget.review.user?.avatar ?? '',
                         ),
                       ),
                     ),
@@ -72,9 +91,9 @@ class _MyAudioReviewCardState extends State<MyAudioReviewCard>
                       children: [
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.6,
-                          child: const Text(
-                            'Домик на берегу моря',
-                            style: TextStyle(
+                          child: Text(
+                            '${widget.review.user?.name ?? ''} ${widget.review.user?.surname ?? ''}',
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
                             ),
@@ -83,9 +102,9 @@ class _MyAudioReviewCardState extends State<MyAudioReviewCard>
                         const SizedBox(height: 10),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.6,
-                          child: const Text(
-                            'Almaty, Kazakhstan',
-                            style: TextStyle(
+                          child: Text(
+                            '${widget.review.housing?.city?.name ?? ''}, ${AppConstants.countries[(widget.review.housing?.city?.countryId ?? 1) - 1]}',
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Colors.black45,
@@ -124,10 +143,21 @@ class _MyAudioReviewCardState extends State<MyAudioReviewCard>
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.75,
                         height: 12,
-                        child: LinearProgressIndicator(
-                          value: controller.value,
-                          color: AppColors.blackWithOpacity,
-                          backgroundColor: AppColors.lightGray,
+                        child: TweenAnimationBuilder<double>(
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.easeInOut,
+                          tween: Tween<double>(
+                            begin: 0,
+                            end: position.inSeconds.toDouble() /
+                                duration.inSeconds.toDouble(),
+                          ),
+                          builder: (context, value, _) =>
+                              LinearProgressIndicator(
+                            value: position.inSeconds.toDouble() /
+                                duration.inSeconds.toDouble(),
+                            color: AppColors.blackWithOpacity,
+                            backgroundColor: AppColors.lightGray,
+                          ),
                         ),
                       ),
                     ),
@@ -135,19 +165,19 @@ class _MyAudioReviewCardState extends State<MyAudioReviewCard>
                 ),
               ),
               Row(
-                children: const [
-                  SizedBox(width: 20),
+                children: [
+                  const SizedBox(width: 20),
                   Text(
-                    '03:01',
-                    style: TextStyle(
+                    '00:${position.inSeconds > 9 ? position.inSeconds.toString() : '0' + position.inSeconds.toString()}',
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    ' / 03:01',
-                    style: TextStyle(
+                    ' / 00:${duration.inSeconds > 9 ? duration.inSeconds.toString() : '0' + duration.inSeconds.toString()}',
+                    style: const TextStyle(
                       color: Colors.black54,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -163,9 +193,17 @@ class _MyAudioReviewCardState extends State<MyAudioReviewCard>
   }
 
   void playAudioReview() async {
-    controller.repeat();
-    setState(() {
-      playingState = !playingState;
-    });
+    if (playingState) {
+      await audioPlayer.pause();
+      setState(() {
+        playingState = !playingState;
+      });
+    } else {
+      UrlSource url = UrlSource(widget.review.audio ?? '');
+      await audioPlayer.play(url);
+      setState(() {
+        playingState = !playingState;
+      });
+    }
   }
 }

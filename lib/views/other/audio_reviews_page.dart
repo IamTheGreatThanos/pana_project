@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/other/audio_review_detail_page.dart';
 
 class AudioReviewsPage extends StatefulWidget {
   // AudioReviewsPage(this.product);
@@ -132,11 +131,11 @@ class _AudioReviewsPageState extends State<AudioReviewsPage> {
                                       if (i == 0)
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AudioReviewDetailPage()));
+                                            //     Navigator.push(
+                                            //         context,
+                                            //         MaterialPageRoute(
+                                            //             builder: (context) =>
+                                            //                 AudioReviewDetailPage(widget.)));
                                           },
                                           child: Row(
                                             children: [

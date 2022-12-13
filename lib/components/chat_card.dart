@@ -1,19 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/utils/const.dart';
 
 class ChatCard extends StatelessWidget {
-  const ChatCard({
-    Key? key,
-    required this.title,
-    required this.subtitle,
-    required this.status,
-    required this.path,
-  }) : super(key: key);
-  final String title;
-  final String subtitle;
-  final bool status;
-  final String path;
+  const ChatCard(this.chat);
+  final ChatModel chat;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +21,9 @@ class ChatCard extends StatelessWidget {
                 SizedBox(
                   width: 34,
                   height: 34,
-                  child: SvgPicture.asset('assets/icons/chat_support.svg'),
+                  child: chat.user?.avatar != null
+                      ? CachedNetworkImage(imageUrl: chat.user?.avatar ?? '')
+                      : SvgPicture.asset('assets/icons/chat_support.svg'),
                 ),
                 const SizedBox(width: 10),
                 Column(
@@ -37,7 +32,7 @@ class ChatCard extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.65,
                       child: Text(
-                        title,
+                        '${chat.user?.name ?? ''} ${chat.user?.surname ?? ''}',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -51,7 +46,7 @@ class ChatCard extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.65,
                       child: Text(
-                        subtitle,
+                        chat.lastMessage?.text ?? '',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.blackWithOpacity,
@@ -77,7 +72,7 @@ class ChatCard extends StatelessWidget {
             ),
           ),
         ),
-        status
+        chat.lastMessage?.isRead == null
             ? Container(
                 color: AppColors.white,
                 child: const Divider(color: AppColors.lightGray),

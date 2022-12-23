@@ -1,131 +1,209 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/models/audioReview.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/other/audio_review_detail_page.dart';
 
 class AudioReviewCard extends StatefulWidget {
-  // AudioReviewCard(this.product);
-  // final Product product;
+  AudioReviewCard(this.review);
+  final AudioReviewModel review;
 
   @override
   _AudioReviewCardState createState() => _AudioReviewCardState();
 }
 
 class _AudioReviewCardState extends State<AudioReviewCard> {
-  double audioReviewWidth = 0.0;
+  final audioPlayer = AudioPlayer();
+  Duration duration = const Duration(seconds: 1);
+  Duration position = const Duration(seconds: 1);
   bool playingState = false;
+
   @override
   void initState() {
+    initPlayer();
     super.initState();
+  }
+
+  void initPlayer() async {
+    audioPlayer.onPlayerStateChanged.listen((state) {
+      setState(() {
+        playingState = state == PlayerState.playing;
+      });
+    });
+
+    audioPlayer.onDurationChanged.listen((newDuration) {
+      setState(() {
+        duration = newDuration;
+      });
+    });
+
+    audioPlayer.onPositionChanged.listen((newPosition) {
+      setState(() {
+        position = newPosition;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(15),
-          ),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 82,
-            child: Row(
-              children: [
-                AnimatedContainer(
-                  duration: const Duration(seconds: 2),
-                  width: audioReviewWidth,
-                  height: 82,
-                  color: AppColors.grey,
-                ),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width,
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AudioReviewDetailPage(widget.review)));
+        },
+        child: Container(
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15),
-            ),
-            border: Border.all(width: 1, color: AppColors.grey),
-          ),
-          child: Row(
+              borderRadius:
+                  BorderRadius.circular(AppConstants.cardBorderRadius),
+              color: AppColors.white),
+          height: 220,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(12)),
-                  child: SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: CachedNetworkImage(
-                      imageUrl:
-                          'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
+                      child: SizedBox(
+                        width: 64,
+                        height: 64,
+                        child: CachedNetworkImage(
+                          imageUrl: widget.review.user?.avatar ?? '',
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.55,
+                          child: Text(
+                            '${widget.review.user?.name ?? ''} ${widget.review.user?.surname ?? ''}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.55,
+                          child: Text(
+                            'Опубликовано: ${widget.review.createdAt ?? ''}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black45,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: const Text(
-                      'Dinmukhammed Muslim',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Divider(),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        playAudioReview();
+                      },
+                      child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: !playingState
+                            ? SvgPicture.asset('assets/icons/play_audio.svg')
+                            : SvgPicture.asset('assets/icons/pause_audio.svg'),
                       ),
                     ),
+                    const SizedBox(width: 20),
+                    ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.65,
+                        height: 12,
+                        child: TweenAnimationBuilder<double>(
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.easeInOut,
+                          tween: Tween<double>(
+                            begin: 0,
+                            end: position.inSeconds.toDouble() /
+                                duration.inSeconds.toDouble(),
+                          ),
+                          builder: (context, value, _) =>
+                              LinearProgressIndicator(
+                            value: position.inSeconds.toDouble() /
+                                duration.inSeconds.toDouble(),
+                            color: AppColors.blackWithOpacity,
+                            backgroundColor: AppColors.lightGray,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 20),
+                  Text(
+                    '00:${position.inSeconds > 9 ? position.inSeconds.toString() : '0' + position.inSeconds.toString()}',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 2),
-                        child: SizedBox(
-                          width: 12,
-                          height: 12,
-                          child: SvgPicture.asset('assets/icons/star.svg'),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text(
-                          '4.9',
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    ' / 00:${duration.inSeconds > 9 ? duration.inSeconds.toString() : '0' + duration.inSeconds.toString()}',
+                    style: const TextStyle(
+                      color: Colors.black54,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
-              GestureDetector(
-                onTap: () {
-                  playAudioReview();
-                },
-                child: SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: !playingState
-                      ? SvgPicture.asset('assets/icons/play_audio.svg')
-                      : SvgPicture.asset('assets/icons/pause_audio.svg'),
-                ),
-              )
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 
   void playAudioReview() async {
-    setState(() {
-      audioReviewWidth = 200;
-      playingState = !playingState;
-    });
+    if (playingState) {
+      await audioPlayer.pause();
+      setState(() {
+        playingState = !playingState;
+      });
+    } else {
+      UrlSource url = UrlSource(widget.review.audio ?? '');
+      await audioPlayer.play(url);
+      setState(() {
+        playingState = !playingState;
+      });
+    }
   }
 }

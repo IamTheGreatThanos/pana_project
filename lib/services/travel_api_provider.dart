@@ -215,6 +215,32 @@ class TravelProvider {
     }
   }
 
+  Future<dynamic> deletePlan(int planId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.delete(
+      Uri.parse('${API_URL}api/mobile/trip-plan/$planId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
   Future<dynamic> getPlanToDoList(int id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
@@ -241,7 +267,8 @@ class TravelProvider {
     }
   }
 
-  Future<dynamic> addItemToPlansToDoList(int id, String text) async {
+  Future<dynamic> addItemToPlansToDoList(
+      int id, String text, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
@@ -255,6 +282,7 @@ class TravelProvider {
       body: jsonEncode(<String, dynamic>{
         "trip_plan_id": id,
         "name": text,
+        "status": status,
       }),
     );
 
@@ -271,17 +299,22 @@ class TravelProvider {
     }
   }
 
-  Future<dynamic> deletePlan(int id) async {
+  Future<dynamic> updateItemInPlansToDoList(
+      int id, int status, int tripPlanId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    final response = await http.delete(
-      Uri.parse('${API_URL}api/mobile/trip-plan/$id'),
+    final response = await http.post(
+      Uri.parse('${API_URL}api/mobile/trip-plan-list/update/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
+      body: jsonEncode(<String, dynamic>{
+        "trip_plan_id": tripPlanId,
+        "status": status,
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -323,7 +356,33 @@ class TravelProvider {
     }
   }
 
-  Future<dynamic> createBookedPlan(int tripId, int housingId) async {
+  Future<dynamic> getBookedImpression() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse('${API_URL}api/mobile/impression/booked'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> createBookedHousing(int tripId, int housingId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
@@ -338,6 +397,68 @@ class TravelProvider {
         "trip_id": tripId,
         "housing_id": housingId,
         "type": 2,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> createBookedImpression(int tripId, int impressionId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.post(
+      Uri.parse('${API_URL}api/mobile/trip-plan'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "trip_id": tripId,
+        "impression_id": impressionId,
+        "type": 3,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> addUserToTravel(int travelId, String phone) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.post(
+      Uri.parse('${API_URL}api/mobile/trip-user'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "trip_id": travelId,
+        "phone": phone,
+        "phone_code": '7'
       }),
     );
 

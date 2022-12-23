@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
@@ -24,7 +25,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
   final ImagePicker _picker = ImagePicker();
 
   var dateMaskFormatter = MaskTextInputFormatter(
-    mask: '##/##/####',
+    mask: '####/##/##',
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy,
   );
@@ -145,7 +146,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                 ),
                                 counterText: "",
                                 border: InputBorder.none,
-                                hintText: 'дд/мм/гггг',
+                                hintText: 'гггг/мм/дд',
                                 hintStyle: TextStyle(
                                   color: Colors.black45,
                                   fontSize: 15,
@@ -552,26 +553,36 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
   }
 
   void saveChanges() async {
-    showLoaderDialog(context);
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
 
-    var response = await MainProvider().sendTextReview(
-      widget.housingId,
-      _dateController.text,
-      _reviewController.text,
-      priceBall,
-      fieldBall,
-      purityBall,
-      staffBall,
-      images,
-    );
+    try {
+      String wasAt = formatter
+          .format(DateTime.parse(_dateController.text.replaceAll('/', '-')));
+      showLoaderDialog(context);
+      var response = await MainProvider().sendTextReview(
+        widget.housingId,
+        wasAt,
+        _reviewController.text,
+        priceBall,
+        fieldBall,
+        purityBall,
+        staffBall,
+        images,
+      );
 
-    if (response['response_status'] == 'ok') {
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-    } else {
-      Navigator.of(context).pop();
+      if (response['response_status'] == 'ok') {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Ошибка загрузки...', style: TextStyle(fontSize: 20)),
+        ));
+      }
+    } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Ошибка загрузки...', style: TextStyle(fontSize: 20)),
+        content:
+            Text("Заполните правильную дату.", style: TextStyle(fontSize: 20)),
       ));
     }
   }

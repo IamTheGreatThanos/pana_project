@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/models/travelPlan.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/profile/my_reviews.dart';
 import 'package:pana_project/views/travel/send_audio_review.dart';
 import 'package:pana_project/views/travel/send_text_review.dart';
 
@@ -164,10 +165,11 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                               fontWeight: FontWeight.w500),
                                         ),
                                       ),
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 10),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
                                         child: Text(
-                                          '18 Отзывов',
+                                          '${widget.plan.housing?.reviewsCount ?? '0'} Отзывов',
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
@@ -390,8 +392,8 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Оставить отзыв',
                               style: TextStyle(
                                 fontSize: 18,
@@ -399,15 +401,23 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            Spacer(),
-                            Text(
-                              'Мои отзывы',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.accent,
+                            const Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MyReviewsPage()));
+                              },
+                              child: const Text(
+                                'Мои отзывы',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.accent,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),

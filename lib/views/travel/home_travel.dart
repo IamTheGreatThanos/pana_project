@@ -32,6 +32,10 @@ class _HomeTravelState extends State<HomeTravel> {
     super.initState();
   }
 
+  Future<void> _pullRefresh() async {
+    getTravelList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -87,41 +91,46 @@ class _HomeTravelState extends State<HomeTravel> {
                       Container(
                         color: AppColors.lightGray,
                         width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: AppColors.grey,
-                                    width: 1,
-                                  ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(100),
-                                  ),
-                                ),
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 7),
-                                  child: Text(
-                                    'Июль 2022',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black45,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            for (int i = 0; i < travelList.length; i++)
-                              GestureDetector(
-                                  onTap: () {
-                                    goToTravelPlan(travelList[i]);
-                                  },
-                                  child: TravelCard(travelList[i]))
-                          ],
+                        height: MediaQuery.of(context).size.height,
+                        child: RefreshIndicator(
+                          onRefresh: _pullRefresh,
+                          child: ListView(
+                            children: [
+                              // Padding(
+                              //   padding: const EdgeInsets.all(20),
+                              //   child: Container(
+                              //     decoration: BoxDecoration(
+                              //       border: Border.all(
+                              //         color: AppColors.grey,
+                              //         width: 1,
+                              //       ),
+                              //       borderRadius: const BorderRadius.all(
+                              //         Radius.circular(100),
+                              //       ),
+                              //     ),
+                              //     child: const Padding(
+                              //       padding: EdgeInsets.symmetric(
+                              //           horizontal: 15, vertical: 7),
+                              //       child: Text(
+                              //         'Июль 2022',
+                              //         style: TextStyle(
+                              //           fontSize: 12,
+                              //           color: Colors.black45,
+                              //           fontWeight: FontWeight.bold,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
+                              for (int i = 0; i < travelList.length; i++)
+                                GestureDetector(
+                                    onTap: () {
+                                      goToTravelPlan(travelList[i]);
+                                    },
+                                    child: TravelCard(travelList[i])),
+                              const SizedBox(height: 150),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -478,6 +487,7 @@ class _HomeTravelState extends State<HomeTravel> {
   }
 
   void createNewTravel() async {
+    _titleController.text = '';
     var response = await TravelProvider()
         .createTravel(_titleController.text, startDate, endDate);
     if (response['response_status'] == 'ok') {

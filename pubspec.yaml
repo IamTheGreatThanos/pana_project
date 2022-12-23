@@ -188,6 +188,8 @@ flutter:
     - assets/images/review_no_answer.svg
     - assets/icons/attach_icon.svg
     - assets/icons/send_message_icon.svg
+    - assets/icons/map_pin_black.png
+    - assets/icons/map_pin_accent.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

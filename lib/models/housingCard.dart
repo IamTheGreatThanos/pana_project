@@ -1,12 +1,14 @@
 import 'package:pana_project/models/city.dart';
 import 'package:pana_project/models/country.dart';
 import 'package:pana_project/models/images.dart';
+import 'package:pana_project/models/videos.dart';
 
 class HousingCardModel {
   int? id;
   City? city;
   Country? country;
   List<Images>? images;
+  List<Videos>? videos;
   bool? inFavorite;
   int? reviewsAvgBall;
   int? distance;
@@ -16,6 +18,7 @@ class HousingCardModel {
       this.city,
       this.country,
       this.images,
+      this.videos,
       this.inFavorite,
       this.reviewsAvgBall,
       this.distance});
@@ -29,6 +32,12 @@ class HousingCardModel {
       images = <Images>[];
       json['images'].forEach((v) {
         images!.add(Images.fromJson(v));
+      });
+    }
+    if (json['videos'] != null) {
+      videos = <Videos>[];
+      json['videos'].forEach((v) {
+        videos!.add(Videos.fromJson(v));
       });
     }
     inFavorite = json['in_favorite'];

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:pana_project/models/travelPlan.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/other/list_of_countries_page.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 
@@ -19,13 +20,12 @@ class MyPlanDetailPage extends StatefulWidget {
 class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
   final DateRangePickerController _datePickerController =
       DateRangePickerController();
-  TextEditingController _titleController = TextEditingController();
   TextEditingController _toDoItemController = TextEditingController();
 
   var _switchValue = false;
 
-  List<String> baseToDoList = [];
-  List<String> toDoList = [];
+  List<Map<String, dynamic>> baseToDoList = [];
+  List<Map<String, dynamic>> toDoList = [];
 
   String selectedRange = '';
   String startDate = '';
@@ -33,6 +33,9 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
 
   String startTime = '';
   String endTime = '';
+
+  int selectedCityId = 0;
+  String selectedCityName = '';
 
   @override
   void initState() {
@@ -135,7 +138,9 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              widget.plan.city?.name ?? '',
+                              selectedCityId != 0
+                                  ? selectedCityName
+                                  : widget.plan.city?.name ?? '',
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -146,14 +151,19 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                           ],
                         ),
                         const Spacer(),
-                        const Text(
-                          'Изменить',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.accent,
+                        GestureDetector(
+                          onTap: () {
+                            goToChangeCity();
+                          },
+                          child: const Text(
+                            'Изменить',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.accent,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
@@ -238,6 +248,55 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                         ),
                       ),
                       const Divider(),
+                      for (var item in baseToDoList)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (item['status'] == 0) {
+                                        item['status'] = 1;
+                                      } else {
+                                        item['status'] = 0;
+                                      }
+                                      setState(() {});
+                                    },
+                                    child: Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                          color: item['status'] == 1
+                                              ? AppColors.accent
+                                              : Colors.transparent,
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(8),
+                                          ),
+                                          border: Border.all(
+                                              width: 1, color: AppColors.grey)),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.7,
+                                    child: Text(
+                                      item['name'],
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Divider(),
+                            ],
+                          ),
+                        ),
                       for (var item in toDoList)
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -245,22 +304,35 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                             children: [
                               Row(
                                 children: [
-                                  Container(
-                                    width: 24,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(8),
-                                        ),
-                                        border: Border.all(
-                                            width: 1, color: AppColors.grey)),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (item['status'] == 0) {
+                                        item['status'] = 1;
+                                      } else {
+                                        item['status'] = 0;
+                                      }
+                                      setState(() {});
+                                    },
+                                    child: Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                          color: item['status'] == 1
+                                              ? AppColors.accent
+                                              : Colors.transparent,
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(8),
+                                          ),
+                                          border: Border.all(
+                                              width: 1, color: AppColors.grey)),
+                                    ),
                                   ),
                                   const SizedBox(width: 20),
                                   SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width * 0.7,
                                     child: Text(
-                                      item,
+                                      item['name'],
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
@@ -314,7 +386,10 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                         child: GestureDetector(
                           onTap: () {
                             if (_toDoItemController.text != '') {
-                              toDoList.add(_toDoItemController.text);
+                              toDoList.add({
+                                'name': _toDoItemController.text,
+                                'status': 0
+                              });
                               _toDoItemController.text = '';
                               setState(() {});
                             }
@@ -443,8 +518,8 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
 
     if (response['response_status'] == 'ok') {
       for (var i in response['data']) {
-        baseToDoList.add(i['name']);
-        toDoList.add(i['name']);
+        baseToDoList
+            .add({'id': i['id'], 'name': i['name'], 'status': i['status']});
         setState(() {});
       }
     } else {
@@ -461,10 +536,11 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
         startDate + startTime,
         endDate + endTime,
         _switchValue == false ? 0 : 1,
-        1);
+        selectedCityId != 0 ? selectedCityId : widget.plan.city?.id ?? 1);
     print(startDate + (startTime == '' ? ' 10:00' : startTime));
 
     if (response['response_status'] == 'ok') {
+      updateToDoList();
       addToDoList();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -474,19 +550,32 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
     }
   }
 
+  void updateToDoList() async {
+    for (var i in baseToDoList) {
+      var response = await TravelProvider()
+          .updateItemInPlansToDoList(i['id'], i['status'], widget.plan.id!);
+      if (response['response_status'] == 'ok') {
+        print('Updated Item!');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 20)),
+        ));
+      }
+    }
+  }
+
   void addToDoList() async {
     for (var i in toDoList) {
-      if (!baseToDoList.contains(i)) {
-        var response =
-            await TravelProvider().addItemToPlansToDoList(widget.plan.id!, i);
-        if (response['response_status'] == 'ok') {
-          print('Added Item!');
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(response['data']['message'],
-                style: const TextStyle(fontSize: 20)),
-          ));
-        }
+      var response = await TravelProvider()
+          .addItemToPlansToDoList(widget.plan.id!, i['name'], i['status']);
+      if (response['response_status'] == 'ok') {
+        print('Added Item!');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 20)),
+        ));
       }
     }
 
@@ -504,6 +593,15 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
             Text(response['message'], style: const TextStyle(fontSize: 20)),
       ));
     }
+  }
+
+  void goToChangeCity() async {
+    final result = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ListOfCountriesPage()));
+    selectedCityId = result[0];
+    selectedCityName = result[1];
+
+    setState(() {});
   }
 
   void showDatePicker() async {
@@ -592,6 +690,9 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
         if (args.value.startDate != null && args.value.endDate != null) {
           startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
           endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
+        } else {
+          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+          endDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
         }
       }
     });

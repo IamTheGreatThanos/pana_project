@@ -10,6 +10,7 @@ import 'package:pana_project/models/user.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/travel/add_new_plan_page.dart';
+import 'package:pana_project/views/travel/add_user_to_travel_page.dart';
 import 'package:pana_project/views/travel/booked_plans_page.dart';
 import 'package:pana_project/views/travel/my_plan_detail.dart';
 
@@ -30,20 +31,6 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
   List<TravelPlanModel> thisTravelPlans = [];
   List<User> userList = [];
   int lenOfRoadLine = 0;
-
-  Map<String, dynamic> startLoc = {
-    'isExist': false,
-    'title': 'Начальная локация',
-    'subtitle': 'Выберите город, с которого вы начнете поездку',
-    'status': 3
-  };
-
-  Map<String, dynamic> finishLoc = {
-    'isExist': false,
-    'title': 'Финальная локация',
-    'subtitle': 'Выберите город, в котором вы завершите поездку',
-    'status': 3
-  };
 
   @override
   void initState() {
@@ -260,8 +247,15 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                 Stack(
                   children: [
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 20, bottom: 20, left: 25),
+                      padding: EdgeInsets.only(
+                          top: (thisTravelPlans.isNotEmpty
+                                      ? thisTravelPlans[0].type
+                                      : 1) ==
+                                  1
+                              ? 20
+                              : 50,
+                          bottom: 20,
+                          left: 25),
                       child: Column(
                         children: [
                           Padding(
@@ -291,88 +285,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                     ),
                     Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 15),
-                              Container(
-                                width: 22,
-                                height: 22,
-                                decoration: const BoxDecoration(
-                                    color: AppColors.lightGray,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(3),
-                                  child: SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: startLoc['status'] == 1
-                                        ? SvgPicture.asset(
-                                            'assets/icons/geolocation_info_icon_checkmark.svg')
-                                        : startLoc['status'] == 2
-                                            ? SvgPicture.asset(
-                                                'assets/icons/geolocation_info_icon_accent.svg')
-                                            : SvgPicture.asset(
-                                                'assets/icons/geolocation_info_icon_grey.svg'),
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  if (!startLoc['isExist']) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text('Choose city',
-                                          style: const TextStyle(fontSize: 20)),
-                                    ));
-                                  }
-                                },
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8),
-                                    ),
-                                    color: Colors.white,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          startLoc['title'],
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Text(
-                                          startLoc['subtitle'],
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w500,
-                                            color: startLoc['isExist']
-                                                ? Colors.black45
-                                                : AppColors.accent,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 20)
-                            ],
-                          ),
-                        ),
-                        for (int i = 1; i < thisTravelPlans.length - 1; i++)
+                        for (int i = 0; i < thisTravelPlans.length; i++)
                           thisTravelPlans[i].type == 1
                               ? Padding(
                                   padding:
@@ -410,13 +323,37 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                                         onTap: () {
                                           goToMyPlanDetail(thisTravelPlans[i]);
                                         },
-                                        child: TravelOwnCard(
-                                            thisTravelPlans[i].name ?? '',
-                                            '${thisTravelPlans[i].city?.name ?? ''}, ${AppConstants.countries[(thisTravelPlans[i].city?.countryId ?? 1) - 1]}',
-                                            thisTravelPlans[i]
-                                                    .dateStart
-                                                    ?.substring(0, 16) ??
-                                                ''),
+                                        child: Stack(
+                                          children: [
+                                            TravelOwnCard(
+                                                thisTravelPlans[i].name ?? '',
+                                                '${thisTravelPlans[i].city?.name ?? ''}, ${AppConstants.countries[(thisTravelPlans[i].city?.countryId ?? 1) - 1]}',
+                                                thisTravelPlans[i]
+                                                        .dateStart
+                                                        ?.substring(0, 16) ??
+                                                    ''),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.7,
+                                                  top: 10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  showAlertDialogForDeletingPlan(
+                                                      context,
+                                                      thisTravelPlans[i].id!);
+                                                },
+                                                child: const Icon(
+                                                  Icons.close,
+                                                  color: AppColors
+                                                      .blackWithOpacity,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                       const SizedBox(width: 20)
                                     ],
@@ -454,92 +391,35 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                                         ),
                                       ),
                                       const Spacer(),
-                                      TravelBookedCard(thisTravelPlans[i]),
+                                      Stack(
+                                        children: [
+                                          TravelBookedCard(thisTravelPlans[i]),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.7,
+                                                top: 10),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                showAlertDialogForDeletingPlan(
+                                                    context,
+                                                    thisTravelPlans[i].id!);
+                                              },
+                                              child: const Icon(
+                                                Icons.close,
+                                                color:
+                                                    AppColors.blackWithOpacity,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                       const SizedBox(width: 20)
                                     ],
                                   ),
                                 ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 15),
-                              Container(
-                                width: 22,
-                                height: 22,
-                                decoration: const BoxDecoration(
-                                    color: AppColors.lightGray,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(3),
-                                  child: SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: startLoc['status'] == 1
-                                        ? SvgPicture.asset(
-                                            'assets/icons/geolocation_info_icon_checkmark.svg')
-                                        : startLoc['status'] == 2
-                                            ? SvgPicture.asset(
-                                                'assets/icons/geolocation_info_icon_accent.svg')
-                                            : SvgPicture.asset(
-                                                'assets/icons/geolocation_info_icon_grey.svg'),
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  if (!finishLoc['isExist']) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text('Choose city',
-                                          style: const TextStyle(fontSize: 20)),
-                                    ));
-                                  }
-                                },
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8),
-                                    ),
-                                    color: Colors.white,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          finishLoc['title'],
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Text(
-                                          finishLoc['subtitle'],
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w500,
-                                            color: finishLoc['isExist']
-                                                ? Colors.black45
-                                                : AppColors.accent,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 20)
-                            ],
-                          ),
-                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Row(
@@ -681,27 +561,32 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                       for (var user in userList) TravelUserCard(user, false),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.add,
-                              color: AppColors.accent,
-                              size: 26,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 10,
+                        child: GestureDetector(
+                          onTap: () {
+                            goToAddUserPage();
+                          },
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.add,
+                                color: AppColors.accent,
+                                size: 26,
                               ),
-                              child: Text(
-                                'Добавить участника',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.accent,
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 10,
+                                ),
+                                child: Text(
+                                  'Добавить участника',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.accent,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       const Padding(
@@ -862,6 +747,59 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
     getTravelPlans();
   }
 
+  void goToAddUserPage() async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddUserToTravelPage(widget.travel.id!)));
+
+    getTravelUsers();
+  }
+
+  void deletePlanFromTravel(int planId) async {
+    var response = await TravelProvider().deletePlan(planId);
+    if (response['response_status'] == 'ok') {
+      getTravelPlans();
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  showAlertDialogForDeletingPlan(BuildContext context, int planId) {
+    Widget okButton = TextButton(
+      child: Text("Да"),
+      onPressed: () {
+        deletePlanFromTravel(planId);
+      },
+    );
+    Widget cancelButton = TextButton(
+      child: Text("Отмена"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Внимание"),
+      content: Text("Вы точно хотите удалить?"),
+      actions: [
+        okButton,
+        cancelButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   showAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
@@ -921,27 +859,6 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
           lenOfRoadLine += 5;
         } else {
           lenOfRoadLine += 9;
-        }
-      }
-
-      if (thisTravelPlans.length > 0) {
-        if (thisTravelPlans[0].city != null) {
-          startLoc['isExist'] = true;
-          startLoc['title'] =
-              '${thisTravelPlans[0].city!.name ?? ''}, ${AppConstants.countries[(thisTravelPlans[0].city!.countryId ?? 1) - 1]}';
-          startLoc['subtitle'] = 'Начальная локация';
-          startLoc['status'] = thisTravelPlans[0].status;
-        }
-      }
-
-      if (thisTravelPlans.length > 1) {
-        if (thisTravelPlans[thisTravelPlans.length - 1].city != null) {
-          finishLoc['isExist'] = true;
-          finishLoc['title'] =
-              '${thisTravelPlans[thisTravelPlans.length - 1].city!.name ?? ''}, ${AppConstants.countries[(thisTravelPlans[thisTravelPlans.length - 1].city!.countryId ?? 1) - 1]}';
-          finishLoc['subtitle'] = 'Финальная локация';
-          finishLoc['status'] =
-              thisTravelPlans[thisTravelPlans.length - 1].status;
         }
       }
 

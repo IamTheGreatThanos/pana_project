@@ -1,6 +1,7 @@
 import 'package:pana_project/models/answers.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/images.dart';
+import 'package:pana_project/models/impressionDetail.dart';
 import 'package:pana_project/models/user.dart';
 
 class AudioReviewModel {
@@ -8,9 +9,9 @@ class AudioReviewModel {
   User? user;
   int? status;
   HousingDetailModel? housing;
-  Null? impression;
+  ImpressionDetailModel? impression;
   String? audio;
-  Null? description;
+  String? description;
   int? price;
   int? purity;
   int? staff;
@@ -44,7 +45,9 @@ class AudioReviewModel {
     housing = json['housing'] != null
         ? HousingDetailModel.fromJson(json['housing'])
         : null;
-    impression = json['impression'];
+    impression = json['impression'] != null
+        ? ImpressionDetailModel.fromJson(json['impression'])
+        : null;
     audio = json['audio'];
     description = json['description'];
     price = json['price'];

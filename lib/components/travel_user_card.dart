@@ -11,7 +11,7 @@ class TravelUserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, top: 10, bottom: 20, right: 20),
+      padding: const EdgeInsets.only(left: 20, top: 0, bottom: 15, right: 20),
       child: Container(
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(

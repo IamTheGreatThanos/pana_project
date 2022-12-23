@@ -1,22 +1,23 @@
 import 'dart:typed_data';
-import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/components/facilities_widget.dart';
-import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/components/stories_card.dart';
+import 'package:pana_project/models/audioReview.dart';
 import 'package:pana_project/models/housingDetail.dart';
+import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/get_bytes_from_asset.dart';
 import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/housing/select_room_page.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
+import 'package:pana_project/views/other/text_reviews_page.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
@@ -31,25 +32,27 @@ class HousingInfo extends StatefulWidget {
 }
 
 class _HousingInfoState extends State<HousingInfo> {
-  final _storyController = StoryController();
+  final storyController = StoryController();
   late GoogleMapController _mapController;
 
   CameraPosition _initPosition =
-      CameraPosition(target: LatLng(43.236431, 76.917994), zoom: 14);
+      const CameraPosition(target: LatLng(43.236431, 76.917994), zoom: 14);
   final Set<Marker> _markers = {};
 
   HousingDetailModel thisHousing = HousingDetailModel();
 
+  List<TextReviewModel> textReviews = [];
+  List<AudioReviewModel> audioReviews = [];
+
   @override
   void initState() {
     getHousingInfo();
-    setupMarkers();
     super.initState();
   }
 
   @override
   void dispose() {
-    _storyController.dispose();
+    storyController.dispose();
     super.dispose();
   }
 
@@ -58,8 +61,6 @@ class _HousingInfoState extends State<HousingInfo> {
       _mapController = controller;
     });
   }
-
-  void setupMarkers() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +92,7 @@ class _HousingInfoState extends State<HousingInfo> {
                         onComplete: () {},
                         progressPosition: ProgressPosition.bottom,
                         repeat: true,
-                        controller: _storyController,
+                        controller: storyController,
                         onVerticalSwipeComplete: (direction) {
                           Navigator.push(
                               context,
@@ -226,9 +227,9 @@ class _HousingInfoState extends State<HousingInfo> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 10),
+                      padding: const EdgeInsets.only(left: 10),
                       child: Text(
-                        '${thisHousing.city?.name ?? ''}, Kazakhstan',
+                        '${thisHousing.city?.name ?? ''}, Казахстан',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -429,24 +430,33 @@ class _HousingInfoState extends State<HousingInfo> {
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 20, bottom: 10),
                   child: Row(
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         'Отзывы',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Spacer(),
-                      Text(
-                        'Перейти',
-                        style: TextStyle(
-                          color: AppColors.accent,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      TextReviewsPage(textReviews)));
+                        },
+                        child: const Text(
+                          'Перейти',
+                          style: TextStyle(
+                            color: AppColors.accent,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                     ],
                   ),
                 ),
@@ -565,13 +575,13 @@ class _HousingInfoState extends State<HousingInfo> {
                             double.parse(thisHousing.reviewsStaffAvg ?? '0')
                                 .roundToDouble()
                                 .toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: AppColors.black,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(width: 20),
+                          const SizedBox(width: 20),
                         ],
                       ),
                     ),
@@ -635,7 +645,8 @@ class _HousingInfoState extends State<HousingInfo> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => AudioReviewsPage()));
+                                  builder: (context) =>
+                                      AudioReviewsPage(audioReviews)));
                         },
                         child: const Text(
                           'Перейти',
@@ -650,16 +661,24 @@ class _HousingInfoState extends State<HousingInfo> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  child: AudioReviewCard(),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  child: AudioReviewCard(),
-                ),
+                for (int i = 0;
+                    i < (audioReviews.length > 2 ? 2 : audioReviews.length);
+                    i++)
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(24),
+                          ),
+                          border: Border.all(
+                            width: 1,
+                            color: AppColors.lightGray,
+                          ),
+                        ),
+                        child: AudioReviewCard(audioReviews[i])),
+                  ),
                 const Divider(),
                 const Padding(
                   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -671,7 +690,7 @@ class _HousingInfoState extends State<HousingInfo> {
                     ),
                   ),
                 ),
-                ImpressionCard(),
+                // ImpressionCard(),
                 const Divider(),
                 const Padding(
                   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -739,7 +758,7 @@ class _HousingInfoState extends State<HousingInfo> {
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: const Text(
-                      'Отклонение проецирует суммарный поворот. Гировертикаль, в силу третьего закона Ньютона, даёт большую проекцию на оси, чем тангаж. Ротор безусловно заставляет иначе взглянуть на то, что такое уходящий ньютонометр, сводя задачу к квадратурам.',
+                      'Гости могут получить полный возврат при отмене не позднее чем за 7 дней до начала Впечатления или в течение 24 часов с момента бронирования (при условии, что Впечатление забронировано более чем за 48 часов до начала).',
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -861,7 +880,7 @@ class _HousingInfoState extends State<HousingInfo> {
 
   void tapFavoritesButton() async {
     if (GlobalVariables.favoritesHousing.contains(widget.id)) {
-      var response = await MainProvider().deleteFavorite(widget.id);
+      var response = await MainProvider().deleteFavorite(widget.id, 1);
       if (response['response_status'] == 'ok') {
         GlobalVariables.favoritesHousing.remove(widget.id);
         if (mounted) {
@@ -874,7 +893,7 @@ class _HousingInfoState extends State<HousingInfo> {
         ));
       }
     } else {
-      var response = await MainProvider().addToFavorite(widget.id);
+      var response = await MainProvider().addToFavorite(widget.id, 1);
       if (response['response_status'] == 'ok') {
         GlobalVariables.favoritesHousing.add(widget.id);
         if (mounted) {
@@ -889,13 +908,35 @@ class _HousingInfoState extends State<HousingInfo> {
     }
   }
 
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
-        .buffer
-        .asUint8List();
+  void getTextReviews() async {
+    textReviews = [];
+    var response = await MainProvider().getTextReviewsInHousing(widget.id);
+    if (response['response_status'] == 'ok') {
+      for (var item in response['data']) {
+        textReviews.add(TextReviewModel.fromJson(item));
+      }
+      setState(() {});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void getAudioReviews() async {
+    audioReviews = [];
+    var response = await MainProvider().getAudioReviewsInHousing(widget.id);
+    if (response['response_status'] == 'ok') {
+      for (var item in response['data']) {
+        audioReviews.add(AudioReviewModel.fromJson(item));
+      }
+      setState(() {});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

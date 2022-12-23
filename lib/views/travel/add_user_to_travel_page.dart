@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/components/payment_method_card.dart';
+import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 
-class PaymentMethodsPage extends StatefulWidget {
+class AddUserToTravelPage extends StatefulWidget {
+  AddUserToTravelPage(this.travelId);
+  final int travelId;
+
   @override
-  _PaymentMethodsPageState createState() => _PaymentMethodsPageState();
+  _AddUserToTravelPageState createState() => _AddUserToTravelPageState();
 }
 
-class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
+class _AddUserToTravelPageState extends State<AddUserToTravelPage> {
   TextEditingController phoneController = TextEditingController();
+  double audioReviewWidth = 0.0;
+  bool playingState = false;
 
   @override
   void initState() {
@@ -51,10 +56,10 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                       ),
                     ),
                     const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
+                    const Padding(
+                      padding: EdgeInsets.all(20),
                       child: Text(
-                        'Способы оплаты',
+                        'Добавить участника',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w500,
@@ -84,32 +89,66 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Выберите способ оплаты по умолчанию',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                'Введите номер',
+                                style: TextStyle(fontSize: 14),
                               ),
-                              const SizedBox(height: 20),
-                              PaymentMethodCard('assets/icons/visa_icon.svg',
-                                  '**** 3254', '04/24', true),
-                              const Divider(),
                               const SizedBox(height: 10),
-                              PaymentMethodCard(
-                                  'assets/icons/mastercard_icon.svg',
-                                  '**** 3254',
-                                  '04/24',
-                                  false),
-                              const Divider(),
-                              const SizedBox(height: 10),
-                              GestureDetector(
-                                onTap: () {},
-                                child: const Text(
-                                  'Добавить карту',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: AppColors.accent,
-                                  ),
+                              const Text(
+                                'Мы добавим участника по телефону, который вы укажете ниже',
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black45),
+                              ),
+                              const SizedBox(height: 30),
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                      width: 1, color: AppColors.grey),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                      child: Text(
+                                        '+7',
+                                        style: TextStyle(
+                                            color: Colors.black45,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: VerticalDivider(),
+                                    ),
+                                    SizedBox(
+                                      height: 40,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.6,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 4),
+                                        child: TextField(
+                                          controller: phoneController,
+                                          keyboardType: TextInputType.number,
+                                          maxLength: 10,
+                                          decoration: const InputDecoration(
+                                            counterStyle: TextStyle(
+                                              height: double.minPositive,
+                                            ),
+                                            counterText: "",
+                                            border: InputBorder.none,
+                                            hintText: 'Номер телефона',
+                                            hintStyle: TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                               const SizedBox(height: 10),
@@ -118,7 +157,6 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      const Spacer(),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 20),
@@ -134,16 +172,17 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                               ),
                             ),
                             onPressed: () {
-                              if (true) {
-                              } else {
+                              if (phoneController.text == '') {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("Заполните все поля.",
                                       style: const TextStyle(fontSize: 20)),
                                 ));
+                              } else {
+                                sendPhone();
                               }
                             },
-                            child: const Text("Сохранить",
+                            child: const Text("Добавить",
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w500)),
                           ),
@@ -158,5 +197,18 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
         ),
       ),
     );
+  }
+
+  void sendPhone() async {
+    var response = await TravelProvider()
+        .addUserToTravel(widget.travelId, phoneController.text);
+    if (response['response_status'] == 'ok') {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
   }
 }

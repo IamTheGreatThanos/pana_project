@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/booked_housing_card.dart';
-import 'package:pana_project/components/impression_card.dart';
+import 'package:pana_project/components/booked_impression_card.dart';
 import 'package:pana_project/models/housingCard.dart';
+import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 
@@ -17,10 +18,12 @@ class BookedPlansPage extends StatefulWidget {
 
 class _BookedPlansPageState extends State<BookedPlansPage> {
   List<HousingCardModel> housingList = [];
+  List<ImpressionCardModel> impressionList = [];
 
   @override
   void initState() {
     getHousingList();
+    getImpressionList();
     super.initState();
   }
 
@@ -136,11 +139,14 @@ class _BookedPlansPageState extends State<BookedPlansPage> {
                               // TODO: Впечатления
                               ListView(
                                 children: [
-                                  for (int i = 0; i < housingList.length; i++)
+                                  for (int i = 0;
+                                      i < impressionList.length;
+                                      i++)
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 20),
-                                      child: ImpressionCard(),
+                                      child: BookedImpressionCard(
+                                          impressionList[i], widget.travelId),
                                     )
                                 ],
                               ),
@@ -166,6 +172,24 @@ class _BookedPlansPageState extends State<BookedPlansPage> {
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         housingList.add(HousingCardModel.fromJson(response['data'][i]));
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void getImpressionList() async {
+    impressionList = [];
+    var response = await TravelProvider().getBookedImpression();
+    if (response['response_status'] == 'ok') {
+      for (int i = 0; i < response['data'].length; i++) {
+        impressionList.add(ImpressionCardModel.fromJson(response['data'][i]));
       }
       if (mounted) {
         setState(() {});

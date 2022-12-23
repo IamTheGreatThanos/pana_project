@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/other/list_of_countries_page.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 
@@ -23,7 +24,7 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
 
   var _switchValue = false;
 
-  List<String> toDoList = [];
+  List<Map<String, dynamic>> toDoList = [];
 
   String selectedRange = 'Выбрать даты';
   String startDate = '';
@@ -31,6 +32,8 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
 
   String startTime = '';
   String endTime = '';
+  int selectedCityId = 0;
+  String selectedCityName = 'Выбрать город';
 
   @override
   void initState() {
@@ -194,14 +197,21 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                           textAlign: TextAlign.center,
                         ),
                         Spacer(),
-                        const Text(
-                          'Выбрать город',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.blackWithOpacity,
+                        GestureDetector(
+                          onTap: () {
+                            goToCountriesPage();
+                          },
+                          child: Text(
+                            selectedCityName,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: selectedCityId != 0
+                                  ? AppColors.accent
+                                  : AppColors.blackWithOpacity,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
@@ -278,22 +288,35 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                             children: [
                               Row(
                                 children: [
-                                  Container(
-                                    width: 24,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(8),
-                                        ),
-                                        border: Border.all(
-                                            width: 1, color: AppColors.grey)),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (item['status'] == 0) {
+                                        item['status'] = 1;
+                                      } else {
+                                        item['status'] = 0;
+                                      }
+                                      setState(() {});
+                                    },
+                                    child: Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                          color: item['status'] == 1
+                                              ? AppColors.accent
+                                              : Colors.transparent,
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(8),
+                                          ),
+                                          border: Border.all(
+                                              width: 1, color: AppColors.grey)),
+                                    ),
                                   ),
                                   const SizedBox(width: 20),
                                   SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width * 0.7,
                                     child: Text(
-                                      item,
+                                      item['name'],
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
@@ -347,7 +370,10 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                         child: GestureDetector(
                           onTap: () {
                             if (_toDoItemController.text != '') {
-                              toDoList.add(_toDoItemController.text);
+                              toDoList.add({
+                                'name': _toDoItemController.text,
+                                'status': 0
+                              });
                               _toDoItemController.text = '';
                               setState(() {});
                             }
@@ -440,7 +466,8 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                         if (_titleController.text != '' &&
                             toDoList.isNotEmpty &&
                             selectedRange != 'Выбрать даты' &&
-                            endDate != '') {
+                            endDate != '' &&
+                            selectedCityId != 0) {
                           saveChanges();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -461,6 +488,15 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
         ),
       ),
     );
+  }
+
+  void goToCountriesPage() async {
+    final result = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ListOfCountriesPage()));
+    selectedCityId = result[0];
+    selectedCityName = result[1];
+
+    setState(() {});
   }
 
   void showDatePicker() async {
@@ -551,6 +587,9 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
         if (args.value.startDate != null && args.value.endDate != null) {
           startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
           endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
+        } else {
+          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+          endDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
         }
       }
     });
@@ -602,7 +641,7 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
         startDate + (startTime == '' ? ' 10:00' : startTime),
         endDate + (endTime == '' ? ' 10:00' : endTime),
         _switchValue == false ? 0 : 1,
-        1);
+        selectedCityId);
     print(response['data']);
 
     if (response['response_status'] == 'ok') {
@@ -617,7 +656,8 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
 
   void addToDoList(int planId) async {
     for (var i in toDoList) {
-      var response = await TravelProvider().addItemToPlansToDoList(planId, i);
+      var response = await TravelProvider()
+          .addItemToPlansToDoList(planId, i['name'], i['status']);
       if (response['response_status'] == 'ok') {
         print('Created!');
       } else {

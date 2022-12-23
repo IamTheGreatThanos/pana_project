@@ -143,14 +143,26 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void getListOfFavorites() async {
-    GlobalVariables.favoritesHousing = [];
-    var response = await MainProvider().getFavorites();
-    if (response['response_status'] == 'ok') {
-      for (var item in response['data']) {
-        GlobalVariables.favoritesHousing.add(item['id']);
-        setState(() {});
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('isLogedIn') == true) {
+      GlobalVariables.favoritesHousing = [];
+      GlobalVariables.favoritesImpression = [];
+
+      var response = await MainProvider().getFavoritesHousing();
+      if (response['response_status'] == 'ok') {
+        for (var item in response['data']) {
+          GlobalVariables.favoritesHousing.add(item['id']);
+          setState(() {});
+        }
       }
-      print(GlobalVariables.favoritesHousing);
+
+      var responseImpression = await MainProvider().getFavoritesImpression();
+      if (responseImpression['response_status'] == 'ok') {
+        for (var item in responseImpression['data']) {
+          GlobalVariables.favoritesImpression.add(item['id']);
+          setState(() {});
+        }
+      }
     }
   }
 }

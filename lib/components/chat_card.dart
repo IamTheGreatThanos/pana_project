@@ -18,12 +18,15 @@ class ChatCard extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: Row(
               children: [
-                SizedBox(
-                  width: 34,
-                  height: 34,
-                  child: chat.user?.avatar != null
-                      ? CachedNetworkImage(imageUrl: chat.user?.avatar ?? '')
-                      : SvgPicture.asset('assets/icons/chat_support.svg'),
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  child: SizedBox(
+                    width: 34,
+                    height: 34,
+                    child: chat.user?.avatar != null
+                        ? CachedNetworkImage(imageUrl: chat.user?.avatar ?? '')
+                        : SvgPicture.asset('assets/icons/chat_support.svg'),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Column(
@@ -58,26 +61,26 @@ class ChatCard extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                Container(
-                  width: 10,
-                  height: 10,
-                  decoration: const BoxDecoration(
-                    color: AppColors.accent,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(5),
-                    ),
-                  ),
-                ),
+                chat.countNewMessages != 0
+                    ? Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                          color: AppColors.accent,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),
         ),
-        chat.lastMessage?.isRead == null
-            ? Container(
-                color: AppColors.white,
-                child: const Divider(color: AppColors.lightGray),
-              )
-            : Container()
+        Container(
+          color: AppColors.white,
+          child: const Divider(color: AppColors.lightGray),
+        )
       ],
     );
   }

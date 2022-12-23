@@ -173,7 +173,7 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
   }
 
   void createBookedPlan() async {
-    var response = await TravelProvider().createBookedPlan(
+    var response = await TravelProvider().createBookedHousing(
       widget.travelId,
       widget.housing.id!,
     );

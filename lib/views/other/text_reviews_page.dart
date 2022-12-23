@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/components/audio_review_card.dart';
-import 'package:pana_project/models/audioReview.dart';
+import 'package:pana_project/components/text_review_card.dart';
+import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/utils/const.dart';
 
-class AudioReviewsPage extends StatefulWidget {
-  AudioReviewsPage(this.reviews);
-  final List<AudioReviewModel> reviews;
+class TextReviewsPage extends StatefulWidget {
+  TextReviewsPage(this.reviews);
+  final List<TextReviewModel> reviews;
 
   @override
-  _AudioReviewsPageState createState() => _AudioReviewsPageState();
+  _TextReviewsPageState createState() => _TextReviewsPageState();
 }
 
-class _AudioReviewsPageState extends State<AudioReviewsPage> {
+class _TextReviewsPageState extends State<TextReviewsPage> {
   @override
   void initState() {
     super.initState();
@@ -66,7 +66,7 @@ class _AudioReviewsPageState extends State<AudioReviewsPage> {
                       const Padding(
                         padding: EdgeInsets.all(20),
                         child: Text(
-                          'Аудио-отзывы',
+                          'Отзывы',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
@@ -104,7 +104,7 @@ class _AudioReviewsPageState extends State<AudioReviewsPage> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(20),
-                                  child: AudioReviewCard(widget.reviews[i]),
+                                  child: TextReviewCard(widget.reviews[i]),
                                 ),
                               ],
                             ),

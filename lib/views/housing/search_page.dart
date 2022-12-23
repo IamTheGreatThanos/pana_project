@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/other/list_of_countries_page.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class SearchPage extends StatefulWidget {
@@ -11,6 +12,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final DateRangePickerController _datePickerController =
       DateRangePickerController();
+  TextEditingController nameController = TextEditingController();
   int selectedContinentIndex = 0;
 
   int adultCount = 0;
@@ -21,6 +23,9 @@ class _SearchPageState extends State<SearchPage> {
   String selectedRange = 'Выбрать даты';
   String startDate = '';
   String endDate = '';
+
+  int selectedCityId = 0;
+  String selectedCityName = 'Город';
 
   List<Map<String, String>> continents = [
     {'name': 'Гибкий поиск', 'asset': 'assets/images/map_1.png'},
@@ -104,12 +109,26 @@ class _SearchPageState extends State<SearchPage> {
                                   child: Icon(Icons.arrow_back_ios),
                                 ),
                               ),
-                              const Text(
-                                'Поиск...',
-                                style: TextStyle(
-                                    color: Colors.black45,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.67,
+                                child: TextField(
+                                  controller: nameController,
+                                  maxLength: 100,
+                                  decoration: const InputDecoration(
+                                    counterStyle: TextStyle(
+                                      height: double.minPositive,
+                                    ),
+                                    counterText: "",
+                                    border: InputBorder.none,
+                                    hintText: 'Поиск...',
+                                    hintStyle: TextStyle(
+                                      color: Colors.black45,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  onChanged: (value) {},
+                                ),
                               ),
                             ],
                           ),
@@ -195,11 +214,12 @@ class _SearchPageState extends State<SearchPage> {
                                           width: 1, color: AppColors.grey)),
                                   child: Row(
                                     children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 20),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 20),
                                         child: Text(
-                                          'Город',
-                                          style: TextStyle(
+                                          selectedCityName,
+                                          style: const TextStyle(
                                               color: Colors.black45,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500),
@@ -217,7 +237,9 @@ class _SearchPageState extends State<SearchPage> {
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w500),
                                           ),
-                                          onTap: () {},
+                                          onTap: () {
+                                            goToCities();
+                                          },
                                         ),
                                       ),
                                     ],
@@ -687,6 +709,8 @@ class _SearchPageState extends State<SearchPage> {
                                   selectedRange,
                                   startDate,
                                   endDate,
+                                  selectedCityId,
+                                  nameController.text,
                                 ]);
                               },
                               child: const Text("Показать результаты",
@@ -704,6 +728,15 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
         ));
+  }
+
+  void goToCities() async {
+    final result = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ListOfCountriesPage()));
+    selectedCityId = result[0];
+    selectedCityName = result[1];
+
+    setState(() {});
   }
 
   void addAction(int index) async {

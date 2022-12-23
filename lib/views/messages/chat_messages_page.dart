@@ -31,6 +31,7 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
   void initState() {
     getUserId();
     getMessages();
+    readMessages();
     startTimer();
     super.initState();
   }
@@ -44,6 +45,7 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
   void getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     myUserId = prefs.getInt('user_id') ?? 0;
+    print(prefs.getString('token'));
     setState(() {});
   }
 
@@ -309,6 +311,19 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
     if (response['response_status'] == 'ok') {
       messageController.text = '';
       getMessages();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void readMessages() async {
+    var response =
+        await MainProvider().readMessageInChat(widget.chat.user!.id!);
+    if (response['response_status'] == 'ok') {
+      print('Readed');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],

@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/models/notification.dart';
 import 'package:pana_project/utils/const.dart';
 
 class MessagesWidget extends StatelessWidget {
-  const MessagesWidget({
-    Key? key,
-    required this.title,
-    required this.subtitle,
-    required this.status,
-    required this.categoryId,
-  }) : super(key: key);
-  final String title;
-  final String subtitle;
+  const MessagesWidget(this.notification, this.status);
+  final NotificationModel notification;
   final bool status;
-  final int categoryId;
 
   @override
   Widget build(BuildContext context) {
     List<String> categories = [
-      'housing',
+      'plan',
       'impression',
       'percent',
+      'percent',
+      'housing',
       'location',
       'plan'
     ];
@@ -35,7 +30,7 @@ class MessagesWidget extends StatelessWidget {
                     width: 34,
                     height: 34,
                     child: SvgPicture.asset(
-                        'assets/icons/m_${categories[categoryId - 1]}_${status ? '1' : '0'}.svg')),
+                        'assets/icons/m_${categories[(notification.type ?? 1) - 1]}_${status ? '1' : '0'}.svg')),
                 const SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +38,7 @@ class MessagesWidget extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.65,
                       child: Text(
-                        title,
+                        notification.title ?? '',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -57,7 +52,7 @@ class MessagesWidget extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.65,
                       child: Text(
-                        subtitle,
+                        notification.description ?? '',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.blackWithOpacity,

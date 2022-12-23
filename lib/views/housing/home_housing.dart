@@ -54,6 +54,7 @@ class _HomeHousingState extends State<HomeHousing>
 
   String selectedRange = '';
   int selectedCountryId = 0;
+  String searchText = '';
   bool isLogedIn = false;
 
   @override
@@ -93,232 +94,269 @@ class _HomeHousingState extends State<HomeHousing>
         length: 12,
         child: Scaffold(
           backgroundColor: Colors.white,
-          body: SingleChildScrollView(
-            child: Container(
-              color: AppColors.lightGray,
-              width: MediaQuery.of(context).size.width,
-              child: Column(children: [
-                const SizedBox(
-                  height: 40,
-                ),
-                Row(
-                  children: [
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        openSearchPage();
-                      },
-                      child: Container(
-                        height: 50,
-                        width: MediaQuery.of(context).size.width * 0.66,
-                        decoration: const BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(50),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              spreadRadius: 0,
-                              blurRadius: 24,
-                              offset:
-                                  Offset(0, 4), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 10),
-                              child: Icon(Icons.search),
-                            ),
-                            selectedRange == ''
-                                ? const Text(
-                                    'Поиск...',
-                                    style: TextStyle(
-                                        color: Colors.black45,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  )
-                                : SizedBox(
-                                    height: 50,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          continentNames[selectedCountryId],
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        Text(
-                                          selectedRange,
-                                          style: const TextStyle(
-                                              color: Colors.black45,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                            Spacer(),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 5),
-                              child: VerticalDivider(),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 5, 15, 5),
-                              child: SvgPicture.asset(
-                                  'assets/icons/slider_01.svg'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        goToFavorites();
-                      },
-                      child: Container(
-                        width: 50,
-                        height: 50,
-                        decoration: const BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(50),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              spreadRadius: 0,
-                              blurRadius: 24,
-                              offset:
-                                  Offset(0, 4), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child:
-                              SvgPicture.asset('assets/icons/heart_empty.svg'),
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                  ],
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                TabBar(
-                  controller: _tabController,
-                  onTap: (index) {
-                    setState(() {
-                      selectedCategoryId = categories[index]['id'];
-                    });
-                    getHousingList();
-                  },
-                  isScrollable: true,
-                  indicatorColor: AppColors.accent,
-                  labelColor: AppColors.black,
-                  labelStyle: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w500),
-                  unselectedLabelColor: AppColors.blackWithOpacity,
-                  indicatorWeight: 3,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  tabs: [
-                    for (int i = 0; i < categories.length; i++)
-                      Tab(
-                        icon: SvgPicture.asset(
-                          categories[i]['asset']!,
-                          color: _tabController.index == i
-                              ? AppColors.black
-                              : AppColors.blackWithOpacity,
-                        ),
-                        text: categories[i]['name'],
-                      ),
-                  ],
-                ),
-                SizedBox(
-                  child: Column(
+          body: RefreshIndicator(
+            onRefresh: _pullRefresh,
+            child: SingleChildScrollView(
+              child: Container(
+                color: AppColors.lightGray,
+                width: MediaQuery.of(context).size.width,
+                child: Column(children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Row(
                     children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 10),
-                        height: 150,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            for (int i = 0; i < 6; i++) StoriesCard(i),
-                          ],
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          openSearchPage();
+                        },
+                        child: Container(
+                          height: 50,
+                          width: MediaQuery.of(context).size.width * 0.66,
+                          decoration: const BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(50),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                spreadRadius: 0,
+                                blurRadius: 24,
+                                offset:
+                                    Offset(0, 4), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 10),
+                                child: Icon(Icons.search),
+                              ),
+                              (selectedRange == '' && searchText == '')
+                                  ? const Text(
+                                      'Поиск...',
+                                      style: TextStyle(
+                                          color: Colors.black45,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                  : SizedBox(
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.35,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            (searchText != ''
+                                                    ? '$searchText, '
+                                                    : '') +
+                                                continentNames[
+                                                    selectedCountryId],
+                                            style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text(
+                                            selectedRange == ''
+                                                ? '- / -'
+                                                : selectedRange,
+                                            style: const TextStyle(
+                                                color: Colors.black45,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w500),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                              Spacer(),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 5),
+                                child: VerticalDivider(),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 5, 15, 5),
+                                child: SvgPicture.asset(
+                                    'assets/icons/slider_01.svg'),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      for (int i = 0; i < housingList.length; i++)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: GestureDetector(
-                            onTap: () async {
-                              if (isLogedIn == true) {
-                                StoryController _storyController =
-                                    StoryController();
-                                List<StoryItem?> thisStoryItems = [];
-                                List<StoryItem?> mediaStoryItems = [];
-
-                                for (int j = 0;
-                                    j < housingList[i].images!.length;
-                                    j++) {
-                                  thisStoryItems.add(
-                                    StoryItem.pageImage(
-                                      url: housingList[i].images![j].path!,
-                                      controller: _storyController,
-                                      imageFit: BoxFit.cover,
-                                    ),
-                                  );
-
-                                  mediaStoryItems.add(
-                                    StoryItem.pageImage(
-                                      url: housingList[i].images![j].path!,
-                                      controller: _storyController,
-                                      imageFit: BoxFit.fitWidth,
-                                    ),
-                                  );
-                                }
-
-                                await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HousingInfo(
-                                            housingList[i].id!,
-                                            thisStoryItems,
-                                            mediaStoryItems)));
-                                setState(() {});
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AuthPage()));
-                              }
-                            },
-                            child: HousingCard(housingList[i], () {}),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          goToFavorites();
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(50),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                spreadRadius: 0,
+                                blurRadius: 24,
+                                offset:
+                                    Offset(0, 4), // changes position of shadow
+                              ),
+                            ],
                           ),
-                        )
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: SvgPicture.asset(
+                                'assets/icons/heart_empty.svg'),
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
                     ],
                   ),
-                ),
-              ]),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  TabBar(
+                    controller: _tabController,
+                    onTap: (index) {
+                      setState(() {
+                        selectedCategoryId = categories[index]['id'];
+                      });
+                      getHousingList();
+                    },
+                    isScrollable: true,
+                    indicatorColor: AppColors.accent,
+                    labelColor: AppColors.black,
+                    labelStyle: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w500),
+                    unselectedLabelColor: AppColors.blackWithOpacity,
+                    indicatorWeight: 3,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    tabs: [
+                      for (int i = 0; i < categories.length; i++)
+                        Tab(
+                          icon: SvgPicture.asset(
+                            categories[i]['asset']!,
+                            color: _tabController.index == i
+                                ? AppColors.black
+                                : AppColors.blackWithOpacity,
+                          ),
+                          text: categories[i]['name'],
+                        ),
+                    ],
+                  ),
+                  SizedBox(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 10),
+                          height: 150,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+                              for (int i = 0; i < 6; i++) StoriesCard(i),
+                            ],
+                          ),
+                        ),
+                        for (int i = 0; i < housingList.length; i++)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: GestureDetector(
+                              onTap: () async {
+                                if (isLogedIn == true) {
+                                  StoryController _storyController =
+                                      StoryController();
+                                  List<StoryItem?> thisStoryItems = [];
+                                  List<StoryItem?> mediaStoryItems = [];
+
+                                  // for (int j = 0;
+                                  //     j < housingList[i].videos!.length;
+                                  //     j++) {
+                                  //   thisStoryItems.add(
+                                  //     StoryItem.pageVideo(
+                                  //       housingList[i].videos![j].path!,
+                                  //       controller: _storyController,
+                                  //       imageFit: BoxFit.cover,
+                                  //     ),
+                                  //   );
+                                  //
+                                  //   mediaStoryItems.add(
+                                  //     StoryItem.pageVideo(
+                                  //       housingList[i].videos![j].path!,
+                                  //       controller: _storyController,
+                                  //       imageFit: BoxFit.fitWidth,
+                                  //     ),
+                                  //   );
+                                  // }
+
+                                  for (int j = 0;
+                                      j < housingList[i].images!.length;
+                                      j++) {
+                                    thisStoryItems.add(
+                                      StoryItem.pageImage(
+                                        url: housingList[i].images![j].path!,
+                                        controller: _storyController,
+                                        imageFit: BoxFit.cover,
+                                      ),
+                                    );
+
+                                    mediaStoryItems.add(
+                                      StoryItem.pageImage(
+                                        url: housingList[i].images![j].path!,
+                                        controller: _storyController,
+                                        imageFit: BoxFit.fitWidth,
+                                      ),
+                                    );
+                                  }
+
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HousingInfo(
+                                              housingList[i].id!,
+                                              thisStoryItems,
+                                              mediaStoryItems)));
+                                  setState(() {});
+                                } else {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AuthPage()));
+                                }
+                              },
+                              child: HousingCard(housingList[i], () {}),
+                            ),
+                          )
+                      ],
+                    ),
+                  ),
+                ]),
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _pullRefresh() async {
+    getHousingList();
   }
 
   void goToFavorites() async {
@@ -360,6 +398,8 @@ class _HomeHousingState extends State<HomeHousing>
       params[4],
       params[6],
       params[7],
+      params[8],
+      params[9],
     );
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
@@ -394,6 +434,7 @@ class _HomeHousingState extends State<HomeHousing>
           } else {
             selectedRange = '';
           }
+          searchText = result[9];
         });
       } else {
         setState(() {

@@ -43,6 +43,7 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
       'transports': ['websocket'],
       'autoConnect': true,
     });
+
     socket.onConnect((_) {
       print('Connected!');
       socket.emit('join', myUserId);

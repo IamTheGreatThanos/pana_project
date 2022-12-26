@@ -52,6 +52,7 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
       'transports': ['websocket'],
       'autoConnect': true,
     });
+
     socket.onConnect((_) {
       print('Connected!');
       socket.emit('join', myUserId);

@@ -57,6 +57,7 @@ dependencies:
   permission_handler: ^10.2.0
   audio_session: ^0.1.11
   audioplayers: ^1.1.1
+  socket_io_client: ^2.0.0
 
 
 dev_dependencies:

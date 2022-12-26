@@ -6,6 +6,8 @@ import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ListOfChatsPage extends StatefulWidget {
   @override
@@ -15,13 +17,41 @@ class ListOfChatsPage extends StatefulWidget {
 class _ListOfChatsPageState extends State<ListOfChatsPage> {
   bool isHaveNewMessages = true;
   int newMessageCount = 2;
+  int myUserId = 0;
 
   List<ChatModel> listOfChats = [];
+
+  late IO.Socket socket;
 
   @override
   void initState() {
     getChats();
+    getUserId();
     super.initState();
+  }
+
+  void getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    myUserId = prefs.getInt('user_id') ?? 0;
+    setState(() {});
+
+    socketInit();
+  }
+
+  void socketInit() {
+    socket = IO.io('http://167.235.196.229:3000', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': true,
+    });
+    socket.onConnect((_) {
+      print('Connected!');
+      socket.emit('join', myUserId);
+    });
+
+    socket.on('chat', (newMessage) async {
+      print(newMessage);
+      getChats();
+    });
   }
 
   @override
@@ -103,9 +133,11 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
 
     var response = await MainProvider().getListOfChats();
     if (response['response_status'] == 'ok') {
+      List<ChatModel> tempList = [];
       for (int i = 0; i < response['data'].length; i++) {
-        listOfChats.add(ChatModel.fromJson(response['data'][i]));
+        tempList.add(ChatModel.fromJson(response['data'][i]));
       }
+      listOfChats = tempList;
       if (mounted) {
         setState(() {});
       }

@@ -105,13 +105,13 @@ class ImpressionDetailModel {
     startTime = json['start_time'];
     closedGroups = json['closed_groups'];
     openGroups = json['open_groups'];
-    openPrice = json['open_price'];
+    openPrice = json['open_price'].toString();
     openPriceCurrency = json['open_price_currency'];
-    openEarning = json['open_earning'];
+    openEarning = json['open_earning'].toString();
     openEarningCurrency = json['open_earning_currency'];
-    closedPrice = json['closed_price'];
+    closedPrice = json['closed_price'].toString();
     closedPriceCurrency = json['closed_price_currency'];
-    closedEarning = json['closed_earning'];
+    closedEarning = json['closed_earning'].toString();
     closedEarningCurrency = json['closed_earning_currency'];
     deadlineGuest = json['deadline_guest'];
     deadlineFirstGuest = json['deadline_first_guest'];

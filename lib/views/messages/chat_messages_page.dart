@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +8,7 @@ import 'package:pana_project/models/chatMessage.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatMessagesPage extends StatefulWidget {
   ChatMessagesPage(this.chat);
@@ -24,49 +23,44 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
   List<ChatMessageModel> listOfMessages = [];
   int myUserId = 0;
 
-  late Timer _timer;
-  int _seconds = 15;
+  late IO.Socket socket;
 
   @override
   void initState() {
     getUserId();
     getMessages();
     readMessages();
-    startTimer();
     super.initState();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
   }
 
   void getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     myUserId = prefs.getInt('user_id') ?? 0;
-    print(prefs.getString('token'));
+    // print(prefs.getString('token'));
     setState(() {});
+
+    socketInit();
   }
 
-  void startTimer() {
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_seconds == 0) {
-          getMessagesFromBackground();
-          setState(() {
-            _seconds = 5;
-          });
-          _seconds = 5;
-        } else {
-          setState(() {
-            _seconds--;
-          });
-        }
-      },
-    );
+  void socketInit() {
+    socket = IO.io('http://167.235.196.229:3000', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': true,
+    });
+    socket.onConnect((_) {
+      print('Connected!');
+      socket.emit('join', myUserId);
+    });
+
+    socket.on('chat_message', (newMessage) async {
+      print(newMessage);
+      getMessagesFromBackground();
+    });
   }
 
   @override

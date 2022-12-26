@@ -684,31 +684,44 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 310,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      for (int i = 0;
-                          i < (textReviews.length > 3 ? 3 : textReviews.length);
-                          i++)
-                        Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, top: 10, bottom: 20),
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(24),
-                                    ),
-                                    border: Border.all(
-                                      width: 1,
-                                      color: AppColors.lightGray,
-                                    )),
-                                child: TextReviewCard(textReviews[i]))),
-                      const SizedBox(width: 20)
-                    ],
-                  ),
-                ),
+                textReviews.isEmpty
+                    ? const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                        child: Text(
+                          'Отзывов пока нет...',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    : SizedBox(
+                        height: 310,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: <Widget>[
+                            for (int i = 0;
+                                i <
+                                    (textReviews.length > 3
+                                        ? 3
+                                        : textReviews.length);
+                                i++)
+                              Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, top: 10, bottom: 20),
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(24),
+                                          ),
+                                          border: Border.all(
+                                            width: 1,
+                                            color: AppColors.lightGray,
+                                          )),
+                                      child: TextReviewCard(textReviews[i]))),
+                            const SizedBox(width: 20)
+                          ],
+                        ),
+                      ),
                 const Divider(),
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -743,6 +756,17 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                     ],
                   ),
                 ),
+                audioReviews.isEmpty
+                    ? const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                        child: Text(
+                          'Аудио-отзывов пока нет...',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    : Container(),
                 for (int i = 0;
                     i < (audioReviews.length > 2 ? 2 : audioReviews.length);
                     i++)
@@ -1022,6 +1046,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
         await MainProvider().getImpressionDetail(widget.impression.id!);
     if (response['response_status'] == 'ok') {
       thisImpression = ImpressionDetailModel.fromJson(response['data']);
+      print(response['data']);
 
       final Uint8List customMarkerBlack =
           await getBytesFromAsset('assets/icons/map_pin_black.png', 150);

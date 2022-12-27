@@ -8,6 +8,7 @@ import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/components/facilities_widget.dart';
 import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/models/audioReview.dart';
+import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/services/main_api_provider.dart';
@@ -15,6 +16,7 @@ import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/get_bytes_from_asset.dart';
 import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/housing/select_room_page.dart';
+import 'package:pana_project/views/messages/chat_messages_page.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
@@ -289,50 +291,74 @@ class _HousingInfoState extends State<HousingInfo> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: [
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.58,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text(
+                                        '${thisHousing.user?.name ?? ''} ${thisHousing.user?.surname ?? ''}',
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  // Padding(
+                                  //   padding:
+                                  //       const EdgeInsets.only(bottom: 2, left: 5),
+                                  //   child: SizedBox(
+                                  //     width: 15,
+                                  //     height: 15,
+                                  //     child:
+                                  //         SvgPicture.asset('assets/icons/star.svg'),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
+                                width: MediaQuery.of(context).size.width * 0.58,
+                                child: const Padding(
+                                  padding: EdgeInsets.only(left: 10),
                                   child: Text(
-                                    '${thisHousing.user?.name ?? ''} ${thisHousing.user?.surname ?? ''}',
-                                    style: const TextStyle(
-                                      fontSize: 18,
+                                    'Здание целиком, 3 комнаты, 2 этажа',
+                                    style: TextStyle(
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w500,
+                                      color: Colors.black45,
                                     ),
                                   ),
                                 ),
                               ),
-                              // Padding(
-                              //   padding:
-                              //       const EdgeInsets.only(bottom: 2, left: 5),
-                              //   child: SizedBox(
-                              //     width: 15,
-                              //     height: 15,
-                              //     child: SvgPicture.asset(
-                              //         'assets/icons/star.svg'),
-                              //   ),
-                              // ),
                             ],
                           ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.65,
-                            child: const Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: Text(
-                                'Здание целиком, 3 комнаты, 2 этажа',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black45,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatMessagesPage(
+                                    ChatModel(
+                                      user: thisHousing.user,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
+                            child: SizedBox(
+                                width: 28,
+                                height: 28,
+                                child: SvgPicture.asset(
+                                    'assets/icons/start_chat_icon.svg')),
                           ),
                         ],
                       )

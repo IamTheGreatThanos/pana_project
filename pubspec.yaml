@@ -191,6 +191,7 @@ flutter:
     - assets/icons/send_message_icon.svg
     - assets/icons/map_pin_black.png
     - assets/icons/map_pin_accent.png
+    - assets/icons/start_chat_icon.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -41,7 +41,7 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
   void getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     myUserId = prefs.getInt('user_id') ?? 0;
-    // print(prefs.getString('token'));
+    print(prefs.getString('token'));
     setState(() {});
 
     socketInit();

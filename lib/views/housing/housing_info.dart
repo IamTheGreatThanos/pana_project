@@ -632,28 +632,6 @@ class _HousingInfoState extends State<HousingInfo> {
                 ),
                 const SizedBox(width: 20),
                 const Divider(),
-                const Padding(
-                  padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                  child: Text(
-                    'Истории с этого места',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                  height: 150,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      for (int i = 0; i < 6; i++) StoriesCard(i),
-                    ],
-                  ),
-                ),
-                const Divider(),
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 20, bottom: 10),
                   child: Row(
@@ -687,6 +665,17 @@ class _HousingInfoState extends State<HousingInfo> {
                     ],
                   ),
                 ),
+                audioReviews.isEmpty
+                    ? const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                        child: Text(
+                          'Аудио-отзывов пока нет...',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    : Container(),
                 for (int i = 0;
                     i < (audioReviews.length > 2 ? 2 : audioReviews.length);
                     i++)
@@ -705,6 +694,28 @@ class _HousingInfoState extends State<HousingInfo> {
                         ),
                         child: AudioReviewCard(audioReviews[i])),
                   ),
+                const Divider(),
+                const Padding(
+                  padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                  child: Text(
+                    'Истории с этого места',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  height: 150,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      for (int i = 0; i < 6; i++) StoriesCard(i),
+                    ],
+                  ),
+                ),
                 const Divider(),
                 const Padding(
                   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),

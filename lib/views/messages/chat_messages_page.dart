@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pana_project/components/chat_message_card.dart';
 import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/chatMessage.dart';
@@ -20,6 +21,8 @@ class ChatMessagesPage extends StatefulWidget {
 class _ChatMessagesPageState extends State<ChatMessagesPage> {
   TextEditingController messageController = TextEditingController();
   ScrollController listViewController = ScrollController();
+  final ImagePicker _picker = ImagePicker();
+
   List<ChatMessageModel> listOfMessages = [];
   int myUserId = 0;
 
@@ -199,7 +202,12 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const Spacer(),
-                          SvgPicture.asset('assets/icons/attach_icon.svg'),
+                          GestureDetector(
+                              onTap: () {
+                                chooseImage();
+                              },
+                              child: SvgPicture.asset(
+                                  'assets/icons/attach_icon.svg')),
                           const Spacer(),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.7,
@@ -319,6 +327,27 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
         await MainProvider().readMessageInChat(widget.chat.user!.id!);
     if (response['response_status'] == 'ok') {
       print('Readed');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void chooseImage() async {
+    final XFile? selectedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (selectedImage != null) {
+      sendFile(selectedImage);
+    }
+  }
+
+  void sendFile(XFile image) async {
+    var response =
+        await MainProvider().sendFileInChat(widget.chat.user!.id!, image);
+    if (response['response_status'] == 'ok') {
+      getMessages();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],

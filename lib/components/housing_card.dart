@@ -30,7 +30,7 @@ class _HousingCardState extends State<HousingCard> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
           color: AppColors.white),
-      height: 330,
+      // height: 400,
       width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -40,18 +40,18 @@ class _HousingCardState extends State<HousingCard> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: ClipRRect(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(AppConstants.cardBorderRadius),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(16),
                 ),
                 child: Stack(
                   children: [
                     SizedBox(
-                      height: 200,
+                      height: 270,
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: CarouselSlider.builder(
                         options: CarouselOptions(
-                          height: 200,
-                          aspectRatio: 16 / 9,
+                          height: 270,
+                          aspectRatio: 16 / 10,
                           viewportFraction: 1,
                           initialPage: 0,
                           enableInfiniteScroll: true,
@@ -79,7 +79,7 @@ class _HousingCardState extends State<HousingCard> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 170),
+                      padding: const EdgeInsets.only(top: 240),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children:
@@ -87,12 +87,15 @@ class _HousingCardState extends State<HousingCard> {
                           return GestureDetector(
                             onTap: () => _controller.animateToPage(entry.key),
                             child: Container(
-                              width: 8.0,
-                              height: 8.0,
+                              width: _current == entry.key ? 24 : 12,
+                              height: 4,
                               margin: const EdgeInsets.symmetric(
                                   vertical: 8.0, horizontal: 4.0),
                               decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(4),
+                                  ),
                                   color: (Colors.white).withOpacity(
                                       _current == entry.key ? 0.9 : 0.4)),
                             ),
@@ -179,6 +182,7 @@ class _HousingCardState extends State<HousingCard> {
                 ),
               ],
             ),
+            const SizedBox(height: 20)
           ],
         ),
       ),

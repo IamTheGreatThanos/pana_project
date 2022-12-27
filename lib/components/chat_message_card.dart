@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pana_project/models/chatMessage.dart';
 import 'package:pana_project/utils/const.dart';
@@ -59,6 +60,9 @@ class ChatMessageCard extends StatelessWidget {
                 fontSize: 14,
               ),
             ),
+            (message.files?.length ?? 0) != 0
+                ? CachedNetworkImage(imageUrl: message.files?[0].path ?? '')
+                : Container(),
             const SizedBox(height: 10),
           ],
         ),

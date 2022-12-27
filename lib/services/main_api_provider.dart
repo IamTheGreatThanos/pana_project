@@ -797,6 +797,38 @@ class MainProvider {
     }
   }
 
+  Future<dynamic> sendFileInChat(int userId, XFile imageFile) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+    var uri = Uri.parse('${API_URL}api/chat/send');
+    var request = http.MultipartRequest("POST", uri);
+    request.headers['Authorization'] = "Bearer $token";
+    request.headers['Accept'] = "application/json";
+    request.fields['user_id'] = userId.toString();
+
+    var multipartFile = http.MultipartFile('files[0]', stream, length,
+        filename: basename(imageFile.path));
+
+    request.files.add(multipartFile);
+    var response = await request.send();
+    final responseString = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(responseString);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(responseString);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
   Future<dynamic> readMessageInChat(int userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');

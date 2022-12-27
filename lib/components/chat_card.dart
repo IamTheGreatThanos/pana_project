@@ -49,7 +49,10 @@ class ChatCard extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.65,
                       child: Text(
-                        chat.lastMessage?.text ?? '',
+                        chat.lastMessage?.text == '' ||
+                                chat.lastMessage?.text == null
+                            ? 'Фотография'
+                            : chat.lastMessage?.text ?? '',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.blackWithOpacity,

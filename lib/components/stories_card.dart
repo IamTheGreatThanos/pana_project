@@ -29,13 +29,13 @@ class _StoriesCardState extends State<StoriesCard> {
         },
         child: ClipRRect(
           borderRadius: const BorderRadius.all(
-            Radius.circular(20),
+            Radius.circular(10),
           ),
           child: Stack(
             children: [
               Container(
                 width: 85,
-                height: 150,
+                height: 153,
                 decoration: const BoxDecoration(
                   color: AppColors.white,
                 ),

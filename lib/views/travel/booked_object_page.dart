@@ -65,7 +65,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Text(
-                          widget.plan.status == 2 ? 'Жилье' : 'Впечатление',
+                          widget.plan.type == 2 ? 'Жилье' : 'Впечатление',
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
@@ -106,10 +106,13 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                 width: 86,
                                 height: 86,
                                 child: CachedNetworkImage(
-                                  imageUrl: widget
-                                          .plan.housing!.images!.isNotEmpty
-                                      ? widget.plan.housing!.images![0].path!
-                                      : '',
+                                  fit: BoxFit.cover,
+                                  imageUrl: widget.plan.type == 2
+                                      ? widget.plan.housing!.images![0].path ??
+                                          ''
+                                      : widget.plan.impression!.images?[0]
+                                              .path ??
+                                          '',
                                 ),
                               ),
                             ),
@@ -121,7 +124,9 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.6,
                                   child: Text(
-                                    widget.plan.housing!.name ?? '',
+                                    widget.plan.type == 2
+                                        ? widget.plan.housing?.name ?? ''
+                                        : widget.plan.impression?.name ?? '',
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
@@ -158,8 +163,13 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                       Padding(
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Text(
-                                          widget.plan.housing?.reviewsBallAvg ??
-                                              '0',
+                                          widget.plan.type == 2
+                                              ? widget.plan.housing
+                                                      ?.reviewsBallAvg ??
+                                                  '0'
+                                              : widget.plan.impression
+                                                      ?.reviewsAvgBall ??
+                                                  '',
                                           style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500),
@@ -169,7 +179,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                         padding:
                                             const EdgeInsets.only(left: 10),
                                         child: Text(
-                                          '${widget.plan.housing?.reviewsCount ?? '0'} Отзывов',
+                                          '${widget.plan.type == 2 ? widget.plan.housing?.reviewsCount ?? '0' : widget.plan.impression?.reviewsCount ?? '0'} Отзывов',
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
@@ -265,8 +275,10 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                 Radius.circular(8),
                               ),
                               child: CachedNetworkImage(
-                                imageUrl:
-                                    widget.plan.housing?.user?.avatar ?? '',
+                                imageUrl: widget.plan.type == 2
+                                    ? widget.plan.housing?.user?.avatar ?? ''
+                                    : widget.plan.impression?.user?.avatar ??
+                                        '',
                                 height: 44,
                                 width: 44,
                               ),
@@ -291,7 +303,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.5,
                                   child: Text(
-                                    '${widget.plan.housing?.user?.name ?? ''} ${widget.plan.housing?.user?.surname ?? ''}',
+                                    '${widget.plan.type == 2 ? widget.plan.housing?.user?.name ?? '' : widget.plan.impression?.user?.name ?? ''} ${widget.plan.type == 2 ? widget.plan.housing?.user?.surname ?? '' : widget.plan.impression?.user?.surname ?? ''}',
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
@@ -432,7 +444,11 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             SendAudioReviewPage(
-                                                widget.plan.housing!.id!)));
+                                                widget.plan.type!,
+                                                widget.plan.type == 2
+                                                    ? widget.plan.housing!.id!
+                                                    : widget.plan.impression!
+                                                        .id!)));
                               },
                               child: Container(
                                 width: 162,
@@ -470,6 +486,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             SendTextReviewPage(
+                                                widget.plan.type!,
                                                 widget.plan.housing!.id!)));
                               },
                               child: Container(

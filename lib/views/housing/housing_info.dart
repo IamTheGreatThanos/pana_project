@@ -6,16 +6,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/components/facilities_widget.dart';
+import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/models/audioReview.dart';
 import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/housingDetail.dart';
+import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/get_bytes_from_asset.dart';
 import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/housing/select_room_page.dart';
+import 'package:pana_project/views/impression/impression_info.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
@@ -46,9 +49,12 @@ class _HousingInfoState extends State<HousingInfo> {
   List<TextReviewModel> textReviews = [];
   List<AudioReviewModel> audioReviews = [];
 
+  List<ImpressionCardModel> nearbyImpressionList = [];
+
   @override
   void initState() {
     getHousingInfo();
+    getNearbyImpression();
     super.initState();
   }
 
@@ -357,8 +363,8 @@ class _HousingInfoState extends State<HousingInfo> {
                             child: SizedBox(
                                 width: 28,
                                 height: 28,
-                                child: SvgPicture.asset(
-                                    'assets/icons/start_chat_icon.svg')),
+                                child: Image.asset(
+                                    'assets/icons/start_chat_icon.png')),
                           ),
                         ],
                       )
@@ -672,7 +678,9 @@ class _HousingInfoState extends State<HousingInfo> {
                         child: Text(
                           'Аудио-отзывов пока нет...',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w500),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blackWithOpacity),
                         ),
                       )
                     : Container(),
@@ -727,7 +735,107 @@ class _HousingInfoState extends State<HousingInfo> {
                     ),
                   ),
                 ),
-                // ImpressionCard(),
+                nearbyImpressionList.isNotEmpty
+                    ? SizedBox(
+                        height: 450,
+                        child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+                              for (int i = 0;
+                                  i < nearbyImpressionList.length;
+                                  i++)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: GestureDetector(
+                                      onTap: () async {
+                                        StoryController _storyController =
+                                            StoryController();
+                                        List<StoryItem?> thisStoryItems = [];
+                                        List<StoryItem?> mediaStoryItems = [];
+
+                                        for (int j = 0;
+                                            j <
+                                                nearbyImpressionList[i]
+                                                    .videos!
+                                                    .length;
+                                            j++) {
+                                          thisStoryItems.add(
+                                            StoryItem.pageVideo(
+                                              nearbyImpressionList[i]
+                                                  .videos![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.cover,
+                                            ),
+                                          );
+
+                                          mediaStoryItems.add(
+                                            StoryItem.pageVideo(
+                                              nearbyImpressionList[i]
+                                                  .videos![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.fitWidth,
+                                            ),
+                                          );
+                                        }
+
+                                        for (int j = 0;
+                                            j <
+                                                nearbyImpressionList[i]
+                                                    .images!
+                                                    .length;
+                                            j++) {
+                                          thisStoryItems.add(
+                                            StoryItem.pageImage(
+                                              url: nearbyImpressionList[i]
+                                                  .images![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.cover,
+                                            ),
+                                          );
+
+                                          mediaStoryItems.add(
+                                            StoryItem.pageImage(
+                                              url: nearbyImpressionList[i]
+                                                  .images![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.fitWidth,
+                                            ),
+                                          );
+                                        }
+
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ImpressionInfo(
+                                              nearbyImpressionList[i],
+                                              thisStoryItems,
+                                              mediaStoryItems,
+                                            ),
+                                          ),
+                                        );
+
+                                        setState(() {});
+                                      },
+                                      child: ImpressionCard(
+                                          nearbyImpressionList[i], () {})),
+                                )
+                            ]))
+                    : const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                        child: Text(
+                          'Впечатления поблизости отсутствуют...',
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blackWithOpacity),
+                        ),
+                      ),
                 const Divider(),
                 const Padding(
                   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -967,6 +1075,22 @@ class _HousingInfoState extends State<HousingInfo> {
     if (response['response_status'] == 'ok') {
       for (var item in response['data']) {
         audioReviews.add(AudioReviewModel.fromJson(item));
+      }
+      setState(() {});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void getNearbyImpression() async {
+    nearbyImpressionList = [];
+    var response = await MainProvider().getNearbyImpression(widget.id);
+    if (response['response_status'] == 'ok') {
+      for (var item in response['data']) {
+        nearbyImpressionList.add(ImpressionCardModel.fromJson(item));
       }
       setState(() {});
     } else {

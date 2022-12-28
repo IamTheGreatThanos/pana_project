@@ -487,10 +487,10 @@ class _HomeTravelState extends State<HomeTravel> {
   }
 
   void createNewTravel() async {
-    _titleController.text = '';
     var response = await TravelProvider()
         .createTravel(_titleController.text, startDate, endDate);
     if (response['response_status'] == 'ok') {
+      _titleController.text = '';
       await Navigator.push(
           context,
           MaterialPageRoute(
@@ -502,8 +502,8 @@ class _HomeTravelState extends State<HomeTravel> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
       ));
     }
   }

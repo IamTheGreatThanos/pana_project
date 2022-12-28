@@ -11,8 +11,9 @@ import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 
 class SendTextReviewPage extends StatefulWidget {
-  SendTextReviewPage(this.housingId);
-  final int housingId;
+  SendTextReviewPage(this.type, this.id);
+  final int type;
+  final int id;
 
   @override
   _SendTextReviewPageState createState() => _SendTextReviewPageState();
@@ -560,7 +561,8 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
           .format(DateTime.parse(_dateController.text.replaceAll('/', '-')));
       showLoaderDialog(context);
       var response = await MainProvider().sendTextReview(
-        widget.housingId,
+        widget.type,
+        widget.id,
         wasAt,
         _reviewController.text,
         priceBall,

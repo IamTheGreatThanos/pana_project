@@ -17,8 +17,9 @@ import 'package:permission_handler/permission_handler.dart';
 const theSource = AudioSource.microphone;
 
 class SendAudioReviewPage extends StatefulWidget {
-  SendAudioReviewPage(this.housingId);
-  final int housingId;
+  SendAudioReviewPage(this.type, this.id);
+  final int type;
+  final int id;
 
   @override
   _SendAudioReviewPageState createState() => _SendAudioReviewPageState();
@@ -437,7 +438,7 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
 
   void saveChanges() async {
     var response =
-        await MainProvider().sendAudioReview(widget.housingId, audioFile);
+        await MainProvider().sendAudioReview(widget.type, widget.id, audioFile);
 
     print(response['data']);
 

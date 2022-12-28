@@ -201,8 +201,8 @@ class _HomeHousingState extends State<HomeHousing>
                           goToFavorites();
                         },
                         child: Container(
-                          width: 50,
-                          height: 50,
+                          width: 40,
+                          height: 40,
                           decoration: const BoxDecoration(
                             color: AppColors.white,
                             borderRadius: BorderRadius.all(
@@ -219,7 +219,7 @@ class _HomeHousingState extends State<HomeHousing>
                             ],
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(8),
                             child: SvgPicture.asset(
                                 'assets/icons/heart_empty.svg'),
                           ),

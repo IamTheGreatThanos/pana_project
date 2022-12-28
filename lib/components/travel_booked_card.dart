@@ -17,11 +17,20 @@ class _TravelBookedCardState extends State<TravelBookedCard> {
 
   @override
   initState() {
-    if (widget.plan.housing?.images != null) {
-      if (widget.plan.housing!.images!.isNotEmpty) {
-        imageUrl = widget.plan.housing!.images![0].path!;
+    if (widget.plan.type == 2) {
+      if (widget.plan.housing?.images != null) {
+        if (widget.plan.housing!.images!.isNotEmpty) {
+          imageUrl = widget.plan.housing!.images![0].path!;
+        }
+      }
+    } else {
+      if (widget.plan.impression?.images != null) {
+        if (widget.plan.impression!.images!.isNotEmpty) {
+          imageUrl = widget.plan.impression!.images![0].path!;
+        }
       }
     }
+
     super.initState();
   }
 
@@ -63,7 +72,9 @@ class _TravelBookedCardState extends State<TravelBookedCard> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.4,
                       child: Text(
-                        widget.plan.housing!.name ?? '',
+                        widget.plan.type == 2
+                            ? widget.plan.housing?.name ?? ''
+                            : widget.plan.impression?.name ?? '',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,

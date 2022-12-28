@@ -246,6 +246,62 @@ class MainProvider {
     }
   }
 
+  Future<dynamic> getNearbyImpression(int housingId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse('${API_URL}api/mobile/impression/nearby/$housingId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+    );
+
+    // print(jsonDecode(response.body));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> getSimilarImpressions(int impressionId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse('${API_URL}api/mobile/impression/similar/$impressionId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+    );
+
+    // print(jsonDecode(response.body));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
   Future<dynamic> addToFavorite(int id, int type) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
@@ -471,7 +527,8 @@ class MainProvider {
   }
 
   Future<dynamic> sendTextReview(
-    int housingId,
+    int type,
+    int id,
     String date,
     String review,
     int price,
@@ -488,7 +545,12 @@ class MainProvider {
     request.headers['Authorization'] = "Bearer $token";
     request.headers['Accept'] = "application/json";
 
-    request.fields['housing_id'] = housingId.toString();
+    if (type == 2) {
+      request.fields['housing_id'] = id.toString();
+    } else {
+      request.fields['impression_id'] = id.toString();
+    }
+
     request.fields['was_at'] = date;
     request.fields['description'] = review;
     request.fields['price'] = price.toString();
@@ -521,7 +583,8 @@ class MainProvider {
   }
 
   Future<dynamic> sendAudioReview(
-    int housingId,
+    int type,
+    int id,
     File audio,
   ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -532,7 +595,12 @@ class MainProvider {
     request.headers['Authorization'] = "Bearer $token";
     request.headers['Accept'] = "application/json";
 
-    request.fields['housing_id'] = housingId.toString();
+    if (type == 2) {
+      request.fields['housing_id'] = id.toString();
+    } else {
+      request.fields['impression_id'] = id.toString();
+    }
+
     var stream = http.ByteStream(DelegatingStream.typed(audio.openRead()));
     var length = await audio.length();
     var multipartFile = http.MultipartFile('audio', stream, length,

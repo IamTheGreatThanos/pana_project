@@ -1,4 +1,5 @@
 import 'package:pana_project/models/city.dart';
+import 'package:pana_project/models/images.dart';
 import 'package:pana_project/models/inventories.dart';
 import 'package:pana_project/models/provideItems.dart';
 import 'package:pana_project/models/user.dart';
@@ -40,6 +41,7 @@ class ImpressionDetailModel {
   List<ProvideItems>? provideItems;
   String? reviewsAvgBall;
   int? reviewsCount;
+  List<Images>? images;
 
   ImpressionDetailModel({
     this.id,
@@ -78,6 +80,7 @@ class ImpressionDetailModel {
     this.provideItems,
     this.reviewsAvgBall,
     this.reviewsCount,
+    this.images,
   });
 
   ImpressionDetailModel.fromJson(Map<String, dynamic> json) {
@@ -139,6 +142,12 @@ class ImpressionDetailModel {
 
     reviewsAvgBall = json['reviews_avg_ball'].toString();
     reviewsCount = json['reviews_count'];
+    if (json['images'] != null) {
+      images = <Images>[];
+      json['images'].forEach((v) {
+        images!.add(Images.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -195,6 +204,9 @@ class ImpressionDetailModel {
     }
     data['reviews_avg_ball'] = reviewsAvgBall;
     data['reviews_count'] = reviewsCount;
+    if (images != null) {
+      data['images'] = images!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

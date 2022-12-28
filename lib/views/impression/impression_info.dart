@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pana_project/components/audio_review_card.dart';
+import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/components/text_review_card.dart';
 import 'package:pana_project/components/text_with_border.dart';
@@ -50,6 +51,8 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
   List<TextReviewModel> textReviews = [];
   List<AudioReviewModel> audioReviews = [];
 
+  List<ImpressionCardModel> similarImpressionList = [];
+
   String startDate = '';
   String endDate = '';
 
@@ -58,6 +61,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
     getImpressionInfo();
     getTextReviews();
     getAudioReviews();
+    getSimilarImpressions();
     super.initState();
   }
 
@@ -631,8 +635,8 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                             child: SizedBox(
                                 width: 28,
                                 height: 28,
-                                child: SvgPicture.asset(
-                                    'assets/icons/start_chat_icon.svg')),
+                                child: Image.asset(
+                                    'assets/icons/start_chat_icon.png')),
                           ),
                         ],
                       )
@@ -702,7 +706,10 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                         child: Text(
                           'Отзывов пока нет...',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w500),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blackWithOpacity,
+                          ),
                         ),
                       )
                     : SizedBox(
@@ -774,7 +781,10 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                         child: Text(
                           'Аудио-отзывов пока нет...',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w500),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blackWithOpacity,
+                          ),
                         ),
                       )
                     : Container(),
@@ -964,7 +974,6 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                     ),
                   ),
                 ),
-
                 const Divider(),
                 const Padding(
                   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -976,7 +985,108 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                     ),
                   ),
                 ),
-                // ImpressionCard(),
+                similarImpressionList.isNotEmpty
+                    ? SizedBox(
+                        height: 450,
+                        child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+                              for (int i = 0;
+                                  i < similarImpressionList.length;
+                                  i++)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: GestureDetector(
+                                      onTap: () async {
+                                        StoryController _storyController =
+                                            StoryController();
+                                        List<StoryItem?> thisStoryItems = [];
+                                        List<StoryItem?> mediaStoryItems = [];
+
+                                        for (int j = 0;
+                                            j <
+                                                similarImpressionList[i]
+                                                    .videos!
+                                                    .length;
+                                            j++) {
+                                          thisStoryItems.add(
+                                            StoryItem.pageVideo(
+                                              similarImpressionList[i]
+                                                  .videos![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.cover,
+                                            ),
+                                          );
+
+                                          mediaStoryItems.add(
+                                            StoryItem.pageVideo(
+                                              similarImpressionList[i]
+                                                  .videos![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.fitWidth,
+                                            ),
+                                          );
+                                        }
+
+                                        for (int j = 0;
+                                            j <
+                                                similarImpressionList[i]
+                                                    .images!
+                                                    .length;
+                                            j++) {
+                                          thisStoryItems.add(
+                                            StoryItem.pageImage(
+                                              url: similarImpressionList[i]
+                                                  .images![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.cover,
+                                            ),
+                                          );
+
+                                          mediaStoryItems.add(
+                                            StoryItem.pageImage(
+                                              url: similarImpressionList[i]
+                                                  .images![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.fitWidth,
+                                            ),
+                                          );
+                                        }
+
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ImpressionInfo(
+                                              similarImpressionList[i],
+                                              thisStoryItems,
+                                              mediaStoryItems,
+                                            ),
+                                          ),
+                                        );
+
+                                        setState(() {});
+                                      },
+                                      child: ImpressionCard(
+                                          similarImpressionList[i], () {})),
+                                )
+                            ]))
+                    : const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                        child: Text(
+                          'Впечатления поблизости отсутствуют...',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blackWithOpacity,
+                          ),
+                        ),
+                      ),
                 const Divider(),
                 Padding(
                   padding:
@@ -1134,6 +1244,23 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
     if (response['response_status'] == 'ok') {
       for (var item in response['data']) {
         audioReviews.add(AudioReviewModel.fromJson(item));
+      }
+      setState(() {});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void getSimilarImpressions() async {
+    similarImpressionList = [];
+    var response =
+        await MainProvider().getSimilarImpressions(widget.impression.id!);
+    if (response['response_status'] == 'ok') {
+      for (var item in response['data']) {
+        similarImpressionList.add(ImpressionCardModel.fromJson(item));
       }
       setState(() {});
     } else {

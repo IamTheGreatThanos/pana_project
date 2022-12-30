@@ -18,7 +18,7 @@ class StoriesView extends StatefulWidget {
 }
 
 class _StoriesViewState extends State<StoriesView> {
-  PageController pageController = PageController(initialPage: 0);
+  late PageController pageController;
   late CachedVideoPlayerController videoController;
 
   int currentPageIndex = 0;
@@ -37,7 +37,9 @@ class _StoriesViewState extends State<StoriesView> {
       videoControllers.add(videoController);
     }
 
-    videoControllers[0].play();
+    pageController = PageController(initialPage: widget.index);
+
+    videoControllers[widget.index].play();
 
     super.initState();
   }

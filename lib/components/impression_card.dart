@@ -172,23 +172,6 @@ class _ImpressionCardState extends State<ImpressionCard> {
             ),
             Row(
               children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: Text(
-                    widget.impression.duration ?? '',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: Colors.black45),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
                 Text(
                   '\$${widget.impression.openPrice ?? 0}',
                   style: const TextStyle(

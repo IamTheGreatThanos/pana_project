@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/housing_card.dart';
 import 'package:pana_project/models/housingCard.dart';
+import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/utils/PageTransitionRoute.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
@@ -49,6 +51,7 @@ class _HomeHousingState extends State<HomeHousing>
   ];
 
   List<HousingCardModel> housingList = [];
+  List<Reels> reels = [];
 
   int selectedCategoryId = 1;
 
@@ -61,6 +64,7 @@ class _HomeHousingState extends State<HomeHousing>
   void initState() {
     getHousingList();
     checkIsLogedIn();
+    getReels();
     super.initState();
     _tabController = TabController(vsync: this, length: 12);
   }
@@ -263,17 +267,20 @@ class _HomeHousingState extends State<HomeHousing>
                   SizedBox(
                     child: Column(
                       children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 10),
-                          height: 150,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: <Widget>[
-                              for (int i = 0; i < 6; i++) StoriesCard(i),
-                            ],
-                          ),
-                        ),
+                        reels.isNotEmpty
+                            ? Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 10),
+                                height: 150,
+                                child: ListView(
+                                  scrollDirection: Axis.horizontal,
+                                  children: <Widget>[
+                                    for (int i = 0; i < reels.length; i++)
+                                      StoriesCard(reels, i),
+                                  ],
+                                ),
+                              )
+                            : Container(),
                         for (int i = 0; i < housingList.length; i++)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20),
@@ -327,11 +334,16 @@ class _HomeHousingState extends State<HomeHousing>
 
                                   await Navigator.push(
                                       context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HousingInfo(
-                                              housingList[i].id!,
-                                              thisStoryItems,
-                                              mediaStoryItems)));
+                                      ThisPageRoute(HousingInfo(
+                                          housingList[i].id!,
+                                          thisStoryItems,
+                                          mediaStoryItems))
+                                      // MaterialPageRoute(
+                                      //     builder: (context) => HousingInfo(
+                                      //         housingList[i].id!,
+                                      //         thisStoryItems,
+                                      //         mediaStoryItems))
+                                      );
                                   setState(() {});
                                 } else {
                                   Navigator.push(
@@ -357,6 +369,7 @@ class _HomeHousingState extends State<HomeHousing>
 
   Future<void> _pullRefresh() async {
     getHousingList();
+    getReels();
   }
 
   void goToFavorites() async {
@@ -442,6 +455,24 @@ class _HomeHousingState extends State<HomeHousing>
           selectedRange = '';
         });
       }
+    }
+  }
+
+  void getReels() async {
+    reels = [];
+    var response = await MainProvider().getReels();
+    if (response['response_status'] == 'ok') {
+      for (int i = 0; i < response['data'].length; i++) {
+        reels.add(Reels.fromJson(response['data'][i]));
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
     }
   }
 }

@@ -14,6 +14,7 @@ import 'package:pana_project/models/audioReview.dart';
 import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/models/impressionDetail.dart';
+import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
@@ -52,6 +53,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
   List<AudioReviewModel> audioReviews = [];
 
   List<ImpressionCardModel> similarImpressionList = [];
+  List<Reels> reels = [];
 
   String startDate = '';
   String endDate = '';
@@ -62,6 +64,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
     getTextReviews();
     getAudioReviews();
     getSimilarImpressions();
+    getReels();
     super.initState();
   }
 
@@ -654,17 +657,30 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                     ),
                   ),
                 ),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                  height: 150,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      for (int i = 0; i < 6; i++) StoriesCard(i),
-                    ],
-                  ),
-                ),
+                reels.isNotEmpty
+                    ? Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 10),
+                        height: 150,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: <Widget>[
+                            for (int i = 0; i < reels.length; i++)
+                              StoriesCard(reels, i),
+                          ],
+                        ),
+                      )
+                    : const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                        child: Text(
+                          'Истории отсутствуют...',
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blackWithOpacity),
+                        ),
+                      ),
                 const Divider(),
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -1267,6 +1283,24 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
             style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void getReels() async {
+    reels = [];
+    var response = await MainProvider().getReels();
+    if (response['response_status'] == 'ok') {
+      for (int i = 0; i < response['data'].length; i++) {
+        reels.add(Reels.fromJson(response['data'][i]));
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
       ));
     }
   }

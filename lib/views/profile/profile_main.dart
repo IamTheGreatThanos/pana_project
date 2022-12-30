@@ -8,6 +8,7 @@ import 'package:pana_project/components/profile_menu_item.dart';
 import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/profile/change_language.dart';
+import 'package:pana_project/views/profile/my_booked_objects_page.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
 import 'package:pana_project/views/profile/my_transactions.dart';
 import 'package:pana_project/views/profile/payment_methods.dart';
@@ -240,6 +241,16 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                         },
                         child: ProfileMenuItem(
                             'assets/icons/profile_star.svg', 'Мои отзывы'),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyBookedObjectsPage()));
+                        },
+                        child: ProfileMenuItem('assets/icons/flag_icon.svg',
+                            'Забронированные места'),
                       ),
                       GestureDetector(
                         onTap: () {

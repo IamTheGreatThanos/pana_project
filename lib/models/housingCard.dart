@@ -1,30 +1,39 @@
 import 'package:pana_project/models/city.dart';
 import 'package:pana_project/models/country.dart';
 import 'package:pana_project/models/images.dart';
+import 'package:pana_project/models/user.dart';
 import 'package:pana_project/models/videos.dart';
 
 class HousingCardModel {
   int? id;
+  String? name;
   City? city;
   Country? country;
   List<Images>? images;
   List<Videos>? videos;
   bool? inFavorite;
   int? reviewsAvgBall;
+  int? reviewsCount;
   int? distance;
+  User? user;
 
-  HousingCardModel(
-      {this.id,
-      this.city,
-      this.country,
-      this.images,
-      this.videos,
-      this.inFavorite,
-      this.reviewsAvgBall,
-      this.distance});
+  HousingCardModel({
+    this.id,
+    this.name,
+    this.city,
+    this.country,
+    this.images,
+    this.videos,
+    this.inFavorite,
+    this.reviewsAvgBall,
+    this.reviewsCount,
+    this.distance,
+    this.user,
+  });
 
   HousingCardModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    name = json['name'];
     city = json['city'] != null ? City.fromJson(json['city']) : null;
     country =
         json['country'] != null ? Country.fromJson(json['country']) : null;
@@ -42,24 +51,31 @@ class HousingCardModel {
     }
     inFavorite = json['in_favorite'];
     reviewsAvgBall = json['reviews_avg_ball'];
+    reviewsCount = json['reviews_count'];
     distance = json['distance'];
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.city != null) {
-      data['city'] = this.city!.toJson();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['name'] = name;
+    if (city != null) {
+      data['city'] = city!.toJson();
     }
-    if (this.country != null) {
-      data['country'] = this.country!.toJson();
+    if (country != null) {
+      data['country'] = country!.toJson();
     }
-    if (this.images != null) {
-      data['images'] = this.images!.map((v) => v.toJson()).toList();
+    if (images != null) {
+      data['images'] = images!.map((v) => v.toJson()).toList();
     }
-    data['in_favorite'] = this.inFavorite;
-    data['reviews_avg_ball'] = this.reviewsAvgBall;
-    data['distance'] = this.distance;
+    data['in_favorite'] = inFavorite;
+    data['reviews_avg_ball'] = reviewsAvgBall;
+    data['reviews_count'] = reviewsCount;
+    data['distance'] = distance;
+    if (user != null) {
+      data['user'] = user!.toJson();
+    }
     return data;
   }
 }

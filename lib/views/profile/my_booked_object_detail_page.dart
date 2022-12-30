@@ -3,21 +3,27 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/models/travelPlan.dart';
+import 'package:pana_project/models/chat.dart';
+import 'package:pana_project/models/housingCard.dart';
+import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/messages/chat_messages_page.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
 import 'package:pana_project/views/travel/send_audio_review.dart';
 import 'package:pana_project/views/travel/send_text_review.dart';
 
-class BookedObjectPage extends StatefulWidget {
-  BookedObjectPage(this.plan);
-  final TravelPlanModel plan;
+class MyBookedObjectDetailPage extends StatefulWidget {
+  MyBookedObjectDetailPage(this.type, this.housing, this.impression);
+  final int type;
+  final HousingCardModel housing;
+  final ImpressionCardModel impression;
 
   @override
-  _BookedObjectPageState createState() => _BookedObjectPageState();
+  _MyBookedObjectDetailPageState createState() =>
+      _MyBookedObjectDetailPageState();
 }
 
-class _BookedObjectPageState extends State<BookedObjectPage> {
+class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
   @override
   void initState() {
     super.initState();
@@ -64,7 +70,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Text(
-                          widget.plan.type == 2 ? 'Жилье' : 'Впечатление',
+                          widget.type == 2 ? 'Жилье' : 'Впечатление',
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
@@ -106,12 +112,9 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                 height: 86,
                                 child: CachedNetworkImage(
                                   fit: BoxFit.cover,
-                                  imageUrl: widget.plan.type == 2
-                                      ? widget.plan.housing!.images![0].path ??
-                                          ''
-                                      : widget.plan.impression!.images?[0]
-                                              .path ??
-                                          '',
+                                  imageUrl: widget.type == 2
+                                      ? widget.housing.images![0].path ?? ''
+                                      : widget.impression.images?[0].path ?? '',
                                 ),
                               ),
                             ),
@@ -123,9 +126,9 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.6,
                                   child: Text(
-                                    widget.plan.type == 2
-                                        ? widget.plan.housing?.name ?? ''
-                                        : widget.plan.impression?.name ?? '',
+                                    widget.type == 2
+                                        ? widget.housing.name ?? ''
+                                        : widget.impression.name ?? '',
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
@@ -137,7 +140,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.6,
                                   child: Text(
-                                    '${widget.plan.city?.name ?? ''} , ${AppConstants.countries[(widget.plan.city?.countryId ?? 1) - 1]}',
+                                    '${widget.type == 2 ? widget.housing.city?.name ?? '' : widget.impression.city?.name ?? ''} , ${widget.type == 2 ? widget.housing.country?.name ?? '' : widget.impression.country?.name ?? ''}',
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
@@ -162,12 +165,12 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                       Padding(
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Text(
-                                          widget.plan.type == 2
-                                              ? widget.plan.housing
-                                                      ?.reviewsBallAvg ??
+                                          widget.type == 2
+                                              ? widget.housing.reviewsAvgBall
+                                                      .toString() ??
                                                   '0'
-                                              : widget.plan.impression
-                                                      ?.reviewsAvgBall ??
+                                              : widget.impression.reviewsAvgBall
+                                                      .toString() ??
                                                   '',
                                           style: const TextStyle(
                                               fontSize: 16,
@@ -178,7 +181,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                         padding:
                                             const EdgeInsets.only(left: 10),
                                         child: Text(
-                                          '${widget.plan.type == 2 ? widget.plan.housing?.reviewsCount ?? '0' : widget.plan.impression?.reviewsCount ?? '0'} Отзывов',
+                                          '${widget.type == 2 ? widget.housing?.reviewsCount ?? '0' : widget.impression?.reviewsCount ?? '0'} Отзывов',
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
@@ -210,8 +213,8 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    widget.plan.dateStart?.substring(0, 10) ??
-                                        '-',
+                                    // widget.housing.dateStart?.substring(0, 10) ??
+                                    '-',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -244,8 +247,8 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    widget.plan.dateEnd?.substring(0, 10) ??
-                                        '-',
+                                    // widget.dateEnd?.substring(0, 10) ??
+                                    '-',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -274,43 +277,67 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                 Radius.circular(8),
                               ),
                               child: CachedNetworkImage(
-                                imageUrl: widget.plan.type == 2
-                                    ? widget.plan.housing?.user?.avatar ?? ''
-                                    : widget.plan.impression?.user?.avatar ??
-                                        '',
+                                imageUrl: widget.type == 2
+                                    ? widget.housing.user?.avatar ?? ''
+                                    : widget.impression.user?.avatar ?? '',
                                 height: 44,
                                 width: 44,
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Column(
+                            Row(
                               children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  child: const Text(
-                                    'Забронировал(а)',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: AppColors.blackWithOpacity,
+                                Column(
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.6,
+                                      child: const Text(
+                                        'Забронировал(а)',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.blackWithOpacity,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.6,
+                                      child: Text(
+                                        '${widget.type == 2 ? widget.housing.user?.name ?? '' : widget.impression.user?.name ?? ''} ${widget.type == 2 ? widget.housing.user?.surname ?? '' : widget.impression.user?.surname ?? ''}',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  child: Text(
-                                    '${widget.plan.type == 2 ? widget.plan.housing?.user?.name ?? '' : widget.plan.impression?.user?.name ?? ''} ${widget.plan.type == 2 ? widget.plan.housing?.user?.surname ?? '' : widget.plan.impression?.user?.surname ?? ''}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatMessagesPage(
+                                          ChatModel(
+                                            user: widget.type == 2
+                                                ? widget.housing.user
+                                                : widget.impression.user,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: SizedBox(
+                                      width: 28,
+                                      height: 28,
+                                      child: Image.asset(
+                                          'assets/icons/start_chat_icon.png')),
                                 ),
                               ],
                             ),
@@ -443,11 +470,10 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             SendAudioReviewPage(
-                                                widget.plan.type!,
-                                                widget.plan.type == 2
-                                                    ? widget.plan.housing!.id!
-                                                    : widget.plan.impression!
-                                                        .id!)));
+                                                widget.type!,
+                                                widget.type == 2
+                                                    ? widget.housing!.id!
+                                                    : widget.impression!.id!)));
                               },
                               child: Container(
                                 width: 162,
@@ -485,11 +511,10 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             SendTextReviewPage(
-                                                widget.plan.type!,
-                                                widget.plan.type == 2
-                                                    ? widget.plan.housing!.id!
-                                                    : widget.plan.impression!
-                                                        .id!)));
+                                                widget.type!,
+                                                widget.type == 2
+                                                    ? widget.housing!.id!
+                                                    : widget.impression!.id!)));
                               },
                               child: Container(
                                 width: 162,
@@ -527,36 +552,11 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 20),
-                    child: Container(
-                      height: 60,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: AppColors.grey),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(8),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Перенести в другую поездку',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
                 Center(
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      cancelOrder();
+                    },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 40),
                       child: Text(
@@ -579,7 +579,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
     );
   }
 
-  void sendOrder() async {
+  void cancelOrder() async {
     // var response = await MainProvider().housingPayment();
     // if (response['response_status'] == 'ok') {
     //   print('Successfully created!');

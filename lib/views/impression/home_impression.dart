@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/impression_card.dart';
+import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/models/impressionCard.dart';
+import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
@@ -11,8 +13,6 @@ import 'package:pana_project/views/other/favorites_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
-
-import '../../components/stories_card.dart';
 
 class HomeImpression extends StatefulWidget {
   @override
@@ -49,6 +49,7 @@ class _HomeImpressionState extends State<HomeImpression>
   ];
 
   List<ImpressionCardModel> impressionList = [];
+  List<Reels> reels = [];
 
   int selectedCategoryId = 1;
   String selectedRange = '';
@@ -60,6 +61,7 @@ class _HomeImpressionState extends State<HomeImpression>
   void initState() {
     getImpressionList();
     checkIsLogedIn();
+    getReels();
     _tabController = TabController(vsync: this, length: 12);
     super.initState();
   }
@@ -262,17 +264,20 @@ class _HomeImpressionState extends State<HomeImpression>
                   SizedBox(
                     child: Column(
                       children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 10),
-                          height: 150,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: <Widget>[
-                              for (int i = 0; i < 6; i++) StoriesCard(i),
-                            ],
-                          ),
-                        ),
+                        reels.isNotEmpty
+                            ? Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 10),
+                                height: 150,
+                                child: ListView(
+                                  scrollDirection: Axis.horizontal,
+                                  children: <Widget>[
+                                    for (int i = 0; i < reels.length; i++)
+                                      StoriesCard(reels, i),
+                                  ],
+                                ),
+                              )
+                            : Container(),
                         for (int i = 0; i < impressionList.length; i++)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20),
@@ -364,6 +369,7 @@ class _HomeImpressionState extends State<HomeImpression>
 
   Future<void> _pullRefresh() async {
     getImpressionList();
+    getReels();
   }
 
   void goToFavorites() async {
@@ -440,6 +446,24 @@ class _HomeImpressionState extends State<HomeImpression>
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         impressionList.add(ImpressionCardModel.fromJson(response['data'][i]));
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 20)),
+      ));
+    }
+  }
+
+  void getReels() async {
+    reels = [];
+    var response = await MainProvider().getReels();
+    if (response['response_status'] == 'ok') {
+      for (int i = 0; i < response['data'].length; i++) {
+        reels.add(Reels.fromJson(response['data'][i]));
       }
       if (mounted) {
         setState(() {});

@@ -16,6 +16,7 @@
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	
 	<key>CFBundleDisplayName</key>
 	<string>Pana Project</string>
 	<key>CFBundleExecutable</key>

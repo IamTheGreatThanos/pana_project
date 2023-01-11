@@ -42,12 +42,11 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
     getToDoList();
     _switchValue = widget.plan.private == 1 ? true : false;
     startDate = widget.plan.dateStart?.substring(0, 10) ?? '';
-    endDate = widget.plan.dateEnd?.substring(0, 10) ?? '';
+    // endDate = widget.plan.dateEnd?.substring(0, 10) ?? '';
     startTime = ' ${widget.plan.dateStart?.substring(11, 16) ?? ''}';
     endTime = ' ${widget.plan.dateEnd?.substring(11, 16) ?? ''}';
 
-    selectedRange =
-        '${widget.plan.dateStart?.substring(0, 10) ?? ''} - ${widget.plan.dateEnd?.substring(0, 10) ?? ''}';
+    selectedRange = widget.plan.dateStart?.substring(0, 10) ?? '';
 
     super.initState();
   }
@@ -671,7 +670,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                     selectionColor: AppColors.accent,
                     headerStyle: const DateRangePickerHeaderStyle(
                         textAlign: TextAlign.center),
-                    selectionMode: DateRangePickerSelectionMode.range,
+                    selectionMode: DateRangePickerSelectionMode.single,
                   ),
                 ],
               ),
@@ -684,16 +683,18 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
-      if (args.value is PickerDateRange) {
-        selectedRange =
-            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
-        if (args.value.startDate != null && args.value.endDate != null) {
-          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
-          endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
-        } else {
-          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
-          endDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+      if (args.value is DateTime) {
+        selectedRange = DateFormat('dd/MM/yyyy').format(args.value);
+        // selectedRange =
+        //     '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} - ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        if (args.value != null) {
+          startDate = DateFormat('yyyy-MM-dd').format(args.value);
+          // endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
         }
+        // else {
+        //   startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+        //   endDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+        // }
       }
     });
   }

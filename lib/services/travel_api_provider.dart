@@ -160,7 +160,7 @@ class TravelProvider {
       },
       body: jsonEncode(<String, dynamic>{
         "name": title,
-        "date_end": endDate,
+        // "date_end": endDate,
         "date_start": startDate,
         "private": isPrivate,
         "trip_id": tripId,
@@ -195,7 +195,7 @@ class TravelProvider {
         'Authorization': "Bearer $token"
       },
       body: jsonEncode(<String, dynamic>{
-        "date_end": endDate,
+        // "date_end": endDate,
         "date_start": startDate,
         "private": isPrivate,
         "city_id": cityId,

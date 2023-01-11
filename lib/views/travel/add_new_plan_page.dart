@@ -466,7 +466,6 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                         if (_titleController.text != '' &&
                             toDoList.isNotEmpty &&
                             selectedRange != 'Выбрать даты' &&
-                            endDate != '' &&
                             selectedCityId != 0) {
                           saveChanges();
                         } else {
@@ -566,7 +565,7 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                     selectionColor: AppColors.accent,
                     headerStyle: const DateRangePickerHeaderStyle(
                         textAlign: TextAlign.center),
-                    selectionMode: DateRangePickerSelectionMode.range,
+                    selectionMode: DateRangePickerSelectionMode.single,
                   ),
                 ],
               ),
@@ -579,18 +578,18 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
-      if (args.value is PickerDateRange) {
-        selectedRange =
-            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
-            // ignore: lines_longer_than_80_chars
-            ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
-        if (args.value.startDate != null && args.value.endDate != null) {
-          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
-          endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
-        } else {
-          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
-          endDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+      if (args.value is DateTime) {
+        selectedRange = DateFormat('dd/MM/yyyy').format(args.value);
+        // ignore: lines_longer_than_80_chars
+        // ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        if (args.value != null) {
+          startDate = DateFormat('yyyy-MM-dd').format(args.value);
+          // endDate = DateFormat('yyyy-MM-dd').format(args.value);
         }
+        // else {
+        //   startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+        //   endDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+        // }
       }
     });
   }

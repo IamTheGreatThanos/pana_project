@@ -41,6 +41,8 @@ class _StoriesViewState extends State<StoriesView> {
 
     videoControllers[widget.index].play();
 
+    viewCountRequest(widget.reels[widget.index].id!);
+
     super.initState();
   }
 
@@ -293,6 +295,7 @@ class _StoriesViewState extends State<StoriesView> {
     videoControllers[currentPageIndex].pause();
     currentPageIndex = index;
     videoControllers[currentPageIndex].play();
+    viewCountRequest(widget.reels[currentPageIndex].id!);
   }
 
   void tapFavoritesButton(int tappedObjectIndex) async {
@@ -372,5 +375,9 @@ class _StoriesViewState extends State<StoriesView> {
         }
       }
     }
+  }
+
+  void viewCountRequest(int reelId) async {
+    var response = await MainProvider().getReelInfo(reelId);
   }
 }

@@ -14,19 +14,24 @@ class TravelPlanModel {
   int? private;
   String? dateStart;
   String? dateEnd;
+  String? lat;
+  String? lng;
 
-  TravelPlanModel(
-      {this.id,
-      this.type,
-      this.status,
-      this.name,
-      this.tripId,
-      this.city,
-      this.housing,
-      this.impression,
-      this.private,
-      this.dateStart,
-      this.dateEnd});
+  TravelPlanModel({
+    this.id,
+    this.type,
+    this.status,
+    this.name,
+    this.tripId,
+    this.city,
+    this.housing,
+    this.impression,
+    this.private,
+    this.dateStart,
+    this.dateEnd,
+    this.lat,
+    this.lng,
+  });
 
   TravelPlanModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -44,6 +49,8 @@ class TravelPlanModel {
     private = json['private'];
     dateStart = json['date_start'];
     dateEnd = json['date_end'];
+    lat = json['lat'].toString();
+    lng = json['lng'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -65,6 +72,8 @@ class TravelPlanModel {
     data['private'] = private;
     data['date_start'] = dateStart;
     data['date_end'] = dateEnd;
+    data['lat'] = lat;
+    data['lng'] = lng;
     return data;
   }
 }

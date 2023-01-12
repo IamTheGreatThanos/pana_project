@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -453,6 +455,15 @@ class _HousingInfoState extends State<HousingInfo> {
                         Radius.circular(16),
                       ),
                       child: GoogleMap(
+                        gestureRecognizers: Set()
+                          ..add(Factory<PanGestureRecognizer>(
+                              () => PanGestureRecognizer()))
+                          ..add(Factory<ScaleGestureRecognizer>(
+                              () => ScaleGestureRecognizer()))
+                          ..add(Factory<TapGestureRecognizer>(
+                              () => TapGestureRecognizer()))
+                          ..add(Factory<VerticalDragGestureRecognizer>(
+                              () => VerticalDragGestureRecognizer())),
                         mapType: MapType.normal,
                         initialCameraPosition: _initPosition,
                         onMapCreated: _onMapCreated,

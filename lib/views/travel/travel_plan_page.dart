@@ -1,3 +1,7 @@
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,6 +13,7 @@ import 'package:pana_project/models/travelPlan.dart';
 import 'package:pana_project/models/user.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/get_bytes_from_asset.dart';
 import 'package:pana_project/views/travel/add_new_plan_page.dart';
 import 'package:pana_project/views/travel/add_user_to_travel_page.dart';
 import 'package:pana_project/views/travel/booked_plans_page.dart';
@@ -27,6 +32,8 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
   CameraPosition _initPosition = const CameraPosition(
       target: const LatLng(43.236431, 76.917994), zoom: 14);
   final Set<Marker> _markers = {};
+  final Set<Polyline> _polylines = {};
+  List<LatLng> mapPoints = [];
 
   List<TravelPlanModel> thisTravelPlans = [];
   List<User> userList = [];
@@ -512,10 +519,20 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                               Radius.circular(16),
                             ),
                             child: GoogleMap(
+                              gestureRecognizers: Set()
+                                ..add(Factory<PanGestureRecognizer>(
+                                    () => PanGestureRecognizer()))
+                                ..add(Factory<ScaleGestureRecognizer>(
+                                    () => ScaleGestureRecognizer()))
+                                ..add(Factory<TapGestureRecognizer>(
+                                    () => TapGestureRecognizer()))
+                                ..add(Factory<VerticalDragGestureRecognizer>(
+                                    () => VerticalDragGestureRecognizer())),
                               mapType: MapType.normal,
                               initialCameraPosition: _initPosition,
                               onMapCreated: _onMapCreated,
                               markers: _markers,
+                              polylines: _polylines,
                             ),
                           ),
                         ),
@@ -849,7 +866,11 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
 
   void getTravelPlans() async {
     thisTravelPlans = [];
+    _markers.removeAll(_markers);
+    _polylines.removeAll(_polylines);
+    mapPoints = [];
     lenOfRoadLine = 0;
+
     var response = await TravelProvider().getTravelPlans(widget.travel.id!);
     if (response['response_status'] == 'ok') {
       for (var object in response['data']) {
@@ -860,6 +881,48 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
         } else {
           lenOfRoadLine += 9;
         }
+
+        final Uint8List customMarker =
+            await getBytesFromAsset('assets/icons/map_pin.png', 150);
+
+        LatLng thisPoint = LatLng(
+            double.parse(
+                (planObject.lat != 'null' ? planObject.lat : '43.236431') ??
+                    '43.236431'),
+            double.parse(
+                (planObject.lng != 'null' ? planObject.lng : '43.236431') ??
+                    '76.917994'));
+
+        mapPoints.add(thisPoint);
+
+        _markers.add(Marker(
+          markerId: MarkerId('point-${planObject.id!}'),
+          position: thisPoint,
+          infoWindow: InfoWindow(
+            title: planObject.name,
+          ),
+          icon: BitmapDescriptor.fromBytes(customMarker),
+        ));
+      }
+
+      if (_markers.isNotEmpty) {
+        _polylines.add(
+          Polyline(
+            polylineId: PolylineId('1'),
+            points: mapPoints,
+            color: AppColors.accent,
+            width: 2,
+            patterns: [PatternItem.dash(10), PatternItem.gap(20)],
+          ),
+        );
+
+        CameraPosition startLocation = CameraPosition(
+          target: _markers.first.position,
+          zoom: 10,
+        );
+
+        _mapController
+            .animateCamera(CameraUpdate.newCameraPosition(startLocation));
       }
 
       setState(() {});

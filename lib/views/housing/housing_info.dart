@@ -994,7 +994,7 @@ class _HousingInfoState extends State<HousingInfo> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => SelectRoomPage(
-                                        thisHousing.id!,
+                                        thisHousing,
                                         thisHousing.basePriceMin!)));
                           },
                           child: const Text(

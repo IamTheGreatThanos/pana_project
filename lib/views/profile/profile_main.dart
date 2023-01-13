@@ -145,43 +145,43 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        LoyaltyProgramPage()));
-                          },
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.black87,
-                              borderRadius:
-                                  BorderRadius.all(const Radius.circular(8)),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(15, 70, 15, 20),
-                              child: Row(
-                                children: const [
-                                  Text(
-                                    'Программа лояльности',
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.white),
-                                  ),
-                                  Spacer(),
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (context) =>
+                      //                   LoyaltyProgramPage()));
+                      //     },
+                      //     child: Container(
+                      //       decoration: const BoxDecoration(
+                      //         color: Colors.black87,
+                      //         borderRadius:
+                      //             BorderRadius.all(const Radius.circular(8)),
+                      //       ),
+                      //       child: Padding(
+                      //         padding:
+                      //             const EdgeInsets.fromLTRB(15, 70, 15, 20),
+                      //         child: Row(
+                      //           children: const [
+                      //             Text(
+                      //               'Программа лояльности',
+                      //               style: TextStyle(
+                      //                   fontSize: 14, color: Colors.white),
+                      //             ),
+                      //             Spacer(),
+                      //             Icon(
+                      //               Icons.arrow_forward_ios,
+                      //               color: Colors.white,
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       GestureDetector(
                         onTap: () async {
                           await Navigator.push(
@@ -214,16 +214,16 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                         child: ProfileMenuItem(
                             'assets/icons/profile_card.svg', 'Способы оплаты'),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoyaltyProgramPage()));
-                        },
-                        child: ProfileMenuItem('assets/icons/profile_chat.svg',
-                            'Служба поддержки'),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => LoyaltyProgramPage()));
+                      //   },
+                      //   child: ProfileMenuItem('assets/icons/profile_chat.svg',
+                      //       'Служба поддержки'),
+                      // ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(

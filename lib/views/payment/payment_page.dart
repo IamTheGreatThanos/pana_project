@@ -3,17 +3,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/payment_method_card.dart';
+import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/roomCard.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class PaymentPage extends StatefulWidget {
-  PaymentPage(this.roomList, this.selectedRoomIds, this.housingId,
-      this.startDate, this.endDate);
+  PaymentPage(this.roomList, this.selectedRoomIds, this.housing, this.startDate,
+      this.endDate);
   final List<RoomCardModel> roomList;
   final List<int> selectedRoomIds;
-  final int housingId;
+  final HousingDetailModel housing;
   final String startDate;
   final String endDate;
 
@@ -124,8 +125,8 @@ class _PaymentPageState extends State<PaymentPage> {
                           width: 86,
                           height: 86,
                           child: CachedNetworkImage(
-                            imageUrl:
-                                'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
+                            fit: BoxFit.cover,
+                            imageUrl: widget.housing.images?[0].path ?? '',
                           ),
                         ),
                       ),
@@ -135,9 +136,9 @@ class _PaymentPageState extends State<PaymentPage> {
                         children: [
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.6,
-                            child: const Text(
-                              'Домик на берегу моря',
-                              style: TextStyle(
+                            child: Text(
+                              widget.housing.name ?? '',
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -146,9 +147,9 @@ class _PaymentPageState extends State<PaymentPage> {
                           const SizedBox(height: 10),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.6,
-                            child: const Text(
-                              'Almaty, Kazakhstan',
-                              style: TextStyle(
+                            child: Text(
+                              '${widget.housing.city?.name ?? ''}, ${widget.housing.city?.country?.name ?? ''}',
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black45,
@@ -168,20 +169,20 @@ class _PaymentPageState extends State<PaymentPage> {
                                         'assets/icons/star.svg'),
                                   ),
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 5),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5),
                                   child: Text(
-                                    '4.9',
-                                    style: TextStyle(
+                                    widget.housing.reviewsBallAvg ?? '',
+                                    style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500),
                                   ),
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 10),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
                                   child: Text(
-                                    '18 Отзывов',
-                                    style: TextStyle(
+                                    '${widget.housing.reviewsCount ?? 0} Отзывов',
+                                    style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black45),
@@ -495,7 +496,7 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void sendOrder() async {
-    var response = await MainProvider().housingPayment(widget.housingId,
+    var response = await MainProvider().housingPayment(widget.housing.id!,
         dateFrom, dateTo, peopleCount, widget.selectedRoomIds);
     if (response['response_status'] == 'ok') {
       print('Successfully created!');

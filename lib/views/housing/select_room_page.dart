@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:pana_project/components/room_card.dart';
+import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/roomCard.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
@@ -9,8 +10,8 @@ import 'package:pana_project/views/payment/payment_page.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class SelectRoomPage extends StatefulWidget {
-  const SelectRoomPage(this.housingId, this.price);
-  final int housingId;
+  const SelectRoomPage(this.housing, this.price);
+  final HousingDetailModel housing;
   final int price;
 
   @override
@@ -221,7 +222,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                                             builder: (context) => PaymentPage(
                                                 selectedRooms,
                                                 selectedRoomIds,
-                                                widget.housingId,
+                                                widget.housing,
                                                 startDate,
                                                 endDate)));
                                   },
@@ -345,7 +346,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
 
   void getRoomsList() async {
     roomsList = [];
-    var response = await MainProvider().getRoomsList(widget.housingId);
+    var response = await MainProvider().getRoomsList(widget.housing.id!);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         roomsList.add(RoomCardModel.fromJson(response['data'][i]));
@@ -362,7 +363,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
   void getRoomListByDate() async {
     roomsList = [];
     var response = await MainProvider()
-        .getRoomsListByDate(widget.housingId, startDate, endDate);
+        .getRoomsListByDate(widget.housing.id!, startDate, endDate);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         roomsList.add(RoomCardModel.fromJson(response['data'][i]));

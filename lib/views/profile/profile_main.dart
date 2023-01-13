@@ -8,6 +8,7 @@ import 'package:pana_project/components/profile_menu_item.dart';
 import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/profile/change_language.dart';
+import 'package:pana_project/views/profile/loyalty_program_page.dart';
 import 'package:pana_project/views/profile/my_booked_objects_page.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
 import 'package:pana_project/views/profile/my_transactions.dart';
@@ -148,10 +149,11 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: GestureDetector(
                           onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => PaymentPage()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        LoyaltyProgramPage()));
                           },
                           child: Container(
                             decoration: const BoxDecoration(
@@ -217,7 +219,7 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PaymentMethodsPage()));
+                                  builder: (context) => LoyaltyProgramPage()));
                         },
                         child: ProfileMenuItem('assets/icons/profile_chat.svg',
                             'Служба поддержки'),

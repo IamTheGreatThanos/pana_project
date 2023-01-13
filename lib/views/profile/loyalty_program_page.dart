@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/utils/const.dart';
 
-class MyTransactionsPage extends StatefulWidget {
+class LoyaltyProgramPage extends StatefulWidget {
   @override
-  _MyTransactionsPageState createState() => _MyTransactionsPageState();
+  _LoyaltyProgramPageState createState() => _LoyaltyProgramPageState();
 }
 
-class _MyTransactionsPageState extends State<MyTransactionsPage> {
-  TextEditingController phoneController = TextEditingController();
-
+class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
   @override
   void initState() {
     super.initState();
@@ -50,10 +48,10 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
                       ),
                     ),
                     const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
+                    const Padding(
+                      padding: EdgeInsets.all(20),
                       child: Text(
-                        'Мои транзакции',
+                        'Soon',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w500,

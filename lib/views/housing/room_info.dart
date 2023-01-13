@@ -39,7 +39,7 @@ class _RoomInfoPageState extends State<RoomInfoPage> {
         StoryItem.pageImage(
           url: widget.room.images![i].path!,
           controller: storyController,
-          imageFit: BoxFit.fitHeight,
+          imageFit: BoxFit.cover,
         ),
       );
 
@@ -129,7 +129,7 @@ class _RoomInfoPageState extends State<RoomInfoPage> {
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    widget.room.roomName?.name ?? '',
+                    widget.room?.name ?? '',
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,

@@ -76,9 +76,13 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
                             itemCount: widget.housing.images?.length ?? 0,
                             itemBuilder: (BuildContext context, int itemIndex,
                                     int pageViewIndex) =>
-                                CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl: widget.housing.images![itemIndex].path!,
+                                SizedBox(
+                              width: double.infinity,
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl:
+                                    widget.housing.images![itemIndex].path!,
+                              ),
                             ),
                           ),
                         ),

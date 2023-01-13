@@ -5,9 +5,9 @@ import 'package:pana_project/models/roomType.dart';
 
 class RoomCardModel {
   int? id;
+  String? name;
   int? housingId;
   RoomType? roomType;
-  RoomType? roomName;
   int? status;
   int? size;
   String? description;
@@ -26,9 +26,9 @@ class RoomCardModel {
 
   RoomCardModel(
       {this.id,
+      this.name,
       this.housingId,
       this.roomType,
-      this.roomName,
       this.status,
       this.size,
       this.description,
@@ -47,11 +47,10 @@ class RoomCardModel {
 
   RoomCardModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    name = json['name'];
     housingId = json['housing_id'];
     roomType =
         json['roomType'] != null ? RoomType.fromJson(json['roomType']) : null;
-    roomName =
-        json['roomName'] != null ? RoomType.fromJson(json['roomName']) : null;
     status = json['status'];
     size = json['size'];
     description = json['description'];
@@ -87,12 +86,10 @@ class RoomCardModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    data['name'] = name;
     data['housing_id'] = housingId;
     if (roomType != null) {
       data['roomType'] = roomType!.toJson();
-    }
-    if (roomName != null) {
-      data['roomName'] = roomName!.toJson();
     }
     data['status'] = status;
     data['size'] = size;

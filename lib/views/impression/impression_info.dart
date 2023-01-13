@@ -1126,7 +1126,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                           Row(
                             children: [
                               Text(
-                                '\$${thisImpression.openPrice ?? ''}',
+                                '\$${thisImpression.price ?? ''}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18,

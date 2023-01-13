@@ -52,12 +52,12 @@ class _RoomCardState extends State<RoomCard> {
                     child: Stack(
                       children: [
                         SizedBox(
-                          height: 250,
+                          height: 270,
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: CarouselSlider.builder(
                             options: CarouselOptions(
-                              height: 250,
-                              aspectRatio: 16 / 9,
+                              height: 270,
+                              aspectRatio: 16 / 10,
                               viewportFraction: 1,
                               initialPage: 0,
                               enableInfiniteScroll: true,
@@ -78,14 +78,24 @@ class _RoomCardState extends State<RoomCard> {
                             itemCount: widget.room.images?.length ?? 0,
                             itemBuilder: (BuildContext context, int itemIndex,
                                     int pageViewIndex) =>
-                                CachedNetworkImage(
-                              fit: BoxFit.fitHeight,
-                              imageUrl: widget.room.images![itemIndex].path!,
+                                SizedBox(
+                              width: double.infinity,
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: widget.room.images![itemIndex].path!,
+                                placeholder: (context, url) => const Center(
+                                    child: SizedBox(
+                                        width: 100,
+                                        height: 100,
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.grey,
+                                        ))),
+                              ),
                             ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 220),
+                          padding: const EdgeInsets.only(top: 240),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: widget.room.images!
@@ -96,12 +106,15 @@ class _RoomCardState extends State<RoomCard> {
                                 onTap: () =>
                                     _controller.animateToPage(entry.key),
                                 child: Container(
-                                  width: 8.0,
-                                  height: 8.0,
+                                  width: _current == entry.key ? 24 : 12,
+                                  height: 4,
                                   margin: const EdgeInsets.symmetric(
                                       vertical: 8.0, horizontal: 4.0),
                                   decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(4),
+                                      ),
                                       color: (Colors.white).withOpacity(
                                           _current == entry.key ? 0.9 : 0.4)),
                                 ),
@@ -119,7 +132,7 @@ class _RoomCardState extends State<RoomCard> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.6,
                       child: Text(
-                        widget.room.roomName?.name ?? '',
+                        widget.room?.name ?? '',
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,

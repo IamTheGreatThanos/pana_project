@@ -49,6 +49,7 @@ class _TextReviewCardState extends State<TextReviewCard> {
                         height: 64,
                         child: CachedNetworkImage(
                           imageUrl: widget.review.user?.avatar ?? '',
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),

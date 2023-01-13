@@ -51,7 +51,7 @@ class _HousingCardState extends State<HousingCard> {
                       child: CarouselSlider.builder(
                         options: CarouselOptions(
                           height: 270,
-                          aspectRatio: 16 / 10,
+                          // aspectRatio: 16 / 10,
                           viewportFraction: 1,
                           initialPage: 0,
                           enableInfiniteScroll: true,
@@ -72,9 +72,21 @@ class _HousingCardState extends State<HousingCard> {
                         itemCount: widget.housing.images?.length ?? 0,
                         itemBuilder: (BuildContext context, int itemIndex,
                                 int pageViewIndex) =>
-                            CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          imageUrl: widget.housing.images![itemIndex].path!,
+                            SizedBox(
+                          width: double.infinity,
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl: widget.housing.images![itemIndex].path!,
+                            placeholder: (context, url) => const Center(
+                              child: SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -134,13 +146,15 @@ class _HousingCardState extends State<HousingCard> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  '${widget.housing.city!.name}, ${widget.housing.country!.name}',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                  widget.housing.name ?? '',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500, fontSize: 16),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   widget.housing.reviewsAvgBall.toString(),
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 2, left: 5),
@@ -156,7 +170,7 @@ class _HousingCardState extends State<HousingCard> {
             ),
             Text(
               '${widget.housing.distance} км от вас',
-              style: TextStyle(
+              style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
                   color: Colors.black45),

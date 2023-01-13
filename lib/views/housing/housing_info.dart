@@ -60,6 +60,8 @@ class _HousingInfoState extends State<HousingInfo> {
     getHousingInfo();
     getNearbyImpression();
     getReels();
+    getAudioReviews();
+    getTextReviews();
     super.initState();
   }
 

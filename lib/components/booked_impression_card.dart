@@ -76,10 +76,13 @@ class _BookedImpressionCardState extends State<BookedImpressionCard> {
                           itemCount: widget.impression.images?.length ?? 0,
                           itemBuilder: (BuildContext context, int itemIndex,
                                   int pageViewIndex) =>
-                              CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            imageUrl:
-                                widget.impression.images![itemIndex].path!,
+                              SizedBox(
+                            width: double.infinity,
+                            child: CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              imageUrl:
+                                  widget.impression.images![itemIndex].path!,
+                            ),
                           ),
                         ),
                       ),
@@ -171,7 +174,7 @@ class _BookedImpressionCardState extends State<BookedImpressionCard> {
               Row(
                 children: [
                   Text(
-                    '\$${widget.impression.openPrice ?? 0}',
+                    '\$${widget.impression.price ?? 0}',
                     style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,

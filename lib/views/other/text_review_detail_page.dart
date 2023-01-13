@@ -123,6 +123,7 @@ class _TextReviewDetailPageState extends State<TextReviewDetailPage> {
                                 height: 60,
                                 child: CachedNetworkImage(
                                   imageUrl: widget.review.user?.avatar ?? '',
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),

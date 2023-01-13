@@ -82,6 +82,7 @@ class _AudioReviewCardState extends State<AudioReviewCard> {
                         height: 64,
                         child: CachedNetworkImage(
                           imageUrl: widget.review.user?.avatar ?? '',
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),

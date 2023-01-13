@@ -154,6 +154,7 @@ class _AudioReviewDetailPageState extends State<AudioReviewDetailPage> {
                                             imageUrl: widget.review.answers?[0]
                                                     .user?.avatar ??
                                                 '',
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                       ),

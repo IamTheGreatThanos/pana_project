@@ -13,7 +13,7 @@ class ImpressionCardModel {
   String? duration;
   List<Images>? images;
   List<Videos>? videos;
-  String? openPrice;
+  String? price;
   bool? inFavorite;
   int? reviewsAvgBall;
   int? reviewsCount;
@@ -27,7 +27,7 @@ class ImpressionCardModel {
     this.duration,
     this.images,
     this.videos,
-    this.openPrice,
+    this.price,
     this.inFavorite,
     this.reviewsAvgBall,
     this.reviewsCount,
@@ -53,7 +53,7 @@ class ImpressionCardModel {
         videos!.add(Videos.fromJson(v));
       });
     }
-    openPrice = json['open_price'].toString();
+    price = json['price'].toString();
     inFavorite = json['in_favorite'];
     reviewsAvgBall = json['reviews_avg_ball'];
     reviewsCount = json['reviews_count'];
@@ -79,7 +79,7 @@ class ImpressionCardModel {
     if (videos != null) {
       data['videos'] = videos!.map((v) => v.toJson()).toList();
     }
-    data['open_price'] = openPrice;
+    data['price'] = price;
     data['in_favorite'] = inFavorite;
     data['reviews_avg_ball'] = reviewsAvgBall;
     data['reviews_count'] = reviewsCount;

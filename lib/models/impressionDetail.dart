@@ -23,14 +23,7 @@ class ImpressionDetailModel {
   String? startTime;
   int? closedGroups;
   int? openGroups;
-  String? openPrice;
-  String? openPriceCurrency;
-  String? openEarning;
-  String? openEarningCurrency;
-  String? closedPrice;
-  String? closedPriceCurrency;
-  String? closedEarning;
-  String? closedEarningCurrency;
+  String? price;
   int? deadlineGuest;
   int? deadlineFirstGuest;
   int? cancellationPolicy;
@@ -62,14 +55,7 @@ class ImpressionDetailModel {
     this.startTime,
     this.closedGroups,
     this.openGroups,
-    this.openPrice,
-    this.openPriceCurrency,
-    this.openEarning,
-    this.openEarningCurrency,
-    this.closedPrice,
-    this.closedPriceCurrency,
-    this.closedEarning,
-    this.closedEarningCurrency,
+    this.price,
     this.deadlineGuest,
     this.deadlineFirstGuest,
     this.cancellationPolicy,
@@ -108,14 +94,7 @@ class ImpressionDetailModel {
     startTime = json['start_time'];
     closedGroups = json['closed_groups'];
     openGroups = json['open_groups'];
-    openPrice = json['open_price'].toString();
-    openPriceCurrency = json['open_price_currency'];
-    openEarning = json['open_earning'].toString();
-    openEarningCurrency = json['open_earning_currency'];
-    closedPrice = json['closed_price'].toString();
-    closedPriceCurrency = json['closed_price_currency'];
-    closedEarning = json['closed_earning'].toString();
-    closedEarningCurrency = json['closed_earning_currency'];
+    price = json['price'].toString();
     deadlineGuest = json['deadline_guest'];
     deadlineFirstGuest = json['deadline_first_guest'];
     cancellationPolicy = json['cancellation_policy'];
@@ -180,14 +159,7 @@ class ImpressionDetailModel {
     data['start_time'] = startTime;
     data['closed_groups'] = closedGroups;
     data['open_groups'] = openGroups;
-    data['open_price'] = openPrice;
-    data['open_price_currency'] = openPriceCurrency;
-    data['open_earning'] = openEarning;
-    data['open_earning_currency'] = openEarningCurrency;
-    data['closed_price'] = closedPrice;
-    data['closed_price_currency'] = closedPriceCurrency;
-    data['closed_earning'] = closedEarning;
-    data['closed_earning_currency'] = closedEarningCurrency;
+    data['price'] = price;
     data['deadline_guest'] = deadlineGuest;
     data['deadline_first_guest'] = deadlineFirstGuest;
     data['cancellation_policy'] = cancellationPolicy;

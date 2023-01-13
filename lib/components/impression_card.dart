@@ -74,9 +74,20 @@ class _ImpressionCardState extends State<ImpressionCard> {
                         itemCount: widget.impression.images?.length ?? 0,
                         itemBuilder: (BuildContext context, int itemIndex,
                                 int pageViewIndex) =>
-                            CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          imageUrl: widget.impression.images![itemIndex].path!,
+                            SizedBox(
+                          width: double.infinity,
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl:
+                                widget.impression.images![itemIndex].path!,
+                            placeholder: (context, url) => const Center(
+                                child: SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.grey,
+                                    ))),
+                          ),
                         ),
                       ),
                     ),
@@ -173,7 +184,7 @@ class _ImpressionCardState extends State<ImpressionCard> {
             Row(
               children: [
                 Text(
-                  '\$${widget.impression.openPrice ?? 0}',
+                  '\$${widget.impression.price ?? 0}',
                   style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,

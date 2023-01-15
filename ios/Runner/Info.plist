@@ -35,7 +35,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>${PRODUCT_NAME} requests the use of a microphone to record voice feedback</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>${PRODUCT_NAME} requests the use of the photo gallery for attaching a photo</string>
+	<string>${PRODUCT_NAME} requests the use of the photo gallery for attaching a photo to chats or set an avatar</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

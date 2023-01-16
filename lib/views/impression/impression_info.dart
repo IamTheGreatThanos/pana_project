@@ -661,7 +661,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                 const Padding(
                   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                   child: Text(
-                    'Истории с этого места',
+                    'Истории с этой локации',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
@@ -980,7 +980,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                 const Padding(
                   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                   child: Text(
-                    'Что нужно знать',
+                    'Важно знать',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,

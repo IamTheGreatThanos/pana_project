@@ -8,7 +8,6 @@ import 'package:pana_project/components/profile_menu_item.dart';
 import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/profile/change_language.dart';
-import 'package:pana_project/views/profile/loyalty_program_page.dart';
 import 'package:pana_project/views/profile/my_booked_objects_page.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
 import 'package:pana_project/views/profile/my_transactions.dart';
@@ -36,7 +35,6 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
   @override
   void initState() {
     checkIsLogedIn();
-    getProfile();
     super.initState();
   }
 
@@ -338,6 +336,7 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
           ' ' +
           (prefs.getString('user_surname') ?? '');
       avatarUrl = prefs.getString('user_avatar') ?? '';
+      getProfile();
       setState(() {});
     } else {
       isLogedIn = false;

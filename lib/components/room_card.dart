@@ -163,8 +163,8 @@ class _RoomCardState extends State<RoomCard> {
                           child: SvgPicture.asset('assets/icons/bed_icon.svg')),
                     ),
                     Text(
-                      '1 кровать на 2 места',
-                      style: TextStyle(
+                      widget.room.description ?? '',
+                      style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                           color: Colors.black45),

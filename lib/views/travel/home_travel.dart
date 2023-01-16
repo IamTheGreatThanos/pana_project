@@ -5,7 +5,9 @@ import 'package:pana_project/components/travel_card.dart';
 import 'package:pana_project/models/travelCard.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/travel/travel_plan_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HomeTravel extends StatefulWidget {
@@ -28,7 +30,7 @@ class _HomeTravelState extends State<HomeTravel> {
 
   @override
   void initState() {
-    getTravelList();
+    checkIsLogedIn();
     super.initState();
   }
 
@@ -176,6 +178,7 @@ class _HomeTravelState extends State<HomeTravel> {
                             height: 60,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                elevation: 0,
                                 primary: AppColors.accent,
                                 minimumSize: const Size.fromHeight(50),
                                 shape: RoundedRectangleBorder(
@@ -202,11 +205,13 @@ class _HomeTravelState extends State<HomeTravel> {
                             height: 60,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                elevation: 0,
                                 primary: AppColors.white,
                                 minimumSize: const Size.fromHeight(50),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(10), // <-- Radius
+                                  side: const BorderSide(
+                                      width: 2, color: AppColors.grey),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
                               onPressed: () {
@@ -506,5 +511,47 @@ class _HomeTravelState extends State<HomeTravel> {
             style: const TextStyle(fontSize: 20)),
       ));
     }
+  }
+
+  void checkIsLogedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('isLogedIn') == true) {
+      getTravelList();
+    } else {
+      showAlertDialog(context);
+    }
+  }
+
+  showAlertDialog(BuildContext context) {
+    Widget cancelButton = TextButton(
+      child: const Text("Отмена"),
+      onPressed: () {
+        widget.onButtonPressed();
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: const Text("Да"),
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AuthPage()));
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("Внимание"),
+      content: const Text("Вы не вошли в аккаунт. Войти?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    ).whenComplete(() => widget.onButtonPressed());
   }
 }

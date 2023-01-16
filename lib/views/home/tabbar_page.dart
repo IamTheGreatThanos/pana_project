@@ -25,7 +25,7 @@ class _TabBarPageState extends State<TabBarPage> {
       HomeTravel(changeTabMethod),
       HomeImpression(),
       HomeHousing(),
-      MessagesPage(),
+      MessagesPage(changeTabMethod),
       ProfileMainPage(changeTabMethod),
     ];
   }

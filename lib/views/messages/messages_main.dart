@@ -5,10 +5,14 @@ import 'package:pana_project/components/messages_card.dart';
 import 'package:pana_project/models/notification.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/messages/list_of_chats.dart';
 import 'package:pana_project/views/messages/notification_detail_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MessagesPage extends StatefulWidget {
+  const MessagesPage(this.onButtonPressed);
+  final void Function() onButtonPressed;
   @override
   _MessagesPageState createState() => _MessagesPageState();
 }
@@ -21,8 +25,8 @@ class _MessagesPageState extends State<MessagesPage> {
 
   @override
   void initState() {
-    readNotification();
-    getNotifications();
+    checkIsLogedIn();
+
     super.initState();
   }
 
@@ -246,5 +250,49 @@ class _MessagesPageState extends State<MessagesPage> {
             style: const TextStyle(fontSize: 20)),
       ));
     }
+  }
+
+  void checkIsLogedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('isLogedIn') == true) {
+      readNotification();
+      getNotifications();
+      setState(() {});
+    } else {
+      showAlertDialog(context);
+    }
+  }
+
+  showAlertDialog(BuildContext context) {
+    Widget cancelButton = TextButton(
+      child: const Text("Отмена"),
+      onPressed: () {
+        widget.onButtonPressed();
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: const Text("Да"),
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AuthPage()));
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("Внимание"),
+      content: const Text("Вы не вошли в аккаунт. Войти?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    ).whenComplete(() => widget.onButtonPressed());
   }
 }

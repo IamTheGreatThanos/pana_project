@@ -167,11 +167,9 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                         child: Text(
                                           widget.type == 2
                                               ? widget.housing.reviewsAvgBall
-                                                      .toString() ??
-                                                  '0'
+                                                  .toString()
                                               : widget.impression.reviewsAvgBall
-                                                      .toString() ??
-                                                  '',
+                                                  .toString(),
                                           style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500),
@@ -181,7 +179,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                         padding:
                                             const EdgeInsets.only(left: 10),
                                         child: Text(
-                                          '${widget.type == 2 ? widget.housing?.reviewsCount ?? '0' : widget.impression?.reviewsCount ?? '0'} Отзывов',
+                                          '${widget.type == 2 ? widget.housing.reviewsCount ?? '0' : widget.impression.reviewsCount ?? '0'} Отзывов',
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
@@ -470,10 +468,10 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             SendAudioReviewPage(
-                                                widget.type!,
+                                                widget.type,
                                                 widget.type == 2
-                                                    ? widget.housing!.id!
-                                                    : widget.impression!.id!)));
+                                                    ? widget.housing.id!
+                                                    : widget.impression.id!)));
                               },
                               child: Container(
                                 width: 162,
@@ -511,10 +509,10 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             SendTextReviewPage(
-                                                widget.type!,
+                                                widget.type,
                                                 widget.type == 2
-                                                    ? widget.housing!.id!
-                                                    : widget.impression!.id!)));
+                                                    ? widget.housing.id!
+                                                    : widget.impression.id!)));
                               },
                               child: Container(
                                 width: 162,

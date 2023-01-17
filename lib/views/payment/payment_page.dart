@@ -278,7 +278,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.7,
                             child: Text(
-                              widget.roomList[i]?.name ?? '',
+                              widget.roomList[i].name ?? '',
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,

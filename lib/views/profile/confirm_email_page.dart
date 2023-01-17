@@ -1,28 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/profile/confirm_email_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ChangeEmailPage extends StatefulWidget {
+class ConfirmEmailPage extends StatefulWidget {
   @override
-  _ChangeEmailPageState createState() => _ChangeEmailPageState();
+  _ConfirmEmailPageState createState() => _ConfirmEmailPageState();
 }
 
-class _ChangeEmailPageState extends State<ChangeEmailPage> {
-  TextEditingController emailController = TextEditingController();
+class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
+  TextEditingController codeController = TextEditingController();
 
   @override
   void initState() {
-    loadData();
     super.initState();
-  }
-
-  void loadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    emailController.text = prefs.getString('user_email') ?? '';
-    setState(() {});
   }
 
   @override
@@ -93,12 +84,12 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Введите новый Email адрес',
+                                'Введите код',
                                 style: TextStyle(fontSize: 14),
                               ),
                               const SizedBox(height: 10),
                               const Text(
-                                'Мы вышлем вам подтвержающее письмо на адрес, который вы укажете ниже',
+                                'Вам пришло письмо с кодом на новый адрес, введите его для подтверждения',
                                 style: TextStyle(
                                     fontSize: 14, color: Colors.black45),
                               ),
@@ -121,8 +112,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 4),
                                       child: TextField(
-                                        controller: emailController,
-                                        keyboardType: TextInputType.text,
+                                        controller: codeController,
                                         maxLength: 10,
                                         decoration: const InputDecoration(
                                           counterStyle: TextStyle(
@@ -130,7 +120,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                                           ),
                                           counterText: "",
                                           border: InputBorder.none,
-                                          hintText: 'Новый email',
+                                          hintText: 'Код',
                                           hintStyle: TextStyle(
                                             fontSize: 15,
                                           ),
@@ -161,7 +151,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                               ),
                             ),
                             onPressed: () {
-                              if (emailController.text == '') {
+                              if (codeController.text == '') {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("Заполните все поля.",
@@ -171,7 +161,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                                 saveChanges();
                               }
                             },
-                            child: const Text("Далее",
+                            child: const Text("Отправить",
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w500)),
                           ),
@@ -190,20 +180,17 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
 
   void saveChanges() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var response = await AuthProvider().changeEmail(emailController.text);
-
-    if (response['response_status'] == 'ok') {
-      prefs.setString("user_email", emailController.text);
-
-      await Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ConfirmEmailPage()));
-
-      Navigator.of(context).pop();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
-      ));
-    }
+    Navigator.pop(context);
+    // var response = await AuthProvider().changeEmail(emailController.text);
+    //
+    // if (response['response_status'] == 'ok') {
+    //   prefs.setString("user_email", emailController.text);
+    //   Navigator.of(context).pop();
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //     content:
+    //         Text(response['message'], style: const TextStyle(fontSize: 20)),
+    //   ));
+    // }
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/profile_menu_item.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/profile/change_email.dart';
 import 'package:pana_project/views/profile/change_full_name.dart';
 import 'package:pana_project/views/profile/change_phone.dart';
@@ -205,6 +206,23 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                         child: ProfileMenuItem(
                             'assets/icons/lock_icon.svg', 'Настройки входа'),
                       ),
+                      GestureDetector(
+                        onTap: () {
+                          showAlertDialog(context);
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40),
+                          child: Text(
+                            'Удалить аккаунт',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -213,6 +231,50 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void deleteAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLogedIn', false);
+    prefs.remove('user_avatar');
+    prefs.remove('user_name');
+    prefs.remove('user_surname');
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => AuthPage()),
+        (Route<dynamic> route) => false);
+  }
+
+  showAlertDialog(BuildContext context) {
+    Widget cancelButton = TextButton(
+      child: const Text("Отмена"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: const Text("Да"),
+      onPressed: () {
+        deleteAccount();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("Внимание"),
+      content: const Text(
+          "Все связанные данные будут удалены. Вы точно хотите удалить аккаунт?!"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

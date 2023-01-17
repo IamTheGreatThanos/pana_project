@@ -194,10 +194,9 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
         prefs.setString("user_avatar", response['user']['avatar']);
         prefs.setBool('isLogedIn', true);
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => widget.page),
-        );
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => widget.page),
+            (Route<dynamic> route) => false);
 
         prefs.setBool('isLogedIn', true);
       } else {

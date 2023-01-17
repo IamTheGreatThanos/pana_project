@@ -132,7 +132,7 @@ class _RoomCardState extends State<RoomCard> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.6,
                       child: Text(
-                        widget.room?.name ?? '',
+                        widget.room.name ?? '',
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,

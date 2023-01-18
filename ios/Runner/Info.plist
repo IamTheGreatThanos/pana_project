@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>${PRODUCT_NAME} requests the use your location to find places near you</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>${PRODUCT_NAME} requests the use your location to find places near you</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -32,6 +28,10 @@
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>${PRODUCT_NAME} requests the use of a face ID for secure login</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>${PRODUCT_NAME} requests the use your location to find places near you</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>${PRODUCT_NAME} requests the use your location to find places near you</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>${PRODUCT_NAME} requests the use of a microphone to record voice feedback</string>
 	<key>NSPhotoLibraryUsageDescription</key>

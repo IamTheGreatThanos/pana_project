@@ -10,10 +10,10 @@ import 'package:pana_project/utils/const.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class PaymentPage extends StatefulWidget {
-  PaymentPage(this.roomList, this.selectedRoomIds, this.housing, this.startDate,
+  PaymentPage(this.roomList, this.selectedRooms, this.housing, this.startDate,
       this.endDate);
   final List<RoomCardModel> roomList;
-  final List<int> selectedRoomIds;
+  final List<Map<String, dynamic>> selectedRooms;
   final HousingDetailModel housing;
   final String startDate;
   final String endDate;
@@ -172,7 +172,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 5),
                                   child: Text(
-                                    widget.housing.reviewsBallAvg ?? '',
+                                    widget.housing.reviewsBallAvg ?? '0',
                                     style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500),
@@ -278,7 +278,8 @@ class _PaymentPageState extends State<PaymentPage> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.7,
                             child: Text(
-                              widget.roomList[i].name ?? '',
+                              (widget.roomList[i].roomName?.name ?? '') +
+                                  ' x ${widget.selectedRooms[i]['count']}',
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -288,7 +289,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           ),
                           const Spacer(),
                           Text(
-                            '\$${widget.roomList[i].basePrice ?? 0}',
+                            '\$${(widget.roomList[i].basePrice ?? 0) * widget.selectedRooms[i]['count']}',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -491,13 +492,14 @@ class _PaymentPageState extends State<PaymentPage> {
 
   void calcSum() {
     for (int i = 0; i < widget.roomList.length; i++) {
-      sum += widget.roomList[i].basePrice ?? 0;
+      sum += (widget.roomList[i].basePrice ?? 0) *
+          widget.selectedRooms[i]['count'];
     }
   }
 
   void sendOrder() async {
     var response = await MainProvider().housingPayment(widget.housing.id!,
-        dateFrom, dateTo, peopleCount, widget.selectedRoomIds);
+        dateFrom, dateTo, peopleCount, widget.selectedRooms);
     if (response['response_status'] == 'ok') {
       print('Successfully created!');
     } else {

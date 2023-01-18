@@ -5,7 +5,7 @@ import 'package:pana_project/models/roomType.dart';
 
 class RoomCardModel {
   int? id;
-  String? name;
+  RoomName? roomName;
   int? housingId;
   RoomType? roomType;
   int? status;
@@ -26,7 +26,7 @@ class RoomCardModel {
 
   RoomCardModel(
       {this.id,
-      this.name,
+      this.roomName,
       this.housingId,
       this.roomType,
       this.status,
@@ -47,7 +47,9 @@ class RoomCardModel {
 
   RoomCardModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
+    roomName = json['roomName'] != null
+        ? new RoomName.fromJson(json['roomName'])
+        : null;
     housingId = json['housing_id'];
     roomType =
         json['roomType'] != null ? RoomType.fromJson(json['roomType']) : null;
@@ -86,7 +88,9 @@ class RoomCardModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['name'] = name;
+    if (this.roomName != null) {
+      data['roomName'] = this.roomName!.toJson();
+    }
     data['housing_id'] = housingId;
     if (roomType != null) {
       data['roomType'] = roomType!.toJson();
@@ -111,6 +115,35 @@ class RoomCardModel {
     }
     if (comforts != null) {
       data['comforts'] = comforts!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class RoomName {
+  int? id;
+  int? roomTypeId;
+  String? name;
+  RoomType? roomType;
+
+  RoomName({this.id, this.roomTypeId, this.name, this.roomType});
+
+  RoomName.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    roomTypeId = json['room_type_id'];
+    name = json['name'];
+    roomType = json['room_type'] != null
+        ? new RoomType.fromJson(json['room_type'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['room_type_id'] = this.roomTypeId;
+    data['name'] = this.name;
+    if (this.roomType != null) {
+      data['room_type'] = this.roomType!.toJson();
     }
     return data;
   }

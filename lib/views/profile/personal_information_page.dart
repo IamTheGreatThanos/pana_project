@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/profile_menu_item.dart';
+import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/profile/change_email.dart';
@@ -236,14 +237,22 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 
   void deleteAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isLogedIn', false);
-    prefs.remove('user_avatar');
-    prefs.remove('user_name');
-    prefs.remove('user_surname');
 
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => AuthPage()),
-        (Route<dynamic> route) => false);
+    var response = await AuthProvider().deleteAccount();
+    if (response['response_status'] == 'ok') {
+      prefs.setBool('isLogedIn', false);
+      prefs.remove('user_avatar');
+      prefs.remove('user_name');
+      prefs.remove('user_surname');
+
+      if (mounted) {
+        setState(() {});
+      }
+
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => AuthPage()),
+          (Route<dynamic> route) => false);
+    }
   }
 
   showAlertDialog(BuildContext context) {

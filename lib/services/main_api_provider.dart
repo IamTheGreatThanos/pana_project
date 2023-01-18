@@ -482,20 +482,15 @@ class MainProvider {
     }
   }
 
-  Future<dynamic> housingPayment(
-    int housingId,
-    String dateFrom,
-    String dateTo,
-    int peopleCount,
-    List<int> selectedRoomIds,
-  ) async {
+  Future<dynamic> housingPayment(int housingId, String dateFrom, String dateTo,
+      int peopleCount, List<Map<String, dynamic>> selectedRooms) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
     Map<String, dynamic> bodyObject = {
       "housing_id": housingId,
       "count_people": peopleCount,
-      "rooms": selectedRoomIds,
+      "rooms": selectedRooms,
     };
 
     if (dateFrom != '') {
@@ -504,7 +499,7 @@ class MainProvider {
     }
 
     final response = await http.post(
-      Uri.parse('${API_URL}api/mobile/favorite'),
+      Uri.parse('${API_URL}api/mobile/order/housing'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',

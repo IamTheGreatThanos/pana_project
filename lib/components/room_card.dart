@@ -132,7 +132,7 @@ class _RoomCardState extends State<RoomCard> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.6,
                       child: Text(
-                        widget.room.name ?? '',
+                        widget.room.roomName?.name ?? '',
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
@@ -194,118 +194,9 @@ class _RoomCardState extends State<RoomCard> {
                 ),
                 const Divider(),
                 const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Text(
-                      'Выберите количество',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: minusFunction,
-                      child: Container(
-                        width: 32,
-                        height: 32,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 1.0,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(16),
-                          ),
-                        ),
-                        child: const Icon(Icons.remove),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        count.toString(),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: plusFunction,
-                      child: Container(
-                        width: 32,
-                        height: 32,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 1.0,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(16),
-                          ),
-                        ),
-                        child: Icon(Icons.add),
-                      ),
-                    ),
-                  ],
-                ),
-                // Padding(
-                //   padding:
-                //       const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
-                //   child: SizedBox(
-                //     height: 48,
-                //     child: ElevatedButton(
-                //       style: ElevatedButton.styleFrom(
-                //         primary: GlobalVariables()
-                //                 .selectedRoomIds
-                //                 .contains(widget.room.id)
-                //             ? AppColors.accent
-                //             : AppColors.grey,
-                //         minimumSize: const Size.fromHeight(50),
-                //         shape: RoundedRectangleBorder(
-                //           borderRadius: BorderRadius.circular(10),
-                //         ),
-                //       ),
-                //       onPressed: () {
-                //         widget.selectionFunc;
-                //       },
-                //       child: Text(
-                //         "Выбрать этот номер",
-                //         style: TextStyle(
-                //             fontSize: 14,
-                //             fontWeight: FontWeight.w500,
-                //             color: GlobalVariables()
-                //                     .selectedRoomIds
-                //                     .contains(widget.room.id)
-                //                 ? AppColors.white
-                //                 : AppColors.blackWithOpacity),
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           )),
     );
-  }
-
-  void plusFunction() {
-    setState(() {
-      count += 1;
-    });
-  }
-
-  void minusFunction() {
-    setState(() {
-      if (count > 1) {
-        count -= 1;
-      }
-    });
   }
 }

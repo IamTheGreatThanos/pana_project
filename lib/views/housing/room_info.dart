@@ -129,7 +129,7 @@ class _RoomInfoPageState extends State<RoomInfoPage> {
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    widget.room.name ?? '',
+                    widget.room.roomName?.name ?? '',
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,

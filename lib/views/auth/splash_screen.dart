@@ -14,7 +14,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late Timer _timer;
-  int _start = 6;
+  int _start = 3;
   double iconPadding = 0;
   double wordPadding = 0;
   double _width = 0;

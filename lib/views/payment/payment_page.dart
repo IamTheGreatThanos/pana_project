@@ -7,6 +7,7 @@ import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/roomCard.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -289,7 +290,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           ),
                           const Spacer(),
                           Text(
-                            '\$${(widget.roomList[i].basePrice ?? 0) * widget.selectedRooms[i]['count']}',
+                            '\₸${formatNumberString(((widget.roomList[i].basePrice ?? 0) * widget.selectedRooms[i]['count']).toString())}',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -310,7 +311,7 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                       const Spacer(),
                       Text(
-                        '\$$sum',
+                        '\₸${formatNumberString(sum.toString())}',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

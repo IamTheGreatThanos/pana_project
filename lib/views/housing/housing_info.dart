@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/components/facilities_widget.dart';
 import 'package:pana_project/components/impression_card.dart';
@@ -18,6 +19,7 @@ import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/utils/get_bytes_from_asset.dart';
 import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/housing/select_room_page.dart';
@@ -28,6 +30,7 @@ import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HousingInfo extends StatefulWidget {
   const HousingInfo(this.id, this.thisStoryItems, this.mediaStoryItems);
@@ -42,6 +45,9 @@ class HousingInfo extends StatefulWidget {
 class _HousingInfoState extends State<HousingInfo> {
   final storyController = StoryController();
   late GoogleMapController _mapController;
+  final DateRangePickerController _datePickerController =
+      DateRangePickerController();
+  String selectedRange = 'Выбрать даты';
 
   CameraPosition _initPosition =
       const CameraPosition(target: LatLng(43.236431, 76.917994), zoom: 14);
@@ -54,6 +60,9 @@ class _HousingInfoState extends State<HousingInfo> {
 
   List<ImpressionCardModel> nearbyImpressionList = [];
   List<Reels> reels = [];
+
+  String startDate = '';
+  String endDate = '';
 
   @override
   void initState() {
@@ -951,7 +960,7 @@ class _HousingInfoState extends State<HousingInfo> {
                           Row(
                             children: [
                               Text(
-                                'от \$${thisHousing.basePriceMin}',
+                                'от \₸${formatNumberString(thisHousing.basePriceMin.toString())}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18,
@@ -967,14 +976,19 @@ class _HousingInfoState extends State<HousingInfo> {
                             ],
                           ),
                           const SizedBox(height: 10),
-                          // const Text(
-                          //   '12-14 июля',
-                          //   style: TextStyle(
-                          //       fontWeight: FontWeight.w500,
-                          //       fontSize: 14,
-                          //       color: AppColors.black,
-                          //       decoration: TextDecoration.underline),
-                          // ),
+                          GestureDetector(
+                            onTap: () {
+                              showDatePicker();
+                            },
+                            child: Text(
+                              selectedRange,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: AppColors.black,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ),
                         ],
                       ),
                       const Spacer(),
@@ -990,12 +1004,21 @@ class _HousingInfoState extends State<HousingInfo> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.push(
+                            if (startDate != '' && endDate != '') {
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SelectRoomPage(
-                                        thisHousing,
-                                        thisHousing.basePriceMin!)));
+                                  builder: (context) => SelectRoomPage(
+                                    thisHousing,
+                                    thisHousing.basePriceMin!,
+                                    startDate,
+                                    endDate,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              showDatePicker();
+                            }
                           },
                           child: const Text(
                             "Выбрать номер",
@@ -1013,6 +1036,98 @@ class _HousingInfoState extends State<HousingInfo> {
         ),
       ),
     );
+  }
+
+  void showDatePicker() async {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: SizedBox(
+            height: 500,
+            child: Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Назад',
+                            style: TextStyle(
+                                color: Colors.black45,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const Spacer(),
+                        const Text(
+                          'Выбрать даты',
+                          style: TextStyle(
+                              color: AppColors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Готово',
+                            style: TextStyle(
+                                color: AppColors.accent,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  SfDateRangePicker(
+                    controller: _datePickerController,
+                    onSelectionChanged: _onSelectionChanged,
+                    startRangeSelectionColor: Colors.black,
+                    endRangeSelectionColor: Colors.black,
+                    rangeSelectionColor: Colors.black12,
+                    selectionColor: AppColors.accent,
+                    headerStyle: const DateRangePickerHeaderStyle(
+                        textAlign: TextAlign.center),
+                    selectionMode: DateRangePickerSelectionMode.range,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      if (args.value is PickerDateRange) {
+        selectedRange =
+            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
+            // ignore: lines_longer_than_80_chars
+            ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+        if (args.value.startDate != null && args.value.endDate != null) {
+          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+          endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
+        }
+      }
+    });
   }
 
   void getHousingInfo() async {

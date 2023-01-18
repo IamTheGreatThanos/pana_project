@@ -6,13 +6,16 @@ import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/roomCard.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/payment/payment_page.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class SelectRoomPage extends StatefulWidget {
-  const SelectRoomPage(this.housing, this.price);
+  const SelectRoomPage(this.housing, this.price, this.startDate, this.endDate);
   final HousingDetailModel housing;
   final int price;
+  final String startDate;
+  final String endDate;
 
   @override
   _SelectRoomPageState createState() => _SelectRoomPageState();
@@ -34,6 +37,15 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
 
   @override
   void initState() {
+    if (widget.startDate != '') {
+      startDate = widget.startDate;
+      endDate = widget.endDate;
+
+      selectedRange =
+          '${DateFormat('dd/MM/yyyy').format(DateTime.parse(startDate))} - ${DateFormat('dd/MM/yyyy').format(DateTime.parse(endDate))}';
+
+      getRoomListByDate();
+    }
     // getRoomsList();
     super.initState();
   }
@@ -148,7 +160,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                                   width: MediaQuery.of(context).size.width,
                                   child: Column(
                                     children: [
-                                      RoomCard(roomsList[i]),
+                                      RoomCard(roomsList[i], selectedRange),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 25),
@@ -284,7 +296,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                                   Row(
                                     children: [
                                       Text(
-                                        'от \$${widget.price}',
+                                        'от \₸${formatNumberString(widget.price.toString())}',
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 18,

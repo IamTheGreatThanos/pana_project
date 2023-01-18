@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/roomCard.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/housing/room_info.dart';
 
 class RoomCard extends StatefulWidget {
-  RoomCard(this.room);
+  RoomCard(this.room, this.date);
   final RoomCardModel room;
+  final String date;
 
   @override
   _RoomCardState createState() => _RoomCardState();
@@ -140,9 +142,9 @@ class _RoomCardState extends State<RoomCard> {
                       ),
                     ),
                     const Spacer(),
-                    const Text(
-                      '12-14 июля',
-                      style: TextStyle(
+                    Text(
+                      '${widget.date.substring(0, 5)} - ${widget.date.substring(13, 18)}',
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.black45,
@@ -177,7 +179,7 @@ class _RoomCardState extends State<RoomCard> {
                 Row(
                   children: [
                     Text(
-                      '\$${widget.room.basePrice}',
+                      '\₸${formatNumberString(widget.room.basePrice.toString())}',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,

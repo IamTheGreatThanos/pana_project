@@ -60,6 +60,9 @@ class _HomeHousingState extends State<HomeHousing>
   String searchText = '';
   bool isLogedIn = false;
 
+  bool fromSearch = false;
+  List<dynamic> searchParams = [];
+
   @override
   void initState() {
     getHousingList();
@@ -241,6 +244,7 @@ class _HomeHousingState extends State<HomeHousing>
                       setState(() {
                         selectedCategoryId = categories[index]['id'];
                       });
+                      fromSearch = false;
                       getHousingList();
                     },
                     isScrollable: true,
@@ -368,7 +372,12 @@ class _HomeHousingState extends State<HomeHousing>
   }
 
   Future<void> _pullRefresh() async {
-    getHousingList();
+    if (fromSearch) {
+      searchHousingList(searchParams);
+    } else {
+      getHousingList();
+    }
+
     getReels();
   }
 
@@ -439,6 +448,8 @@ class _HomeHousingState extends State<HomeHousing>
 
     if (mounted) {
       if (result != null) {
+        fromSearch = true;
+        searchParams = result;
         searchHousingList(result);
         setState(() {
           selectedCountryId = result[0];

@@ -20,6 +20,7 @@ import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/utils/get_bytes_from_asset.dart';
 import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
@@ -1126,7 +1127,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                           Row(
                             children: [
                               Text(
-                                '\$${thisImpression.price ?? ''}',
+                                '\₸${formatNumberString(thisImpression.price.toString())}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18,

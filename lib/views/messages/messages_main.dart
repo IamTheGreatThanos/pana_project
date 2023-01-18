@@ -126,39 +126,42 @@ class _MessagesPageState extends State<MessagesPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(AppConstants.cardBorderRadius),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
-                          child: Text(
-                            'Просмотренно',
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: AppColors.black,
-                              fontWeight: FontWeight.w500,
+                  oldNotifications.isNotEmpty
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.cardBorderRadius),
                             ),
                           ),
-                        ),
-                        for (int i = 0; i < oldNotifications.length; i++)
-                          GestureDetector(
-                              onTap: () {
-                                goToNotificationDetail(oldNotifications[i]);
-                              },
-                              child:
-                                  MessagesWidget(oldNotifications[i], false)),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
+                                child: Text(
+                                  'Просмотренно',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    color: AppColors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              for (int i = 0; i < oldNotifications.length; i++)
+                                GestureDetector(
+                                    onTap: () {
+                                      goToNotificationDetail(
+                                          oldNotifications[i]);
+                                    },
+                                    child: MessagesWidget(
+                                        oldNotifications[i], false)),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        )
+                      : Container(),
                   const SizedBox(height: 20),
                   Center(
                     child: Column(
@@ -211,6 +214,7 @@ class _MessagesPageState extends State<MessagesPage> {
   void getNotifications() async {
     var response = await MainProvider().getNotifications();
     if (response['response_status'] == 'ok') {
+      print(response['data']);
       int messageCount = 0;
       List<NotificationModel> tempList1 = [];
       List<NotificationModel> tempList2 = [];
@@ -224,7 +228,9 @@ class _MessagesPageState extends State<MessagesPage> {
         }
       }
       for (int i = 0; i < response['data']['old'].length; i++) {
-        tempList2.add(NotificationModel.fromJson(response['data']['old'][i]));
+        NotificationModel notification =
+            NotificationModel.fromJson(response['data']['old'][i]);
+        tempList2.add(notification);
       }
       if (mounted) {
         newMessageCount = messageCount;

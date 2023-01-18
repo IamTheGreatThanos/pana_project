@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/utils/globalVariables.dart';
 
 class ImpressionCard extends StatefulWidget {
@@ -184,7 +185,7 @@ class _ImpressionCardState extends State<ImpressionCard> {
             Row(
               children: [
                 Text(
-                  '\$${widget.impression.price ?? 0}',
+                  '\₸${formatNumberString(widget.impression.price.toString())}',
                   style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,

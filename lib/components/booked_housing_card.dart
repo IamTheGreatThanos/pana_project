@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
 
 class BookedHousingCard extends StatefulWidget {
   BookedHousingCard(this.housing, this.travelId);
@@ -155,15 +156,15 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
                   height: 8,
                 ),
                 Row(
-                  children: const [
+                  children: [
                     Text(
-                      '\$324',
-                      style: TextStyle(
+                      '\₸${formatNumberString('123')}',
+                      style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                           color: AppColors.black),
                     ),
-                    Text(
+                    const Text(
                       ' за ночь',
                       style: TextStyle(
                           fontWeight: FontWeight.w500,

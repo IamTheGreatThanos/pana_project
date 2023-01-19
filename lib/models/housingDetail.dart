@@ -64,64 +64,67 @@ class HousingDetailModel {
   List<Comforts>? comforts;
   List<Languages>? languages;
   List<Breakfasts>? breakfasts;
+  String? freeDates;
 
-  HousingDetailModel(
-      {this.id,
-      this.user,
-      this.category,
-      this.city,
-      this.status,
-      this.name,
-      this.description,
-      this.maxFloor,
-      this.star,
-      this.contactPerson,
-      this.phone,
-      this.altPhone,
-      this.representManagement,
-      this.companyName,
-      this.address,
-      this.altAddress,
-      this.lat,
-      this.lng,
-      this.distance,
-      this.postalCode,
-      this.cancelFineDay,
-      this.requiredPay,
-      this.parking,
-      this.parkingProperty,
-      this.parkingLocation,
-      this.parkingBooking,
-      this.parkingPrice,
-      this.breakfast,
-      this.childrenAllowed,
-      this.pet,
-      this.petCharge,
-      this.petPrice,
-      this.checkInFrom,
-      this.checkInBefore,
-      this.checkOutFrom,
-      this.checkOutBefore,
-      this.posTerminal,
-      this.invoiceName,
-      this.invoiceCompanyName,
-      this.recipientInvoice,
-      this.recipientInvoiceCity,
-      this.recipientInvoiceAddress,
-      this.recipientInvoicePostalCode,
-      this.createdAt,
-      this.roomCount,
-      this.basePriceMin,
-      this.reviewsCount,
-      this.reviewsBallAvg,
-      this.reviewsPriceAvg,
-      this.reviewsPurityAvg,
-      this.reviewsStaffAvg,
-      this.images,
-      this.videos,
-      this.comforts,
-      this.languages,
-      this.breakfasts});
+  HousingDetailModel({
+    this.id,
+    this.user,
+    this.category,
+    this.city,
+    this.status,
+    this.name,
+    this.description,
+    this.maxFloor,
+    this.star,
+    this.contactPerson,
+    this.phone,
+    this.altPhone,
+    this.representManagement,
+    this.companyName,
+    this.address,
+    this.altAddress,
+    this.lat,
+    this.lng,
+    this.distance,
+    this.postalCode,
+    this.cancelFineDay,
+    this.requiredPay,
+    this.parking,
+    this.parkingProperty,
+    this.parkingLocation,
+    this.parkingBooking,
+    this.parkingPrice,
+    this.breakfast,
+    this.childrenAllowed,
+    this.pet,
+    this.petCharge,
+    this.petPrice,
+    this.checkInFrom,
+    this.checkInBefore,
+    this.checkOutFrom,
+    this.checkOutBefore,
+    this.posTerminal,
+    this.invoiceName,
+    this.invoiceCompanyName,
+    this.recipientInvoice,
+    this.recipientInvoiceCity,
+    this.recipientInvoiceAddress,
+    this.recipientInvoicePostalCode,
+    this.createdAt,
+    this.roomCount,
+    this.basePriceMin,
+    this.reviewsCount,
+    this.reviewsBallAvg,
+    this.reviewsPriceAvg,
+    this.reviewsPurityAvg,
+    this.reviewsStaffAvg,
+    this.images,
+    this.videos,
+    this.comforts,
+    this.languages,
+    this.breakfasts,
+    this.freeDates,
+  });
 
   HousingDetailModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -208,6 +211,7 @@ class HousingDetailModel {
         breakfasts!.add(Breakfasts.fromJson(v));
       });
     }
+    freeDates = json['free_dates'];
   }
 
   Map<String, dynamic> toJson() {
@@ -286,6 +290,7 @@ class HousingDetailModel {
     if (breakfasts != null) {
       data['breakfasts'] = breakfasts!.map((v) => v.toJson()).toList();
     }
+    data['free_dates'] = freeDates;
     return data;
   }
 }

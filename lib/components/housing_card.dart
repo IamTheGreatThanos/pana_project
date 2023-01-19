@@ -182,7 +182,7 @@ class _HousingCardState extends State<HousingCard> {
             Row(
               children: [
                 Text(
-                  '\₸${formatNumberString('324')}',
+                  '\₸${formatNumberString(widget.housing.basePriceMin.toString())}',
                   style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,

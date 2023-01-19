@@ -16,6 +16,7 @@ class HousingCardModel {
   int? reviewsCount;
   int? distance;
   User? user;
+  int? basePriceMin;
 
   HousingCardModel({
     this.id,
@@ -29,6 +30,7 @@ class HousingCardModel {
     this.reviewsCount,
     this.distance,
     this.user,
+    this.basePriceMin,
   });
 
   HousingCardModel.fromJson(Map<String, dynamic> json) {
@@ -54,6 +56,7 @@ class HousingCardModel {
     reviewsCount = json['reviews_count'];
     distance = json['distance'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
+    basePriceMin = json['base_price_min'];
   }
 
   Map<String, dynamic> toJson() {
@@ -76,6 +79,7 @@ class HousingCardModel {
     if (user != null) {
       data['user'] = user!.toJson();
     }
+    data['base_price_min'] = basePriceMin;
     return data;
   }
 }

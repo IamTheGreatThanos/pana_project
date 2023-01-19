@@ -277,7 +277,7 @@ class _HousingInfoState extends State<HousingInfo> {
                       Padding(
                         padding: const EdgeInsets.only(left: 5),
                         child: Text(
-                          thisHousing.star.toString(),
+                          '${thisHousing.reviewsBallAvg ?? 0}',
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w500),
                         ),
@@ -352,7 +352,7 @@ class _HousingInfoState extends State<HousingInfo> {
                                 child: const Padding(
                                   padding: EdgeInsets.only(left: 10),
                                   child: Text(
-                                    'Здание целиком, 3 комнаты, 2 этажа',
+                                    'Владелец',
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
@@ -890,9 +890,9 @@ class _HousingInfoState extends State<HousingInfo> {
                       const EdgeInsets.only(left: 20, bottom: 20, right: 20),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
-                    child: const Text(
-                      '28 сен. - 2 окт.',
-                      style: TextStyle(
+                    child: Text(
+                      thisHousing.freeDates ?? '',
+                      style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Colors.black45),

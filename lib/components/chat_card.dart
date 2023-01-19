@@ -24,8 +24,14 @@ class ChatCard extends StatelessWidget {
                     width: 34,
                     height: 34,
                     child: chat.user?.avatar != null
-                        ? CachedNetworkImage(imageUrl: chat.user?.avatar ?? '')
-                        : SvgPicture.asset('assets/icons/chat_support.svg'),
+                        ? CachedNetworkImage(
+                            imageUrl: chat.user?.avatar ?? '',
+                            fit: BoxFit.cover,
+                          )
+                        : SvgPicture.asset(
+                            'assets/icons/chat_support.svg',
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
                 const SizedBox(width: 10),

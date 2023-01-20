@@ -356,7 +356,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                 dashPattern: const [6, 2],
                                 strokeCap: StrokeCap.round,
                                 borderType: BorderType.RRect,
-                                radius: const Radius.circular(15),
+                                radius: const Radius.circular(8),
                                 child: Container(
                                   width: 85,
                                   height: 150,

@@ -194,6 +194,8 @@ flutter:
     - assets/icons/start_chat_icon.svg
     - assets/icons/start_chat_icon.png
     - assets/icons/flag_icon.svg
+    - assets/icons/checkbox_empty.svg
+    - assets/icons/checkbox_full.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

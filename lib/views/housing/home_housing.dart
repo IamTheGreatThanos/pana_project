@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/housing_card.dart';
@@ -271,20 +272,48 @@ class _HomeHousingState extends State<HomeHousing>
                   SizedBox(
                     child: Column(
                       children: [
-                        reels.isNotEmpty
-                            ? Container(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 20, horizontal: 10),
-                                height: 150,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: <Widget>[
-                                    for (int i = 0; i < reels.length; i++)
-                                      StoriesCard(reels, i),
-                                  ],
+                        Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 10),
+                          height: 150,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+                              DottedBorder(
+                                color: AppColors.accent,
+                                strokeWidth: 1,
+                                dashPattern: const [6, 2],
+                                strokeCap: StrokeCap.round,
+                                borderType: BorderType.RRect,
+                                radius: const Radius.circular(8),
+                                child: Container(
+                                  width: 85,
+                                  height: 150,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.white,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Icon(Icons.add, color: AppColors.accent),
+                                      Text(
+                                        'Добавить',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.accent),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              )
-                            : Container(),
+                              ),
+                              const SizedBox(width: 5),
+                              for (int i = 0; i < reels.length; i++)
+                                StoriesCard(reels, i),
+                            ],
+                          ),
+                        ),
                         for (int i = 0; i < housingList.length; i++)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20),

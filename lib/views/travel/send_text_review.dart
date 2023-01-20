@@ -438,7 +438,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                         const SizedBox(height: 20),
                         Container(
                           margin: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 10),
+                              vertical: 20, horizontal: 0),
                           height: 120,
                           child: ListView(
                             scrollDirection: Axis.horizontal,
@@ -453,7 +453,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                   dashPattern: [6, 2],
                                   strokeCap: StrokeCap.round,
                                   borderType: BorderType.RRect,
-                                  radius: const Radius.circular(15),
+                                  radius: const Radius.circular(8),
                                   child: Container(
                                     width: 120,
                                     height: 120,
@@ -576,6 +576,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
       } else {
+        print(response['data']['message']);
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Ошибка загрузки...', style: TextStyle(fontSize: 20)),

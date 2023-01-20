@@ -553,13 +553,18 @@ class MainProvider {
     request.fields['purity'] = purity.toString();
     request.fields['staff'] = staff.toString();
 
-    for (XFile item in images) {
-      var stream = http.ByteStream(DelegatingStream.typed(item.openRead()));
-      var length = await item.length();
-      var multipartFile = http.MultipartFile('images', stream, length,
-          filename: basename(item.path));
-      request.files.add(multipartFile);
+    List<http.MultipartFile> multipartFiles = [];
+
+    for (int i = 0; i < images.length; i++) {
+      var stream =
+          http.ByteStream(DelegatingStream.typed(images[i].openRead()));
+      var length = await images[i].length();
+      var multipartFile = http.MultipartFile('images[$i]', stream, length,
+          filename: basename(images[i].path));
+      multipartFiles.add(multipartFile);
     }
+
+    request.files.addAll(multipartFiles);
 
     var response = await request.send();
     final responseString = await response.stream.bytesToString();

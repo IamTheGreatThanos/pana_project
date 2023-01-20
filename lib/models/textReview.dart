@@ -16,6 +16,7 @@ class TextReviewModel {
   int? purity;
   int? staff;
   int? ball;
+  int? atmosphere;
   List<Answers>? answers;
   List<Images>? images;
   int? likeCount;
@@ -33,6 +34,7 @@ class TextReviewModel {
       this.purity,
       this.staff,
       this.ball,
+      this.atmosphere,
       this.answers,
       this.images,
       this.likeCount,
@@ -54,6 +56,7 @@ class TextReviewModel {
     purity = json['purity'];
     staff = json['staff'];
     ball = json['ball'];
+    atmosphere = json['atmosphere'];
     if (json['answers'] != null) {
       answers = <Answers>[];
       json['answers'].forEach((v) {
@@ -87,6 +90,7 @@ class TextReviewModel {
     data['purity'] = purity;
     data['staff'] = staff;
     data['ball'] = ball;
+    data['atmosphere'] = atmosphere;
     if (answers != null) {
       data['answers'] = answers!.map((v) => v.toJson()).toList();
     }

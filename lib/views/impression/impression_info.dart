@@ -27,6 +27,7 @@ import 'package:pana_project/views/messages/chat_messages_page.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
+import 'package:pana_project/views/payment/impression_payment_page.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -58,6 +59,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
   List<ImpressionCardModel> similarImpressionList = [];
   List<Reels> reels = [];
 
+  String selectedRange = 'Выбрать даты';
   String startDate = '';
   String endDate = '';
 
@@ -1134,7 +1136,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                     color: AppColors.black),
                               ),
                               const Text(
-                                ' за человека',
+                                ' за чел.',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 14,
@@ -1143,14 +1145,19 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                             ],
                           ),
                           const SizedBox(height: 10),
-                          // const Text(
-                          //   'Изменить кол-во гостей',
-                          //   style: TextStyle(
-                          //       fontWeight: FontWeight.w500,
-                          //       fontSize: 14,
-                          //       color: AppColors.black,
-                          //       decoration: TextDecoration.underline),
-                          // ),
+                          GestureDetector(
+                            onTap: () {
+                              showDatePicker();
+                            },
+                            child: Text(
+                              selectedRange,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: AppColors.black,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ),
                         ],
                       ),
                       const Spacer(),
@@ -1166,14 +1173,23 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                             ),
                           ),
                           onPressed: () {
-                            showDatePicker();
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => PaymentPage()));
+                            if (startDate != '' && endDate != '') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ImpressionPaymentPage(
+                                    thisImpression,
+                                    startDate,
+                                    endDate,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              showDatePicker();
+                            }
                           },
                           child: const Text(
-                            "Выбрать дату",
+                            "Продолжить",
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w500),
                           ),
@@ -1393,10 +1409,6 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).pop();
-                            if (startDate != '') {
-                              print(startDate);
-                              print(endDate);
-                            }
                           },
                           child: const Text(
                             'Готово',
@@ -1433,12 +1445,13 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
       if (args.value is PickerDateRange) {
+        selectedRange =
+            '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
+            // ignore: lines_longer_than_80_chars
+            ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
         if (args.value.startDate != null && args.value.endDate != null) {
           startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
           endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
-        } else {
-          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
-          endDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
         }
       }
     });

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,11 +26,13 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
+  late PersistentBottomSheetController _controller;
+  final _scaffoldKeyInPaymentPage = GlobalKey<ScaffoldState>();
+
   var _switchValue = false;
   double sum = 0;
   String dateFrom = '-';
   String dateTo = '-';
-  int peopleCount = 1;
 
   @override
   void initState() {
@@ -238,23 +242,44 @@ class _PaymentPageState extends State<PaymentPage> {
                             ),
                           ),
                           const SizedBox(height: 5),
-                          Text(
-                            '$peopleCount человека',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black45,
-                            ),
+                          StreamBuilder(
+                            stream: sharedHousingPaymentData.dataStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(
+                                  '${sharedHousingPaymentData.peopleCount} человека',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45,
+                                  ),
+                                );
+                              } else {
+                                return const Text(
+                                  '1 человека',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45,
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),
                       const Spacer(),
-                      const Text(
-                        'Изменить',
-                        style: TextStyle(
-                          color: AppColors.accent,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                      GestureDetector(
+                        onTap: () {
+                          showPeopleCountModalSheet();
+                        },
+                        child: const Text(
+                          'Изменить',
+                          style: TextStyle(
+                            color: AppColors.accent,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ],
@@ -499,8 +524,12 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void sendOrder() async {
-    var response = await MainProvider().housingPayment(widget.housing.id!,
-        dateFrom, dateTo, peopleCount, widget.selectedRooms);
+    var response = await MainProvider().housingPayment(
+        widget.housing.id!,
+        dateFrom,
+        dateTo,
+        sharedHousingPaymentData.peopleCount,
+        widget.selectedRooms);
     if (response['response_status'] == 'ok') {
       print('Successfully created!');
     } else {
@@ -509,5 +538,181 @@ class _PaymentPageState extends State<PaymentPage> {
             Text(response['message'], style: const TextStyle(fontSize: 20)),
       ));
     }
+  }
+
+  void showPeopleCountModalSheet() async {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return HousingPaymentBottomSheet();
+      },
+    );
+  }
+}
+
+class HousingPaymentData {
+  int peopleCount = 1;
+
+  final _dataController = StreamController<int>();
+  Stream<int> get dataStream => _dataController.stream;
+
+  void minusFunction() {
+    if (peopleCount > 1) {
+      peopleCount -= 1;
+      _dataController.sink.add(peopleCount);
+    }
+  }
+
+  void plusFunction() {
+    if (peopleCount < 99) {
+      peopleCount += 1;
+      _dataController.sink.add(peopleCount);
+    }
+  }
+
+  void dispose() {
+    _dataController.close();
+  }
+}
+
+HousingPaymentData sharedHousingPaymentData = HousingPaymentData();
+
+class HousingPaymentBottomSheet extends StatefulWidget {
+  @override
+  _HousingPaymentBottomSheetState createState() =>
+      _HousingPaymentBottomSheetState();
+}
+
+class _HousingPaymentBottomSheetState extends State<HousingPaymentBottomSheet> {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: SizedBox(
+        height: 300,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              const Text(
+                'Выберите число гостей:',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 40),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(width: 1, color: AppColors.grey)),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Персоны',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            '0 - 99 лет',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          sharedHousingPaymentData.minusFunction();
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(width: 1, color: AppColors.grey),
+                          ),
+                          child: const Icon(Icons.remove),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          sharedHousingPaymentData.peopleCount.toString(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          sharedHousingPaymentData.plusFunction();
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(width: 1, color: AppColors.grey),
+                          ),
+                          child: const Icon(Icons.add),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              SizedBox(
+                height: 60,
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: AppColors.accent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10), // <-- Radius
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    "Продолжить",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

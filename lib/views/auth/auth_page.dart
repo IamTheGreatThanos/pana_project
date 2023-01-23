@@ -87,6 +87,7 @@ class _AuthPageState extends State<AuthPage> {
                                     child: TextField(
                                       controller: authPhoneController,
                                       keyboardType: TextInputType.number,
+                                      textInputAction: TextInputAction.done,
                                       maxLength: 10,
                                       decoration: const InputDecoration(
                                         counterStyle: TextStyle(
@@ -339,6 +340,7 @@ class _AuthPageState extends State<AuthPage> {
                             child: TextField(
                               controller: phoneController,
                               keyboardType: TextInputType.number,
+                              textInputAction: TextInputAction.done,
                               maxLength: 10,
                               decoration: const InputDecoration(
                                 counterStyle: TextStyle(

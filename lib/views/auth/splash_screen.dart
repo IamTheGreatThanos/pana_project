@@ -44,13 +44,9 @@ class _SplashScreenState extends State<SplashScreen> {
       oneSec,
       (Timer timer) {
         if (_start == 0) {
-          Navigator.push(
-            context,
-            // MaterialPageRoute(
-            //     builder: (context) =>
-            //         LockScreen(CreateLockCodePage())),
-            MaterialPageRoute(builder: (context) => TabBarPage()),
-          );
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => TabBarPage()),
+              (Route<dynamic> route) => false);
 
           setState(() {
             timer.cancel();

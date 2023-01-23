@@ -280,6 +280,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                         '',
                                 height: 44,
                                 width: 44,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             const SizedBox(width: 10),

@@ -31,8 +31,8 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
   late GoogleMapController _mapController;
   CameraPosition _initPosition = const CameraPosition(
       target: const LatLng(43.236431, 76.917994), zoom: 14);
-  final Set<Marker> _markers = {};
-  final Set<Polyline> _polylines = {};
+  Set<Marker> _markers = {};
+  Set<Polyline> _polylines = {};
   List<LatLng> mapPoints = [];
 
   List<TravelPlanModel> thisTravelPlans = [];
@@ -866,8 +866,8 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
 
   void getTravelPlans() async {
     thisTravelPlans = [];
-    _markers.removeAll(_markers);
-    _polylines.removeAll(_polylines);
+    _markers = {};
+    _polylines = {};
     mapPoints = [];
     lenOfRoadLine = 0;
 
@@ -927,10 +927,12 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
 
       setState(() {});
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
-      ));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text(response['message'], style: const TextStyle(fontSize: 20)),
+        ));
+      }
     }
   }
 
@@ -944,10 +946,12 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
 
       setState(() {});
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
-      ));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text(response['message'], style: const TextStyle(fontSize: 20)),
+        ));
+      }
     }
   }
 }

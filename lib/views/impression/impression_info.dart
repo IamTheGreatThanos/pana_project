@@ -23,11 +23,11 @@ import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/utils/get_bytes_from_asset.dart';
 import 'package:pana_project/utils/globalVariables.dart';
+import 'package:pana_project/views/impression/impression_sessions.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
-import 'package:pana_project/views/payment/impression_payment_page.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -1177,7 +1177,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ImpressionPaymentPage(
+                                  builder: (context) => ImpressionSessionsPage(
                                     thisImpression,
                                     startDate,
                                     endDate,
@@ -1211,12 +1211,11 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
         await MainProvider().getImpressionDetail(widget.impression.id!);
     if (response['response_status'] == 'ok') {
       thisImpression = ImpressionDetailModel.fromJson(response['data']);
-      print(response['data']);
 
       final Uint8List customMarkerBlack =
           await getBytesFromAsset('assets/icons/map_pin_black.png', 150);
       final Uint8List customMarkerAccent =
-          await getBytesFromAsset('assets/icons/map_pin_black.png', 150);
+          await getBytesFromAsset('assets/icons/map_pin_accent.png', 150);
 
       _markers.add(Marker(
         markerId: const MarkerId('point-black'),

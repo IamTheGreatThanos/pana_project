@@ -544,7 +544,10 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
         roomsList.add(RoomCardModel.fromJson(response['data'][i]));
         roomCounts.add(1);
       }
-      setState(() {});
+
+      if (mounted) {
+        setState(() {});
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],

@@ -280,6 +280,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                     : widget.impression.user?.avatar ?? '',
                                 height: 44,
                                 width: 44,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             const SizedBox(width: 10),

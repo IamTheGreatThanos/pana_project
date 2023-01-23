@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/payment_method_card.dart';
 import 'package:pana_project/models/impressionDetail.dart';
+import 'package:pana_project/utils/ImpressionData.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
+import 'package:pana_project/views/impression/impression_sessions.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class ImpressionPaymentPage extends StatefulWidget {
@@ -233,23 +235,42 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                             ),
                           ),
                           const SizedBox(height: 5),
-                          Text(
-                            '$peopleCount человека',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black45,
-                            ),
+                          StreamBuilder(
+                            stream: sharedImpressionData.dataStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(
+                                  '${sharedImpressionData.peopleCount} персоны',
+                                  style: const TextStyle(
+                                    color: AppColors.accent,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                );
+                              } else {
+                                return const Text(
+                                  '1 персоны',
+                                  style: TextStyle(
+                                    color: AppColors.accent,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),
                       const Spacer(),
-                      const Text(
-                        'Изменить',
-                        style: TextStyle(
-                          color: AppColors.accent,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                      GestureDetector(
+                        onTap: () {
+                          showPeopleCountModalSheet();
+                        },
+                        child: const Text(
+                          'Изменить',
+                          style: TextStyle(
+                            color: AppColors.accent,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ],
@@ -483,6 +504,21 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void showPeopleCountModalSheet() async {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return ImpressionPeopleCountBottomSheet();
+      },
     );
   }
 

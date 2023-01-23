@@ -432,7 +432,10 @@ class _HousingInfoState extends State<HousingInfo> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            FacilitiesWidget(title: item.name ?? ''),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: FacilitiesWidget(title: item.name ?? ''),
+                            ),
                             const SizedBox(width: 10),
                           ],
                         ),
@@ -875,31 +878,31 @@ class _HousingInfoState extends State<HousingInfo> {
                         ),
                       ),
                 const Divider(),
-                const Padding(
-                  padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                  child: Text(
-                    'Свободные даты',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20, bottom: 20, right: 20),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: Text(
-                      thisHousing.freeDates ?? '',
-                      style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black45),
-                    ),
-                  ),
-                ),
-                const Divider(),
+                // const Padding(
+                //   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                //   child: Text(
+                //     'Свободные даты',
+                //     style: TextStyle(
+                //       fontSize: 24,
+                //       fontWeight: FontWeight.w500,
+                //     ),
+                //   ),
+                // ),
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.only(left: 20, bottom: 20, right: 20),
+                //   child: SizedBox(
+                //     width: MediaQuery.of(context).size.width * 0.9,
+                //     child: Text(
+                //       thisHousing.freeDates ?? '',
+                //       style: const TextStyle(
+                //           fontSize: 14,
+                //           fontWeight: FontWeight.w500,
+                //           color: Colors.black45),
+                //     ),
+                //   ),
+                // ),
+                // const Divider(),
                 const Padding(
                   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                   child: Text(

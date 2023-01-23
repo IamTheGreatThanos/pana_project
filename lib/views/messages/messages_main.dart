@@ -56,15 +56,8 @@ class _MessagesPageState extends State<MessagesPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
+                    color: AppColors.white,
                     width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.only(
-                          bottomRight:
-                              Radius.circular(AppConstants.cardBorderRadius),
-                          bottomLeft:
-                              Radius.circular(AppConstants.cardBorderRadius)),
-                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -96,25 +89,66 @@ class _MessagesPageState extends State<MessagesPage> {
                                         'assets/icons/m_message_${newMessageCount != 0 ? '1' : '0'}.svg')),
                                 const SizedBox(width: 10),
                                 SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.72,
-                                  child: Text(
-                                    newMessageCount != 0
-                                        ? '$newMessageCount новых сообщения'
-                                        : 'Нет новых сообщений',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.white,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                                  height: 70,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.72,
+                                        child: const Text(
+                                          'Список чатов',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.white,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.72,
+                                        child: Text(
+                                          newMessageCount != 0
+                                              ? '$newMessageCount новых сообщения'
+                                              : 'Нет новых сообщений',
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.white,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                  newNotifications.isNotEmpty ? Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.only(
+                          bottomRight:
+                              Radius.circular(AppConstants.cardBorderRadius),
+                          bottomLeft:
+                              Radius.circular(AppConstants.cardBorderRadius)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         for (int i = 0; i < newNotifications.length; i++)
                           GestureDetector(
                               onTap: () {
@@ -124,7 +158,7 @@ class _MessagesPageState extends State<MessagesPage> {
                         const SizedBox(height: 20),
                       ],
                     ),
-                  ),
+                  ) : Container(),
                   const SizedBox(height: 20),
                   oldNotifications.isNotEmpty
                       ? Container(

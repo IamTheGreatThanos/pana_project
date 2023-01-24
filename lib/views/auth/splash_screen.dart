@@ -148,7 +148,9 @@ class _SplashScreenState extends State<SplashScreen> {
       if (response['response_status'] == 'ok') {
         for (var item in response['data']) {
           GlobalVariables.favoritesHousing.add(item['id']);
-          setState(() {});
+          if (mounted) {
+            setState(() {});
+          }
         }
       }
 
@@ -156,7 +158,9 @@ class _SplashScreenState extends State<SplashScreen> {
       if (responseImpression['response_status'] == 'ok') {
         for (var item in responseImpression['data']) {
           GlobalVariables.favoritesImpression.add(item['id']);
-          setState(() {});
+          if (mounted) {
+            setState(() {});
+          }
         }
       }
     }

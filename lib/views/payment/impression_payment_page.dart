@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +13,12 @@ import 'package:pana_project/views/impression/impression_sessions.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class ImpressionPaymentPage extends StatefulWidget {
-  ImpressionPaymentPage(this.impression, this.startDate, this.endDate);
+  ImpressionPaymentPage(
+      this.impression, this.startDate, this.endDate, this.impressionData);
   final ImpressionDetailModel impression;
   final String startDate;
   final String endDate;
+  final ImpressionData impressionData;
 
   @override
   _ImpressionPaymentPageState createState() => _ImpressionPaymentPageState();
@@ -25,7 +29,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   double sum = 0;
   String dateFrom = '-';
   String dateTo = '-';
-  int peopleCount = 1;
+  // int peopleCount = 1;
 
   @override
   void initState() {
@@ -36,6 +40,11 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
 
     calcSum();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -236,11 +245,11 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                           ),
                           const SizedBox(height: 5),
                           StreamBuilder(
-                            stream: sharedImpressionData.dataStream,
+                            stream: widget.impressionData.dataStream,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 return Text(
-                                  '${sharedImpressionData.peopleCount} персоны',
+                                  '${snapshot.data} персоны',
                                   style: const TextStyle(
                                     color: AppColors.accent,
                                     fontWeight: FontWeight.w500,
@@ -517,7 +526,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
       ),
       backgroundColor: Colors.white,
       builder: (BuildContext context) {
-        return ImpressionPeopleCountBottomSheet();
+        return ImpressionPeopleCountBottomSheet(widget.impressionData);
       },
     );
   }

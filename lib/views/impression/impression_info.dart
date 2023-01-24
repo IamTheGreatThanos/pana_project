@@ -909,7 +909,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                   Row(
                                     children: const [
                                       Text(
-                                        'от \$324 ',
+                                        'от \₸324 ',
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w500,
@@ -1316,7 +1316,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
 
   void getReels() async {
     reels = [];
-    var response = await MainProvider().getReels();
+    var response = await MainProvider().getReels('impression');
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         reels.add(Reels.fromJson(response['data'][i]));

@@ -489,7 +489,7 @@ class _HomeImpressionState extends State<HomeImpression>
 
   void getReels() async {
     reels = [];
-    var response = await MainProvider().getReels();
+    var response = await MainProvider().getReels('impression');
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         reels.add(Reels.fromJson(response['data'][i]));

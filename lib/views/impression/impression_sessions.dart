@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:pana_project/components/impression_session_card.dart';
 import 'package:pana_project/models/impressionDetail.dart';
+import 'package:pana_project/models/impressionSession.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/ImpressionData.dart';
 import 'package:pana_project/utils/const.dart';
@@ -20,7 +22,8 @@ class ImpressionSessionsPage extends StatefulWidget {
 class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
   final DateRangePickerController _datePickerController =
       DateRangePickerController();
-  List<String> sessionList = [];
+  final impressionData = ImpressionData();
+  List<ImpressionSessionModel> sessionList = [];
   String dateText = '';
   int sessionCount = 0;
   bool isPrivat = false;
@@ -38,6 +41,12 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
     getSessions();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    impressionData.dispose();
+    super.dispose();
   }
 
   @override
@@ -180,11 +189,11 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
                               child: Row(
                                 children: [
                                   StreamBuilder(
-                                    stream: sharedImpressionData.dataStream,
+                                    stream: impressionData.dataStream,
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return Text(
-                                          '${sharedImpressionData.peopleCount} персоны',
+                                          '${snapshot.data} персоны',
                                           style: const TextStyle(
                                             color: AppColors.accent,
                                             fontWeight: FontWeight.w500,
@@ -245,29 +254,18 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
                   ),
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height,
                   color: AppColors.lightGray,
-                  child: ListView(
+                  child: Column(
                     children: [
                       for (int i = 0; i < sessionList.length; i++)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    AppConstants.cardBorderRadius),
-                                color: AppColors.white),
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Text(sessionList[i]),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
+                        ImpressionSessionCard(
+                          session: sessionList[i],
+                          impressionData: impressionData,
+                          impression: widget.impression,
+                          startDate: widget.startDate,
+                          endDate: widget.endDate,
+                        ),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 )
@@ -323,7 +321,9 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).pop();
-                            if (startDate != '') {}
+                            if (startDate != '') {
+                              getSessions();
+                            }
                           },
                           child: const Text(
                             'Готово',
@@ -381,7 +381,7 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
       ),
       backgroundColor: Colors.white,
       builder: (BuildContext context) {
-        return ImpressionPeopleCountBottomSheet();
+        return ImpressionPeopleCountBottomSheet(impressionData);
       },
     );
   }
@@ -392,7 +392,7 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
         .getSessionsInImpression(widget.impression.id!, startDate, endDate);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
-        // sessionList.add(RoomCardModel.fromJson(response['data'][i]));
+        sessionList.add(ImpressionSessionModel.fromJson(response['data'][i]));
       }
 
       sessionCount = sessionList.length;
@@ -410,6 +410,8 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
 }
 
 class ImpressionPeopleCountBottomSheet extends StatefulWidget {
+  ImpressionPeopleCountBottomSheet(this.impressionData);
+  final ImpressionData impressionData;
   @override
   _ImpressionPeopleCountBottomSheetState createState() =>
       _ImpressionPeopleCountBottomSheetState();
@@ -468,7 +470,7 @@ class _ImpressionPeopleCountBottomSheetState
                       const Spacer(),
                       GestureDetector(
                         onTap: () {
-                          sharedImpressionData.minusFunction();
+                          widget.impressionData.minusFunction();
                           setState(() {});
                         },
                         child: Container(
@@ -485,7 +487,7 @@ class _ImpressionPeopleCountBottomSheetState
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
-                          sharedImpressionData.peopleCount.toString(),
+                          widget.impressionData.peopleCount.toString(),
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -494,7 +496,7 @@ class _ImpressionPeopleCountBottomSheetState
                       ),
                       GestureDetector(
                         onTap: () {
-                          sharedImpressionData.plusFunction();
+                          widget.impressionData.plusFunction();
                           setState(() {});
                         },
                         child: Container(

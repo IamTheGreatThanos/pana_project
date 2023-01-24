@@ -20,9 +20,12 @@ class ImpressionData {
     }
   }
 
+  void setPeopleCount(int newValue) {
+    peopleCount = newValue;
+    _dataController.sink.add(peopleCount);
+  }
+
   void dispose() {
     _dataController.close();
   }
 }
-
-ImpressionData sharedImpressionData = ImpressionData();

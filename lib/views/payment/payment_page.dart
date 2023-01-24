@@ -46,6 +46,12 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   @override
+  void dispose() {
+    sharedHousingPaymentData.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {

@@ -1007,12 +1007,12 @@ class MainProvider {
     }
   }
 
-  Future<dynamic> getReels() async {
+  Future<dynamic> getReels(String type) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
     final response = await http.get(
-      Uri.parse('${API_URL}api/mobile/reel'),
+      Uri.parse('${API_URL}api/mobile/reel?type=$type'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',

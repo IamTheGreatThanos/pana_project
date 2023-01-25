@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
@@ -9,29 +8,20 @@ import 'package:pana_project/utils/const.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MainProvider {
+class MessagesProvider {
   String API_URL = AppConstants.baseUrl;
 
-  Future<dynamic> addToFavorite(int id, int type) async {
+  Future<dynamic> getListOfChats() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    Map<String, dynamic> jsonBody = {};
-
-    if (type == 1) {
-      jsonBody['housing_id'] = id;
-    } else {
-      jsonBody['impression_id'] = id;
-    }
-
-    final response = await http.post(
-      Uri.parse('${API_URL}api/mobile/favorite'),
+    final response = await http.get(
+      Uri.parse('${API_URL}api/chat'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
-      body: jsonEncode(jsonBody),
     );
 
     if (response.statusCode == 200) {
@@ -47,26 +37,17 @@ class MainProvider {
     }
   }
 
-  Future<dynamic> deleteFavorite(int id, int type) async {
+  Future<dynamic> getChatMessages(int userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    Map<String, dynamic> jsonBody = {};
-
-    if (type == 1) {
-      jsonBody['housing_id'] = id;
-    } else {
-      jsonBody['impression_id'] = id;
-    }
-
-    final response = await http.post(
-      Uri.parse('${API_URL}api/mobile/favorite/delete'),
+    final response = await http.get(
+      Uri.parse('${API_URL}api/chat/messages?user_id=$userId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
-      body: jsonEncode(jsonBody),
     );
 
     if (response.statusCode == 200) {
@@ -82,92 +63,52 @@ class MainProvider {
     }
   }
 
-  Future<dynamic> sendTextReview(
-    int type,
-    int id,
-    String date,
-    String review,
-    int price,
-    int field,
-    int purity,
-    int staff,
-    List<XFile> images,
-  ) async {
+  Future<dynamic> sendMessageInChat(String text, int userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    var uri = Uri.parse('${API_URL}api/mobile/review');
-    var request = http.MultipartRequest("POST", uri);
-    request.headers['Authorization'] = "Bearer $token";
-    request.headers['Accept'] = "application/json";
-
-    if (type == 2) {
-      request.fields['housing_id'] = id.toString();
-    } else {
-      request.fields['impression_id'] = id.toString();
-    }
-
-    request.fields['was_at'] = date;
-    request.fields['description'] = review;
-    request.fields['price'] = price.toString();
-    request.fields['atmosphere'] = field.toString();
-    request.fields['purity'] = purity.toString();
-    request.fields['staff'] = staff.toString();
-
-    List<http.MultipartFile> multipartFiles = [];
-
-    for (int i = 0; i < images.length; i++) {
-      var stream =
-          http.ByteStream(DelegatingStream.typed(images[i].openRead()));
-      var length = await images[i].length();
-      var multipartFile = http.MultipartFile('images[$i]', stream, length,
-          filename: basename(images[i].path));
-      multipartFiles.add(multipartFile);
-    }
-
-    request.files.addAll(multipartFiles);
-
-    var response = await request.send();
-    final responseString = await response.stream.bytesToString();
+    final response = await http.post(
+      Uri.parse('${API_URL}api/chat/send'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "user_id": userId,
+        "text": text,
+      }),
+    );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> result = {};
-      result['data'] = jsonDecode(responseString);
+      result['data'] = jsonDecode(response.body);
       result['response_status'] = 'ok';
       return result;
     } else {
       Map<String, dynamic> result = {};
-      result['data'] = jsonDecode(responseString);
+      result['data'] = jsonDecode(response.body);
       result['response_status'] = 'error';
       return result;
     }
   }
 
-  Future<dynamic> sendAudioReview(
-    int type,
-    int id,
-    File audio,
-  ) async {
+  Future<dynamic> sendFileInChat(int userId, XFile imageFile) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    var uri = Uri.parse('${API_URL}api/mobile/review');
+    var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+    var uri = Uri.parse('${API_URL}api/chat/send');
     var request = http.MultipartRequest("POST", uri);
     request.headers['Authorization'] = "Bearer $token";
     request.headers['Accept'] = "application/json";
+    request.fields['user_id'] = userId.toString();
 
-    if (type == 2) {
-      request.fields['housing_id'] = id.toString();
-    } else {
-      request.fields['impression_id'] = id.toString();
-    }
+    var multipartFile = http.MultipartFile('files[0]', stream, length,
+        filename: basename(imageFile.path));
 
-    var stream = http.ByteStream(DelegatingStream.typed(audio.openRead()));
-    var length = await audio.length();
-    var multipartFile = http.MultipartFile('audio', stream, length,
-        filename: basename(audio.path));
     request.files.add(multipartFile);
-
     var response = await request.send();
     final responseString = await response.stream.bytesToString();
 
@@ -184,12 +125,41 @@ class MainProvider {
     }
   }
 
-  Future<dynamic> getCities(int countryId) async {
+  Future<dynamic> readMessageInChat(int userId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.post(
+      Uri.parse('${API_URL}api/chat/read'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "user_id": userId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> getNotifications() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
     final response = await http.get(
-      Uri.parse('${API_URL}api/city?country_id=$countryId'),
+      Uri.parse('${API_URL}api/notification/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -210,43 +180,20 @@ class MainProvider {
     }
   }
 
-  Future<dynamic> getReels(String type) async {
+  Future<dynamic> readNotification() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    final response = await http.get(
-      Uri.parse('${API_URL}api/mobile/reel?type=$type'),
+    final response = await http.post(
+      Uri.parse('${API_URL}api/notification/read'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
         'Authorization': "Bearer $token"
       },
-    );
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> result = {};
-      result['data'] = jsonDecode(response.body);
-      result['response_status'] = 'ok';
-      return result;
-    } else {
-      Map<String, dynamic> result = {};
-      result['data'] = jsonDecode(response.body);
-      result['response_status'] = 'error';
-      return result;
-    }
-  }
-
-  Future<dynamic> getReelInfo(int reelId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-
-    final response = await http.get(
-      Uri.parse('${API_URL}api/mobile/reel/show/$reelId'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept': 'application/json',
-        'Authorization': "Bearer $token"
-      },
+      // body: jsonEncode(<String, dynamic>{
+      //   "notification_id": notificationId,
+      // }),
     );
 
     if (response.statusCode == 200) {

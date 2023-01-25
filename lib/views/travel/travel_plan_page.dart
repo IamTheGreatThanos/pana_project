@@ -780,8 +780,8 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -858,8 +858,8 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -929,8 +929,8 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text(response['message'], style: const TextStyle(fontSize: 20)),
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
         ));
       }
     }
@@ -948,8 +948,8 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text(response['message'], style: const TextStyle(fontSize: 20)),
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
         ));
       }
     }

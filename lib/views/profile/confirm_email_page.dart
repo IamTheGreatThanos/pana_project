@@ -155,7 +155,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("Заполните все поля.",
-                                      style: const TextStyle(fontSize: 20)),
+                                      style: const TextStyle(fontSize: 14)),
                                 ));
                               } else {
                                 saveChanges();
@@ -189,7 +189,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
     // } else {
     //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     //     content:
-    //         Text(response['message'], style: const TextStyle(fontSize: 20)),
+    //         Text(response['data']['message'], style: const TextStyle(fontSize: 14)),
     //   ));
     // }
   }

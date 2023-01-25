@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/messages_card.dart';
 import 'package:pana_project/models/notification.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/messages_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/messages/list_of_chats.dart';
@@ -136,29 +136,33 @@ class _MessagesPageState extends State<MessagesPage> {
                       ],
                     ),
                   ),
-                  newNotifications.isNotEmpty ? Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.only(
-                          bottomRight:
-                              Radius.circular(AppConstants.cardBorderRadius),
-                          bottomLeft:
-                              Radius.circular(AppConstants.cardBorderRadius)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (int i = 0; i < newNotifications.length; i++)
-                          GestureDetector(
-                              onTap: () {
-                                goToNotificationDetail(newNotifications[i]);
-                              },
-                              child: MessagesWidget(newNotifications[i], true)),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  ) : Container(),
+                  newNotifications.isNotEmpty
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(
+                                    AppConstants.cardBorderRadius),
+                                bottomLeft: Radius.circular(
+                                    AppConstants.cardBorderRadius)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              for (int i = 0; i < newNotifications.length; i++)
+                                GestureDetector(
+                                    onTap: () {
+                                      goToNotificationDetail(
+                                          newNotifications[i]);
+                                    },
+                                    child: MessagesWidget(
+                                        newNotifications[i], true)),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        )
+                      : Container(),
                   const SizedBox(height: 20),
                   oldNotifications.isNotEmpty
                       ? Container(
@@ -246,7 +250,7 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 
   void getNotifications() async {
-    var response = await MainProvider().getNotifications();
+    var response = await MessagesProvider().getNotifications();
     if (response['response_status'] == 'ok') {
       print(response['data']);
       int messageCount = 0;
@@ -275,19 +279,19 @@ class _MessagesPageState extends State<MessagesPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
 
   void readNotification() async {
-    var response = await MainProvider().readNotification();
+    var response = await MessagesProvider().readNotification();
     if (response['response_status'] == 'ok') {
       print('Readed');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

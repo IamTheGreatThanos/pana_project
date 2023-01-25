@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pana_project/components/profile_menu_item.dart';
-import 'package:pana_project/services/auth_api_provider.dart';
+import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/profile/change_language.dart';
 import 'package:pana_project/views/profile/my_booked_objects_page.dart';
@@ -292,19 +292,19 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
   }
 
   void uploadAvatar(XFile image) async {
-    var response = await AuthProvider().changeAvatar(image);
+    var response = await ProfileProvider().changeAvatar(image);
     if (response['response_status'] == 'ok') {
       print('Successfully uploaded!');
       getProfile();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Ошибка загрузки!', style: TextStyle(fontSize: 20)),
+        content: Text('Ошибка загрузки!', style: TextStyle(fontSize: 14)),
       ));
     }
   }
 
   void getProfile() async {
-    var response = await AuthProvider().getProfileData();
+    var response = await ProfileProvider().getProfileData();
     if (response['response_status'] == 'ok') {
       if (response['data']['avatar'] != null) {
         avatarUrl = response['data']['avatar'];

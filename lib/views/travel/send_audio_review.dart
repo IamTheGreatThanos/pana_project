@@ -308,7 +308,7 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             content: Text("Сперва запишите аудио.",
-                                style: TextStyle(fontSize: 20)),
+                                style: TextStyle(fontSize: 14)),
                           ));
                         }
                       },
@@ -349,8 +349,8 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
       setState(() {});
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Предоставьте доступ к микрофону.",
-            style: TextStyle(fontSize: 20)),
+        content: Text("Предоставьте доступ к микрофону из Настроек.",
+            style: TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -447,7 +447,7 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

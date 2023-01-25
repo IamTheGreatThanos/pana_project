@@ -5,7 +5,8 @@ import 'package:pana_project/components/housing_card.dart';
 import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/impressionCard.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/housing_api_provider.dart';
+import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
 import 'package:pana_project/views/impression/impression_info.dart';
@@ -145,34 +146,34 @@ class _FavoritesPageState extends State<FavoritesPage> {
                                                 List<StoryItem?>
                                                     mediaStoryItems = [];
 
-                                                for (int j = 0;
-                                                    j <
-                                                        housingList[i]
-                                                            .videos!
-                                                            .length;
-                                                    j++) {
-                                                  thisStoryItems.add(
-                                                    StoryItem.pageVideo(
-                                                      housingList[i]
-                                                          .videos![j]
-                                                          .path!,
-                                                      controller:
-                                                          _storyController,
-                                                      imageFit: BoxFit.cover,
-                                                    ),
-                                                  );
-
-                                                  mediaStoryItems.add(
-                                                    StoryItem.pageVideo(
-                                                      housingList[i]
-                                                          .videos![j]
-                                                          .path!,
-                                                      controller:
-                                                          _storyController,
-                                                      imageFit: BoxFit.fitWidth,
-                                                    ),
-                                                  );
-                                                }
+                                                // for (int j = 0;
+                                                //     j <
+                                                //         housingList[i]
+                                                //             .videos!
+                                                //             .length;
+                                                //     j++) {
+                                                //   thisStoryItems.add(
+                                                //     StoryItem.pageVideo(
+                                                //       housingList[i]
+                                                //           .videos![j]
+                                                //           .path!,
+                                                //       controller:
+                                                //           _storyController,
+                                                //       imageFit: BoxFit.cover,
+                                                //     ),
+                                                //   );
+                                                //
+                                                //   mediaStoryItems.add(
+                                                //     StoryItem.pageVideo(
+                                                //       housingList[i]
+                                                //           .videos![j]
+                                                //           .path!,
+                                                //       controller:
+                                                //           _storyController,
+                                                //       imageFit: BoxFit.fitWidth,
+                                                //     ),
+                                                //   );
+                                                // }
 
                                                 for (int j = 0;
                                                     j <
@@ -382,7 +383,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   void getHousingList() async {
     housingList = [];
-    var response = await MainProvider().getFavoritesHousing();
+    var response = await HousingProvider().getFavoritesHousing();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         housingList.add(HousingCardModel.fromJson(response['data'][i]));
@@ -392,15 +393,15 @@ class _FavoritesPageState extends State<FavoritesPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
 
   void getImpressionList() async {
     impressionList = [];
-    var response = await MainProvider().getFavoritesImpression();
+    var response = await ImpressionProvider().getFavoritesImpression();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         impressionList.add(ImpressionCardModel.fromJson(response['data'][i]));
@@ -410,8 +411,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

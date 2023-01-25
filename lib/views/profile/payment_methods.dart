@@ -139,7 +139,7 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("Заполните все поля.",
-                                      style: const TextStyle(fontSize: 20)),
+                                      style: const TextStyle(fontSize: 14)),
                                 ));
                               }
                             },

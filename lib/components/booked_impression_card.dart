@@ -175,7 +175,7 @@ class _BookedImpressionCardState extends State<BookedImpressionCard> {
               Row(
                 children: [
                   Text(
-                    '\₸${formatNumberString(widget.impression.price.toString())}',
+                    '${formatNumberString(widget.impression.price.toString())} \₸',
                     style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
@@ -210,7 +210,7 @@ class _BookedImpressionCardState extends State<BookedImpressionCard> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

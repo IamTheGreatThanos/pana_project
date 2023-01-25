@@ -202,7 +202,7 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Извините, код введен неправильно. Попробуйте еще раз.",
-              style: TextStyle(fontSize: 20)),
+              style: TextStyle(fontSize: 14)),
         ));
       }
     } else {
@@ -232,7 +232,7 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Извините, код введен неправильно. Попробуйте еще раз.",
-              style: TextStyle(fontSize: 20)),
+              style: TextStyle(fontSize: 14)),
         ));
       }
     }
@@ -246,8 +246,8 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
         print("Sended!");
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text(response['message'], style: const TextStyle(fontSize: 20)),
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
         ));
       }
     } else {
@@ -258,8 +258,8 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
         print("Sended!");
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text(response['message'], style: const TextStyle(fontSize: 20)),
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
         ));
       }
     }

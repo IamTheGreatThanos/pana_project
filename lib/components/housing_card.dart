@@ -118,8 +118,8 @@ class _HousingCardState extends State<HousingCard> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                          top: 15,
-                          left: MediaQuery.of(context).size.width * 0.9 - 70),
+                          top: 10,
+                          left: MediaQuery.of(context).size.width * 0.9 - 60),
                       child: GestureDetector(
                         onTap: () {
                           tapFavoritesButton();
@@ -169,12 +169,25 @@ class _HousingCardState extends State<HousingCard> {
             const SizedBox(
               height: 8,
             ),
-            Text(
-              '${widget.housing.distance} км от вас',
-              style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: Colors.black45),
+            Row(
+              children: [
+                Text(
+                  widget.housing.city!.name ?? '',
+                  style: const TextStyle(
+                    color: AppColors.accent,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  '${widget.housing.distance} км от вас',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Colors.black45),
+                ),
+              ],
             ),
             const SizedBox(
               height: 8,
@@ -182,7 +195,7 @@ class _HousingCardState extends State<HousingCard> {
             Row(
               children: [
                 Text(
-                  '\₸${formatNumberString(widget.housing.basePriceMin.toString())}',
+                  '${formatNumberString(widget.housing.basePriceMin.toString())} \₸',
                   style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
@@ -216,7 +229,7 @@ class _HousingCardState extends State<HousingCard> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(response['data']['message'],
-              style: const TextStyle(fontSize: 20)),
+              style: const TextStyle(fontSize: 14)),
         ));
       }
     } else {
@@ -230,7 +243,7 @@ class _HousingCardState extends State<HousingCard> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(response['data']['message'],
-              style: const TextStyle(fontSize: 20)),
+              style: const TextStyle(fontSize: 14)),
         ));
       }
     }

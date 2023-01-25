@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/services/auth_api_provider.dart';
+import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/profile/confirm_email_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -165,7 +165,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("Заполните все поля.",
-                                      style: const TextStyle(fontSize: 20)),
+                                      style: const TextStyle(fontSize: 14)),
                                 ));
                               } else {
                                 saveChanges();
@@ -190,7 +190,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
 
   void saveChanges() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var response = await AuthProvider().changeEmail(emailController.text);
+    var response = await ProfileProvider().changeEmail(emailController.text);
 
     if (response['response_status'] == 'ok') {
       prefs.setString("user_email", emailController.text);
@@ -201,8 +201,8 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
       Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

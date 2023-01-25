@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:pana_project/components/room_card.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/roomCard.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/payment/payment_page.dart';
@@ -124,162 +124,172 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                       Container(
                         color: AppColors.lightGray,
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.67,
-                        child: ListView(
-                          children: [
-                            roomsList.isEmpty
-                                ? Column(
-                                    children: [
-                                      SvgPicture.asset(
-                                          'assets/images/calendar_image.svg'),
-                                      const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 20,
-                                          horizontal: 40,
-                                        ),
-                                        child: Text(
-                                          'Чтобы увидеть список свободных комнат выберите дату',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
+                        height: MediaQuery.of(context).size.height * 0.69,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 10),
+                              roomsList.isEmpty
+                                  ? Column(
+                                      children: [
+                                        SvgPicture.asset(
+                                            'assets/images/calendar_image.svg'),
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 20,
+                                            horizontal: 40,
                                           ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Container(),
-                            for (int i = 0; i < roomsList.length; i++)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                          AppConstants.cardBorderRadius),
-                                      color: AppColors.white),
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Column(
-                                    children: [
-                                      RoomCard(roomsList[i], selectedRange),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 25),
-                                        child: Row(
-                                          children: [
-                                            const Text(
-                                              'Выберите количество',
-                                              style: TextStyle(fontSize: 14),
+                                          child: Text(
+                                            'Чтобы увидеть список свободных комнат выберите дату',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500,
                                             ),
-                                            const Spacer(),
-                                            GestureDetector(
-                                              onTap: () {
-                                                minusFunction(i);
-                                              },
-                                              child: Container(
-                                                width: 32,
-                                                height: 32,
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey,
-                                                      offset: Offset(
-                                                          0.0, 1.0), //(x,y)
-                                                      blurRadius: 1.0,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                              for (int i = 0; i < roomsList.length; i++)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 15),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            AppConstants.cardBorderRadius),
+                                        color: AppColors.white),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Column(
+                                      children: [
+                                        RoomCard(roomsList[i], selectedRange),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 25),
+                                          child: Row(
+                                            children: [
+                                              const Text(
+                                                'Выберите количество',
+                                                style: TextStyle(fontSize: 14),
+                                              ),
+                                              const Spacer(),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  minusFunction(i);
+                                                },
+                                                child: Container(
+                                                  width: 32,
+                                                  height: 32,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.white,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey,
+                                                        offset: Offset(
+                                                            0.0, 1.0), //(x,y)
+                                                        blurRadius: 1.0,
+                                                      ),
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(16),
                                                     ),
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(16),
+                                                  ),
+                                                  child:
+                                                      const Icon(Icons.remove),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10),
+                                                child: Text(
+                                                  roomCounts[i].toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                                child: const Icon(Icons.remove),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  plusFunction(i);
+                                                },
+                                                child: Container(
+                                                  width: 32,
+                                                  height: 32,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.white,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey,
+                                                        offset: Offset(
+                                                            0.0, 1.0), //(x,y)
+                                                        blurRadius: 1.0,
+                                                      ),
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(16),
+                                                    ),
+                                                  ),
+                                                  child: Icon(Icons.add),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 25, vertical: 20),
+                                          child: SizedBox(
+                                            height: 48,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                primary:
+                                                    selectedRoomIds.contains(
+                                                            roomsList[i].id)
+                                                        ? AppColors.accent
+                                                        : AppColors.grey,
+                                                minimumSize:
+                                                    const Size.fromHeight(50),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                roomSelectionFunction(
+                                                    roomsList[i].id!,
+                                                    roomsList[i],
+                                                    roomCounts[i]);
+                                              },
                                               child: Text(
-                                                roomCounts[i].toString(),
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                selectedRoomIds.contains(
+                                                        roomsList[i].id)
+                                                    ? "Выбрано номеров: ${roomCounts[i].toString()}"
+                                                    : "Выбрать этот номер",
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: selectedRoomIds
+                                                            .contains(
+                                                                roomsList[i].id)
+                                                        ? AppColors.white
+                                                        : AppColors
+                                                            .blackWithOpacity),
                                               ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                plusFunction(i);
-                                              },
-                                              child: Container(
-                                                width: 32,
-                                                height: 32,
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey,
-                                                      offset: Offset(
-                                                          0.0, 1.0), //(x,y)
-                                                      blurRadius: 1.0,
-                                                    ),
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(16),
-                                                  ),
-                                                ),
-                                                child: Icon(Icons.add),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 25, vertical: 20),
-                                        child: SizedBox(
-                                          height: 48,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              primary: selectedRoomIds
-                                                      .contains(roomsList[i].id)
-                                                  ? AppColors.accent
-                                                  : AppColors.grey,
-                                              minimumSize:
-                                                  const Size.fromHeight(50),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              roomSelectionFunction(
-                                                  roomsList[i].id!,
-                                                  roomsList[i],
-                                                  roomCounts[i]);
-                                            },
-                                            child: Text(
-                                              "Выбрать этот номер",
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: selectedRoomIds
-                                                          .contains(
-                                                              roomsList[i].id)
-                                                      ? AppColors.white
-                                                      : AppColors
-                                                          .blackWithOpacity),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       Container(
@@ -296,7 +306,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                                   Row(
                                     children: [
                                       Text(
-                                        'от \₸${formatNumberString(widget.price.toString())}',
+                                        'от ${formatNumberString(widget.price.toString())} \₸',
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 18,
@@ -516,7 +526,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
   void getRoomsList() async {
     roomsList = [];
     roomCounts = [];
-    var response = await MainProvider().getRoomsList(widget.housing.id!);
+    var response = await HousingProvider().getRoomsList(widget.housing.id!);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         roomsList.add(RoomCardModel.fromJson(response['data'][i]));
@@ -527,7 +537,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
       print(response['data']['message']);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -537,7 +547,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
     roomCounts = [];
     selectedRoomIds = [];
     selectedRoomCounts = [];
-    var response = await MainProvider()
+    var response = await HousingProvider()
         .getRoomsListByDate(widget.housing.id!, startDate, endDate);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
@@ -551,7 +561,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

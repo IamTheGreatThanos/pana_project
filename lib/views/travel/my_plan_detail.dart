@@ -524,7 +524,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -544,7 +544,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -558,7 +558,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(response['data']['message'],
-              style: const TextStyle(fontSize: 20)),
+              style: const TextStyle(fontSize: 14)),
         ));
       }
     }
@@ -573,7 +573,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(response['data']['message'],
-              style: const TextStyle(fontSize: 20)),
+              style: const TextStyle(fontSize: 14)),
         ));
       }
     }
@@ -588,8 +588,8 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
       Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

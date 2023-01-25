@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:pana_project/components/impression_session_card.dart';
 import 'package:pana_project/models/impressionDetail.dart';
 import 'package:pana_project/models/impressionSession.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/utils/ImpressionData.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -397,7 +397,7 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
 
   void getSessions() async {
     sessionList = [];
-    var response = await MainProvider()
+    var response = await ImpressionProvider()
         .getSessionsInImpression(widget.impression.id!, startDate, endDate);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
@@ -412,7 +412,7 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

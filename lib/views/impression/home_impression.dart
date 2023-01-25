@@ -5,6 +5,7 @@ import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/models/reels.dart';
+import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
@@ -104,7 +105,7 @@ class _HomeImpressionState extends State<HomeImpression>
                 width: MediaQuery.of(context).size.width,
                 child: Column(children: [
                   const SizedBox(
-                    height: 40,
+                    height: 60,
                   ),
                   Row(
                     children: [
@@ -115,7 +116,7 @@ class _HomeImpressionState extends State<HomeImpression>
                         },
                         child: Container(
                           height: 50,
-                          width: MediaQuery.of(context).size.width * 0.66,
+                          width: MediaQuery.of(context).size.width * 0.75,
                           decoration: const BoxDecoration(
                             color: AppColors.white,
                             borderRadius: BorderRadius.all(
@@ -414,7 +415,7 @@ class _HomeImpressionState extends State<HomeImpression>
 
   void getImpressionList() async {
     impressionList = [];
-    var response = await MainProvider().getImpressionData();
+    var response = await ImpressionProvider().getImpressionData();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         impressionList.add(ImpressionCardModel.fromJson(response['data'][i]));
@@ -425,7 +426,7 @@ class _HomeImpressionState extends State<HomeImpression>
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -461,7 +462,7 @@ class _HomeImpressionState extends State<HomeImpression>
 
   void searchImpressionList(List<dynamic> params) async {
     impressionList = [];
-    var response = await MainProvider().getImpressionFromSearch(
+    var response = await ImpressionProvider().getImpressionFromSearch(
       params[0],
       params[1],
       params[2],
@@ -481,8 +482,8 @@ class _HomeImpressionState extends State<HomeImpression>
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -499,8 +500,8 @@ class _HomeImpressionState extends State<HomeImpression>
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

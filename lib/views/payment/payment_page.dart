@@ -7,9 +7,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/payment_method_card.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/roomCard.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
+import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -26,9 +27,6 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
-  late PersistentBottomSheetController _controller;
-  final _scaffoldKeyInPaymentPage = GlobalKey<ScaffoldState>();
-
   var _switchValue = false;
   double sum = 0;
   String dateFrom = '-';
@@ -47,7 +45,6 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   void dispose() {
-    sharedHousingPaymentData.dispose();
     super.dispose();
   }
 
@@ -305,7 +302,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           ),
                           const Spacer(),
                           Text(
-                            '\₸${formatNumberString(((widget.roomList[i].basePrice ?? 0) * widget.selectedRooms[i]['count']).toString())}',
+                            '${formatNumberString(((widget.roomList[i].basePrice ?? 0) * widget.selectedRooms[i]['count']).toString())} \₸',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -326,7 +323,7 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                       const Spacer(),
                       Text(
-                        '\₸${formatNumberString(sum.toString())}',
+                        '${formatNumberString(sum.toString())} \₸',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -487,11 +484,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           innerColor: AppColors.accent,
                           outerColor: AppColors.white,
                           onSubmit: () {
-                            sendOrder();
-                            Future.delayed(
-                              const Duration(seconds: 1),
-                              () => _key.currentState!.reset(),
-                            ).whenComplete(() => Navigator.of(context).pop());
+                            sendOrder(_key);
                           },
                         );
                       },
@@ -513,19 +506,29 @@ class _PaymentPageState extends State<PaymentPage> {
     }
   }
 
-  void sendOrder() async {
-    var response = await MainProvider().housingPayment(
+  void sendOrder(GlobalKey<SlideActionState> _key) async {
+    var response = await HousingProvider().housingPayment(
         widget.housing.id!,
         dateFrom,
         dateTo,
         sharedHousingPaymentData.peopleCount,
         widget.selectedRooms);
     if (response['response_status'] == 'ok') {
-      print('Successfully created!');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Жилье успешно забронировано!',
+            style: const TextStyle(fontSize: 14)),
+      ));
+
+      Future.delayed(
+        const Duration(seconds: 3),
+        () => _key.currentState!.reset(),
+      ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => TabBarPage()),
+          (Route<dynamic> route) => false));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

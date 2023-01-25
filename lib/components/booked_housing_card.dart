@@ -158,7 +158,7 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
                 Row(
                   children: [
                     Text(
-                      '\₸${formatNumberString('123')}',
+                      '${formatNumberString('123')} \₸',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
@@ -185,14 +185,13 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
       widget.travelId,
       widget.housing.id!,
     );
-    print(response['data']);
 
     if (response['response_status'] == 'ok') {
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

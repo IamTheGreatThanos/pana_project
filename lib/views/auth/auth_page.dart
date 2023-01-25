@@ -129,7 +129,7 @@ class _AuthPageState extends State<AuthPage> {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
                                     content: Text("Заполните все поля.",
-                                        style: const TextStyle(fontSize: 20)),
+                                        style: const TextStyle(fontSize: 14)),
                                   ));
                                 }
                               },
@@ -383,7 +383,7 @@ class _AuthPageState extends State<AuthPage> {
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("Заполните все поля.",
-                                style: const TextStyle(fontSize: 20)),
+                                style: const TextStyle(fontSize: 14)),
                           ));
                         }
                       },
@@ -446,8 +446,8 @@ class _AuthPageState extends State<AuthPage> {
                   emailController.text)));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -463,8 +463,8 @@ class _AuthPageState extends State<AuthPage> {
                   0, TabBarPage(), authPhoneController.text, '', '', '')));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

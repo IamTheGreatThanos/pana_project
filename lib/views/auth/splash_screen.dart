@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/housing_api_provider.dart';
+import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -144,7 +145,7 @@ class _SplashScreenState extends State<SplashScreen> {
       GlobalVariables.favoritesHousing = [];
       GlobalVariables.favoritesImpression = [];
 
-      var response = await MainProvider().getFavoritesHousing();
+      var response = await HousingProvider().getFavoritesHousing();
       if (response['response_status'] == 'ok') {
         for (var item in response['data']) {
           GlobalVariables.favoritesHousing.add(item['id']);
@@ -154,7 +155,8 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }
 
-      var responseImpression = await MainProvider().getFavoritesImpression();
+      var responseImpression =
+          await ImpressionProvider().getFavoritesImpression();
       if (responseImpression['response_status'] == 'ok') {
         for (var item in responseImpression['data']) {
           GlobalVariables.favoritesImpression.add(item['id']);

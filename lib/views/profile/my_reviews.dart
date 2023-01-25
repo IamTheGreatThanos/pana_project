@@ -4,7 +4,7 @@ import 'package:pana_project/components/my_audio_review_card.dart';
 import 'package:pana_project/components/my_text_review_card.dart';
 import 'package:pana_project/models/audioReview.dart';
 import 'package:pana_project/models/textReview.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 
 class MyReviewsPage extends StatefulWidget {
@@ -141,7 +141,7 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
 
   void getTextReviews() async {
     textReviews = [];
-    var response = await MainProvider().getTextReviews();
+    var response = await ProfileProvider().getTextReviews();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         textReviews.add(TextReviewModel.fromJson(response['data'][i]));
@@ -151,15 +151,15 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
 
   void getAudioReviews() async {
     audioReviews = [];
-    var response = await MainProvider().getAudioReviews();
+    var response = await ProfileProvider().getAudioReviews();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         audioReviews.add(AudioReviewModel.fromJson(response['data'][i]));
@@ -169,8 +169,8 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

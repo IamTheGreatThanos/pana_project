@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/services/auth_api_provider.dart';
+import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -225,7 +225,7 @@ class _ChangeFullNamePageState extends State<ChangeFullNamePage> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("Заполните все поля.",
-                                      style: const TextStyle(fontSize: 20)),
+                                      style: const TextStyle(fontSize: 14)),
                                 ));
                               } else {
                                 saveChanges();
@@ -250,7 +250,7 @@ class _ChangeFullNamePageState extends State<ChangeFullNamePage> {
 
   void saveChanges() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var response = await AuthProvider()
+    var response = await ProfileProvider()
         .changeFullName(nameController.text, surnameController.text);
 
     if (response['response_status'] == 'ok') {
@@ -259,8 +259,8 @@ class _ChangeFullNamePageState extends State<ChangeFullNamePage> {
       Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

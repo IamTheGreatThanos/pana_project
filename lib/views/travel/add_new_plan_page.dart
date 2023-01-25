@@ -471,7 +471,7 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("Заполните все поля.",
-                                style: const TextStyle(fontSize: 20)),
+                                style: const TextStyle(fontSize: 14)),
                           ));
                         }
                       },
@@ -648,7 +648,7 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -662,7 +662,7 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(response['data']['message'],
-              style: const TextStyle(fontSize: 20)),
+              style: const TextStyle(fontSize: 14)),
         ));
       }
     }

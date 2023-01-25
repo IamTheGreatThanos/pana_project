@@ -32,10 +32,14 @@ class _TravelCardState extends State<TravelCard> {
           borderRadius: const BorderRadius.all(
             Radius.circular(24),
           ),
-          color: widget.travel.bgImage == null
+          color: widget.travel.bgImage == null ||
+                  widget.travel.bgImage ==
+                      'https://hryoutest.in.ua/uploads/images/default.jpg'
               ? Colors.primaries[Random().nextInt(Colors.primaries.length)]
               : null,
-          image: widget.travel.bgImage != null
+          image: widget.travel.bgImage != null &&
+                  widget.travel.bgImage !=
+                      'https://hryoutest.in.ua/uploads/images/default.jpg'
               ? DecorationImage(
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
@@ -218,7 +222,8 @@ class _TravelCardState extends State<TravelCard> {
                               SizedBox(
                                 width: 30,
                                 child: Text(
-                                  widget.travel.usersCount.toString(),
+                                  (1 + (widget.travel.usersCount ?? 0))
+                                      .toString(),
                                   style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/chat_card.dart';
 import 'package:pana_project/models/chat.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/messages_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -132,7 +132,7 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
   void getChats() async {
     listOfChats = [];
 
-    var response = await MainProvider().getListOfChats();
+    var response = await MessagesProvider().getListOfChats();
     if (response['response_status'] == 'ok') {
       List<ChatModel> tempList = [];
       for (int i = 0; i < response['data'].length; i++) {
@@ -144,8 +144,8 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

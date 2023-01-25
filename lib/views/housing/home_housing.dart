@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/housing_card.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/reels.dart';
+import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/PageTransitionRoute.dart';
 import 'package:pana_project/utils/const.dart';
@@ -110,7 +111,7 @@ class _HomeHousingState extends State<HomeHousing>
                 width: MediaQuery.of(context).size.width,
                 child: Column(children: [
                   const SizedBox(
-                    height: 40,
+                    height: 60,
                   ),
                   Row(
                     children: [
@@ -121,7 +122,7 @@ class _HomeHousingState extends State<HomeHousing>
                         },
                         child: Container(
                           height: 50,
-                          width: MediaQuery.of(context).size.width * 0.66,
+                          width: MediaQuery.of(context).size.width * 0.75,
                           decoration: const BoxDecoration(
                             color: AppColors.white,
                             borderRadius: BorderRadius.all(
@@ -423,7 +424,7 @@ class _HomeHousingState extends State<HomeHousing>
 
   void getHousingList() async {
     housingList = [];
-    var response = await MainProvider().getHousingData(selectedCategoryId);
+    var response = await HousingProvider().getHousingData(selectedCategoryId);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         housingList.add(HousingCardModel.fromJson(response['data'][i]));
@@ -434,14 +435,14 @@ class _HomeHousingState extends State<HomeHousing>
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
 
   void searchHousingList(List<dynamic> params) async {
     housingList = [];
-    var response = await MainProvider().getHousingFromSearch(
+    var response = await HousingProvider().getHousingFromSearch(
       params[0],
       params[1],
       params[2],
@@ -461,8 +462,8 @@ class _HomeHousingState extends State<HomeHousing>
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -510,8 +511,8 @@ class _HomeHousingState extends State<HomeHousing>
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

@@ -67,7 +67,7 @@ class ImpressionSessionCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'от \₸${session.openPrice} ',
+                    'от ${session.openPrice} \₸',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,

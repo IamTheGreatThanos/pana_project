@@ -524,7 +524,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             content: Text("Заполните все поля.",
-                                style: TextStyle(fontSize: 20)),
+                                style: TextStyle(fontSize: 14)),
                           ));
                         }
                       },
@@ -579,13 +579,13 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
         print(response['data']['message']);
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Ошибка загрузки...', style: TextStyle(fontSize: 20)),
+          content: Text('Ошибка загрузки...', style: TextStyle(fontSize: 14)),
         ));
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content:
-            Text("Заполните правильную дату.", style: TextStyle(fontSize: 20)),
+            Text("Заполните правильную дату.", style: TextStyle(fontSize: 14)),
       ));
     }
   }

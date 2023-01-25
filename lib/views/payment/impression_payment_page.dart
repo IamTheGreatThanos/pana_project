@@ -9,6 +9,7 @@ import 'package:pana_project/models/impressionDetail.dart';
 import 'package:pana_project/utils/ImpressionData.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
+import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/impression/impression_sessions.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
@@ -29,7 +30,6 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   double sum = 0;
   String dateFrom = '-';
   String dateTo = '-';
-  // int peopleCount = 1;
 
   @override
   void initState() {
@@ -300,7 +300,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                   //         ),
                   //         const Spacer(),
                   //         Text(
-                  //           '\₸${formatNumberString(((widget.roomList[i].basePrice ?? 0) * widget.selectedRooms[i]['count']).toString())}',
+                  //           '${formatNumberString(((widget.roomList[i].basePrice ?? 0) * widget.selectedRooms[i]['count']).toString())} \₸',
                   //           style: const TextStyle(
                   //             fontSize: 16,
                   //             fontWeight: FontWeight.bold,
@@ -321,7 +321,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                       ),
                       const Spacer(),
                       Text(
-                        '\₸${formatNumberString(sum.toString())}',
+                        '${formatNumberString(sum.toString())} \₸',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -482,11 +482,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                           innerColor: AppColors.accent,
                           outerColor: AppColors.white,
                           onSubmit: () {
-                            sendOrder();
-                            Future.delayed(
-                              const Duration(seconds: 1),
-                              () => _key.currentState!.reset(),
-                            ).whenComplete(() => Navigator.of(context).pop());
+                            sendOrder(_key);
                           },
                         );
                       },
@@ -525,7 +521,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
     // }
   }
 
-  void sendOrder() async {
+  void sendOrder(GlobalKey<SlideActionState> _key) async {
     //   var response = await MainProvider().housingPayment(widget.housing.id!,
     //       dateFrom, dateTo, peopleCount, widget.selectedRooms);
     //   if (response['response_status'] == 'ok') {
@@ -533,8 +529,24 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
     //   } else {
     //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     //       content:
-    //           Text(response['message'], style: const TextStyle(fontSize: 20)),
+    //           Text(response['data']['message'], style: const TextStyle(fontSize: 14)),
     //     ));
     //   }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Впечатление успешно забронировано!',
+          style: TextStyle(fontSize: 14),
+        ),
+      ),
+    );
+
+    Future.delayed(
+      const Duration(seconds: 3),
+      () => _key.currentState!.reset(),
+    ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => TabBarPage()),
+        (Route<dynamic> route) => false));
   }
 }

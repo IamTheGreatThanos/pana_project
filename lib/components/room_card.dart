@@ -184,7 +184,7 @@ class _RoomCardState extends State<RoomCard> {
                 Row(
                   children: [
                     Text(
-                      '\₸${formatNumberString(widget.room.basePrice.toString())}',
+                      '${formatNumberString(widget.room.basePrice.toString())} \₸',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,

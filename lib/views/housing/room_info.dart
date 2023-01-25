@@ -99,12 +99,12 @@ class _RoomInfoPageState extends State<RoomInfoPage> {
                           Navigator.of(context).pop();
                         },
                         child: Container(
-                          width: 50,
-                          height: 50,
+                          width: 40,
+                          height: 40,
                           decoration: const BoxDecoration(
                             color: AppColors.white,
                             borderRadius: BorderRadius.all(
-                              Radius.circular(50),
+                              Radius.circular(40),
                             ),
                             boxShadow: [
                               BoxShadow(
@@ -117,7 +117,7 @@ class _RoomInfoPageState extends State<RoomInfoPage> {
                             ],
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(9),
                             child:
                                 SvgPicture.asset('assets/icons/back_arrow.svg'),
                           ),
@@ -144,7 +144,7 @@ class _RoomInfoPageState extends State<RoomInfoPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: Text(
-                          '${widget.room.roomType?.name ?? ''}, king size',
+                          '${widget.room.roomType?.name ?? ''}',
                           style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -218,8 +218,11 @@ class _RoomInfoPageState extends State<RoomInfoPage> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            FacilitiesWidget(
-                                title: widget.room.comforts![k].name ?? ''),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: FacilitiesWidget(
+                                  title: widget.room.comforts![k].name ?? ''),
+                            ),
                             const SizedBox(width: 10),
                           ],
                         ),

@@ -587,7 +587,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
     // } else {
     //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     //     content:
-    //         Text(response['message'], style: const TextStyle(fontSize: 20)),
+    //         Text(response['data']['message'], style: const TextStyle(fontSize: 14)),
     //   ));
     // }
   }

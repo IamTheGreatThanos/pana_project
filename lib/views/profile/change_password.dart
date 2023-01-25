@@ -194,7 +194,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("Заполните все поля.",
-                                      style: const TextStyle(fontSize: 20)),
+                                      style: const TextStyle(fontSize: 14)),
                                 ));
                               }
                             },

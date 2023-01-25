@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pana_project/services/auth_api_provider.dart';
+import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/create_lock_code_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -292,7 +293,7 @@ class _EnterPersonalInformationPageState
                                           .showSnackBar(SnackBar(
                                         content: Text("Заполните все поля.",
                                             style:
-                                                const TextStyle(fontSize: 20)),
+                                                const TextStyle(fontSize: 14)),
                                       ));
                                     }
                                   },
@@ -440,19 +441,19 @@ class _EnterPersonalInformationPageState
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
 
   void uploadAvatar(XFile image) async {
-    var response = await AuthProvider().changeAvatar(image);
+    var response = await ProfileProvider().changeAvatar(image);
     if (response['response_status'] == 'ok') {
       print('Successfully uploaded!');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Ошибка загрузки!', style: const TextStyle(fontSize: 20)),
+        content: Text('Ошибка загрузки!', style: const TextStyle(fontSize: 14)),
       ));
     }
   }

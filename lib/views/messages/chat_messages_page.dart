@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pana_project/components/chat_message_card.dart';
 import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/chatMessage.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/messages_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -266,7 +266,8 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
   }
 
   void getMessages() async {
-    var response = await MainProvider().getChatMessages(widget.chat.user!.id!);
+    var response =
+        await MessagesProvider().getChatMessages(widget.chat.user!.id!);
     if (response['response_status'] == 'ok') {
       List<ChatMessageModel> tempList = [];
       for (int i = 0; i < response['data'].length; i++) {
@@ -283,14 +284,15 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
 
   void getMessagesFromBackground() async {
-    var response = await MainProvider().getChatMessages(widget.chat.user!.id!);
+    var response =
+        await MessagesProvider().getChatMessages(widget.chat.user!.id!);
     if (response['response_status'] == 'ok') {
       List<ChatMessageModel> tempList = [];
       for (int i = 0; i < response['data'].length; i++) {
@@ -302,14 +304,14 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text(response['message'], style: const TextStyle(fontSize: 20)),
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
 
   void sendMessage() async {
-    var response = await MainProvider()
+    var response = await MessagesProvider()
         .sendMessageInChat(messageController.text, widget.chat.user!.id!);
     if (response['response_status'] == 'ok') {
       messageController.text = '';
@@ -317,20 +319,20 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
 
   void readMessages() async {
     var response =
-        await MainProvider().readMessageInChat(widget.chat.user!.id!);
+        await MessagesProvider().readMessageInChat(widget.chat.user!.id!);
     if (response['response_status'] == 'ok') {
       print('Readed');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }
@@ -345,13 +347,13 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
 
   void sendFile(XFile image) async {
     var response =
-        await MainProvider().sendFileInChat(widget.chat.user!.id!, image);
+        await MessagesProvider().sendFileInChat(widget.chat.user!.id!, image);
     if (response['response_status'] == 'ok') {
       getMessages();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 20)),
+            style: const TextStyle(fontSize: 14)),
       ));
     }
   }

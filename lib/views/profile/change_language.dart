@@ -174,7 +174,7 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("Заполните все поля.",
-                                      style: const TextStyle(fontSize: 20)),
+                                      style: const TextStyle(fontSize: 14)),
                                 ));
                               }
                             },

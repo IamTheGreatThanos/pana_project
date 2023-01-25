@@ -121,8 +121,8 @@ class _ImpressionCardState extends State<ImpressionCard> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                          top: 15,
-                          left: MediaQuery.of(context).size.width * 0.9 - 70),
+                          top: 10,
+                          left: MediaQuery.of(context).size.width * 0.9 - 60),
                       child: GestureDetector(
                         onTap: () {
                           tapFavoritesButton();
@@ -185,7 +185,7 @@ class _ImpressionCardState extends State<ImpressionCard> {
             Row(
               children: [
                 Text(
-                  '\₸${formatNumberString(widget.impression.price.toString())}',
+                  '${formatNumberString(widget.impression.price.toString())} \₸',
                   style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
@@ -220,7 +220,7 @@ class _ImpressionCardState extends State<ImpressionCard> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(response['data']['message'],
-              style: const TextStyle(fontSize: 20)),
+              style: const TextStyle(fontSize: 14)),
         ));
       }
     } else {
@@ -235,7 +235,7 @@ class _ImpressionCardState extends State<ImpressionCard> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(response['data']['message'],
-              style: const TextStyle(fontSize: 20)),
+              style: const TextStyle(fontSize: 14)),
         ));
       }
     }

@@ -322,7 +322,7 @@ class _StoriesViewState extends State<StoriesView> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(response['data']['message'],
-                style: const TextStyle(fontSize: 20)),
+                style: const TextStyle(fontSize: 14)),
           ));
         }
       } else {
@@ -337,7 +337,7 @@ class _StoriesViewState extends State<StoriesView> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(response['data']['message'],
-                style: const TextStyle(fontSize: 20)),
+                style: const TextStyle(fontSize: 14)),
           ));
         }
       }
@@ -355,7 +355,7 @@ class _StoriesViewState extends State<StoriesView> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(response['data']['message'],
-                style: const TextStyle(fontSize: 20)),
+                style: const TextStyle(fontSize: 14)),
           ));
         }
       } else {
@@ -370,7 +370,7 @@ class _StoriesViewState extends State<StoriesView> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(response['data']['message'],
-                style: const TextStyle(fontSize: 20)),
+                style: const TextStyle(fontSize: 14)),
           ));
         }
       }

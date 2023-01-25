@@ -90,18 +90,18 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Column(
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Выбрать номер',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             Text(
-                              'Pana Boutiq Hotel',
-                              style: TextStyle(
+                              widget.housing.name ?? '',
+                              style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black45,
@@ -111,7 +111,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                         ),
                       ),
                       const Spacer(),
-                      SizedBox(width: 50)
+                      const SizedBox(width: 50)
                     ],
                   ),
                 ),

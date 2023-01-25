@@ -244,28 +244,13 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                             ),
                           ),
                           const SizedBox(height: 5),
-                          StreamBuilder(
-                            stream: widget.impressionData.dataStream,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Text(
-                                  '${snapshot.data} персоны',
-                                  style: const TextStyle(
-                                    color: AppColors.accent,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                );
-                              } else {
-                                return const Text(
-                                  '1 персоны',
-                                  style: TextStyle(
-                                    color: AppColors.accent,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
+                          Text(
+                            '${widget.impressionData.peopleCount} персоны',
+                            style: const TextStyle(
+                              color: AppColors.accent,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
                         ],
                       ),
                       const Spacer(),
@@ -517,7 +502,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   }
 
   void showPeopleCountModalSheet() async {
-    showModalBottomSheet<void>(
+    await showModalBottomSheet<void>(
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -529,6 +514,8 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
         return ImpressionPeopleCountBottomSheet(widget.impressionData);
       },
     );
+
+    setState(() {});
   }
 
   void calcSum() {

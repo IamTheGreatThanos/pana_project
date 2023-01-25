@@ -248,29 +248,13 @@ class _PaymentPageState extends State<PaymentPage> {
                             ),
                           ),
                           const SizedBox(height: 5),
-                          StreamBuilder(
-                            stream: sharedHousingPaymentData.dataStream,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Text(
-                                  '${sharedHousingPaymentData.peopleCount} человека',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black45,
-                                  ),
-                                );
-                              } else {
-                                return const Text(
-                                  '1 человека',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black45,
-                                  ),
-                                );
-                              }
-                            },
+                          Text(
+                            '${sharedHousingPaymentData.peopleCount} человека',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black45,
+                            ),
                           ),
                         ],
                       ),
@@ -547,7 +531,7 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void showPeopleCountModalSheet() async {
-    showModalBottomSheet<void>(
+    await showModalBottomSheet<void>(
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -559,32 +543,27 @@ class _PaymentPageState extends State<PaymentPage> {
         return HousingPaymentBottomSheet();
       },
     );
+
+    setState(() {});
   }
 }
 
 class HousingPaymentData {
   int peopleCount = 1;
 
-  final _dataController = StreamController<int>();
-  Stream<int> get dataStream => _dataController.stream;
-
   void minusFunction() {
     if (peopleCount > 1) {
       peopleCount -= 1;
-      _dataController.sink.add(peopleCount);
     }
   }
 
   void plusFunction() {
     if (peopleCount < 99) {
       peopleCount += 1;
-      _dataController.sink.add(peopleCount);
     }
   }
 
-  void dispose() {
-    _dataController.close();
-  }
+  void dispose() {}
 }
 
 HousingPaymentData sharedHousingPaymentData = HousingPaymentData();

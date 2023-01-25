@@ -45,7 +45,6 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
 
   @override
   void dispose() {
-    impressionData.dispose();
     super.dispose();
   }
 
@@ -188,28 +187,36 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
                                   horizontal: 8, vertical: 5),
                               child: Row(
                                 children: [
-                                  StreamBuilder(
-                                    stream: impressionData.dataStream,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        return Text(
-                                          '${snapshot.data} персоны',
-                                          style: const TextStyle(
-                                            color: AppColors.accent,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        );
-                                      } else {
-                                        return const Text(
-                                          '1 персоны',
-                                          style: TextStyle(
-                                            color: AppColors.accent,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        );
-                                      }
-                                    },
+                                  Text(
+                                    '${impressionData.peopleCount} персоны',
+                                    style: const TextStyle(
+                                      color: AppColors.accent,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
+                                  // StreamBuilder(
+                                  //   stream: impressionData.dataStream
+                                  //       .asBroadcastStream(),
+                                  //   builder: (context, snapshot) {
+                                  //     if (snapshot.hasData) {
+                                  //       return Text(
+                                  //         '${snapshot.data} персоны',
+                                  //         style: const TextStyle(
+                                  //           color: AppColors.accent,
+                                  //           fontWeight: FontWeight.w500,
+                                  //         ),
+                                  //       );
+                                  //     } else {
+                                  //       return const Text(
+                                  //         '1 персоны',
+                                  //         style: TextStyle(
+                                  //           color: AppColors.accent,
+                                  //           fontWeight: FontWeight.w500,
+                                  //         ),
+                                  //       );
+                                  //     }
+                                  //   },
+                                  // ),
                                 ],
                               ),
                             ),
@@ -372,7 +379,7 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
   }
 
   void showPeopleCountModalSheet() async {
-    showModalBottomSheet<void>(
+    await showModalBottomSheet<void>(
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -384,6 +391,8 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
         return ImpressionPeopleCountBottomSheet(impressionData);
       },
     );
+
+    setState(() {});
   }
 
   void getSessions() async {

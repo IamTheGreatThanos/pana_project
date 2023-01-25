@@ -32,6 +32,7 @@ class TravelUserCard extends StatelessWidget {
                     height: 44,
                     child: CachedNetworkImage(
                       imageUrl: user.avatar ?? '',
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),

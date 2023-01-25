@@ -156,6 +156,7 @@ class _RoomCardState extends State<RoomCard> {
                   height: 8,
                 ),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(right: 5),
@@ -164,12 +165,16 @@ class _RoomCardState extends State<RoomCard> {
                           height: 24,
                           child: SvgPicture.asset('assets/icons/bed_icon.svg')),
                     ),
-                    Text(
-                      widget.room.description ?? '',
-                      style: const TextStyle(
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.75,
+                      child: Text(
+                        widget.room.description ?? '',
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
-                          color: Colors.black45),
+                          color: Colors.black45,
+                        ),
+                      ),
                     ),
                   ],
                 ),

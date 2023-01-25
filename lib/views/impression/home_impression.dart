@@ -283,7 +283,7 @@ class _HomeImpressionState extends State<HomeImpression>
                                   width: 85,
                                   height: 150,
                                   decoration: const BoxDecoration(
-                                    color: AppColors.white,
+                                    color: AppColors.lightGray,
                                   ),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,

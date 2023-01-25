@@ -61,6 +61,7 @@ class _TravelCardState extends State<TravelCard> {
                       imageUrl: widget.travel.user!.avatar ?? '',
                       height: 24,
                       width: 24,
+                      fit: BoxFit.cover,
                     ),
                   ),
                   const SizedBox(width: 10),

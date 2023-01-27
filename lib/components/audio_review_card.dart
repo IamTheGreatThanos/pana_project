@@ -53,141 +53,135 @@ class _AudioReviewCardState extends State<AudioReviewCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AudioReviewDetailPage(widget.review)));
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius:
-                  BorderRadius.circular(AppConstants.cardBorderRadius),
-              color: AppColors.white),
-          height: 220,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(12)),
-                      child: SizedBox(
-                        width: 64,
-                        height: 64,
-                        child: CachedNetworkImage(
-                          imageUrl: widget.review.user?.avatar ?? '',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          child: Text(
-                            '${widget.review.user?.name ?? ''} ${widget.review.user?.surname ?? ''}',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          child: Text(
-                            'Опубликовано: ${widget.review.createdAt ?? ''}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black45,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Divider(),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        playAudioReview();
-                      },
-                      child: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: !playingState
-                            ? SvgPicture.asset('assets/icons/play_audio.svg')
-                            : SvgPicture.asset('assets/icons/pause_audio.svg'),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.65,
-                        height: 12,
-                        child: TweenAnimationBuilder<double>(
-                          duration: const Duration(seconds: 1),
-                          curve: Curves.easeInOut,
-                          tween: Tween<double>(
-                            begin: 0,
-                            end: position.inSeconds.toDouble() /
-                                duration.inSeconds.toDouble(),
-                          ),
-                          builder: (context, value, _) =>
-                              LinearProgressIndicator(
-                            value: position.inSeconds.toDouble() /
-                                duration.inSeconds.toDouble(),
-                            color: AppColors.blackWithOpacity,
-                            backgroundColor: AppColors.lightGray,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AudioReviewDetailPage(widget.review)));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
+            color: AppColors.white),
+        height: 200,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+              child: Row(
                 children: [
-                  const SizedBox(width: 20),
-                  Text(
-                    '00:${position.inSeconds > 9 ? position.inSeconds.toString() : '0' + position.inSeconds.toString()}',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    child: SizedBox(
+                      width: 64,
+                      height: 64,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.review.user?.avatar ?? '',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                  Text(
-                    ' / 00:${duration.inSeconds > 9 ? duration.inSeconds.toString() : '0' + duration.inSeconds.toString()}',
-                    style: const TextStyle(
-                      color: Colors.black54,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.55,
+                        child: Text(
+                          '${widget.review.user?.name ?? ''} ${widget.review.user?.surname ?? ''}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.55,
+                        child: Text(
+                          'Опубликовано: ${widget.review.createdAt ?? ''}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black45,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Divider(),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      playAudioReview();
+                    },
+                    child: SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: !playingState
+                          ? SvgPicture.asset('assets/icons/play_audio.svg')
+                          : SvgPicture.asset('assets/icons/pause_audio.svg'),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.65,
+                      height: 12,
+                      child: TweenAnimationBuilder<double>(
+                        duration: const Duration(seconds: 1),
+                        curve: Curves.easeInOut,
+                        tween: Tween<double>(
+                          begin: 0,
+                          end: position.inSeconds.toDouble() /
+                              duration.inSeconds.toDouble(),
+                        ),
+                        builder: (context, value, _) => LinearProgressIndicator(
+                          value: position.inSeconds.toDouble() /
+                              duration.inSeconds.toDouble(),
+                          color: AppColors.blackWithOpacity,
+                          backgroundColor: AppColors.lightGray,
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+            Row(
+              children: [
+                const SizedBox(width: 20),
+                Text(
+                  '00:${position.inSeconds > 9 ? position.inSeconds.toString() : '0' + position.inSeconds.toString()}',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  ' / 00:${duration.inSeconds > 9 ? duration.inSeconds.toString() : '0' + duration.inSeconds.toString()}',
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

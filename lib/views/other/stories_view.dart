@@ -7,6 +7,7 @@ import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/globalVariables.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StoriesView extends StatefulWidget {
   StoriesView(this.reels, this.index);
@@ -237,8 +238,14 @@ class _StoriesViewState extends State<StoriesView> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     GestureDetector(
-                                      onTap: () {
-                                        tapFavoritesButton(i);
+                                      onTap: () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        if (prefs.getBool('isLogedIn') ??
+                                            false) {
+                                          tapFavoritesButton(i);
+                                        }
                                       },
                                       child: SizedBox(
                                         width: 32,

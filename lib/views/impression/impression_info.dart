@@ -112,7 +112,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                       Stack(
                         children: [
                           SizedBox(
-                            height: 300,
+                            height: 385,
                             width: MediaQuery.of(context).size.width,
                             child: StoryView(
                               storyItems: widget.thisStoryItems,

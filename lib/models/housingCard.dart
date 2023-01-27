@@ -1,3 +1,4 @@
+import 'package:pana_project/models/category.dart';
 import 'package:pana_project/models/city.dart';
 import 'package:pana_project/models/country.dart';
 import 'package:pana_project/models/images.dart';
@@ -17,6 +18,7 @@ class HousingCardModel {
   int? distance;
   User? user;
   int? basePriceMin;
+  Category? category;
 
   HousingCardModel({
     this.id,
@@ -31,6 +33,7 @@ class HousingCardModel {
     this.distance,
     this.user,
     this.basePriceMin,
+    this.category,
   });
 
   HousingCardModel.fromJson(Map<String, dynamic> json) {
@@ -57,6 +60,8 @@ class HousingCardModel {
     distance = json['distance'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     basePriceMin = json['base_price_min'];
+    category =
+        json['category'] != null ? Category.fromJson(json['category']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -80,6 +85,9 @@ class HousingCardModel {
       data['user'] = user!.toJson();
     }
     data['base_price_min'] = basePriceMin;
+    if (category != null) {
+      data['category'] = category!.toJson();
+    }
     return data;
   }
 }

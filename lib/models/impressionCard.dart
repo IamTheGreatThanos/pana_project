@@ -1,6 +1,7 @@
 import 'package:pana_project/models/city.dart';
 import 'package:pana_project/models/country.dart';
 import 'package:pana_project/models/images.dart';
+import 'package:pana_project/models/topic.dart';
 import 'package:pana_project/models/user.dart';
 import 'package:pana_project/models/videos.dart';
 
@@ -17,6 +18,7 @@ class ImpressionCardModel {
   bool? inFavorite;
   int? reviewsAvgBall;
   int? reviewsCount;
+  List<Topic>? topic;
 
   ImpressionCardModel({
     this.id,
@@ -31,6 +33,7 @@ class ImpressionCardModel {
     this.inFavorite,
     this.reviewsAvgBall,
     this.reviewsCount,
+    this.topic,
   });
 
   ImpressionCardModel.fromJson(Map<String, dynamic> json) {
@@ -57,6 +60,12 @@ class ImpressionCardModel {
     inFavorite = json['in_favorite'];
     reviewsAvgBall = json['reviews_avg_ball'];
     reviewsCount = json['reviews_count'];
+    if (json['topics'] != null) {
+      topic = <Topic>[];
+      json['topics'].forEach((v) {
+        topic!.add(new Topic.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +92,10 @@ class ImpressionCardModel {
     data['in_favorite'] = inFavorite;
     data['reviews_avg_ball'] = reviewsAvgBall;
     data['reviews_count'] = reviewsCount;
+    if (this.topic != null) {
+      data['topics'] = this.topic!.map((v) => v.toJson()).toList();
+    }
+
     return data;
   }
 }

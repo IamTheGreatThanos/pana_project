@@ -261,4 +261,58 @@ class MainProvider {
       return result;
     }
   }
+
+  Future<dynamic> uploadReels(
+    String type,
+    int id,
+    int cityId,
+    int categoryId,
+    XFile video,
+    File thumbnail,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    var uri = Uri.parse('${API_URL}api/mobile/reel');
+    var request = http.MultipartRequest("POST", uri);
+    request.headers['Authorization'] = "Bearer $token";
+    request.headers['Accept'] = "application/json";
+
+    if (type == 'housing') {
+      request.fields['housing_id'] = id.toString();
+    } else {
+      request.fields['impression_id'] = id.toString();
+    }
+    request.fields['city_id'] = cityId.toString();
+    request.fields['category_id'] = categoryId.toString();
+
+    var streamThumbnail =
+        http.ByteStream(DelegatingStream.typed(thumbnail.openRead()));
+    var lengthThumbnail = await thumbnail.length();
+    var multipartFileThumbnail = http.MultipartFile(
+        'thumbnail', streamThumbnail, lengthThumbnail,
+        filename: basename(thumbnail.path));
+    request.files.add(multipartFileThumbnail);
+
+    var stream = http.ByteStream(DelegatingStream.typed(video.openRead()));
+    var length = await video.length();
+    var multipartFile = http.MultipartFile('video', stream, length,
+        filename: basename(video.path));
+    request.files.add(multipartFile);
+
+    var response = await request.send();
+    final responseString = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(responseString);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(responseString);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
 }

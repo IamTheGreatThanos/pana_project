@@ -120,7 +120,8 @@ class _SelectReelsHousingPageState extends State<SelectReelsBookedObjectPage> {
                                                     ReelsVideoSelectionPage(
                                                         widget.type,
                                                         housingList[i],
-                                                        ImpressionCardModel()),
+                                                        ImpressionCardModel(),
+                                                        true),
                                               ),
                                             );
                                           },
@@ -139,7 +140,8 @@ class _SelectReelsHousingPageState extends State<SelectReelsBookedObjectPage> {
                                                     ReelsVideoSelectionPage(
                                                         widget.type,
                                                         HousingCardModel(),
-                                                        impressionList[i]),
+                                                        impressionList[i],
+                                                        true),
                                               ),
                                             );
                                           },

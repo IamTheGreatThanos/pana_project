@@ -3,11 +3,15 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/impressionCard.dart';
+import 'package:pana_project/models/reels.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
+import 'package:pana_project/views/other/reels_video_selection_page.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
 import 'package:pana_project/views/travel/send_audio_review.dart';
 import 'package:pana_project/views/travel/send_text_review.dart';
@@ -24,8 +28,11 @@ class MyBookedObjectDetailPage extends StatefulWidget {
 }
 
 class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
+  List<Reels> reels = [];
+
   @override
   void initState() {
+    getReels();
     super.initState();
   }
 
@@ -211,8 +218,13 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    // widget.housing.dateStart?.substring(0, 10) ??
-                                    '-',
+                                    widget.type == 2
+                                        ? widget.housing.dateFrom
+                                        ?.substring(0, 10) ??
+                                        '-'
+                                        : widget.impression.dateFrom
+                                        ?.substring(0, 10) ??
+                                        '-',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -245,8 +257,13 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    // widget.dateEnd?.substring(0, 10) ??
-                                    '-',
+                                    widget.type == 2
+                                        ? widget.housing.dateTo
+                                                ?.substring(0, 10) ??
+                                            '-'
+                                        : widget.impression.dateTo
+                                                ?.substring(0, 10) ??
+                                            '-',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -376,37 +393,63 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: <Widget>[
-                              DottedBorder(
-                                color: AppColors.accent,
-                                strokeWidth: 1,
-                                dashPattern: const [6, 2],
-                                strokeCap: StrokeCap.round,
-                                borderType: BorderType.RRect,
-                                radius: const Radius.circular(8),
-                                child: Container(
-                                  width: 85,
-                                  height: 150,
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.white,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Icon(Icons.add, color: AppColors.accent),
-                                      Text(
-                                        'Добавить',
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
+                              GestureDetector(
+                                onTap: () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ReelsVideoSelectionPage(
+                                              widget.type == 2
+                                                  ? 'housing'
+                                                  : 'impression',
+                                              widget.type == 2
+                                                  ? widget.housing
+                                                  : HousingCardModel(),
+                                              widget.type == 2
+                                                  ? ImpressionCardModel()
+                                                  : widget.impression,
+                                              false),
+                                    ),
+                                  );
+
+                                  getReels();
+                                },
+                                child: DottedBorder(
+                                  color: AppColors.accent,
+                                  strokeWidth: 1,
+                                  dashPattern: const [6, 2],
+                                  strokeCap: StrokeCap.round,
+                                  borderType: BorderType.RRect,
+                                  radius: const Radius.circular(8),
+                                  child: Container(
+                                    width: 85,
+                                    height: 150,
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.white,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Icon(Icons.add,
                                             color: AppColors.accent),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
+                                        Text(
+                                          'Добавить',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.accent),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                               const SizedBox(width: 5),
-                              // for (int i = 0; i < 6; i++) StoriesCard(i),
+                              for (int i = 0; i < reels.length; i++)
+                                StoriesCard(reels, i),
                             ],
                           ),
                         ),
@@ -588,5 +631,23 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
     //         Text(response['data']['message'], style: const TextStyle(fontSize: 14)),
     //   ));
     // }
+  }
+
+  void getReels() async {
+    reels = [];
+    var response = await MainProvider().getReels('housing');
+    if (response['response_status'] == 'ok') {
+      for (int i = 0; i < response['data'].length; i++) {
+        reels.add(Reels.fromJson(response['data'][i]));
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
+    }
   }
 }

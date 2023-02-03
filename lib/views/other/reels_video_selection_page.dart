@@ -14,10 +14,12 @@ import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class ReelsVideoSelectionPage extends StatefulWidget {
-  ReelsVideoSelectionPage(this.type, this.housing, this.impression);
+  ReelsVideoSelectionPage(
+      this.type, this.housing, this.impression, this.fromHomePage);
   final String type;
   final HousingCardModel housing;
   final ImpressionCardModel impression;
+  final bool fromHomePage;
 
   @override
   _ReelsVideoSelectionPageState createState() =>
@@ -428,11 +430,15 @@ class _ReelsVideoSelectionPageState extends State<ReelsVideoSelectionPage> {
             style: const TextStyle(fontSize: 14)),
       ));
 
-      Future.delayed(
-        const Duration(seconds: 3),
-      ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => TabBarPage()),
-          (Route<dynamic> route) => false));
+      if (widget.fromHomePage) {
+        Future.delayed(
+          const Duration(seconds: 3),
+        ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => TabBarPage()),
+            (Route<dynamic> route) => false));
+      } else {
+        Navigator.pop(context);
+      }
     } else {
       setState(() {
         isLoadingStarts = false;

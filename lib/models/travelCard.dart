@@ -10,17 +10,20 @@ class TravelCardModel {
   String? bgImage;
   String? dateEnd;
   String? dateStart;
+  int? colorNumber;
 
-  TravelCardModel(
-      {this.id,
-      this.name,
-      this.status,
-      this.user,
-      this.usersCount,
-      this.routeCount,
-      this.bgImage,
-      this.dateEnd,
-      this.dateStart});
+  TravelCardModel({
+    this.id,
+    this.name,
+    this.status,
+    this.user,
+    this.usersCount,
+    this.routeCount,
+    this.bgImage,
+    this.dateEnd,
+    this.dateStart,
+    this.colorNumber,
+  });
 
   TravelCardModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -32,21 +35,23 @@ class TravelCardModel {
     bgImage = json['bg_image'];
     dateEnd = json['date_end'];
     dateStart = json['date_start'];
+    colorNumber = json['color_number'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['status'] = this.status;
-    if (this.user != null) {
-      data['user'] = this.user!.toJson();
+    data['id'] = id;
+    data['name'] = name;
+    data['status'] = status;
+    if (user != null) {
+      data['user'] = user!.toJson();
     }
-    data['users_count'] = this.usersCount;
-    data['route_count'] = this.routeCount;
-    data['bg_image'] = this.bgImage;
-    data['date_end'] = this.dateEnd;
-    data['date_start'] = this.dateStart;
+    data['users_count'] = usersCount;
+    data['route_count'] = routeCount;
+    data['bg_image'] = bgImage;
+    data['date_end'] = dateEnd;
+    data['date_start'] = dateStart;
+    data['color_number'] = colorNumber;
     return data;
   }
 }

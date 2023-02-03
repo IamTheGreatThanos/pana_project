@@ -28,6 +28,8 @@ class _HomeTravelState extends State<HomeTravel> {
 
   List<TravelCardModel> travelList = [];
 
+  bool loading = true;
+
   @override
   void initState() {
     checkIsLogedIn();
@@ -50,184 +52,194 @@ class _HomeTravelState extends State<HomeTravel> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: travelList.isNotEmpty
-            ? SingleChildScrollView(
+        body: loading
+            ? const Center(
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 30),
-                      Row(
-                        children: [
-                          const SizedBox(width: 40),
-                          const Spacer(),
-                          const Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Text(
-                              'Мои поездки',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              showNewPlanOfTravelModalSheet();
-                            },
-                            child: const SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: Icon(
-                                Icons.add,
-                                size: 26,
-                                color: AppColors.accent,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      Container(
-                        color: AppColors.lightGray,
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        child: RefreshIndicator(
-                          onRefresh: _pullRefresh,
-                          child: ListView(
-                            children: [
-                              // Padding(
-                              //   padding: const EdgeInsets.all(20),
-                              //   child: Container(
-                              //     decoration: BoxDecoration(
-                              //       border: Border.all(
-                              //         color: AppColors.grey,
-                              //         width: 1,
-                              //       ),
-                              //       borderRadius: const BorderRadius.all(
-                              //         Radius.circular(100),
-                              //       ),
-                              //     ),
-                              //     child: const Padding(
-                              //       padding: EdgeInsets.symmetric(
-                              //           horizontal: 15, vertical: 7),
-                              //       child: Text(
-                              //         'Июль 2022',
-                              //         style: TextStyle(
-                              //           fontSize: 12,
-                              //           color: Colors.black45,
-                              //           fontWeight: FontWeight.bold,
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-                              for (int i = 0; i < travelList.length; i++)
-                                GestureDetector(
-                                    onTap: () {
-                                      goToTravelPlan(travelList[i]);
-                                    },
-                                    child: TravelCard(travelList[i])),
-                              const SizedBox(height: 150),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  width: 80,
+                  height: 80,
+                  child: CircularProgressIndicator(
+                    color: AppColors.grey,
                   ),
                 ),
               )
-            : SingleChildScrollView(
-                child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 80,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        const Spacer(),
-                        SizedBox(
-                          width: 120,
-                          height: 120,
-                          child: SvgPicture.asset(
-                              'assets/images/placeholder_image.svg'),
-                        ),
-                        const Spacer(),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: const Text(
-                            'У вас пока нет запланированных поездок',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: SizedBox(
-                            height: 60,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                primary: AppColors.accent,
-                                minimumSize: const Size.fromHeight(50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(10), // <-- Radius
+            : travelList.isNotEmpty
+                ? SingleChildScrollView(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 30),
+                          Row(
+                            children: [
+                              const SizedBox(width: 40),
+                              const Spacer(),
+                              const Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  'Мои поездки',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  widget.onButtonPressed();
-                                });
-                              },
-                              child: const Text("Перейти к поиску жилья",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500)),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: SizedBox(
-                            height: 60,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                primary: AppColors.white,
-                                minimumSize: const Size.fromHeight(50),
-                                shape: RoundedRectangleBorder(
-                                  side: const BorderSide(
-                                      width: 2, color: AppColors.grey),
-                                  borderRadius: BorderRadius.circular(10),
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  showNewPlanOfTravelModalSheet();
+                                },
+                                child: const SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: Icon(
+                                    Icons.add,
+                                    size: 26,
+                                    color: AppColors.accent,
+                                  ),
                                 ),
                               ),
-                              onPressed: () {
-                                showNewPlanOfTravelModalSheet();
-                              },
-                              child: const Text("Создать план",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500)),
+                              const SizedBox(width: 10),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Container(
+                            color: AppColors.lightGray,
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            child: RefreshIndicator(
+                              onRefresh: _pullRefresh,
+                              child: ListView(
+                                children: [
+                                  // Padding(
+                                  //   padding: const EdgeInsets.all(20),
+                                  //   child: Container(
+                                  //     decoration: BoxDecoration(
+                                  //       border: Border.all(
+                                  //         color: AppColors.grey,
+                                  //         width: 1,
+                                  //       ),
+                                  //       borderRadius: const BorderRadius.all(
+                                  //         Radius.circular(100),
+                                  //       ),
+                                  //     ),
+                                  //     child: const Padding(
+                                  //       padding: EdgeInsets.symmetric(
+                                  //           horizontal: 15, vertical: 7),
+                                  //       child: Text(
+                                  //         'Июль 2022',
+                                  //         style: TextStyle(
+                                  //           fontSize: 12,
+                                  //           color: Colors.black45,
+                                  //           fontWeight: FontWeight.bold,
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  for (int i = 0; i < travelList.length; i++)
+                                    GestureDetector(
+                                        onTap: () {
+                                          goToTravelPlan(travelList[i]);
+                                        },
+                                        child: TravelCard(travelList[i])),
+                                  const SizedBox(height: 150),
+                                ],
+                              ),
                             ),
                           ),
-                        )
-                      ],
-                    )),
-              ),
+                        ],
+                      ),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height - 80,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            const Spacer(),
+                            SizedBox(
+                              width: 120,
+                              height: 120,
+                              child: SvgPicture.asset(
+                                  'assets/images/placeholder_image.svg'),
+                            ),
+                            const Spacer(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'У вас пока нет запланированных поездок',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              child: SizedBox(
+                                height: 60,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    primary: AppColors.accent,
+                                    minimumSize: const Size.fromHeight(50),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          10), // <-- Radius
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      widget.onButtonPressed();
+                                    });
+                                  },
+                                  child: const Text("Перейти к поиску жилья",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              child: SizedBox(
+                                height: 60,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    primary: AppColors.white,
+                                    minimumSize: const Size.fromHeight(50),
+                                    shape: RoundedRectangleBorder(
+                                      side: const BorderSide(
+                                          width: 2, color: AppColors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    showNewPlanOfTravelModalSheet();
+                                  },
+                                  child: const Text("Создать план",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              ),
+                            )
+                          ],
+                        )),
+                  ),
       ),
     );
   }
@@ -473,7 +485,9 @@ class _HomeTravelState extends State<HomeTravel> {
         travelList.add(TravelCardModel.fromJson(response['data'][i]));
       }
       if (mounted) {
-        setState(() {});
+        setState(() {
+          loading = false;
+        });
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

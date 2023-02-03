@@ -184,14 +184,14 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
       // TODO: Действие при авторизации пользователя...
       print(response);
       if (response['response_status'] == 'ok') {
-        prefs.setString("token", response['access_token']);
-        prefs.setInt("user_id", response['user']['id']);
-        prefs.setString("user_name", response['user']['name']);
-        prefs.setString("user_surname", response['user']['surname']);
-        prefs.setString("user_email", response['user']['email']);
-        prefs.setString("user_phone", response['user']['phone']);
-        prefs.setInt("user_phone_code", response['user']['phone_code']);
-        prefs.setString("user_avatar", response['user']['avatar']);
+        prefs.setString("token", response['data']['access_token']);
+        prefs.setInt("user_id", response['data']['user']['id']);
+        prefs.setString("user_name", response['data']['user']['name']);
+        prefs.setString("user_surname", response['data']['user']['surname']);
+        prefs.setString("user_email", response['data']['user']['email']);
+        prefs.setString("user_phone", response['data']['user']['phone']);
+        prefs.setInt("user_phone_code", response['data']['user']['phone_code']);
+        prefs.setString("user_avatar", response['data']['user']['avatar']);
         prefs.setBool('isLogedIn', true);
 
         Navigator.of(context).pushAndRemoveUntil(
@@ -210,15 +210,16 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
           await AuthProvider().registerVerify(pinCodeController.text);
       // TODO: Действие при авторизации пользователя...
       if (response['response_status'] == 'ok') {
-        prefs.setString("token", response['access_token']);
-        prefs.setInt("user_id", response['user']['id']);
-        prefs.setString("user_name", response['user']['name']);
-        prefs.setString("user_surname", response['user']['surname']);
-        prefs.setString("user_email", response['user']['email']);
-        prefs.setString("user_phone", response['user']['phone']);
-        prefs.setString("user_phone_code", response['user']['phone_code']);
-        if (response['user']['avatar'] != null) {
-          prefs.setString("user_avatar", response['user']['avatar']);
+        prefs.setString("token", response['data']['access_token']);
+        prefs.setInt("user_id", response['data']['user']['id']);
+        prefs.setString("user_name", response['data']['user']['name']);
+        prefs.setString("user_surname", response['data']['user']['surname']);
+        prefs.setString("user_email", response['data']['user']['email']);
+        prefs.setString("user_phone", response['data']['user']['phone']);
+        prefs.setString(
+            "user_phone_code", response['data']['user']['phone_code']);
+        if (response['data']['user']['avatar'] != null) {
+          prefs.setString("user_avatar", response['data']['user']['avatar']);
         }
 
         prefs.setBool('isLogedIn', true);

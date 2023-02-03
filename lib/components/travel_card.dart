@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -17,6 +16,8 @@ class TravelCard extends StatefulWidget {
 class _TravelCardState extends State<TravelCard> {
   @override
   void initState() {
+    print(Colors.primaries.length);
+    print(widget.travel.colorNumber);
     super.initState();
   }
 
@@ -35,7 +36,7 @@ class _TravelCardState extends State<TravelCard> {
           color: widget.travel.bgImage == null ||
                   widget.travel.bgImage ==
                       'https://hryoutest.in.ua/uploads/images/default.jpg'
-              ? Colors.primaries[Random().nextInt(Colors.primaries.length)]
+              ? Colors.primaries[(widget.travel.colorNumber ?? 1) - 1]
               : null,
           image: widget.travel.bgImage != null &&
                   widget.travel.bgImage !=

@@ -1,6 +1,6 @@
 import 'package:pana_project/models/city.dart';
-import 'package:pana_project/models/housingDetail.dart';
-import 'package:pana_project/models/impressionDetail.dart';
+import 'package:pana_project/models/housingCard.dart';
+import 'package:pana_project/models/impressionCard.dart';
 
 class TravelPlanModel {
   int? id;
@@ -9,8 +9,8 @@ class TravelPlanModel {
   String? name;
   int? tripId;
   City? city;
-  HousingDetailModel? housing;
-  ImpressionDetailModel? impression;
+  HousingCardModel? housing;
+  ImpressionCardModel? impression;
   int? private;
   String? dateStart;
   String? dateEnd;
@@ -41,10 +41,10 @@ class TravelPlanModel {
     tripId = json['trip_id'];
     city = json['city'] != null ? City.fromJson(json['city']) : null;
     housing = json['housing'] != null
-        ? HousingDetailModel.fromJson(json['housing'])
+        ? HousingCardModel.fromJson(json['housing'])
         : null;
     impression = json['impression'] != null
-        ? ImpressionDetailModel.fromJson(json['impression'])
+        ? ImpressionCardModel.fromJson(json['impression'])
         : null;
     private = json['private'];
     dateStart = json['date_start'];

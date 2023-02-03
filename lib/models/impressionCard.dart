@@ -19,6 +19,8 @@ class ImpressionCardModel {
   int? reviewsAvgBall;
   int? reviewsCount;
   List<Topic>? topic;
+  String? dateFrom;
+  String? dateTo;
 
   ImpressionCardModel({
     this.id,
@@ -34,6 +36,8 @@ class ImpressionCardModel {
     this.reviewsAvgBall,
     this.reviewsCount,
     this.topic,
+    this.dateFrom,
+    this.dateTo,
   });
 
   ImpressionCardModel.fromJson(Map<String, dynamic> json) {
@@ -66,6 +70,8 @@ class ImpressionCardModel {
         topic!.add(new Topic.fromJson(v));
       });
     }
+    dateFrom = json['date_from'];
+    dateTo = json['date_to'];
   }
 
   Map<String, dynamic> toJson() {
@@ -95,6 +101,8 @@ class ImpressionCardModel {
     if (this.topic != null) {
       data['topics'] = this.topic!.map((v) => v.toJson()).toList();
     }
+    data['date_from'] = dateFrom;
+    data['date_to'] = dateTo;
 
     return data;
   }

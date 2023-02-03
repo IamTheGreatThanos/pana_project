@@ -218,6 +218,7 @@ class _AuthPageState extends State<AuthPage> {
                         child: TextField(
                           controller: nameController,
                           textCapitalization: TextCapitalization.words,
+                          textInputAction: TextInputAction.done,
                           maxLength: 30,
                           decoration: const InputDecoration(
                             counterStyle: TextStyle(
@@ -254,6 +255,7 @@ class _AuthPageState extends State<AuthPage> {
                         child: TextField(
                           controller: lastNameController,
                           textCapitalization: TextCapitalization.words,
+                          textInputAction: TextInputAction.done,
                           maxLength: 30,
                           decoration: const InputDecoration(
                             counterStyle: TextStyle(
@@ -290,6 +292,7 @@ class _AuthPageState extends State<AuthPage> {
                         child: TextField(
                           controller: emailController,
                           maxLength: 50,
+                          textInputAction: TextInputAction.done,
                           decoration: const InputDecoration(
                             counterStyle: TextStyle(
                               height: double.minPositive,

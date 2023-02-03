@@ -22,6 +22,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
   List<HousingCardModel> housingList = [];
   List<ImpressionCardModel> impressionList = [];
 
+  bool loadingHousing = true;
+  bool loadingImpression = true;
+
   @override
   void initState() {
     getHousingList();
@@ -127,244 +130,273 @@ class _FavoritesPageState extends State<FavoritesPage> {
                           child: TabBarView(
                             children: [
                               // TODO: Жилье
-                              housingList.isNotEmpty
-                                  ? ListView(
-                                      children: [
-                                        for (int i = 0;
-                                            i < housingList.length;
-                                            i++)
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 20),
-                                            child: GestureDetector(
-                                              onTap: () async {
-                                                StoryController
-                                                    _storyController =
-                                                    StoryController();
-                                                List<StoryItem?>
-                                                    thisStoryItems = [];
-                                                List<StoryItem?>
-                                                    mediaStoryItems = [];
-
-                                                // for (int j = 0;
-                                                //     j <
-                                                //         housingList[i]
-                                                //             .videos!
-                                                //             .length;
-                                                //     j++) {
-                                                //   thisStoryItems.add(
-                                                //     StoryItem.pageVideo(
-                                                //       housingList[i]
-                                                //           .videos![j]
-                                                //           .path!,
-                                                //       controller:
-                                                //           _storyController,
-                                                //       imageFit: BoxFit.cover,
-                                                //     ),
-                                                //   );
-                                                //
-                                                //   mediaStoryItems.add(
-                                                //     StoryItem.pageVideo(
-                                                //       housingList[i]
-                                                //           .videos![j]
-                                                //           .path!,
-                                                //       controller:
-                                                //           _storyController,
-                                                //       imageFit: BoxFit.fitWidth,
-                                                //     ),
-                                                //   );
-                                                // }
-
-                                                for (int j = 0;
-                                                    j <
-                                                        housingList[i]
-                                                            .images!
-                                                            .length;
-                                                    j++) {
-                                                  thisStoryItems.add(
-                                                    StoryItem.pageImage(
-                                                      url: housingList[i]
-                                                          .images![j]
-                                                          .path!,
-                                                      controller:
-                                                          _storyController,
-                                                      imageFit: BoxFit.cover,
-                                                    ),
-                                                  );
-
-                                                  mediaStoryItems.add(
-                                                    StoryItem.pageImage(
-                                                      url: housingList[i]
-                                                          .images![j]
-                                                          .path!,
-                                                      controller:
-                                                          _storyController,
-                                                      imageFit: BoxFit.fitWidth,
-                                                    ),
-                                                  );
-                                                }
-
-                                                await Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            HousingInfo(
-                                                                housingList[i]
-                                                                    .id!,
-                                                                thisStoryItems,
-                                                                mediaStoryItems)));
-
-                                                getHousingList();
-                                              },
-                                              child: HousingCard(housingList[i],
-                                                  getHousingList),
-                                            ),
-                                          )
-                                      ],
+                              loadingHousing
+                                  ? const Center(
+                                      child: SizedBox(
+                                        width: 80,
+                                        height: 80,
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.grey,
+                                        ),
+                                      ),
                                     )
-                                  : Column(
-                                      children: [
-                                        const SizedBox(height: 150),
-                                        SvgPicture.asset(
-                                            'assets/images/favorites_empty.svg'),
-                                        const SizedBox(height: 20),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.7,
-                                          child: const Text(
-                                            'У вас пока нет избранного жилья',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 24,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
+                                  : housingList.isNotEmpty
+                                      ? ListView(
+                                          children: [
+                                            for (int i = 0;
+                                                i < housingList.length;
+                                                i++)
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 20),
+                                                child: GestureDetector(
+                                                  onTap: () async {
+                                                    StoryController
+                                                        _storyController =
+                                                        StoryController();
+                                                    List<StoryItem?>
+                                                        thisStoryItems = [];
+                                                    List<StoryItem?>
+                                                        mediaStoryItems = [];
+
+                                                    // for (int j = 0;
+                                                    //     j <
+                                                    //         housingList[i]
+                                                    //             .videos!
+                                                    //             .length;
+                                                    //     j++) {
+                                                    //   thisStoryItems.add(
+                                                    //     StoryItem.pageVideo(
+                                                    //       housingList[i]
+                                                    //           .videos![j]
+                                                    //           .path!,
+                                                    //       controller:
+                                                    //           _storyController,
+                                                    //       imageFit: BoxFit.cover,
+                                                    //     ),
+                                                    //   );
+                                                    //
+                                                    //   mediaStoryItems.add(
+                                                    //     StoryItem.pageVideo(
+                                                    //       housingList[i]
+                                                    //           .videos![j]
+                                                    //           .path!,
+                                                    //       controller:
+                                                    //           _storyController,
+                                                    //       imageFit: BoxFit.fitWidth,
+                                                    //     ),
+                                                    //   );
+                                                    // }
+
+                                                    for (int j = 0;
+                                                        j <
+                                                            housingList[i]
+                                                                .images!
+                                                                .length;
+                                                        j++) {
+                                                      thisStoryItems.add(
+                                                        StoryItem.pageImage(
+                                                          url: housingList[i]
+                                                              .images![j]
+                                                              .path!,
+                                                          controller:
+                                                              _storyController,
+                                                          imageFit:
+                                                              BoxFit.cover,
+                                                        ),
+                                                      );
+
+                                                      mediaStoryItems.add(
+                                                        StoryItem.pageImage(
+                                                          url: housingList[i]
+                                                              .images![j]
+                                                              .path!,
+                                                          controller:
+                                                              _storyController,
+                                                          imageFit:
+                                                              BoxFit.fitWidth,
+                                                        ),
+                                                      );
+                                                    }
+
+                                                    await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                HousingInfo(
+                                                                    housingList[
+                                                                            i]
+                                                                        .id!,
+                                                                    thisStoryItems,
+                                                                    mediaStoryItems)));
+
+                                                    getHousingList();
+                                                  },
+                                                  child: HousingCard(
+                                                      housingList[i],
+                                                      getHousingList),
+                                                ),
+                                              )
+                                          ],
                                         )
-                                      ],
-                                    ),
+                                      : Column(
+                                          children: [
+                                            const SizedBox(height: 150),
+                                            SvgPicture.asset(
+                                                'assets/images/favorites_empty.svg'),
+                                            const SizedBox(height: 20),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.7,
+                                              child: const Text(
+                                                'У вас пока нет избранного жилья',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
                               // TODO: Впечатления
-                              impressionList.isNotEmpty
-                                  ? ListView(
-                                      children: [
-                                        for (int i = 0;
-                                            i < impressionList.length;
-                                            i++)
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 20),
-                                            child: GestureDetector(
-                                                onTap: () async {
-                                                  StoryController
-                                                      _storyController =
-                                                      StoryController();
-                                                  List<StoryItem?>
-                                                      thisStoryItems = [];
-                                                  List<StoryItem?>
-                                                      mediaStoryItems = [];
-
-                                                  for (int j = 0;
-                                                      j <
-                                                          impressionList[i]
-                                                              .videos!
-                                                              .length;
-                                                      j++) {
-                                                    thisStoryItems.add(
-                                                      StoryItem.pageVideo(
-                                                        impressionList[i]
-                                                            .videos![j]
-                                                            .path!,
-                                                        controller:
-                                                            _storyController,
-                                                        imageFit: BoxFit.cover,
-                                                      ),
-                                                    );
-
-                                                    mediaStoryItems.add(
-                                                      StoryItem.pageVideo(
-                                                        impressionList[i]
-                                                            .videos![j]
-                                                            .path!,
-                                                        controller:
-                                                            _storyController,
-                                                        imageFit:
-                                                            BoxFit.fitWidth,
-                                                      ),
-                                                    );
-                                                  }
-
-                                                  for (int j = 0;
-                                                      j <
-                                                          impressionList[i]
-                                                              .images!
-                                                              .length;
-                                                      j++) {
-                                                    thisStoryItems.add(
-                                                      StoryItem.pageImage(
-                                                        url: impressionList[i]
-                                                            .images![j]
-                                                            .path!,
-                                                        controller:
-                                                            _storyController,
-                                                        imageFit: BoxFit.cover,
-                                                      ),
-                                                    );
-
-                                                    mediaStoryItems.add(
-                                                      StoryItem.pageImage(
-                                                        url: impressionList[i]
-                                                            .images![j]
-                                                            .path!,
-                                                        controller:
-                                                            _storyController,
-                                                        imageFit:
-                                                            BoxFit.fitWidth,
-                                                      ),
-                                                    );
-                                                  }
-
-                                                  await Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ImpressionInfo(
-                                                        impressionList[i],
-                                                        thisStoryItems,
-                                                        mediaStoryItems,
-                                                      ),
-                                                    ),
-                                                  );
-
-                                                  setState(() {});
-                                                },
-                                                child: ImpressionCard(
-                                                    impressionList[i], () {})),
-                                          )
-                                      ],
+                              loadingImpression
+                                  ? const Center(
+                                      child: SizedBox(
+                                        width: 80,
+                                        height: 80,
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.grey,
+                                        ),
+                                      ),
                                     )
-                                  : Column(
-                                      children: [
-                                        const SizedBox(height: 150),
-                                        SvgPicture.asset(
-                                            'assets/images/favorites_empty.svg'),
-                                        const SizedBox(height: 20),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.7,
-                                          child: const Text(
-                                            'У вас пока нет избранных впечатлений',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 24,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
+                                  : impressionList.isNotEmpty
+                                      ? ListView(
+                                          children: [
+                                            for (int i = 0;
+                                                i < impressionList.length;
+                                                i++)
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 20),
+                                                child: GestureDetector(
+                                                    onTap: () async {
+                                                      StoryController
+                                                          _storyController =
+                                                          StoryController();
+                                                      List<StoryItem?>
+                                                          thisStoryItems = [];
+                                                      List<StoryItem?>
+                                                          mediaStoryItems = [];
+
+                                                      for (int j = 0;
+                                                          j <
+                                                              impressionList[i]
+                                                                  .videos!
+                                                                  .length;
+                                                          j++) {
+                                                        thisStoryItems.add(
+                                                          StoryItem.pageVideo(
+                                                            impressionList[i]
+                                                                .videos![j]
+                                                                .path!,
+                                                            controller:
+                                                                _storyController,
+                                                            imageFit:
+                                                                BoxFit.cover,
+                                                          ),
+                                                        );
+
+                                                        mediaStoryItems.add(
+                                                          StoryItem.pageVideo(
+                                                            impressionList[i]
+                                                                .videos![j]
+                                                                .path!,
+                                                            controller:
+                                                                _storyController,
+                                                            imageFit:
+                                                                BoxFit.fitWidth,
+                                                          ),
+                                                        );
+                                                      }
+
+                                                      for (int j = 0;
+                                                          j <
+                                                              impressionList[i]
+                                                                  .images!
+                                                                  .length;
+                                                          j++) {
+                                                        thisStoryItems.add(
+                                                          StoryItem.pageImage(
+                                                            url: impressionList[
+                                                                    i]
+                                                                .images![j]
+                                                                .path!,
+                                                            controller:
+                                                                _storyController,
+                                                            imageFit:
+                                                                BoxFit.cover,
+                                                          ),
+                                                        );
+
+                                                        mediaStoryItems.add(
+                                                          StoryItem.pageImage(
+                                                            url: impressionList[
+                                                                    i]
+                                                                .images![j]
+                                                                .path!,
+                                                            controller:
+                                                                _storyController,
+                                                            imageFit:
+                                                                BoxFit.fitWidth,
+                                                          ),
+                                                        );
+                                                      }
+
+                                                      await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ImpressionInfo(
+                                                            impressionList[i],
+                                                            thisStoryItems,
+                                                            mediaStoryItems,
+                                                          ),
+                                                        ),
+                                                      );
+
+                                                      setState(() {});
+                                                    },
+                                                    child: ImpressionCard(
+                                                        impressionList[i],
+                                                        () {})),
+                                              )
+                                          ],
                                         )
-                                      ],
-                                    ),
+                                      : Column(
+                                          children: [
+                                            const SizedBox(height: 150),
+                                            SvgPicture.asset(
+                                                'assets/images/favorites_empty.svg'),
+                                            const SizedBox(height: 20),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.7,
+                                              child: const Text(
+                                                'У вас пока нет избранных впечатлений',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
                             ],
                           ),
                         ),
@@ -389,7 +421,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
         housingList.add(HousingCardModel.fromJson(response['data'][i]));
       }
       if (mounted) {
-        setState(() {});
+        setState(() {
+          loadingHousing = false;
+        });
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -407,7 +441,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
         impressionList.add(ImpressionCardModel.fromJson(response['data'][i]));
       }
       if (mounted) {
-        setState(() {});
+        setState(() {
+          loadingImpression = false;
+        });
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

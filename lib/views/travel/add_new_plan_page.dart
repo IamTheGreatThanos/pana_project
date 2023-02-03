@@ -347,6 +347,16 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                                   vertical: 4, horizontal: 10),
                               child: TextField(
                                 controller: _toDoItemController,
+                                onSubmitted: (value) {
+                                  if (_toDoItemController.text != '') {
+                                    toDoList.add({
+                                      'name': _toDoItemController.text,
+                                      'status': 0
+                                    });
+                                    _toDoItemController.text = '';
+                                    setState(() {});
+                                  }
+                                },
                                 maxLength: 100,
                                 decoration: const InputDecoration(
                                   counterStyle: TextStyle(

@@ -16,8 +16,6 @@ class TravelCard extends StatefulWidget {
 class _TravelCardState extends State<TravelCard> {
   @override
   void initState() {
-    print(Colors.primaries.length);
-    print(widget.travel.colorNumber);
     super.initState();
   }
 

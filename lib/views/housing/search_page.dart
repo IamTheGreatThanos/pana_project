@@ -36,6 +36,22 @@ class _SearchPageState extends State<SearchPage> {
     {'name': 'ОАЭ', 'asset': 'assets/images/map_6.png'},
   ];
 
+  List<String> suggestions = [
+    "apple",
+    "apple2",
+    "apple3",
+    "apple4",
+    "banana",
+    "cherry",
+    "date",
+    "elderberry",
+    "fig",
+    "grape",
+    "honeydew",
+  ];
+
+  List<String> filteredSuggestions = [];
+
   @override
   void initState() {
     super.initState();
@@ -127,76 +143,143 @@ class _SearchPageState extends State<SearchPage> {
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  onChanged: (value) {},
+                                  onChanged: (value) {
+                                    setState(() {
+                                      filteredSuggestions = suggestions
+                                          .where((suggestion) => suggestion
+                                              .toLowerCase()
+                                              .startsWith(value.toLowerCase()))
+                                          .toList();
+                                    });
+                                  },
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 10),
-                          height: 170,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: <Widget>[
-                              for (int i = 0; i < continents.length; i++)
-                                Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedContinentIndex = i;
-                                          });
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color:
-                                                    selectedContinentIndex == i
-                                                        ? AppColors.black
-                                                        : AppColors.white,
-                                                width: 2),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                              Radius.circular(20),
-                                            ),
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                              Radius.circular(20),
-                                            ),
-                                            child: SizedBox(
-                                              height: 120,
-                                              width: 120,
-                                              child: Image.asset(
-                                                continents[i]['asset']!,
+                        Stack(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 10),
+                              height: 170,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: <Widget>[
+                                  for (int i = 0; i < continents.length; i++)
+                                    Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                selectedContinentIndex = i;
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color:
+                                                        selectedContinentIndex ==
+                                                                i
+                                                            ? AppColors.black
+                                                            : AppColors.white,
+                                                    width: 2),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(20),
+                                                ),
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(20),
+                                                ),
+                                                child: SizedBox(
+                                                  height: 120,
+                                                  width: 120,
+                                                  child: Image.asset(
+                                                    continents[i]['asset']!,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 120,
-                                      child: Center(
-                                        child: Text(
-                                          continents[i]['name']!,
-                                          style: TextStyle(
-                                              color: selectedContinentIndex == i
-                                                  ? AppColors.black
-                                                  : AppColors.blackWithOpacity,
-                                              fontWeight: FontWeight.w500),
+                                        SizedBox(
+                                          width: 120,
+                                          child: Center(
+                                            child: Text(
+                                              continents[i]['name']!,
+                                              style: TextStyle(
+                                                  color:
+                                                      selectedContinentIndex ==
+                                                              i
+                                                          ? AppColors.black
+                                                          : AppColors
+                                                              .blackWithOpacity,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
+                                ],
+                              ),
+                            ),
+                            Visibility(
+                              visible: nameController.text.isNotEmpty &&
+                                  filteredSuggestions.isNotEmpty,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(60, 8, 8, 8),
+                                child: Container(
+                                  height: 160,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.74,
+                                  decoration: const BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        spreadRadius: 0,
+                                        blurRadius: 24,
+                                        offset: Offset(
+                                            0, 4), // changes position of shadow
+                                      ),
+                                    ],
+                                    color: AppColors.white,
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        for (int h = 0;
+                                            h < filteredSuggestions.length;
+                                            h++)
+                                          Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 30,
+                                                child: ListTile(
+                                                  title: Text(
+                                                      filteredSuggestions[h]),
+                                                  onTap: () {
+                                                    nameController.text =
+                                                        filteredSuggestions[h];
+                                                    filteredSuggestions.clear();
+                                                    setState(() {});
+                                                  },
+                                                ),
+                                              ),
+                                              const Divider(),
+                                            ],
+                                          ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                            ],
-                          ),
+                              ),
+                            ),
+                          ],
                         ),
                         selectedContinentIndex != 0
                             ? Padding(

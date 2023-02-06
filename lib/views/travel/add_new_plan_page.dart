@@ -281,7 +281,7 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                         ),
                       ),
                       const Divider(),
-                      for (var item in toDoList)
+                      for (int k = 0; k < toDoList.length; k++)
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Column(
@@ -290,10 +290,10 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      if (item['status'] == 0) {
-                                        item['status'] = 1;
+                                      if (toDoList[k]['status'] == 0) {
+                                        toDoList[k]['status'] = 1;
                                       } else {
-                                        item['status'] = 0;
+                                        toDoList[k]['status'] = 0;
                                       }
                                       setState(() {});
                                     },
@@ -301,7 +301,7 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                                       width: 24,
                                       height: 24,
                                       decoration: BoxDecoration(
-                                          color: item['status'] == 1
+                                          color: toDoList[k]['status'] == 1
                                               ? AppColors.accent
                                               : Colors.transparent,
                                           borderRadius: const BorderRadius.all(
@@ -313,16 +313,24 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                                   ),
                                   const SizedBox(width: 20),
                                   SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.7,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.65,
                                     child: Text(
-                                      item['name'],
+                                      toDoList[k]['name'],
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      deleteToDoListItem(k);
+                                    },
+                                    child: const Icon(Icons.close),
+                                  ),
+                                  const SizedBox(width: 10),
                                 ],
                               ),
                               const SizedBox(height: 10),
@@ -678,5 +686,10 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
     }
 
     Navigator.of(context).pop();
+  }
+
+  void deleteToDoListItem(int index) {
+    toDoList.removeAt(index);
+    setState(() {});
   }
 }

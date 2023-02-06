@@ -217,7 +217,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                             SvgPicture.asset('assets/icons/user_icon.svg'),
                             const SizedBox(width: 5),
                             Text(
-                              '${widget.travel.usersCount} человек',
+                              '${(widget.travel.usersCount ?? 0) + 1} человек',
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,

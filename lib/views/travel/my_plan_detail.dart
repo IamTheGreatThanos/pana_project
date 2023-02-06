@@ -247,7 +247,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                         ),
                       ),
                       const Divider(),
-                      for (var item in baseToDoList)
+                      for (int l = 0; l < baseToDoList.length; l++)
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Column(
@@ -256,10 +256,10 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      if (item['status'] == 0) {
-                                        item['status'] = 1;
+                                      if (baseToDoList[l]['status'] == 0) {
+                                        baseToDoList[l]['status'] = 1;
                                       } else {
-                                        item['status'] = 0;
+                                        baseToDoList[l]['status'] = 0;
                                       }
                                       setState(() {});
                                     },
@@ -267,7 +267,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                                       width: 24,
                                       height: 24,
                                       decoration: BoxDecoration(
-                                          color: item['status'] == 1
+                                          color: baseToDoList[l]['status'] == 1
                                               ? AppColors.accent
                                               : Colors.transparent,
                                           borderRadius: const BorderRadius.all(
@@ -279,16 +279,24 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                                   ),
                                   const SizedBox(width: 20),
                                   SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.7,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.65,
                                     child: Text(
-                                      item['name'],
+                                      baseToDoList[l]['name'],
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      deleteToDoListItem(l, true);
+                                    },
+                                    child: const Icon(Icons.close),
+                                  ),
+                                  const SizedBox(width: 10),
                                 ],
                               ),
                               const SizedBox(height: 10),
@@ -296,7 +304,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                             ],
                           ),
                         ),
-                      for (var item in toDoList)
+                      for (int k = 0; k < toDoList.length; k++)
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Column(
@@ -305,10 +313,10 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      if (item['status'] == 0) {
-                                        item['status'] = 1;
+                                      if (toDoList[k]['status'] == 0) {
+                                        toDoList[k]['status'] = 1;
                                       } else {
-                                        item['status'] = 0;
+                                        toDoList[k]['status'] = 0;
                                       }
                                       setState(() {});
                                     },
@@ -316,7 +324,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                                       width: 24,
                                       height: 24,
                                       decoration: BoxDecoration(
-                                          color: item['status'] == 1
+                                          color: toDoList[k]['status'] == 1
                                               ? AppColors.accent
                                               : Colors.transparent,
                                           borderRadius: const BorderRadius.all(
@@ -328,16 +336,24 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                                   ),
                                   const SizedBox(width: 20),
                                   SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.7,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.65,
                                     child: Text(
-                                      item['name'],
+                                      toDoList[k]['name'],
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      deleteToDoListItem(k, false);
+                                    },
+                                    child: const Icon(Icons.close),
+                                  ),
+                                  const SizedBox(width: 10),
                                 ],
                               ),
                               const SizedBox(height: 10),
@@ -362,6 +378,16 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                                   vertical: 4, horizontal: 10),
                               child: TextField(
                                 controller: _toDoItemController,
+                                onSubmitted: (value) {
+                                  if (_toDoItemController.text != '') {
+                                    toDoList.add({
+                                      'name': _toDoItemController.text,
+                                      'status': 0
+                                    });
+                                    _toDoItemController.text = '';
+                                    setState(() {});
+                                  }
+                                },
                                 maxLength: 100,
                                 decoration: const InputDecoration(
                                   counterStyle: TextStyle(
@@ -513,6 +539,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
   }
 
   void getToDoList() async {
+    baseToDoList = [];
     var response = await TravelProvider().getPlanToDoList(widget.plan.id!);
 
     if (response['response_status'] == 'ok') {
@@ -736,5 +763,25 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
         }
       }
     }
+  }
+
+  void deleteToDoListItem(int index, bool isFromServer) async {
+    if (isFromServer) {
+      var response = await TravelProvider()
+          .deleteItemFromPlansToDoList(baseToDoList[index]['id']);
+      if (response['response_status'] == 'ok') {
+        print('Deleted!');
+        getToDoList();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
+        ));
+      }
+    } else {
+      toDoList.removeAt(index);
+    }
+
+    setState(() {});
   }
 }

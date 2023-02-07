@@ -61,6 +61,8 @@ dependencies:
   video_player: ^2.5.1
   video_thumbnail: ^0.5.3
   path_provider: ^2.0.12
+  cloudpayments: ^0.3.0
+  flutter_credit_card: ^3.0.5
 
 
 dev_dependencies:

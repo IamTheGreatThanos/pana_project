@@ -11,6 +11,7 @@ import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
+import 'package:pana_project/views/other/create_credit_card_page.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -40,6 +41,7 @@ class _PaymentPageState extends State<PaymentPage> {
     }
 
     calcSum();
+    getCreditCards();
     super.initState();
   }
 
@@ -351,7 +353,14 @@ class _PaymentPageState extends State<PaymentPage> {
                   const Divider(),
                   const SizedBox(height: 10),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () async {
+                      await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreateCreditCardPage()));
+
+                      getCreditCards();
+                    },
                     child: const Text(
                       'Добавить карту',
                       style: TextStyle(
@@ -548,6 +557,10 @@ class _PaymentPageState extends State<PaymentPage> {
     );
 
     setState(() {});
+  }
+
+  void getCreditCards() async {
+    print('Credit');
   }
 }
 

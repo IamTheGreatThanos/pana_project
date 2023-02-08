@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/payment_method_card.dart';
+import 'package:pana_project/models/creditCard.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/other/create_credit_card_page.dart';
 
 class PaymentMethodsPage extends StatefulWidget {
   @override
@@ -11,8 +14,12 @@ class PaymentMethodsPage extends StatefulWidget {
 class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
   TextEditingController phoneController = TextEditingController();
 
+  List<CreditCard> cards = [];
+  int selectedCardIndex = 0;
+
   @override
   void initState() {
+    getCreditCards();
     super.initState();
   }
 
@@ -51,8 +58,8 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                       ),
                     ),
                     const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
+                    const Padding(
+                      padding: EdgeInsets.all(20),
                       child: Text(
                         'Способы оплаты',
                         style: TextStyle(
@@ -62,14 +69,14 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                       ),
                     ),
                     const Spacer(),
-                    SizedBox(width: 50)
+                    const SizedBox(width: 50)
                   ],
                 ),
                 const SizedBox(height: 5),
                 Container(
                   color: AppColors.lightGray,
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
+                  height: MediaQuery.of(context).size.height - 100,
                   child: Column(
                     children: [
                       const SizedBox(height: 20),
@@ -78,46 +85,67 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                             color: Colors.white,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(24))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Выберите способ оплаты по умолчанию',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              PaymentMethodCard('assets/icons/visa_icon.svg',
-                                  '**** 3254', '04/24', true),
-                              const Divider(),
-                              const SizedBox(height: 10),
-                              PaymentMethodCard(
-                                  'assets/icons/mastercard_icon.svg',
-                                  '**** 3254',
-                                  '04/24',
-                                  false),
-                              const Divider(),
-                              const SizedBox(height: 10),
-                              GestureDetector(
-                                onTap: () {},
-                                child: const Text(
-                                  'Добавить карту',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: AppColors.accent,
+                        child: SizedBox(
+                          height: 500,
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Выберите способ оплаты по умолчанию',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(height: 20),
+                                  for (int i = 0; i < cards.length; i++)
+                                    Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            selectedCardIndex = i;
+                                            setState(() {});
+                                          },
+                                          child: PaymentMethodCard(
+                                            'assets/icons/visa_icon.svg',
+                                            '**** ${cards[i].number!.substring(15, 19)}',
+                                            '${cards[i].month}/${cards[i].year}',
+                                            i == selectedCardIndex,
+                                          ),
+                                        ),
+                                        const Divider(),
+                                        const SizedBox(height: 10),
+                                      ],
+                                    ),
+                                  const SizedBox(height: 10),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CreateCreditCardPage()));
+
+                                      getCreditCards();
+                                    },
+                                    child: const Text(
+                                      'Добавить карту',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppColors.accent,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                ],
                               ),
-                              const SizedBox(height: 10),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
                       const Spacer(),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -134,14 +162,7 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                               ),
                             ),
                             onPressed: () {
-                              if (true) {
-                              } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text("Заполните все поля.",
-                                      style: const TextStyle(fontSize: 14)),
-                                ));
-                              }
+                              Navigator.pop(context);
                             },
                             child: const Text("Сохранить",
                                 style: TextStyle(
@@ -158,5 +179,29 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
         ),
       ),
     );
+  }
+
+  void getCreditCards() async {
+    var response = await MainProvider().getCards();
+    if (response['response_status'] == 'ok') {
+      List<CreditCard> thisCards = [];
+      for (int i = 0; i < response['data'].length; i++) {
+        CreditCard thisCard = CreditCard.fromJson(response['data'][i]);
+        thisCards.add(thisCard);
+        if (thisCard.isDefault == 1) {
+          selectedCardIndex = i;
+        }
+      }
+
+      cards = thisCards;
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
+    }
   }
 }

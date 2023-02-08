@@ -1,16 +1,14 @@
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/payment_method_card.dart';
+import 'package:pana_project/models/creditCard.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/roomCard.dart';
-import 'package:pana_project/services/housing_api_provider.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
-import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/other/create_credit_card_page.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
@@ -32,6 +30,8 @@ class _PaymentPageState extends State<PaymentPage> {
   double sum = 0;
   String dateFrom = '-';
   String dateTo = '-';
+  List<CreditCard> cards = [];
+  int selectedCardIndex = 0;
 
   @override
   void initState() {
@@ -248,7 +248,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            '${sharedHousingPaymentData.peopleCount} человека',
+                            '${sharedHousingPaymentData.peopleCount} человек(а)',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -344,14 +344,25 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                     ),
                   ),
-                  PaymentMethodCard(
-                      'assets/icons/visa_icon.svg', '**** 3254', '04/24', true),
-                  const Divider(),
-                  const SizedBox(height: 10),
-                  PaymentMethodCard('assets/icons/mastercard_icon.svg',
-                      '**** 3254', '04/24', false),
-                  const Divider(),
-                  const SizedBox(height: 10),
+                  for (int i = 0; i < cards.length; i++)
+                    Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            selectedCardIndex = i;
+                            setState(() {});
+                          },
+                          child: PaymentMethodCard(
+                            'assets/icons/visa_icon.svg',
+                            '**** ${cards[i].number!.substring(15, 19)}',
+                            '${cards[i].month}/${cards[i].year}',
+                            i == selectedCardIndex,
+                          ),
+                        ),
+                        const Divider(),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
                   GestureDetector(
                     onTap: () async {
                       await Navigator.push(
@@ -516,30 +527,38 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void sendOrder(GlobalKey<SlideActionState> _key) async {
-    var response = await HousingProvider().housingPayment(
-        widget.housing.id!,
-        dateFrom,
-        dateTo,
-        sharedHousingPaymentData.peopleCount,
-        widget.selectedRooms);
-    if (response['response_status'] == 'ok') {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Жилье успешно забронировано!',
-            style: const TextStyle(fontSize: 14)),
-      ));
-
-      Future.delayed(
-        const Duration(seconds: 3),
-        () => _key.currentState!.reset(),
-      ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => TabBarPage()),
-          (Route<dynamic> route) => false));
+    if (cards.isNotEmpty) {
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 14)),
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content:
+            Text("Добавьте способ оплаты.", style: TextStyle(fontSize: 14)),
       ));
     }
+
+    // var response = await HousingProvider().housingPayment(
+    //     widget.housing.id!,
+    //     dateFrom,
+    //     dateTo,
+    //     sharedHousingPaymentData.peopleCount,
+    //     widget.selectedRooms);
+    // if (response['response_status'] == 'ok') {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //     content: Text('Жилье успешно забронировано!',
+    //         style: const TextStyle(fontSize: 14)),
+    //   ));
+    //
+    //   Future.delayed(
+    //     const Duration(seconds: 3),
+    //     () => _key.currentState!.reset(),
+    //   ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+    //       MaterialPageRoute(builder: (context) => TabBarPage()),
+    //       (Route<dynamic> route) => false));
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //     content: Text(response['data']['message'],
+    //         style: const TextStyle(fontSize: 14)),
+    //   ));
+    // }
   }
 
   void showPeopleCountModalSheet() async {
@@ -560,7 +579,27 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void getCreditCards() async {
-    print('Credit');
+    var response = await MainProvider().getCards();
+    if (response['response_status'] == 'ok') {
+      List<CreditCard> thisCards = [];
+      for (int i = 0; i < response['data'].length; i++) {
+        CreditCard thisCard = CreditCard.fromJson(response['data'][i]);
+        thisCards.add(thisCard);
+        if (thisCard.isDefault == 1) {
+          selectedCardIndex = i;
+        }
+      }
+
+      cards = thisCards;
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
+    }
   }
 }
 

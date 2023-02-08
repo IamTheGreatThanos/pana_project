@@ -1,8 +1,10 @@
+import 'package:cloudpayments/cloudpayments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_form.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 
 class CreateCreditCardPage extends StatefulWidget {
@@ -15,6 +17,7 @@ class _CreateCreditCardPageState extends State<CreateCreditCardPage> {
   String expiryDate = '';
   String cardHolderName = '';
   String cvvCode = '';
+  String cardType = '';
   bool isCvvFocused = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -76,7 +79,7 @@ class _CreateCreditCardPageState extends State<CreateCreditCardPage> {
                 Container(
                   color: AppColors.lightGray,
                   width: MediaQuery.of(context).size.width,
-                  height: 650,
+                  height: 690,
                   child: Column(
                     children: [
                       const SizedBox(height: 20),
@@ -99,7 +102,11 @@ class _CreateCreditCardPageState extends State<CreateCreditCardPage> {
                                 showBackView: isCvvFocused,
                                 obscureCardNumber: true,
                                 obscureCardCvv: true,
-                                onCreditCardWidgetChange: (CreditCardBrand) {},
+                                isHolderNameVisible: true,
+                                onCreditCardWidgetChange: (CreditCardBrand) {
+                                  cardType =
+                                      CreditCardBrand.brandName.toString();
+                                },
                               ),
                               CreditCardForm(
                                 themeColor: AppColors.accent,
@@ -154,7 +161,9 @@ class _CreateCreditCardPageState extends State<CreateCreditCardPage> {
                               ),
                             ),
                             onPressed: () {
-                              saveCardButtonAction();
+                              if (formKey.currentState!.validate() == true) {
+                                saveCardButtonAction();
+                              }
                             },
                             child: const Text("Сохранить",
                                 style: TextStyle(
@@ -184,12 +193,37 @@ class _CreateCreditCardPageState extends State<CreateCreditCardPage> {
   }
 
   void saveCardButtonAction() async {
-    if (formKey.currentState!.validate()) {
-      List<Map<String, dynamic>> cards = [];
+    bool isValidCardNumber = await Cloudpayments.isValidNumber(cardNumber);
+    bool isValidExpireDate = await Cloudpayments.isValidExpiryDate(expiryDate);
+
+    if (isValidCardNumber && isValidExpireDate) {
+      final cryptogram = await Cloudpayments.cardCryptogram(
+          cardNumber: cardNumber,
+          cardDate: expiryDate,
+          cardCVC: cvvCode,
+          publicId: 'pk_03c4a34922cc4734c0e2b7a46a62a');
+
+      var response = await MainProvider().createCard(
+          cardHolderName,
+          cardNumber,
+          expiryDate.substring(0, 2),
+          expiryDate.substring(3, 5),
+          cvvCode,
+          1,
+          cryptogram.cryptogram!);
+      if (response['response_status'] == 'ok') {
+        print(response['data']);
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
+        ));
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content:
-            Text("Поля заполнены некорректно.", style: TextStyle(fontSize: 14)),
+        content: Text("Данная карта недействительна.",
+            style: TextStyle(fontSize: 14)),
       ));
     }
   }

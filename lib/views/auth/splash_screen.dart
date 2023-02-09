@@ -32,8 +32,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void confOneSignal() async {
     await OneSignal.shared.setAppId('47781c01-87c4-45c0-ad57-3b8d1fd6f48b');
-    OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
-      OSNotificationDisplayType.notification;
+    OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+      print("Accepted permission: $accepted");
+      if (accepted) {
+        OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
+          OSNotificationDisplayType.notification;
+        });
+        OneSignal.shared.setOnWillDisplayInAppMessageHandler((message) {
+          OSNotificationDisplayType.notification;
+        });
+      }
     });
   }
 

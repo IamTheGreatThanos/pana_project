@@ -194,6 +194,7 @@ class _CreateCreditCardPageState extends State<CreateCreditCardPage> {
   }
 
   void saveCardButtonAction() async {
+    cardNumber = cardNumber.replaceAll(' ', '');
     bool isValidCardNumber = await Cloudpayments.isValidNumber(cardNumber);
     bool isValidExpireDate = await Cloudpayments.isValidExpiryDate(expiryDate);
 

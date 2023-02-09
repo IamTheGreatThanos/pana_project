@@ -113,7 +113,7 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                                             cards[i].type == 1
                                                 ? 'assets/icons/mastercard_icon.svg'
                                                 : 'assets/icons/visa_icon.svg',
-                                            '**** ${cards[i].number!.substring(15, 19)}',
+                                            '**** ${cards[i].number!.substring(12, 16)}',
                                             '${cards[i].month}/${cards[i].year}',
                                             i == selectedCardIndex,
                                           ),

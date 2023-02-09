@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloudpayments/cloudpayments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,6 +11,7 @@ import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
+import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/other/create_credit_card_page.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
@@ -357,7 +359,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             cards[i].type == 1
                                 ? 'assets/icons/mastercard_icon.svg'
                                 : 'assets/icons/visa_icon.svg',
-                            '**** ${cards[i].number!.substring(15, 19)}',
+                            '**** ${cards[i].number!.substring(12, 16)}',
                             '${cards[i].month}/${cards[i].year}',
                             i == selectedCardIndex,
                           ),
@@ -540,21 +542,38 @@ class _PaymentPageState extends State<PaymentPage> {
         cards[selectedCardIndex].id!,
       );
       if (response['response_status'] == 'ok') {
-        print(response['data']);
-        // final result =
-        //     await Cloudpayments.show3ds(acsUrl, transactionId, paReq);
+        String acsUrl =
+            response['data']['payment_operation']['acs_url'].toString();
+        String transactionId =
+            response['data']['payment_operation']['transaction_id'].toString();
+        String paReq =
+            response['data']['payment_operation']['pa_req'].toString();
 
-        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        //   content: Text('Жилье успешно забронировано!',
-        //       style: const TextStyle(fontSize: 14)),
-        // ));
-        //
-        // Future.delayed(
-        //   const Duration(seconds: 3),
-        //   () => _key.currentState!.reset(),
-        // ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
-        //     MaterialPageRoute(builder: (context) => TabBarPage()),
-        //     (Route<dynamic> route) => false));
+        final result = await Cloudpayments.show3ds(
+            acsUrl: acsUrl, transactionId: transactionId, paReq: paReq);
+
+        if (result?.success == true) {
+          var response3ds = await HousingProvider()
+              .housingPaymentSend3ds(result!.md!, result.paRes!);
+          if (response3ds['response_status'] == 'ok') {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Жилье успешно забронировано!',
+                  style: const TextStyle(fontSize: 14)),
+            ));
+
+            Future.delayed(
+              const Duration(seconds: 3),
+              () => _key.currentState!.reset(),
+            ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => TabBarPage()),
+                (Route<dynamic> route) => false));
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(response3ds['data']['message'],
+                  style: const TextStyle(fontSize: 14)),
+            ));
+          }
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(response['data']['message'],

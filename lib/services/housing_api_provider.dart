@@ -209,8 +209,13 @@ class HousingProvider {
     }
   }
 
-  Future<dynamic> housingPayment(int housingId, String dateFrom, String dateTo,
-      int peopleCount, List<Map<String, dynamic>> selectedRooms) async {
+  Future<dynamic> housingPayment(
+      int housingId,
+      String dateFrom,
+      String dateTo,
+      int peopleCount,
+      List<Map<String, dynamic>> selectedRooms,
+      int paymentCardId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
@@ -218,6 +223,7 @@ class HousingProvider {
       "housing_id": housingId,
       "count_people": peopleCount,
       "rooms": selectedRooms,
+      "payment_card_id": paymentCardId,
     };
 
     if (dateFrom != '') {
@@ -234,8 +240,6 @@ class HousingProvider {
       },
       body: jsonEncode(bodyObject),
     );
-
-    print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> result = {};

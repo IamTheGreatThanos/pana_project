@@ -106,6 +106,7 @@ class _CreateCreditCardPageState extends State<CreateCreditCardPage> {
                                 onCreditCardWidgetChange: (CreditCardBrand) {
                                   cardType =
                                       CreditCardBrand.brandName.toString();
+                                  print(cardType);
                                 },
                               ),
                               CreditCardForm(
@@ -204,13 +205,15 @@ class _CreateCreditCardPageState extends State<CreateCreditCardPage> {
           publicId: 'pk_03c4a34922cc4734c0e2b7a46a62a');
 
       var response = await MainProvider().createCard(
-          cardHolderName,
-          cardNumber,
-          expiryDate.substring(0, 2),
-          expiryDate.substring(3, 5),
-          cvvCode,
-          1,
-          cryptogram.cryptogram!);
+        cardHolderName,
+        cardNumber,
+        expiryDate.substring(0, 2),
+        expiryDate.substring(3, 5),
+        cvvCode,
+        1,
+        cryptogram.cryptogram!,
+        cardType == 'CardType.mastercard' ? 1 : 2,
+      );
       if (response['response_status'] == 'ok') {
         print(response['data']);
         Navigator.pop(context);

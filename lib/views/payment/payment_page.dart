@@ -6,6 +6,7 @@ import 'package:pana_project/components/payment_method_card.dart';
 import 'package:pana_project/models/creditCard.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/roomCard.dart';
+import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
@@ -353,7 +354,9 @@ class _PaymentPageState extends State<PaymentPage> {
                             setState(() {});
                           },
                           child: PaymentMethodCard(
-                            'assets/icons/visa_icon.svg',
+                            cards[i].type == 1
+                                ? 'assets/icons/mastercard_icon.svg'
+                                : 'assets/icons/visa_icon.svg',
                             '**** ${cards[i].number!.substring(15, 19)}',
                             '${cards[i].month}/${cards[i].year}',
                             i == selectedCardIndex,
@@ -528,37 +531,42 @@ class _PaymentPageState extends State<PaymentPage> {
 
   void sendOrder(GlobalKey<SlideActionState> _key) async {
     if (cards.isNotEmpty) {
+      var response = await HousingProvider().housingPayment(
+        widget.housing.id!,
+        dateFrom,
+        dateTo,
+        sharedHousingPaymentData.peopleCount,
+        widget.selectedRooms,
+        cards[selectedCardIndex].id!,
+      );
+      if (response['response_status'] == 'ok') {
+        print(response['data']);
+        // final result =
+        //     await Cloudpayments.show3ds(acsUrl, transactionId, paReq);
+
+        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        //   content: Text('Жилье успешно забронировано!',
+        //       style: const TextStyle(fontSize: 14)),
+        // ));
+        //
+        // Future.delayed(
+        //   const Duration(seconds: 3),
+        //   () => _key.currentState!.reset(),
+        // ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+        //     MaterialPageRoute(builder: (context) => TabBarPage()),
+        //     (Route<dynamic> route) => false));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
+        ));
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content:
             Text("Добавьте способ оплаты.", style: TextStyle(fontSize: 14)),
       ));
     }
-
-    // var response = await HousingProvider().housingPayment(
-    //     widget.housing.id!,
-    //     dateFrom,
-    //     dateTo,
-    //     sharedHousingPaymentData.peopleCount,
-    //     widget.selectedRooms);
-    // if (response['response_status'] == 'ok') {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content: Text('Жилье успешно забронировано!',
-    //         style: const TextStyle(fontSize: 14)),
-    //   ));
-    //
-    //   Future.delayed(
-    //     const Duration(seconds: 3),
-    //     () => _key.currentState!.reset(),
-    //   ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
-    //       MaterialPageRoute(builder: (context) => TabBarPage()),
-    //       (Route<dynamic> route) => false));
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content: Text(response['data']['message'],
-    //         style: const TextStyle(fontSize: 14)),
-    //   ));
-    // }
   }
 
   void showPeopleCountModalSheet() async {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/utils/globalVariables.dart';
@@ -24,8 +25,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     getListOfFavorites();
+    confOneSignal();
     super.initState();
     startTimer();
+  }
+
+  void confOneSignal() async {
+    await OneSignal.shared.setAppId('47781c01-87c4-45c0-ad57-3b8d1fd6f48b');
+    OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
+      OSNotificationDisplayType.notification;
+    });
   }
 
   void removeData() async {

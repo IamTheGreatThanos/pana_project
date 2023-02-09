@@ -12,21 +12,24 @@ class CreditCard {
   String? token;
   String? createdAt;
   String? updatedAt;
+  int? type;
 
-  CreditCard(
-      {this.id,
-      this.userId,
-      this.isDefault,
-      this.status,
-      this.number,
-      this.month,
-      this.year,
-      this.cvv,
-      this.name,
-      this.cryptogram,
-      this.token,
-      this.createdAt,
-      this.updatedAt});
+  CreditCard({
+    this.id,
+    this.userId,
+    this.isDefault,
+    this.status,
+    this.number,
+    this.month,
+    this.year,
+    this.cvv,
+    this.name,
+    this.cryptogram,
+    this.token,
+    this.createdAt,
+    this.updatedAt,
+    this.type,
+  });
 
   CreditCard.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -42,6 +45,7 @@ class CreditCard {
     token = json['token'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -59,6 +63,7 @@ class CreditCard {
     data['token'] = token;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
+    data['type'] = type;
     return data;
   }
 }

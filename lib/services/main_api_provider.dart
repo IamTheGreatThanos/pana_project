@@ -342,8 +342,15 @@ class MainProvider {
     }
   }
 
-  Future<dynamic> createCard(String name, String number, String month,
-      String year, String cvv, int isDefault, String cryptogram) async {
+  Future<dynamic> createCard(
+      String name,
+      String number,
+      String month,
+      String year,
+      String cvv,
+      int isDefault,
+      String cryptogram,
+      int type) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
@@ -362,6 +369,7 @@ class MainProvider {
         'cvv': cvv,
         'default': isDefault,
         'cryptogram': cryptogram,
+        'type': type,
       }),
     );
 

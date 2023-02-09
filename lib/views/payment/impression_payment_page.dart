@@ -5,12 +5,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/payment_method_card.dart';
+import 'package:pana_project/models/creditCard.dart';
 import 'package:pana_project/models/impressionDetail.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/ImpressionData.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/impression/impression_sessions.dart';
+import 'package:pana_project/views/other/create_credit_card_page.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class ImpressionPaymentPage extends StatefulWidget {
@@ -30,6 +33,8 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   double sum = 0;
   String dateFrom = '-';
   String dateTo = '-';
+  List<CreditCard> cards = [];
+  int selectedCardIndex = 0;
 
   @override
   void initState() {
@@ -245,7 +250,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            '${widget.impressionData.peopleCount} персоны',
+                            '${widget.impressionData.peopleCount} человек(а)',
                             style: const TextStyle(
                               color: AppColors.accent,
                               fontWeight: FontWeight.w500,
@@ -340,16 +345,36 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                       ),
                     ),
                   ),
-                  PaymentMethodCard(
-                      'assets/icons/visa_icon.svg', '**** 3254', '04/24', true),
-                  const Divider(),
-                  const SizedBox(height: 10),
-                  PaymentMethodCard('assets/icons/mastercard_icon.svg',
-                      '**** 3254', '04/24', false),
-                  const Divider(),
-                  const SizedBox(height: 10),
+                  for (int i = 0; i < cards.length; i++)
+                    Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            selectedCardIndex = i;
+                            setState(() {});
+                          },
+                          child: PaymentMethodCard(
+                            cards[i].type == 1
+                                ? 'assets/icons/mastercard_icon.svg'
+                                : 'assets/icons/visa_icon.svg',
+                            '**** ${cards[i].number!.substring(15, 19)}',
+                            '${cards[i].month}/${cards[i].year}',
+                            i == selectedCardIndex,
+                          ),
+                        ),
+                        const Divider(),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () async {
+                      await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreateCreditCardPage()));
+
+                      getCreditCards();
+                    },
                     child: const Text(
                       'Добавить карту',
                       style: TextStyle(
@@ -548,5 +573,29 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
     ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => TabBarPage()),
         (Route<dynamic> route) => false));
+  }
+
+  void getCreditCards() async {
+    var response = await MainProvider().getCards();
+    if (response['response_status'] == 'ok') {
+      List<CreditCard> thisCards = [];
+      for (int i = 0; i < response['data'].length; i++) {
+        CreditCard thisCard = CreditCard.fromJson(response['data'][i]);
+        thisCards.add(thisCard);
+        if (thisCard.isDefault == 1) {
+          selectedCardIndex = i;
+        }
+      }
+
+      cards = thisCards;
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
+    }
   }
 }

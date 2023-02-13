@@ -492,7 +492,7 @@ class _HomeHousingState extends State<HomeHousing>
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SearchPage(),
+        builder: (context) => SearchPage(true),
       ),
     );
 

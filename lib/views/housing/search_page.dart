@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/other/list_of_countries_page.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class SearchPage extends StatefulWidget {
+  SearchPage(this.fromHousing);
+  final bool fromHousing;
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -27,6 +31,8 @@ class _SearchPageState extends State<SearchPage> {
   int selectedCityId = 0;
   String selectedCityName = 'Город';
 
+  bool searchBool = true;
+
   List<Map<String, String>> continents = [
     {'name': 'Гибкий поиск', 'asset': 'assets/images/map_1.png'},
     {'name': 'Казахстан', 'asset': 'assets/images/map_2.png'},
@@ -34,20 +40,6 @@ class _SearchPageState extends State<SearchPage> {
     {'name': 'Узбекистан', 'asset': 'assets/images/map_4.png'},
     {'name': 'Турция', 'asset': 'assets/images/map_5.png'},
     {'name': 'ОАЭ', 'asset': 'assets/images/map_6.png'},
-  ];
-
-  List<String> suggestions = [
-    "apple",
-    "apple2",
-    "apple3",
-    "apple4",
-    "banana",
-    "cherry",
-    "date",
-    "elderberry",
-    "fig",
-    "grape",
-    "honeydew",
   ];
 
   List<String> filteredSuggestions = [];
@@ -145,11 +137,13 @@ class _SearchPageState extends State<SearchPage> {
                                   ),
                                   onChanged: (value) {
                                     setState(() {
-                                      filteredSuggestions = suggestions
-                                          .where((suggestion) => suggestion
-                                              .toLowerCase()
-                                              .startsWith(value.toLowerCase()))
-                                          .toList();
+                                      if (selectedContinentIndex == 0 &&
+                                          nameController.text != '' &&
+                                          searchBool) {
+                                        getAutocompleteVariants();
+                                      } else {
+                                        filteredSuggestions = [];
+                                      }
                                     });
                                   },
                                 ),
@@ -261,7 +255,13 @@ class _SearchPageState extends State<SearchPage> {
                                                 height: 30,
                                                 child: ListTile(
                                                   title: Text(
-                                                      filteredSuggestions[h]),
+                                                    filteredSuggestions[h],
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
                                                   onTap: () {
                                                     nameController.text =
                                                         filteredSuggestions[h];
@@ -940,5 +940,38 @@ class _SearchPageState extends State<SearchPage> {
         }
       }
     });
+  }
+
+  void getAutocompleteVariants() async {
+    searchBool = false;
+    var response =
+        await MainProvider().getAutocompleteText(nameController.text);
+    print(response['data']);
+    if (response['response_status'] == 'ok') {
+      filteredSuggestions = [];
+      if (widget.fromHousing) {
+        for (int i = 0; i < response['data']['housings'].length; i++) {
+          filteredSuggestions.add(response['data']['housings'][i]['name']);
+        }
+      } else {
+        for (int i = 0; i < response['data']['impressions'].length; i++) {
+          filteredSuggestions.add(response['data']['impressions'][i]['name']);
+        }
+      }
+
+      for (int i = 0; i < response['data']['cities'].length; i++) {
+        filteredSuggestions.add(response['data']['cities'][i]['name']);
+      }
+      if (mounted) {
+        setState(() {});
+        searchBool = true;
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
+      searchBool = true;
+    }
   }
 }

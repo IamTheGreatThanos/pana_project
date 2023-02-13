@@ -385,4 +385,57 @@ class MainProvider {
       return result;
     }
   }
+
+  Future<dynamic> getAutocompleteText(String text) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse(
+          '${API_URL}api/mobile/global-search/${Uri.encodeComponent(text)}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> requestPaymentPermission() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse('${API_URL}api/mobile/payment/is-public'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
 }

@@ -532,58 +532,69 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void sendOrder(GlobalKey<SlideActionState> _key) async {
-    if (cards.isNotEmpty) {
-      var response = await HousingProvider().housingPayment(
-        widget.housing.id!,
-        dateFrom,
-        dateTo,
-        sharedHousingPaymentData.peopleCount,
-        widget.selectedRooms,
-        cards[selectedCardIndex].id!,
-      );
-      if (response['response_status'] == 'ok') {
-        String acsUrl =
-            response['data']['payment_operation']['acs_url'].toString();
-        String transactionId =
-            response['data']['payment_operation']['transaction_id'].toString();
-        String paReq =
-            response['data']['payment_operation']['pa_req'].toString();
+    var paymentPermissionResponse =
+        await MainProvider().requestPaymentPermission();
+    if (paymentPermissionResponse['data']['is-public'] == true) {
+      if (cards.isNotEmpty) {
+        var response = await HousingProvider().housingPayment(
+          widget.housing.id!,
+          dateFrom,
+          dateTo,
+          sharedHousingPaymentData.peopleCount,
+          widget.selectedRooms,
+          cards[selectedCardIndex].id!,
+        );
+        if (response['response_status'] == 'ok') {
+          String acsUrl =
+              response['data']['payment_operation']['acs_url'].toString();
+          String transactionId = response['data']['payment_operation']
+                  ['transaction_id']
+              .toString();
+          String paReq =
+              response['data']['payment_operation']['pa_req'].toString();
 
-        final result = await Cloudpayments.show3ds(
-            acsUrl: acsUrl, transactionId: transactionId, paReq: paReq);
+          final result = await Cloudpayments.show3ds(
+              acsUrl: acsUrl, transactionId: transactionId, paReq: paReq);
 
-        if (result?.success == true) {
-          var response3ds = await HousingProvider()
-              .housingPaymentSend3ds(result!.md!, result.paRes!);
-          if (response3ds['response_status'] == 'ok') {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('Жилье успешно забронировано!',
-                  style: const TextStyle(fontSize: 14)),
-            ));
+          if (result?.success == true) {
+            var response3ds = await HousingProvider()
+                .housingPaymentSend3ds(result!.md!, result.paRes!);
+            if (response3ds['response_status'] == 'ok') {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Жилье успешно забронировано!',
+                    style: const TextStyle(fontSize: 14)),
+              ));
 
-            Future.delayed(
-              const Duration(seconds: 3),
-              () => _key.currentState!.reset(),
-            ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => TabBarPage()),
-                (Route<dynamic> route) => false));
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(response3ds['data']['message'],
-                  style: const TextStyle(fontSize: 14)),
-            ));
+              Future.delayed(
+                const Duration(seconds: 3),
+                () => _key.currentState!.reset(),
+              ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => TabBarPage()),
+                  (Route<dynamic> route) => false));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(response3ds['data']['message'],
+                    style: const TextStyle(fontSize: 14)),
+              ));
+            }
           }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(response['data']['message'],
+                style: const TextStyle(fontSize: 14)),
+          ));
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(response['data']['message'],
-              style: const TextStyle(fontSize: 14)),
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content:
+              Text("Добавьте способ оплаты.", style: TextStyle(fontSize: 14)),
         ));
       }
     } else {
+      _key.currentState!.reset();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content:
-            Text("Добавьте способ оплаты.", style: TextStyle(fontSize: 14)),
+        content: Text("Извините, ведутся технические работы, попробуйте позже.",
+            style: TextStyle(fontSize: 14)),
       ));
     }
   }

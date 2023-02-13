@@ -455,7 +455,7 @@ class _HomeImpressionState extends State<HomeImpression>
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SearchPage(),
+        builder: (context) => SearchPage(false),
       ),
     );
 

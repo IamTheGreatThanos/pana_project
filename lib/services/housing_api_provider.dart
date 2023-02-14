@@ -8,12 +8,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HousingProvider {
   String API_URL = AppConstants.baseUrl;
 
-  Future<dynamic> getHousingData(int id) async {
+  Future<dynamic> getHousingData(int id, String lat, String lng) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    String uri = '${API_URL}api/mobile/housing?page=1&category_id=$id';
+    if (lat != '' && lng != '') {
+      uri += '&lat=$lat&lng=$lng';
+    }
 
     final response = await http.get(
-      Uri.parse('${API_URL}api/mobile/housing?page=1&category_id=$id'),
+      Uri.parse(uri),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -37,15 +41,18 @@ class HousingProvider {
   }
 
   Future<dynamic> getHousingFromSearch(
-      int countryId,
-      int adultCount,
-      int childCount,
-      int babyCount,
-      int petCount,
-      String startDate,
-      String endDate,
-      int cityId,
-      String searchText) async {
+    int countryId,
+    int adultCount,
+    int childCount,
+    int babyCount,
+    int petCount,
+    String startDate,
+    String endDate,
+    int cityId,
+    String searchText,
+    String lat,
+    String lng,
+  ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     String urlParams = 'api/mobile/housing?page=1';
@@ -73,6 +80,9 @@ class HousingProvider {
     }
     if (searchText != '') {
       urlParams += '&search=${Uri.encodeComponent(searchText)}';
+    }
+    if (lat != '' && lng != '') {
+      urlParams += '&lat=$lat&lng=$lng';
     }
 
     print(urlParams);
@@ -125,12 +135,18 @@ class HousingProvider {
     }
   }
 
-  Future<dynamic> getFavoritesHousing() async {
+  Future<dynamic> getFavoritesHousing(String lat, String lng) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
+    String uri = '${API_URL}api/mobile/favorite?page=1&type=housing';
+
+    if (lat != '' && lng != '') {
+      uri += '&lat=$lat&lng=$lng';
+    }
+
     final response = await http.get(
-      Uri.parse('${API_URL}api/mobile/favorite?page=1&type=housing'),
+      Uri.parse(uri),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -324,6 +340,32 @@ class HousingProvider {
     final response = await http.get(
       Uri.parse(
           '${API_URL}api/mobile/review?page=1&type=audio_review&housing_id=$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> getReelsById(int id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse('${API_URL}api/mobile/reel?housing_id=$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',

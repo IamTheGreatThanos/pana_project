@@ -35,10 +35,12 @@ import 'package:story_view/widgets/story_view.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HousingInfo extends StatefulWidget {
-  const HousingInfo(this.id, this.thisStoryItems, this.mediaStoryItems);
+  const HousingInfo(
+      this.id, this.thisStoryItems, this.mediaStoryItems, this.distance);
   final int id;
   final List<StoryItem?> thisStoryItems;
   final List<StoryItem?> mediaStoryItems;
+  final String distance;
 
   @override
   _HousingInfoState createState() => _HousingInfoState();
@@ -249,7 +251,7 @@ class _HousingInfoState extends State<HousingInfo> {
                           Padding(
                             padding: const EdgeInsets.only(left: 20),
                             child: Text(
-                              '${thisHousing.distance ?? 0} км от вас',
+                              '${widget.distance} км от вас',
                               style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -1296,7 +1298,7 @@ class _HousingInfoState extends State<HousingInfo> {
 
   void getReels() async {
     reels = [];
-    var response = await MainProvider().getReels('housing');
+    var response = await HousingProvider().getReelsById(widget.id);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         reels.add(Reels.fromJson(response['data'][i]));

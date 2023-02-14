@@ -13,3 +13,5 @@ prefs.setString('lock_code', widget.code);
 prefs.setString("user_avatar", response['user']['avatar']);
 prefs.setBool('isBiometricsUse', _switchValue);
 prefs.getBool('isLogedIn');
+prefs.setString('lastLat', lat);
+prefs.setString('lastLng', lng);

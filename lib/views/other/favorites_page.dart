@@ -10,6 +10,7 @@ import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
 import 'package:pana_project/views/impression/impression_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
@@ -220,15 +221,19 @@ class _FavoritesPageState extends State<FavoritesPage> {
                                                     }
 
                                                     await Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                HousingInfo(
-                                                                    housingList[
-                                                                            i]
-                                                                        .id!,
-                                                                    thisStoryItems,
-                                                                    mediaStoryItems)));
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            HousingInfo(
+                                                          housingList[i].id!,
+                                                          thisStoryItems,
+                                                          mediaStoryItems,
+                                                          housingList[i]
+                                                              .distance
+                                                              .toString(),
+                                                        ),
+                                                      ),
+                                                    );
 
                                                     getHousingList();
                                                   },
@@ -414,8 +419,18 @@ class _FavoritesPageState extends State<FavoritesPage> {
   }
 
   void getHousingList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     housingList = [];
-    var response = await HousingProvider().getFavoritesHousing();
+    String lat = '';
+    String lng = '';
+
+    if (prefs.getString('lastLat') != null &&
+        prefs.getString('lastLng') != null) {
+      lat = prefs.getString('lastLat')!;
+      lng = prefs.getString('lastLng')!;
+    }
+    var response = await HousingProvider().getFavoritesHousing(lat, lng);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         housingList.add(HousingCardModel.fromJson(response['data'][i]));

@@ -162,7 +162,7 @@ class _SplashScreenState extends State<SplashScreen> {
       GlobalVariables.favoritesHousing = [];
       GlobalVariables.favoritesImpression = [];
 
-      var response = await HousingProvider().getFavoritesHousing();
+      var response = await HousingProvider().getFavoritesHousing('', '');
       if (response['response_status'] == 'ok') {
         for (var item in response['data']) {
           GlobalVariables.favoritesHousing.add(item['id']);

@@ -8,7 +8,8 @@ import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/models/reels.dart';
-import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/services/housing_api_provider.dart';
+import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
 import 'package:pana_project/views/other/reels_video_selection_page.dart';
@@ -220,11 +221,11 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                   Text(
                                     widget.type == 2
                                         ? widget.housing.dateFrom
-                                        ?.substring(0, 10) ??
-                                        '-'
+                                                ?.substring(0, 10) ??
+                                            '-'
                                         : widget.impression.dateFrom
-                                        ?.substring(0, 10) ??
-                                        '-',
+                                                ?.substring(0, 10) ??
+                                            '-',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -635,19 +636,37 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
 
   void getReels() async {
     reels = [];
-    var response = await MainProvider().getReels('housing');
-    if (response['response_status'] == 'ok') {
-      for (int i = 0; i < response['data'].length; i++) {
-        reels.add(Reels.fromJson(response['data'][i]));
-      }
-      if (mounted) {
-        setState(() {});
+    if (widget.type == 2) {
+      var response = await HousingProvider().getReelsById(widget.housing.id!);
+      if (response['response_status'] == 'ok') {
+        for (int i = 0; i < response['data'].length; i++) {
+          reels.add(Reels.fromJson(response['data'][i]));
+        }
+        if (mounted) {
+          setState(() {});
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
+        ));
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 14)),
-      ));
+      var response =
+          await ImpressionProvider().getReelsById(widget.impression.id!);
+      if (response['response_status'] == 'ok') {
+        for (int i = 0; i < response['data'].length; i++) {
+          reels.add(Reels.fromJson(response['data'][i]));
+        }
+        if (mounted) {
+          setState(() {});
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
+        ));
+      }
     }
   }
 }

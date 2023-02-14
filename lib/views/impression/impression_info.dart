@@ -1353,7 +1353,8 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
 
   void getReels() async {
     reels = [];
-    var response = await MainProvider().getReels('impression');
+    var response =
+        await ImpressionProvider().getReelsById(widget.impression.id!);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         reels.add(Reels.fromJson(response['data'][i]));

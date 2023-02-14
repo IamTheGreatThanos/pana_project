@@ -181,7 +181,7 @@ class _HousingCardState extends State<HousingCard> {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  '${widget.housing.distance} км от вас',
+                  '${widget.housing.distance == -1 ? "-" : widget.housing.distance} км от вас',
                   style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,

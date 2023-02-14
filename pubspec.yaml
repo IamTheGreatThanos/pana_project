@@ -64,6 +64,7 @@ dependencies:
   cloudpayments: ^0.3.0
   flutter_credit_card: ^3.0.5
   onesignal_flutter: ^3.5.0
+  geolocator: ^9.0.0
 
 
 dev_dependencies:

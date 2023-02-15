@@ -534,7 +534,7 @@ class _PaymentPageState extends State<PaymentPage> {
   void sendOrder(GlobalKey<SlideActionState> _key) async {
     var paymentPermissionResponse =
         await MainProvider().requestPaymentPermission();
-    if (paymentPermissionResponse['data']['is-public'] == true) {
+    if (paymentPermissionResponse['data']['is_public'] == true) {
       if (cards.isNotEmpty) {
         var response = await HousingProvider().housingPayment(
           widget.housing.id!,

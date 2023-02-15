@@ -2,9 +2,12 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/impression_card.dart';
+import 'package:pana_project/components/selections_card.dart';
 import 'package:pana_project/components/stories_card.dart';
+import 'package:pana_project/models/images.dart';
 import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/models/reels.dart';
+import 'package:pana_project/models/selections.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
@@ -53,18 +56,21 @@ class _HomeImpressionState extends State<HomeImpression>
 
   List<ImpressionCardModel> impressionList = [];
   List<Reels> reels = [];
+  Selections selections = Selections();
+  List<Images> selectionsImage = [];
 
   int selectedCategoryId = 1;
   String selectedRange = '';
   int selectedCountryId = 0;
   String searchText = '';
-  bool isLogedIn = false;
+  bool isLoggedIn = false;
 
   @override
   void initState() {
     getImpressionList();
     checkIsLogedIn();
     getReels();
+    getSelections();
     _tabController = TabController(vsync: this, length: 12);
     super.initState();
   }
@@ -78,9 +84,9 @@ class _HomeImpressionState extends State<HomeImpression>
   void checkIsLogedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('isLogedIn') == true) {
-      isLogedIn = true;
+      isLoggedIn = true;
     } else {
-      isLogedIn = false;
+      isLoggedIn = false;
     }
   }
 
@@ -276,7 +282,7 @@ class _HomeImpressionState extends State<HomeImpression>
                             children: <Widget>[
                               GestureDetector(
                                 onTap: () {
-                                  if (isLogedIn == true) {
+                                  if (isLoggedIn == true) {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -329,81 +335,105 @@ class _HomeImpressionState extends State<HomeImpression>
                           ),
                         ),
                         for (int i = 0; i < impressionList.length; i++)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
-                            child: GestureDetector(
-                                onTap: () async {
-                                  if (isLogedIn == true) {
-                                    StoryController _storyController =
-                                        StoryController();
-                                    List<StoryItem?> thisStoryItems = [];
-                                    List<StoryItem?> mediaStoryItems = [];
+                          Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: GestureDetector(
+                                    onTap: () async {
+                                      if (isLoggedIn == true) {
+                                        StoryController _storyController =
+                                            StoryController();
+                                        List<StoryItem?> thisStoryItems = [];
+                                        List<StoryItem?> mediaStoryItems = [];
 
-                                    for (int j = 0;
-                                        j < impressionList[i].videos!.length;
-                                        j++) {
-                                      thisStoryItems.add(
-                                        StoryItem.pageVideo(
-                                          impressionList[i].videos![j].path!,
-                                          controller: _storyController,
-                                          imageFit: BoxFit.cover,
-                                        ),
-                                      );
+                                        for (int j = 0;
+                                            j <
+                                                impressionList[i]
+                                                    .videos!
+                                                    .length;
+                                            j++) {
+                                          thisStoryItems.add(
+                                            StoryItem.pageVideo(
+                                              impressionList[i]
+                                                  .videos![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.cover,
+                                            ),
+                                          );
 
-                                      mediaStoryItems.add(
-                                        StoryItem.pageVideo(
-                                          impressionList[i].videos![j].path!,
-                                          controller: _storyController,
-                                          imageFit: BoxFit.fitWidth,
-                                        ),
-                                      );
-                                    }
+                                          mediaStoryItems.add(
+                                            StoryItem.pageVideo(
+                                              impressionList[i]
+                                                  .videos![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.fitWidth,
+                                            ),
+                                          );
+                                        }
 
-                                    for (int j = 0;
-                                        j < impressionList[i].images!.length;
-                                        j++) {
-                                      thisStoryItems.add(
-                                        StoryItem.pageImage(
-                                          url: impressionList[i]
-                                              .images![j]
-                                              .path!,
-                                          controller: _storyController,
-                                          imageFit: BoxFit.cover,
-                                        ),
-                                      );
+                                        for (int j = 0;
+                                            j <
+                                                impressionList[i]
+                                                    .images!
+                                                    .length;
+                                            j++) {
+                                          thisStoryItems.add(
+                                            StoryItem.pageImage(
+                                              url: impressionList[i]
+                                                  .images![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.cover,
+                                            ),
+                                          );
 
-                                      mediaStoryItems.add(
-                                        StoryItem.pageImage(
-                                          url: impressionList[i]
-                                              .images![j]
-                                              .path!,
-                                          controller: _storyController,
-                                          imageFit: BoxFit.fitWidth,
-                                        ),
-                                      );
-                                    }
+                                          mediaStoryItems.add(
+                                            StoryItem.pageImage(
+                                              url: impressionList[i]
+                                                  .images![j]
+                                                  .path!,
+                                              controller: _storyController,
+                                              imageFit: BoxFit.fitWidth,
+                                            ),
+                                          );
+                                        }
 
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ImpressionInfo(
-                                          impressionList[i],
-                                          thisStoryItems,
-                                          mediaStoryItems,
-                                        ),
-                                      ),
-                                    );
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ImpressionInfo(
+                                              impressionList[i],
+                                              thisStoryItems,
+                                              mediaStoryItems,
+                                            ),
+                                          ),
+                                        );
 
-                                    setState(() {});
-                                  } else {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => AuthPage()));
-                                  }
-                                },
-                                child:
-                                    ImpressionCard(impressionList[i], () {})),
+                                        setState(() {});
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AuthPage()));
+                                      }
+                                    },
+                                    child: ImpressionCard(
+                                        impressionList[i], () {})),
+                              ),
+                              (i + 1) % 3 == 0
+                                  ? Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 20),
+                                      child: SelectionsCard(selections,
+                                          selectionsImage, isLoggedIn),
+                                    )
+                                  : const SizedBox()
+                            ],
                           )
                       ],
                     ),
@@ -515,6 +545,31 @@ class _HomeImpressionState extends State<HomeImpression>
       for (int i = 0; i < response['data'].length; i++) {
         reels.add(Reels.fromJson(response['data'][i]));
       }
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
+    }
+  }
+
+  void getSelections() async {
+    var response = await MainProvider().getSelections();
+    if (response['response_status'] == 'ok') {
+      selections = Selections.fromJson(response['data']);
+      selectionsImage = [];
+
+      for (int i = 0; i < selections.items!.length; i++) {
+        if (selections.items![i].type == 'housing') {
+          selectionsImage.add(selections.items![i].housing!.images!.first);
+        } else {
+          selectionsImage.add(selections.items![i].impression!.images!.first);
+        }
+      }
+
       if (mounted) {
         setState(() {});
       }

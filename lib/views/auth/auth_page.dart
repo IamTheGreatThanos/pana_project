@@ -391,6 +391,9 @@ class _AuthPageState extends State<AuthPage> {
                             registerButtonTapped();
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              margin: EdgeInsets.fromLTRB(20, 0, 20,
+                                  MediaQuery.of(context).size.height - 100),
                               content: Text("Заполните все поля.",
                                   style: const TextStyle(fontSize: 14)),
                             ));
@@ -456,6 +459,9 @@ class _AuthPageState extends State<AuthPage> {
                   emailController.text)));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.fromLTRB(
+            20, 0, 20, MediaQuery.of(context).size.height - 100),
         content: Text(response['data']['message'],
             style: const TextStyle(fontSize: 14)),
       ));

@@ -89,6 +89,8 @@ class _AuthPageState extends State<AuthPage> {
                                       keyboardType: TextInputType.number,
                                       textInputAction: TextInputAction.done,
                                       maxLength: 10,
+                                      scrollPadding:
+                                          const EdgeInsets.only(bottom: 100),
                                       decoration: const InputDecoration(
                                         counterStyle: TextStyle(
                                           height: double.minPositive,
@@ -128,6 +130,8 @@ class _AuthPageState extends State<AuthPage> {
                                 } else {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
                                     content: Text("Заполните все поля.",
                                         style: const TextStyle(fontSize: 14)),
                                   ));
@@ -480,6 +484,8 @@ class _AuthPageState extends State<AuthPage> {
     } else {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
         content: Text(response['data']['message'],
             style: const TextStyle(fontSize: 14)),
       ));

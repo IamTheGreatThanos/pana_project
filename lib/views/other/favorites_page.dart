@@ -48,6 +48,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
         child: Scaffold(
           backgroundColor: AppColors.lightGray,
           body: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Column(
@@ -241,7 +242,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
                                                       housingList[i],
                                                       getHousingList),
                                                 ),
-                                              )
+                                              ),
+                                            const SizedBox(height: 20)
                                           ],
                                         )
                                       : Column(
@@ -377,7 +379,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
                                                     child: ImpressionCard(
                                                         impressionList[i],
                                                         () {})),
-                                              )
+                                              ),
+                                            const SizedBox(height: 20)
                                           ],
                                         )
                                       : Column(

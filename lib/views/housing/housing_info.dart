@@ -251,7 +251,7 @@ class _HousingInfoState extends State<HousingInfo> {
                           Padding(
                             padding: const EdgeInsets.only(left: 20),
                             child: Text(
-                              '${widget.distance} км от вас',
+                              '${widget.distance == '-1' ? "-" : widget.distance} км от вас',
                               style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,

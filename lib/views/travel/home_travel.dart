@@ -245,8 +245,9 @@ class _HomeTravelState extends State<HomeTravel> {
   }
 
   void showNewPlanOfTravelModalSheet() async {
-    showModalBottomSheet<void>(
+    showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(AppConstants.cardBorderRadius),
@@ -257,129 +258,140 @@ class _HomeTravelState extends State<HomeTravel> {
         return Padding(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: SingleChildScrollView(
-            child: SizedBox(
-              height: 600,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      child: const Text(
-                        'Новый план поездки',
+          child: Container(
+            height: 400,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                topRight: Radius.circular(25.0),
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: 400,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: const Text(
+                          'Новый план поездки',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(width: 1, color: AppColors.grey),
+                          ),
+                          child: SizedBox(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 10),
+                              child: TextField(
+                                controller: _titleController,
+                                maxLength: 100,
+                                decoration: const InputDecoration(
+                                  counterStyle: TextStyle(
+                                    height: double.minPositive,
+                                  ),
+                                  counterText: "",
+                                  border: InputBorder.none,
+                                  hintText: 'Отдых с семьей, каникулы и т.д.',
+                                  hintStyle: TextStyle(
+                                    color: Colors.black45,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Text(
+                        'Планы позволяют составить маршрут из мест, которые вы посетите в поездке',
                         style: TextStyle(
-                          fontSize: 32,
+                          color: Colors.black45,
+                          fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(width: 1, color: AppColors.grey),
-                        ),
-                        child: SizedBox(
-                          height: 40,
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 10),
-                            child: TextField(
-                              controller: _titleController,
-                              maxLength: 100,
-                              decoration: const InputDecoration(
-                                counterStyle: TextStyle(
-                                  height: double.minPositive,
+                      const SizedBox(height: 40),
+                      Row(
+                        children: [
+                          const Spacer(),
+                          SizedBox(
+                            height: 60,
+                            width: 150,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10), // <-- Radius
                                 ),
-                                counterText: "",
-                                border: InputBorder.none,
-                                hintText: 'Отдых с семьей, каникулы и т.д.',
-                                hintStyle: TextStyle(
-                                  color: Colors.black45,
-                                  fontSize: 15,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                "Отмена",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    const Text(
-                      'Планы позволяют составить маршрут из мест, которые вы посетите в поездке',
-                      style: TextStyle(
-                        color: Colors.black45,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    Row(
-                      children: [
-                        const Spacer(),
-                        SizedBox(
-                          height: 60,
-                          width: 150,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: AppColors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(10), // <-- Radius
+                          const Spacer(),
+                          SizedBox(
+                            height: 60,
+                            width: 150,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors.accent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10), // <-- Radius
+                                ),
                               ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text(
-                              "Отмена",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
+                              onPressed: () {
+                                if (_titleController.text != '') {
+                                  Navigator.of(context).pop();
+                                  showDatePicker();
+                                }
+                              },
+                              child: const Text(
+                                "Далее",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const Spacer(),
-                        SizedBox(
-                          height: 60,
-                          width: 150,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: AppColors.accent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(10), // <-- Radius
-                              ),
-                            ),
-                            onPressed: () {
-                              if (_titleController.text != '') {
-                                Navigator.of(context).pop();
-                                showDatePicker();
-                              }
-                            },
-                            child: const Text(
-                              "Далее",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Spacer(),
-                      ],
-                    )
-                  ],
+                          const Spacer(),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -6,7 +6,7 @@ class Answers {
   User? user;
   String? description;
   String? createdAt;
-  Null? updatedAt;
+  String? updatedAt;
 
   Answers(
       {this.id,

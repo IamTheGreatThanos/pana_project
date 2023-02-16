@@ -212,8 +212,9 @@ class _TextReviewDetailPageState extends State<TextReviewDetailPage> {
                                       width: 60,
                                       height: 60,
                                       child: CachedNetworkImage(
-                                        imageUrl:
-                                            'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
+                                        imageUrl: widget.review.answers?[0].user
+                                                ?.avatar ??
+                                            '',
                                       ),
                                     ),
                                   ),
@@ -262,7 +263,8 @@ class _TextReviewDetailPageState extends State<TextReviewDetailPage> {
                                                 const EdgeInsets.only(left: 10),
                                             child: Text(
                                               widget.review.answers?[0]
-                                                      .updatedAt ??
+                                                      .updatedAt
+                                                      ?.substring(0, 10) ??
                                                   '',
                                               style: const TextStyle(
                                                 fontSize: 12,

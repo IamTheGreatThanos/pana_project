@@ -47,8 +47,8 @@ class ProvideItem {
   int? id;
   int? provideId;
   String? name;
-  Null? createdAt;
-  Null? updatedAt;
+  String? createdAt;
+  String? updatedAt;
 
   ProvideItem(
       {this.id, this.provideId, this.name, this.createdAt, this.updatedAt});

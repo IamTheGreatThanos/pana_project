@@ -115,7 +115,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                             text: 'Жилье',
                           ),
                           Tab(
-                            text: 'Впечатления',
+                            text: 'Впечатление',
                           ),
                         ],
                       ),

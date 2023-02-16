@@ -188,7 +188,8 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
                               child: Row(
                                 children: [
                                   Text(
-                                    '${impressionData.peopleCount} персоны',
+                                    checkPersonCount(
+                                        impressionData.peopleCount.toString()),
                                     style: const TextStyle(
                                       color: AppColors.accent,
                                       fontWeight: FontWeight.w500,
@@ -415,6 +416,18 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
             style: const TextStyle(fontSize: 14)),
       ));
     }
+  }
+
+  String checkPersonCount(String personCount) {
+    if (personCount.endsWith('1')) {
+      return '$personCount персона';
+    } else if (personCount.endsWith('2') ||
+        personCount.endsWith('3') ||
+        personCount.endsWith('4')) {
+      return '$personCount персоны';
+    }
+
+    return '$personCount персон';
   }
 }
 

@@ -20,6 +20,7 @@ import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/utils/checkReviewsCount.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/utils/get_bytes_from_asset.dart';
@@ -295,7 +296,8 @@ class _HousingInfoState extends State<HousingInfo> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: Text(
-                                '${thisHousing.reviewsCount ?? 0} Отзыва',
+                                checkReviewsCount(
+                                    (thisHousing.reviewsCount ?? 0).toString()),
                                 style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,

@@ -9,6 +9,7 @@ import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/roomCard.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/utils/checkReviewsCount.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
@@ -194,7 +195,9 @@ class _PaymentPageState extends State<PaymentPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: Text(
-                                    '${widget.housing.reviewsCount ?? 0} Отзывов',
+                                    checkReviewsCount(
+                                        (widget.housing.reviewsCount ?? 0)
+                                            .toString()),
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,

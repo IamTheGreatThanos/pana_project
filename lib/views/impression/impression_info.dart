@@ -354,11 +354,16 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                             SvgPicture.asset(
                                                 'assets/icons/service_icon_${item.provideItem.provideId}.svg'),
                                             const SizedBox(width: 10),
-                                            Text(
-                                              item.provideItem.name,
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500,
+                                            SizedBox(
+                                              width: 170,
+                                              child: Text(
+                                                item.provideItem.name,
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                           ],

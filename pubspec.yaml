@@ -65,6 +65,7 @@ dependencies:
   flutter_credit_card: ^3.0.5
   onesignal_flutter: ^3.5.0
   geolocator: ^9.0.0
+  syncfusion_flutter_charts: ^20.1.47
 
 
 dev_dependencies:

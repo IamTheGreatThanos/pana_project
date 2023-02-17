@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
+import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
     OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
       print("Accepted permission: $accepted");
       if (accepted) {
+        getOneSignalUserToken();
         OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
           OSNotificationDisplayType.notification;
         });
@@ -43,6 +45,23 @@ class _SplashScreenState extends State<SplashScreen> {
         });
       }
     });
+  }
+
+  void getOneSignalUserToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var deviceState = await OneSignal.shared.getDeviceState();
+    if (deviceState != null || deviceState?.userId != null) {
+      String userId = deviceState!.userId!;
+      print("TOKEN ID: " + userId);
+
+      if (prefs.getBool('isLogedIn') == true) {
+        var response = await ProfileProvider().setOneSignalUserToken(userId);
+        if (response['response_status'] == 'ok') {
+          print(response);
+        }
+      }
+    }
   }
 
   void removeData() async {

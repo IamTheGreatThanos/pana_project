@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/transaction_payment_history_card.dart';
+import 'package:pana_project/models/transactionHistory.dart';
+import 'package:pana_project/models/transactionMain.dart';
+import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MyTransactionsPage extends StatefulWidget {
@@ -11,32 +15,22 @@ class MyTransactionsPage extends StatefulWidget {
 
 class _MyTransactionsPageState extends State<MyTransactionsPage> {
   TextEditingController phoneController = TextEditingController();
-  List<_ChartData> data = [
-    _ChartData('Янв', 6, 1),
-    _ChartData('Фев', 10, 1),
-    _ChartData('Мар', 12, 1),
-    _ChartData('Апр', 6.4, 1),
-    _ChartData('Май', 14, 1),
-    _ChartData('Июн', 13, 1),
-    _ChartData('Июл', 20, 1),
-  ];
+  TransactionMain transactionMain = TransactionMain();
 
-  List<_ChartData> data2 = [
-    _ChartData('Янв', 30, 1),
-    _ChartData('Фев', 9, 1),
-    _ChartData('Мар', 12, 1),
-    _ChartData('Апр', 6.4, 1),
-    _ChartData('Май', 10, 1),
-    _ChartData('Июн', 6, 1),
-    _ChartData('Июл', 3, 1),
-  ];
+  List<_ChartData> data = [];
+  List<_ChartData> data2 = [];
+
+  List<TransactionHistory> transactionHistory = [];
 
   late TooltipBehavior _tooltip;
 
-  int choosedType = 2;
+  bool isHousingTapped = true;
+  bool isImpressionTapped = true;
 
   @override
   void initState() {
+    getMyTransactionsStatistic();
+    getMyTransactionsHistory();
     _tooltip = TooltipBehavior(enable: true);
     super.initState();
   }
@@ -119,8 +113,8 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: const [
-                                      Text(
+                                    children: [
+                                      const Text(
                                         "Транзакции",
                                         style: TextStyle(
                                           fontSize: 14,
@@ -128,186 +122,231 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
                                           color: AppColors.blackWithOpacity,
                                         ),
                                       ),
-                                      SizedBox(height: 10),
-                                      Text(
-                                        "1.543.000 тг",
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.black,
+                                      const SizedBox(height: 10),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.7,
+                                        child: Text(
+                                          "${formatNumberString(transactionMain.totalPriceSum.toString())} тг",
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.black,
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
                                   const Spacer(),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(8)),
-                                        border: Border.all(
-                                          width: 1,
-                                          color: AppColors.grey,
-                                        )),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
-                                      child: Row(
-                                        children: const [
-                                          Text(
-                                            "Год",
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.blackWithOpacity,
-                                            ),
-                                          ),
-                                          Icon(Icons.arrow_drop_down)
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                  // Container(
+                                  //   decoration: BoxDecoration(
+                                  //       color: Colors.white,
+                                  //       borderRadius: const BorderRadius.all(
+                                  //           Radius.circular(8)),
+                                  //       border: Border.all(
+                                  //         width: 1,
+                                  //         color: AppColors.grey,
+                                  //       )),
+                                  //   child: Padding(
+                                  //     padding: const EdgeInsets.symmetric(
+                                  //         horizontal: 10, vertical: 5),
+                                  //     child: Row(
+                                  //       children: const [
+                                  //         Text(
+                                  //           "Год",
+                                  //           style: TextStyle(
+                                  //             fontSize: 14,
+                                  //             fontWeight: FontWeight.w500,
+                                  //             color: AppColors.blackWithOpacity,
+                                  //           ),
+                                  //         ),
+                                  //         Icon(Icons.arrow_drop_down)
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                               const SizedBox(height: 20),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: 150,
-                                child: SfCartesianChart(
-                                  primaryXAxis: CategoryAxis(
-                                    labelStyle: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                  primaryYAxis: NumericAxis(
-                                    minimum: 0,
-                                    maximum: 40,
-                                    interval: 50,
-                                    isVisible: false,
-                                  ),
-                                  tooltipBehavior: _tooltip,
-                                  series: <ChartSeries<_ChartData, String>>[
-                                    AreaSeries<_ChartData, String>(
-                                      dataSource: data,
-                                      xValueMapper: (_ChartData data, _) =>
-                                          '${data.x}\n2022',
-                                      yValueMapper: (_ChartData data, _) =>
-                                          data.y,
-                                      name: 'Text',
-                                      color: AppColors.accent.withOpacity(0.2),
-                                      borderColor: AppColors.accent,
-                                      borderWidth: 1,
-                                    ),
-                                    AreaSeries<_ChartData, String>(
-                                      dataSource: data2,
-                                      xValueMapper: (_ChartData data, _) =>
-                                          '${data.x}\n2022',
-                                      yValueMapper: (_ChartData data, _) =>
-                                          data.y,
-                                      name: 'Text',
-                                      color: AppColors.main.withOpacity(0.2),
-                                      borderColor: AppColors.main,
-                                      borderWidth: 1,
+                              isHousingTapped || isImpressionTapped
+                                  ? SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 150,
+                                      child: SfCartesianChart(
+                                        primaryXAxis: CategoryAxis(
+                                          labelStyle: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                        primaryYAxis: NumericAxis(
+                                          isVisible: false,
+                                        ),
+                                        tooltipBehavior: _tooltip,
+                                        series: <
+                                            ChartSeries<_ChartData, String>>[
+                                          isImpressionTapped
+                                              ? AreaSeries<_ChartData, String>(
+                                                  dataSource: data,
+                                                  xValueMapper:
+                                                      (_ChartData data, _) =>
+                                                          data.x,
+                                                  yValueMapper:
+                                                      (_ChartData data, _) =>
+                                                          data.y,
+                                                  name: 'Инф.',
+                                                  color: AppColors.accent
+                                                      .withOpacity(0.2),
+                                                  borderColor: AppColors.accent,
+                                                  borderWidth: 1,
+                                                )
+                                              : AreaSeries(
+                                                  dataSource: [],
+                                                  xValueMapper:
+                                                      (_ChartData data, _) =>
+                                                          data.x,
+                                                  yValueMapper:
+                                                      (_ChartData data, _) =>
+                                                          data.y),
+                                          isHousingTapped
+                                              ? AreaSeries<_ChartData, String>(
+                                                  dataSource: data2,
+                                                  xValueMapper:
+                                                      (_ChartData data, _) =>
+                                                          data.x,
+                                                  yValueMapper:
+                                                      (_ChartData data, _) =>
+                                                          data.y,
+                                                  name: 'Инф.',
+                                                  color: AppColors.main
+                                                      .withOpacity(0.2),
+                                                  borderColor: AppColors.main,
+                                                  borderWidth: 1,
+                                                )
+                                              : AreaSeries(
+                                                  dataSource: [],
+                                                  xValueMapper:
+                                                      (_ChartData data, _) =>
+                                                          data.x,
+                                                  yValueMapper:
+                                                      (_ChartData data, _) =>
+                                                          data.y),
+                                        ],
+                                      ),
                                     )
-                                  ],
-                                ),
-                              ),
+                                  : const SizedBox(),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    decoration: BoxDecoration(
-                                      color: choosedType == 2
-                                          ? AppColors.accent
-                                          : AppColors.grey,
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(8)),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 20),
-                                      child: Column(
-                                        children: [
-                                          SvgPicture.asset(
-                                            'assets/icons/tab_bar_icon2.svg',
-                                            color: choosedType == 2
-                                                ? AppColors.white
-                                                : AppColors.black,
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            "1.543.000 тг",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: choosedType == 2
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isImpressionTapped =
+                                            !isImpressionTapped;
+                                      });
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.4,
+                                      decoration: BoxDecoration(
+                                        color: isImpressionTapped
+                                            ? AppColors.accent
+                                            : AppColors.grey,
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(8)),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 20),
+                                        child: Column(
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/icons/tab_bar_icon2.svg',
+                                              color: isImpressionTapped
                                                   ? AppColors.white
                                                   : AppColors.black,
                                             ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            "Впечатление",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: choosedType == 2
-                                                  ? Colors.white60
-                                                  : Colors.black54,
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              "${formatNumberString(transactionMain.impressionTotalPriceSum.toString())} тг",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: isImpressionTapped
+                                                    ? AppColors.white
+                                                    : AppColors.black,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              "Впечатление",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                color: isImpressionTapped
+                                                    ? Colors.white60
+                                                    : Colors.black54,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
                                   const SizedBox(width: 20),
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    decoration: BoxDecoration(
-                                      color: choosedType == 1
-                                          ? AppColors.main
-                                          : AppColors.grey,
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(8)),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 20),
-                                      child: Column(
-                                        children: [
-                                          SvgPicture.asset(
-                                            'assets/icons/tab_bar_icon3.svg',
-                                            color: choosedType == 1
-                                                ? AppColors.white
-                                                : AppColors.black,
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            "1.543.000 тг",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: choosedType == 1
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isHousingTapped = !isHousingTapped;
+                                      });
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.4,
+                                      decoration: BoxDecoration(
+                                        color: isHousingTapped
+                                            ? AppColors.main
+                                            : AppColors.grey,
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(8)),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 20),
+                                        child: Column(
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/icons/tab_bar_icon3.svg',
+                                              color: isHousingTapped
                                                   ? AppColors.white
                                                   : AppColors.black,
                                             ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            "Жилье",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: choosedType == 1
-                                                  ? Colors.white60
-                                                  : Colors.black54,
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              "${formatNumberString(transactionMain.housingTotalPriceSum.toString())} тг",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: isHousingTapped
+                                                    ? AppColors.white
+                                                    : AppColors.black,
+                                              ),
+                                              textAlign: TextAlign.center,
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              "Жилье",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                color: isHousingTapped
+                                                    ? Colors.white60
+                                                    : Colors.black54,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   )
@@ -332,7 +371,8 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
                     ),
                   ),
                 ),
-                for (int i = 0; i < 3; i++) TransactionPaymentHistoryCard(),
+                for (int i = 0; i < transactionHistory.length; i++)
+                  TransactionPaymentHistoryCard(transactionHistory[i]),
                 const SizedBox(height: 20),
               ],
             ),
@@ -341,12 +381,44 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
       ),
     );
   }
+
+  void getMyTransactionsStatistic() async {
+    var response = await ProfileProvider().getMyTransactionsStatistic();
+    if (response['response_status'] == 'ok') {
+      transactionMain = TransactionMain.fromJson(response['data']);
+
+      for (int i = 0; i < transactionMain.month!.length; i++) {
+        data.add(_ChartData(
+            '${transactionMain.month![i].name!.substring(0, 3)}.\n${transactionMain.month![i].year}',
+            transactionMain.month![i].housingPrice ?? 0));
+        data2.add(_ChartData(
+            '${transactionMain.month![i].name!.substring(0, 3)}.\n${transactionMain.month![i].year}',
+            transactionMain.month![i].impressionPrice ?? 0));
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
+
+  void getMyTransactionsHistory() async {
+    var response = await ProfileProvider().getMyTransactionsHistory();
+    if (response['response_status'] == 'ok') {
+      for (int i = 0; i < response['data'].length; i++) {
+        transactionHistory
+            .add(TransactionHistory.fromJson(response['data'][i]));
+      }
+
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
 }
 
 class _ChartData {
-  _ChartData(this.x, this.y, this.type);
+  _ChartData(this.x, this.y);
 
   final String x;
   final double y;
-  final int type;
 }

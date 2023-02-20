@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pana_project/models/transactionHistory.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
+import 'package:pana_project/views/profile/my_transaction_detail.dart';
 
 class TransactionPaymentHistoryCard extends StatefulWidget {
-  // TransactionPaymentHistoryCard(this.title);
-  // final String title;
+  TransactionPaymentHistoryCard(this.transaction);
+  final TransactionHistory transaction;
 
   @override
   _TransactionPaymentHistoryCardState createState() =>
@@ -23,10 +26,11 @@ class _TransactionPaymentHistoryCardState
       padding: const EdgeInsets.only(top: 20),
       child: GestureDetector(
         onTap: () {
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => TextReviewDetailPage()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      MyTransactionDetailPage(widget.transaction)));
         },
         child: Container(
           decoration: BoxDecoration(
@@ -40,16 +44,18 @@ class _TransactionPaymentHistoryCardState
                 Row(
                   children: [
                     Text(
-                      'Бронирование жилья',
-                      style: TextStyle(
+                      widget.transaction.type == 'housing'
+                          ? 'Бронирование жилья'
+                          : 'Бронирование впечатления',
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Text(
-                      '20.01.2023',
-                      style: TextStyle(
+                      widget.transaction.paymentAt?.substring(0, 10) ?? '',
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: AppColors.blackWithOpacity,
@@ -57,28 +63,28 @@ class _TransactionPaymentHistoryCardState
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
-                  'Сумма: 543.000 тг',
-                  style: TextStyle(
+                  'Сумма: ${formatNumberString(widget.transaction.totalPrice.toString())} тг',
+                  style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.blackWithOpacity),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 const Divider(),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       'Подробнее о платеже',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Spacer(),
-                    Icon(
+                    const Spacer(),
+                    const Icon(
                       Icons.arrow_forward_ios,
                       size: 18,
                     )

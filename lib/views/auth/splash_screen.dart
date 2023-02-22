@@ -27,14 +27,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     getListOfFavorites();
     confOneSignal();
-    super.initState();
     startTimer();
+    super.initState();
   }
 
   void confOneSignal() async {
     await OneSignal.shared.setAppId('47781c01-87c4-45c0-ad57-3b8d1fd6f48b');
     OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-      print("Accepted permission: $accepted");
+      // print("Accepted permission: $accepted");
       if (accepted) {
         getOneSignalUserToken();
         OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
@@ -53,12 +53,12 @@ class _SplashScreenState extends State<SplashScreen> {
     var deviceState = await OneSignal.shared.getDeviceState();
     if (deviceState != null || deviceState?.userId != null) {
       String userId = deviceState!.userId!;
-      print("TOKEN ID: " + userId);
+      // print("TOKEN ID: " + userId);
 
       if (prefs.getBool('isLogedIn') == true) {
         var response = await ProfileProvider().setOneSignalUserToken(userId);
         if (response['response_status'] == 'ok') {
-          print(response);
+          // print(response);
         }
       }
     }

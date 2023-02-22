@@ -138,7 +138,9 @@ class RoomNumbers {
     totalPrice = json['total_price'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    roomName = json['room']['room_name']['name'];
+    json['room']['room_name'] != null
+        ? roomName = json['room']['room_name']['name']
+        : '';
   }
 
   Map<String, dynamic> toJson() {

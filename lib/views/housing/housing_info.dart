@@ -1,9 +1,8 @@
-import 'dart:typed_data';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -170,8 +169,13 @@ class _HousingInfoState extends State<HousingInfo> {
                                 ),
                                 const Spacer(),
                                 GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
+                                  onTap: () async {
+                                    await FlutterShare.share(
+                                      title: 'Pana',
+                                      text: 'Жилье в Pana',
+                                      linkUrl:
+                                          'pana://pana.app/housing?id=${widget.id}',
+                                    );
                                   },
                                   child: Container(
                                     width: 40,

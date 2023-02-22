@@ -63,6 +63,14 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>kTCCServiceMediaLibrary</key>
-	<string>${PRODUCT_NAME} requests the use of the medialibrary for attaching a audio feedback</string>
+	<string>${PRODUCT_NAME} requests the use of the media library for attaching a audio feedback</string>
+	<key>CFBundleTypeRole</key>
+    <string>Editor</string>
+    <key>CFBundleURLName</key>
+    <string>pana.app</string>
+    <key>CFBundleURLSchemes</key>
+    <array>
+        <string>pana</string>
+    </array>
 </dict>
 </plist>

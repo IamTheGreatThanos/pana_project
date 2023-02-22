@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/housing/home_housing.dart';
+import 'package:pana_project/views/housing/search_page.dart';
 import 'package:pana_project/views/impression/home_impression.dart';
 import 'package:pana_project/views/messages/messages_main.dart';
 import 'package:pana_project/views/profile/profile_main.dart';
 import 'package:pana_project/views/travel/home_travel.dart';
+import 'package:uni_links/uni_links.dart';
 
 class TabBarPage extends StatefulWidget {
   @override
@@ -18,9 +22,12 @@ class _TabBarPageState extends State<TabBarPage> {
 
   List<Widget> tabViews = <Widget>[];
 
+  StreamSubscription? _sub;
+
   @override
   void initState() {
     super.initState();
+    initUniLinks();
     tabViews = <Widget>[
       HomeTravel(changeTabMethod),
       HomeImpression(),
@@ -28,6 +35,27 @@ class _TabBarPageState extends State<TabBarPage> {
       MessagesPage(changeTabMethod),
       ProfileMainPage(changeTabMethod),
     ];
+  }
+
+  Future<void> initUniLinks() async {
+    _sub = uriLinkStream.listen((uri) {
+      if (!mounted) return;
+      if (uri != null) {
+        if (uri.path == '/housing') {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SearchPage(true)));
+        }
+        print(uri.path);
+        print(uri.data);
+      }
+    });
+
+    // try {
+    //   String? initialLink = await getInitialLink();
+    //   print(initialLink);
+    // } on PlatformException {
+    //   print('Platfrom exception unilink.');
+    // }
   }
 
   @override

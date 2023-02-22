@@ -66,6 +66,8 @@ dependencies:
   onesignal_flutter: ^3.5.0
   geolocator: ^9.0.0
   syncfusion_flutter_charts: ^20.1.47
+  uni_links: ^0.5.1
+  flutter_share: ^2.0.0
 
 
 dev_dependencies:
@@ -204,6 +206,12 @@ flutter:
     - assets/icons/flag_icon.svg
     - assets/icons/checkbox_empty.svg
     - assets/icons/checkbox_full.svg
+    - assets/images/loyalty_card.png
+    - assets/images/loyalty_progress.png
+    - assets/icons/bronze_assik.png
+    - assets/icons/silver_assik.png
+    - assets/icons/gold_assik.png
+    - assets/icons/progress_assik.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

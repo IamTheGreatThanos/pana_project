@@ -64,7 +64,6 @@ class _AudioReviewCardState extends State<AudioReviewCard> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
             color: AppColors.white),
-        height: 200,
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
@@ -149,8 +148,11 @@ class _AudioReviewCardState extends State<AudioReviewCard> {
                               duration.inSeconds.toDouble(),
                         ),
                         builder: (context, value, _) => LinearProgressIndicator(
-                          value: position.inSeconds.toDouble() /
-                              duration.inSeconds.toDouble(),
+                          value:
+                              position.inSeconds == 1 && duration.inSeconds == 1
+                                  ? 0.0
+                                  : position.inSeconds.toDouble() /
+                                      duration.inSeconds.toDouble(),
                           color: AppColors.blackWithOpacity,
                           backgroundColor: AppColors.lightGray,
                         ),
@@ -181,6 +183,83 @@ class _AudioReviewCardState extends State<AudioReviewCard> {
                 ),
               ],
             ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: Divider(),
+            ),
+            widget.review.answers?.isNotEmpty ?? false
+                ? Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(12)),
+                              child: SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      widget.review.answers?[0].user?.avatar ??
+                                          '',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Text(
+                                      '${widget.review.answers?[0].user?.name ?? ''} ${widget.review.answers?[0].user?.surname ?? ''}',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text(
+                                    'Ответ от владельца',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.accent,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 20, bottom: 20, right: 20),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: Text(
+                            widget.review.answers?[0].description ?? '',
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : SizedBox()
           ],
         ),
       ),

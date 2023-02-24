@@ -45,7 +45,7 @@ class _LoyaltyBonusCardState extends State<LoyaltyBonusCard> {
                             ? 'Бронирование жилья'
                             : 'Бронирование впечатления',
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

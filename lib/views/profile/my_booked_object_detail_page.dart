@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/stories_card.dart';
@@ -557,7 +556,11 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                                 widget.type,
                                                 widget.type == 2
                                                     ? widget.housing.id!
-                                                    : widget.impression.id!)));
+                                                    : widget.impression.id!,
+                                                widget.type == 2
+                                                    ? widget.housing.dateFrom!
+                                                    : widget.impression
+                                                        .dateFrom!)));
                               },
                               child: Container(
                                 width: 162,

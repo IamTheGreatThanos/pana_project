@@ -102,8 +102,7 @@ class _TextReviewCardState extends State<TextReviewCard> {
               const SizedBox(height: 10),
               (widget.review.images?.length ?? 0) > 0
                   ? Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 10),
+                      margin: const EdgeInsets.fromLTRB(10, 0, 10, 15),
                       height: 70,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
@@ -151,6 +150,79 @@ class _TextReviewCardState extends State<TextReviewCard> {
                       ),
                     )
                   : Container(),
+              widget.review.answers?.isNotEmpty ?? false
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(12)),
+                                child: SizedBox(
+                                  width: 64,
+                                  height: 64,
+                                  child: CachedNetworkImage(
+                                    imageUrl: widget
+                                            .review.answers?[0].user?.avatar ??
+                                        '',
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 15),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.6,
+                                    child: Text(
+                                      '${widget.review.answers?[0].user?.name ?? ''} ${widget.review.answers?[0].user?.surname ?? ''}',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.6,
+                                    child: const Text(
+                                      'Ответ от владельца',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.accent,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: SizedBox(
+                            child: Text(
+                              widget.review.answers?[0].description ?? '',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: AppColors.blackWithOpacity,
+                              ),
+                              maxLines: 5,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    )
+                  : const SizedBox(),
             ],
           ),
         ),

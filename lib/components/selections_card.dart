@@ -68,8 +68,8 @@ class _SelectionsCardState extends State<SelectionsCard> {
                         initialPage: 0,
                         enableInfiniteScroll: true,
                         reverse: false,
-                        autoPlay: false,
-                        autoPlayInterval: const Duration(seconds: 3),
+                        autoPlay: true,
+                        autoPlayInterval: const Duration(seconds: 0),
                         autoPlayAnimationDuration:
                             const Duration(milliseconds: 800),
                         autoPlayCurve: Curves.fastOutSlowIn,

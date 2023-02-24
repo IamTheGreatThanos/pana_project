@@ -60,7 +60,6 @@ class _AudioReviewDetailPageState extends State<AudioReviewDetailPage> {
         body: SingleChildScrollView(
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
                 Container(
@@ -134,7 +133,7 @@ class _AudioReviewDetailPageState extends State<AudioReviewDetailPage> {
                     color: AppColors.white,
                   ),
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.78,
+                  height: MediaQuery.of(context).size.height * 0.82,
                   child: Column(
                     children: [
                       widget.review.answers?.isNotEmpty ?? false
@@ -200,7 +199,8 @@ class _AudioReviewDetailPageState extends State<AudioReviewDetailPage> {
                                                     left: 10),
                                                 child: Text(
                                                   widget.review.answers?[0]
-                                                          .updatedAt ??
+                                                          .updatedAt
+                                                          ?.substring(0, 10) ??
                                                       '',
                                                   style: const TextStyle(
                                                     fontSize: 12,
@@ -310,8 +310,11 @@ class _AudioReviewDetailPageState extends State<AudioReviewDetailPage> {
                                       curve: Curves.easeInOut,
                                       tween: Tween<double>(
                                         begin: 0,
-                                        end: position.inSeconds.toDouble() /
-                                            duration.inSeconds.toDouble(),
+                                        end: position.inSeconds == 1 &&
+                                                duration.inSeconds == 1
+                                            ? 0.0
+                                            : position.inSeconds.toDouble() /
+                                                duration.inSeconds.toDouble(),
                                       ),
                                       builder: (context, value, _) =>
                                           LinearProgressIndicator(

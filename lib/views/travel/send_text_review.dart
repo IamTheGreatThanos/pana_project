@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,9 +10,10 @@ import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 
 class SendTextReviewPage extends StatefulWidget {
-  SendTextReviewPage(this.type, this.id);
+  SendTextReviewPage(this.type, this.id, this.visitDate);
   final int type;
   final int id;
+  final String visitDate;
 
   @override
   _SendTextReviewPageState createState() => _SendTextReviewPageState();
@@ -33,13 +33,16 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
 
   List<XFile> images = [];
 
-  int priceBall = 3;
-  int fieldBall = 3;
-  int purityBall = 3;
-  int staffBall = 3;
+  int priceBall = 0;
+  int fieldBall = 0;
+  int purityBall = 0;
+  int staffBall = 0;
 
   @override
   void initState() {
+    _dateController.text =
+        '${widget.visitDate.substring(0, 4)}/${widget.visitDate.substring(5, 7)}/${widget.visitDate.substring(8, 10)}';
+
     super.initState();
   }
 
@@ -518,7 +521,11 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                       ),
                       onPressed: () {
                         if (_dateController.text.length == 10 &&
-                            _reviewController.text.isNotEmpty) {
+                            _reviewController.text.isNotEmpty &&
+                            priceBall != 0 &&
+                            fieldBall != 0 &&
+                            purityBall != 0 &&
+                            staffBall != 0) {
                           saveChanges();
                         } else {
                           ScaffoldMessenger.of(context)

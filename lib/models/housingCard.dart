@@ -63,7 +63,7 @@ class HousingCardModel {
     reviewsCount = json['reviews_count'];
     distance = json['distance'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
-    basePriceMin = json['base_price_min'];
+    basePriceMin = int.parse(json['base_price_min'].toString());
     category =
         json['category'] != null ? Category.fromJson(json['category']) : null;
     dateFrom = json['date_from'];

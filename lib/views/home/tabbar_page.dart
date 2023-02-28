@@ -2,13 +2,22 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pana_project/models/housingCard.dart';
+import 'package:pana_project/models/impressionCard.dart';
+import 'package:pana_project/services/housing_api_provider.dart';
+import 'package:pana_project/services/impression_api_provider.dart';
+import 'package:pana_project/utils/PageTransitionRoute.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/housing/home_housing.dart';
-import 'package:pana_project/views/housing/search_page.dart';
+import 'package:pana_project/views/housing/housing_info.dart';
 import 'package:pana_project/views/impression/home_impression.dart';
+import 'package:pana_project/views/impression/impression_info.dart';
 import 'package:pana_project/views/messages/messages_main.dart';
 import 'package:pana_project/views/profile/profile_main.dart';
 import 'package:pana_project/views/travel/home_travel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:story_view/story_view.dart';
 import 'package:uni_links/uni_links.dart';
 
 class TabBarPage extends StatefulWidget {
@@ -24,8 +33,11 @@ class _TabBarPageState extends State<TabBarPage> {
 
   StreamSubscription? _sub;
 
+  bool isLoggedIn = false;
+
   @override
   void initState() {
+    checkIsLogedIn();
     super.initState();
     initUniLinks();
     tabViews = <Widget>[
@@ -37,16 +49,32 @@ class _TabBarPageState extends State<TabBarPage> {
     ];
   }
 
+  void checkIsLogedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('isLogedIn') == true) {
+      isLoggedIn = true;
+    } else {
+      isLoggedIn = false;
+    }
+  }
+
   Future<void> initUniLinks() async {
     _sub = uriLinkStream.listen((uri) {
       if (!mounted) return;
       if (uri != null) {
         if (uri.path == '/housing') {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => SearchPage(true)));
+          if (uri.queryParameters.containsKey('id')) {
+            if (uri.queryParameters['id'] != null) {
+              getHousingInfo(int.parse(uri.queryParameters['id']!));
+            }
+          }
+        } else if (uri.path == '/impression') {
+          if (uri.queryParameters.containsKey('id')) {
+            if (uri.queryParameters['id'] != null) {
+              getImpressionInfo(int.parse(uri.queryParameters['id']!));
+            }
+          }
         }
-        print(uri.path);
-        print(uri.data);
       }
     });
 
@@ -56,6 +84,122 @@ class _TabBarPageState extends State<TabBarPage> {
     // } on PlatformException {
     //   print('Platfrom exception unilink.');
     // }
+  }
+
+  void getHousingInfo(int id) async {
+    var response = await HousingProvider().getHousingDetail(id);
+    if (response['response_status'] == 'ok') {
+      HousingCardModel thisHousing =
+          HousingCardModel.fromJson(response['data']);
+
+      if (isLoggedIn == true) {
+        StoryController storyController = StoryController();
+        List<StoryItem?> thisStoryItems = [];
+        List<StoryItem?> mediaStoryItems = [];
+
+        for (int j = 0; j < thisHousing.images!.length; j++) {
+          thisStoryItems.add(
+            StoryItem.pageImage(
+              url: thisHousing.images![j].path!,
+              controller: storyController,
+              imageFit: BoxFit.cover,
+            ),
+          );
+
+          mediaStoryItems.add(
+            StoryItem.pageImage(
+              url: thisHousing.images![j].path!,
+              controller: storyController,
+              imageFit: BoxFit.fitWidth,
+            ),
+          );
+        }
+
+        await Navigator.push(
+            context,
+            ThisPageRoute(HousingInfo(
+                thisHousing.id!,
+                thisStoryItems,
+                mediaStoryItems,
+                thisHousing.distance == -1
+                    ? '-'
+                    : thisHousing.distance.toString())));
+        setState(() {});
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AuthPage()));
+      }
+    } else {
+      print(response['data']['message']);
+    }
+  }
+
+  void getImpressionInfo(int id) async {
+    var response = await ImpressionProvider().getImpressionDetail(id);
+    if (response['response_status'] == 'ok') {
+      ImpressionCardModel thisImpression =
+          ImpressionCardModel.fromJson(response['data']);
+
+      if (isLoggedIn == true) {
+        StoryController _storyController = StoryController();
+        List<StoryItem?> thisStoryItems = [];
+        List<StoryItem?> mediaStoryItems = [];
+
+        for (int j = 0; j < thisImpression.videos!.length; j++) {
+          thisStoryItems.add(
+            StoryItem.pageVideo(
+              thisImpression.videos![j].path!,
+              controller: _storyController,
+              imageFit: BoxFit.cover,
+            ),
+          );
+
+          mediaStoryItems.add(
+            StoryItem.pageVideo(
+              thisImpression.videos![j].path!,
+              controller: _storyController,
+              imageFit: BoxFit.fitWidth,
+            ),
+          );
+        }
+
+        for (int j = 0; j < thisImpression.images!.length; j++) {
+          thisStoryItems.add(
+            StoryItem.pageImage(
+              url: thisImpression.images![j].path!,
+              controller: _storyController,
+              imageFit: BoxFit.cover,
+            ),
+          );
+
+          mediaStoryItems.add(
+            StoryItem.pageImage(
+              url: thisImpression.images![j].path!,
+              controller: _storyController,
+              imageFit: BoxFit.fitWidth,
+            ),
+          );
+        }
+
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ImpressionInfo(
+              thisImpression,
+              thisStoryItems,
+              mediaStoryItems,
+            ),
+          ),
+        );
+
+        setState(() {});
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AuthPage()));
+      }
+    } else {
+      print(response['data']['message']);
+    }
   }
 
   @override

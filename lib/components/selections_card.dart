@@ -64,15 +64,14 @@ class _SelectionsCardState extends State<SelectionsCard> {
                   ? CarouselSlider.builder(
                       options: CarouselOptions(
                         height: 270,
-                        viewportFraction: 0.85,
+                        viewportFraction: 0.9,
                         initialPage: 0,
                         enableInfiniteScroll: true,
                         reverse: false,
                         autoPlay: true,
-                        autoPlayInterval: const Duration(seconds: 0),
-                        autoPlayAnimationDuration:
-                            const Duration(milliseconds: 800),
-                        autoPlayCurve: Curves.fastOutSlowIn,
+                        autoPlayInterval: const Duration(seconds: 3),
+                        autoPlayAnimationDuration: const Duration(seconds: 3),
+                        autoPlayCurve: Curves.linear,
                         enlargeCenterPage: true,
                         onPageChanged: (index, reason) {},
                         scrollDirection: Axis.horizontal,

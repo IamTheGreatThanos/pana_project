@@ -650,9 +650,13 @@ class _HomeHousingState extends State<HomeHousing>
 
       for (int i = 0; i < selections.items!.length; i++) {
         if (selections.items![i].type == 'housing') {
-          selectionsImage.add(selections.items![i].housing!.images!.first);
+          if (selections.items![i].housing!.images!.isNotEmpty) {
+            selectionsImage.add(selections.items![i].housing!.images!.first);
+          }
         } else {
-          selectionsImage.add(selections.items![i].impression!.images!.first);
+          if (selections.items![i].impression!.images!.isNotEmpty) {
+            selectionsImage.add(selections.items![i].impression!.images!.first);
+          }
         }
       }
 

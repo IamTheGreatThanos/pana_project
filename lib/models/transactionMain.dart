@@ -12,8 +12,9 @@ class TransactionMain {
   });
 
   TransactionMain.fromJson(Map<String, dynamic> json) {
-    totalPriceSum = json['total_price_sum'];
-    housingTotalPriceSum = json['housing_total_price_sum'];
+    totalPriceSum = double.parse(json['total_price_sum'].toString());
+    housingTotalPriceSum =
+        double.parse(json['housing_total_price_sum'].toString());
     impressionTotalPriceSum =
         double.parse(json['impression_total_price_sum'].toString());
     if (json['month'] != null) {

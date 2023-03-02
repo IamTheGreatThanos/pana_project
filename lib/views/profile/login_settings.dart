@@ -15,6 +15,7 @@ class LoginSettingsPage extends StatefulWidget {
 
 class _LoginSettingsPageState extends State<LoginSettingsPage> {
   var _switchValue = false;
+  bool isHasLockCode = false;
 
   @override
   void initState() {
@@ -22,9 +23,20 @@ class _LoginSettingsPageState extends State<LoginSettingsPage> {
     super.initState();
   }
 
+  @override
+  dispose() {
+    setSwitchValue();
+    super.dispose();
+  }
+
   void loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _switchValue = prefs.getBool('isBiometricsUse') ?? false;
+    if (prefs.containsKey('lock_code')) {
+      isHasLockCode = true;
+    } else {
+      isHasLockCode = false;
+    }
     setState(() {});
   }
 
@@ -144,7 +156,18 @@ class _LoginSettingsPageState extends State<LoginSettingsPage> {
                                   onChanged: (value) {
                                     setSwitchValue();
                                     setState(() {
-                                      _switchValue = value;
+                                      if (_switchValue == false) {
+                                        isHasLockCode
+                                            ? _switchValue = value
+                                            : Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LockScreen(
+                                                            CreateLockCodePage())));
+                                      } else {
+                                        _switchValue = value;
+                                      }
                                     });
                                   },
                                 ),

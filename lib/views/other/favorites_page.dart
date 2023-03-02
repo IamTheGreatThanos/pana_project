@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/housing_card.dart';
@@ -232,6 +231,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
                                                           housingList[i]
                                                               .distance
                                                               .toString(),
+                                                          '',
+                                                          '',
                                                         ),
                                                       ),
                                                     );

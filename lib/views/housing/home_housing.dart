@@ -76,6 +76,8 @@ class _HomeHousingState extends State<HomeHousing>
 
   String lat = '';
   String lng = '';
+  String dateFrom = '';
+  String dateTo = '';
 
   @override
   void initState() {
@@ -412,7 +414,8 @@ class _HomeHousingState extends State<HomeHousing>
 
                                         await Navigator.push(
                                             context,
-                                            ThisPageRoute(HousingInfo(
+                                            ThisPageRoute(
+                                              HousingInfo(
                                                 housingList[i].id!,
                                                 thisStoryItems,
                                                 mediaStoryItems,
@@ -420,7 +423,11 @@ class _HomeHousingState extends State<HomeHousing>
                                                     ? '-'
                                                     : housingList[i]
                                                         .distance
-                                                        .toString()))
+                                                        .toString(),
+                                                dateFrom,
+                                                dateTo,
+                                              ),
+                                            )
                                             // MaterialPageRoute(
                                             //     builder: (context) => HousingInfo(
                                             //         housingList[i].id!,
@@ -568,6 +575,8 @@ class _HomeHousingState extends State<HomeHousing>
           selectedCountryId = result[0];
           if (result[5] != 'Выбрать даты') {
             selectedRange = result[5];
+            dateFrom = result[6];
+            dateTo = result[7];
           } else {
             selectedRange = '';
           }

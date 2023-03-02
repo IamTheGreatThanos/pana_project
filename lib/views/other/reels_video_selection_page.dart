@@ -29,7 +29,7 @@ class ReelsVideoSelectionPage extends StatefulWidget {
 class _ReelsVideoSelectionPageState extends State<ReelsVideoSelectionPage> {
   late VideoPlayerController _videoController;
   final ImagePicker _picker = ImagePicker();
-  XFile? video;
+  File? video;
   File? thumbnail;
   bool picSelected = false;
   bool isLoadingStarts = false;
@@ -394,7 +394,7 @@ class _ReelsVideoSelectionPageState extends State<ReelsVideoSelectionPage> {
 
       setState(() {
         picSelected = true;
-        video = selectedVideo;
+        video = File(selectedVideo.path);
         thumbnail = thumFile;
 
         _videoController = VideoPlayerController.file(File(video!.path))
@@ -440,6 +440,7 @@ class _ReelsVideoSelectionPageState extends State<ReelsVideoSelectionPage> {
         Navigator.pop(context);
       }
     } else {
+      print(response['data']);
       setState(() {
         isLoadingStarts = false;
       });

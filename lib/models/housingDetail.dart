@@ -30,6 +30,7 @@ class HousingDetailModel {
   String? postalCode;
   String? cancelFineDay;
   String? requiredPay;
+  int? guestPayCheckIn;
   String? parking;
   String? parkingProperty;
   String? parkingLocation;
@@ -89,6 +90,7 @@ class HousingDetailModel {
     this.postalCode,
     this.cancelFineDay,
     this.requiredPay,
+    this.guestPayCheckIn,
     this.parking,
     this.parkingProperty,
     this.parkingLocation,
@@ -150,6 +152,7 @@ class HousingDetailModel {
     postalCode = json['postal_code'];
     cancelFineDay = json['cancel_fine_day'];
     requiredPay = json['required_pay'];
+    guestPayCheckIn = json['guest_pay_check_in'];
     parking = json['parking'];
     parkingProperty = json['parking_property'];
     parkingLocation = json['parking_location'];
@@ -177,10 +180,10 @@ class HousingDetailModel {
     roomCount = json['room_count'];
     basePriceMin = json['base_price_min'];
     reviewsCount = json['reviews_count'];
-    reviewsBallAvg = json['reviews_ball_avg'];
-    reviewsPriceAvg = json['reviews_price_avg'];
-    reviewsPurityAvg = json['reviews_purity_avg'];
-    reviewsStaffAvg = json['reviews_staff_avg'];
+    reviewsBallAvg = json['reviews_ball_avg'].toString();
+    reviewsPriceAvg = json['reviews_price_avg'].toString();
+    reviewsPurityAvg = json['reviews_purity_avg'].toString();
+    reviewsStaffAvg = json['reviews_staff_avg'].toString();
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
@@ -244,6 +247,7 @@ class HousingDetailModel {
     data['postal_code'] = postalCode;
     data['cancel_fine_day'] = cancelFineDay;
     data['required_pay'] = requiredPay;
+    data['guest_pay_check_in'] = guestPayCheckIn;
     data['parking'] = parking;
     data['parking_property'] = parkingProperty;
     data['parking_location'] = parkingLocation;

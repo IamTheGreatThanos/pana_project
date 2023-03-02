@@ -116,14 +116,20 @@ class _TabBarPageState extends State<TabBarPage> {
         }
 
         await Navigator.push(
-            context,
-            ThisPageRoute(HousingInfo(
-                thisHousing.id!,
-                thisStoryItems,
-                mediaStoryItems,
-                thisHousing.distance == -1
-                    ? '-'
-                    : thisHousing.distance.toString())));
+          context,
+          ThisPageRoute(
+            HousingInfo(
+              thisHousing.id!,
+              thisStoryItems,
+              mediaStoryItems,
+              thisHousing.distance == -1
+                  ? '-'
+                  : thisHousing.distance.toString(),
+              '',
+              '',
+            ),
+          ),
+        );
         setState(() {});
       } else {
         Navigator.push(

@@ -1,0 +1,113 @@
+import 'package:pana_project/models/housingCard.dart';
+import 'package:pana_project/models/impressionCard.dart';
+import 'package:pana_project/models/transactionHistory.dart';
+import 'package:pana_project/models/user.dart';
+
+class Order {
+  int? id;
+  String? type;
+  int? status;
+  User? user;
+  HousingCardModel? housing;
+  ImpressionCardModel? impression;
+  double? totalPrice;
+  double? returnPrice;
+  double? finePrice;
+  String? dateFrom;
+  String? dateTo;
+  String? paymentAt;
+  String? comment;
+  int? countPeople;
+  String? timeStart;
+  String? timeEnd;
+  Null? housingCompany;
+  Null? customerCompany;
+  List<RoomNumbers>? roomNumbers;
+
+  Order({
+    this.id,
+    this.type,
+    this.status,
+    this.user,
+    this.housing,
+    this.impression,
+    this.totalPrice,
+    this.returnPrice,
+    this.finePrice,
+    this.dateFrom,
+    this.dateTo,
+    this.paymentAt,
+    this.comment,
+    this.countPeople,
+    this.timeStart,
+    this.timeEnd,
+    this.housingCompany,
+    this.customerCompany,
+    this.roomNumbers,
+  });
+
+  Order.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    type = json['type'];
+    status = json['status'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    housing = json['housing'] != null
+        ? new HousingCardModel.fromJson(json['housing'])
+        : null;
+    impression = json['impression'] != null
+        ? new ImpressionCardModel.fromJson(json['impression'])
+        : null;
+    totalPrice = json['total_price'];
+    returnPrice = json['return_price'];
+    finePrice = json['fine_price'];
+    dateFrom = json['date_from'];
+    dateTo = json['date_to'];
+    paymentAt = json['payment_at'];
+    comment = json['comment'];
+    countPeople = json['count_people'];
+    timeStart = json['time_start'];
+    timeEnd = json['time_end'];
+    housingCompany = json['housing_company'];
+
+    customerCompany = json['customer_company'];
+    if (json['roomNumbers'] != null) {
+      roomNumbers = <RoomNumbers>[];
+      json['roomNumbers'].forEach((v) {
+        roomNumbers!.add(new RoomNumbers.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['type'] = this.type;
+    data['status'] = this.status;
+    if (this.user != null) {
+      data['user'] = this.user!.toJson();
+    }
+    if (this.housing != null) {
+      data['housing'] = this.housing!.toJson();
+    }
+    if (this.impression != null) {
+      data['impression'] = this.impression!.toJson();
+    }
+    data['total_price'] = this.totalPrice;
+    data['return_price'] = this.returnPrice;
+    data['fine_price'] = this.finePrice;
+    data['date_from'] = this.dateFrom;
+    data['date_to'] = this.dateTo;
+    data['payment_at'] = this.paymentAt;
+    data['comment'] = this.comment;
+    data['count_people'] = this.countPeople;
+    data['time_start'] = this.timeStart;
+    data['time_end'] = this.timeEnd;
+    data['housing_company'] = this.housingCompany;
+    data['customer_company'] = this.customerCompany;
+    if (this.roomNumbers != null) {
+      data['roomNumbers'] = this.roomNumbers!.map((v) => v.toJson()).toList();
+    }
+
+    return data;
+  }
+}

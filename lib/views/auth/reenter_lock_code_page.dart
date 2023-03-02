@@ -508,10 +508,9 @@ class _ReenterLockCodePageState extends State<ReenterLockCodePage> {
       if (secureCode == widget.code) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('lock_code', widget.code);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TabBarPage()),
-        );
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => TabBarPage()),
+            (Route<dynamic> route) => false);
       } else {
         setState(() {
           _width = 40;

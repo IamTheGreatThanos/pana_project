@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/housing_card.dart';
 import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/impressionCard.dart';
+import 'package:pana_project/models/order.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/other/reels_video_selection_page.dart';
@@ -18,8 +18,8 @@ class SelectReelsBookedObjectPage extends StatefulWidget {
 }
 
 class _SelectReelsHousingPageState extends State<SelectReelsBookedObjectPage> {
-  List<HousingCardModel> housingList = [];
-  List<ImpressionCardModel> impressionList = [];
+  List<Order> housingList = [];
+  List<Order> impressionList = [];
 
   @override
   void initState() {
@@ -119,14 +119,14 @@ class _SelectReelsHousingPageState extends State<SelectReelsBookedObjectPage> {
                                                 builder: (context) =>
                                                     ReelsVideoSelectionPage(
                                                         widget.type,
-                                                        housingList[i],
+                                                        housingList[i].housing!,
                                                         ImpressionCardModel(),
                                                         true),
                                               ),
                                             );
                                           },
                                           child: HousingCard(
-                                              housingList[i], () {})),
+                                              housingList[i].housing!, () {})),
                                     )
                                   : Padding(
                                       padding:
@@ -140,13 +140,15 @@ class _SelectReelsHousingPageState extends State<SelectReelsBookedObjectPage> {
                                                     ReelsVideoSelectionPage(
                                                         widget.type,
                                                         HousingCardModel(),
-                                                        impressionList[i],
+                                                        impressionList[i]
+                                                            .impression!,
                                                         true),
                                               ),
                                             );
                                           },
                                           child: ImpressionCard(
-                                              impressionList[i], () {})),
+                                              impressionList[i].impression!,
+                                              () {})),
                                     )
                           ],
                         ),
@@ -168,7 +170,7 @@ class _SelectReelsHousingPageState extends State<SelectReelsBookedObjectPage> {
     var response = await TravelProvider().getBookedHousing();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
-        housingList.add(HousingCardModel.fromJson(response['data'][i]));
+        housingList.add(Order.fromJson(response['data'][i]));
       }
       if (mounted) {
         setState(() {});
@@ -186,7 +188,7 @@ class _SelectReelsHousingPageState extends State<SelectReelsBookedObjectPage> {
     var response = await TravelProvider().getBookedImpression();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
-        impressionList.add(ImpressionCardModel.fromJson(response['data'][i]));
+        impressionList.add(Order.fromJson(response['data'][i]));
       }
       if (mounted) {
         setState(() {});

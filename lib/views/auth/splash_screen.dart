@@ -7,6 +7,7 @@ import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/utils/globalVariables.dart';
+import 'package:pana_project/views/auth/lock_screen.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,13 +23,21 @@ class _SplashScreenState extends State<SplashScreen> {
   double wordPadding = 0;
   double _width = 0;
   double _secondWidth = 50;
+  bool isLocked = false;
 
   @override
   void initState() {
+    checkLockScreenState();
     getListOfFavorites();
     confOneSignal();
     startTimer();
     super.initState();
+  }
+
+  void checkLockScreenState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isLocked = prefs.getBool('isBiometricsUse') ?? false;
+    setState(() {});
   }
 
   void confOneSignal() async {
@@ -81,9 +90,16 @@ class _SplashScreenState extends State<SplashScreen> {
       oneSec,
       (Timer timer) {
         if (_start == 0) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => TabBarPage()),
-              (Route<dynamic> route) => false);
+          if (isLocked) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => LockScreen(TabBarPage())),
+                (Route<dynamic> route) => false);
+          } else {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => TabBarPage()),
+                (Route<dynamic> route) => false);
+          }
 
           setState(() {
             timer.cancel();

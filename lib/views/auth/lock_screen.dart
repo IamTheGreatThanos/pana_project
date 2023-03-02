@@ -35,10 +35,13 @@ class _LockScreenState extends State<LockScreen> {
   double _width = 30;
   double _height = 5;
   Color _color = AppColors.accent;
+  String name = 'Пользователь';
+  String avatarUrl = '';
 
   @override
   void initState() {
     getSavedCode();
+    getUserData();
     super.initState();
 
     auth.isDeviceSupported().then(
@@ -46,6 +49,17 @@ class _LockScreenState extends State<LockScreen> {
               ? _SupportState.supported
               : _SupportState.unsupported),
         );
+    if (_supportState == _SupportState.supported && useBiometrics == true) {
+      authByBiometrics();
+    }
+  }
+
+  void getUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    name =
+        '${prefs.getString('user_name') ?? ''} ${prefs.getString('user_surname') ?? ''}';
+    avatarUrl = prefs.getString('user_avatar') ?? '';
+    setState(() {});
   }
 
   Future<void> _checkBiometrics() async {
@@ -179,19 +193,18 @@ class _LockScreenState extends State<LockScreen> {
                 ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   child: CachedNetworkImage(
-                    imageUrl:
-                        'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
+                    imageUrl: avatarUrl,
                     width: 100,
                     height: 100,
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    'Muslimov Dinmukhammed',
+                    name,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
                     ),
@@ -632,36 +645,36 @@ class _LockScreenState extends State<LockScreen> {
                       )
                     : Container(),
                 const SizedBox(height: 40),
-                SizedBox(
-                  height: 20,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(width: 20),
-                      Text(
-                        'Забыл пароль',
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: Colors.black45,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      VerticalDivider(),
-                      SizedBox(width: 10),
-                      Text(
-                        'Сменить аккаунт',
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: Colors.black45,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+                // SizedBox(
+                //   height: 20,
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: const [
+                //       SizedBox(width: 20),
+                //       Text(
+                //         'Забыл пароль',
+                //         style: TextStyle(
+                //           decoration: TextDecoration.underline,
+                //           color: Colors.black45,
+                //           fontWeight: FontWeight.w500,
+                //           fontSize: 14,
+                //         ),
+                //       ),
+                //       SizedBox(width: 10),
+                //       VerticalDivider(),
+                //       SizedBox(width: 10),
+                //       Text(
+                //         'Сменить аккаунт',
+                //         style: TextStyle(
+                //           decoration: TextDecoration.underline,
+                //           color: Colors.black45,
+                //           fontWeight: FontWeight.w500,
+                //           fontSize: 14,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // )
               ],
             ),
           ),
@@ -673,10 +686,9 @@ class _LockScreenState extends State<LockScreen> {
   void checkCode() async {
     if (secureCode.length == 4) {
       if (secureCode == savedCode) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => widget.page),
-        );
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => widget.page),
+            (Route<dynamic> route) => false);
       } else {
         setState(() {
           _width = 40;
@@ -692,20 +704,18 @@ class _LockScreenState extends State<LockScreen> {
     savedCode = prefs.getString('lock_code');
     useBiometrics = prefs.getBool('isBiometricsUse');
     if (savedCode == null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => widget.page),
-      );
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => widget.page),
+          (Route<dynamic> route) => false);
     }
   }
 
   void authByBiometrics() async {
     _authenticateWithBiometrics().whenComplete(() {
       if (_authorized == 'Authorized') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => widget.page),
-        );
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => widget.page),
+            (Route<dynamic> route) => false);
       }
     });
   }

@@ -267,7 +267,7 @@ class MainProvider {
     int id,
     int cityId,
     int categoryId,
-    XFile video,
+    File video,
     File thumbnail,
   ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

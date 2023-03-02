@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/housing_card.dart';
 import 'package:pana_project/components/impression_card.dart';
-import 'package:pana_project/models/housingCard.dart';
-import 'package:pana_project/models/impressionCard.dart';
+import 'package:pana_project/models/order.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/profile/my_booked_object_detail_page.dart';
@@ -17,8 +15,8 @@ class MyBookedObjectsPage extends StatefulWidget {
 }
 
 class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
-  List<HousingCardModel> housingList = [];
-  List<ImpressionCardModel> impressionList = [];
+  List<Order> housingList = [];
+  List<Order> impressionList = [];
 
   @override
   void initState() {
@@ -138,12 +136,12 @@ class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         MyBookedObjectDetailPage(
-                                                            2,
-                                                            housingList[i],
-                                                            ImpressionCardModel())));
+                                                          2,
+                                                          housingList[i],
+                                                        )));
                                           },
                                           child: HousingCard(
-                                              housingList[i], () {})),
+                                              housingList[i].housing!, () {})),
                                     )
                                 ],
                               ),
@@ -164,11 +162,11 @@ class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
                                                   builder: (context) =>
                                                       MyBookedObjectDetailPage(
                                                           3,
-                                                          HousingCardModel(),
                                                           impressionList[i])));
                                         },
                                         child: ImpressionCard(
-                                            impressionList[i], () {}),
+                                            impressionList[i].impression!,
+                                            () {}),
                                       ),
                                     )
                                 ],
@@ -194,7 +192,7 @@ class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
     var response = await TravelProvider().getBookedHousing();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
-        housingList.add(HousingCardModel.fromJson(response['data'][i]));
+        housingList.add(Order.fromJson(response['data'][i]));
       }
       if (mounted) {
         setState(() {});
@@ -212,7 +210,7 @@ class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
     var response = await TravelProvider().getBookedImpression();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
-        impressionList.add(ImpressionCardModel.fromJson(response['data'][i]));
+        impressionList.add(Order.fromJson(response['data'][i]));
       }
       if (mounted) {
         setState(() {});

@@ -44,7 +44,7 @@ dependencies:
   pin_code_fields: ^7.4.0
   shared_preferences: ^2.0.8
   http: ^0.13.4
-  image_picker: ^0.8.5+3
+  image_picker: ^0.8.6+4
   carousel_slider: ^4.1.1
   slide_to_act: ^2.0.1
   cached_video_player: ^2.0.3
@@ -94,124 +94,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/icons/slider_01.svg
-    - assets/icons/heart_empty.svg
-    - assets/icons/tab_bar_icon1.svg
-    - assets/icons/tab_bar_icon2.svg
-    - assets/icons/tab_bar_icon3.svg
-    - assets/icons/tab_bar_icon4.svg
-    - assets/icons/tab_bar_icon5.svg
-    - assets/icons/category_1.svg
-    - assets/icons/category_2.svg
-    - assets/icons/category_3.svg
-    - assets/icons/category_4.svg
-    - assets/icons/category_5.svg
-    - assets/icons/category_6.svg
-    - assets/icons/category_7.svg
-    - assets/icons/category_8.svg
-    - assets/icons/category_9.svg
-    - assets/icons/category_10.svg
-    - assets/icons/category_11.svg
-    - assets/icons/category_12.svg
-    - assets/icons/play.svg
-    - assets/icons/star.svg
-    - assets/icons/check.svg
-    - assets/icons/play_audio.svg
-    - assets/icons/pause_audio.svg
-    - assets/icons/share.svg
-    - assets/icons/back_arrow.svg
-    - assets/icons/heart_empty_2.svg
-    - assets/icons/heart_full.svg
-    - assets/icons/chat.svg
-    - assets/icons/like_review.svg
-    - assets/icons/dislike_review.svg
-    - assets/icons/service_icon_1.svg
-    - assets/icons/service_icon_2.svg
-    - assets/icons/service_icon_3.svg
-    - assets/icons/service_icon_4.svg
-    - assets/icons/service_icon_5.svg
-    - assets/icons/geolocation_info_icon.svg
-    - assets/icons/geolocation_info_icon_accent.svg
-    - assets/icons/geolocation_info_icon_grey.svg
-    - assets/icons/geolocation_info_icon_checkmark.svg
-    - assets/icons/map_pin.svg
-    - assets/icons/map_pin.png
-    - assets/icons/timer.svg
-    - assets/images/logo_word.svg
-    - assets/images/logo_icon.svg
-    - assets/images/auth_bg.svg
-    - assets/images/register_bg.svg
-    - assets/images/profile_bg.svg
-    - assets/images/add_photo_placeholder.svg
-    - assets/images/placeholder_image.svg
-    - assets/icons/face_id.svg
-    - assets/icons/bed_icon.svg
-    - assets/images/map_1.png
-    - assets/images/map_2.png
-    - assets/images/map_3.png
-    - assets/images/map_4.png
-    - assets/images/map_5.png
-    - assets/images/map_6.png
-    - assets/gifs/loading.gif
-    - assets/gifs/sms_code.gif
-    - assets/icons/profile_user.svg
-    - assets/icons/profile_card.svg
-    - assets/icons/profile_chat.svg
-    - assets/icons/profile_globe.svg
-    - assets/icons/profile_star.svg
-    - assets/icons/avatar_edit_icon.svg
-    - assets/icons/mobile_icon.svg
-    - assets/icons/mail_icon.svg
-    - assets/icons/lock_icon.svg
-    - assets/icons/pin_code_icon.svg
-    - assets/icons/visa_icon.svg
-    - assets/icons/mastercard_icon.svg
-    - assets/icons/radio_button_0.svg
-    - assets/icons/radio_button_1.svg
-    - assets/icons/kz_icon.svg
-    - assets/icons/ru_icon.svg
-    - assets/icons/en_icon.svg
-    - assets/icons/size_icon.svg
-    - assets/icons/bonus_icon.svg
-    - assets/icons/user_icon.svg
-    - assets/images/calendar_image.svg
-    - assets/icons/calendar_icon.svg
-    - assets/icons/micro_icon.svg
-    - assets/icons/text_icon.svg
-    - assets/icons/start_record.svg
-    - assets/icons/stop_record.svg
-    - assets/icons/re_record.svg
-    - assets/images/favorites_empty.svg
-    - assets/images/smile.svg
-    - assets/icons/m_message_0.svg
-    - assets/icons/m_message_1.svg
-    - assets/icons/m_housing_0.svg
-    - assets/icons/m_housing_1.svg
-    - assets/icons/m_impression_0.svg
-    - assets/icons/m_impression_1.svg
-    - assets/icons/m_percent_0.svg
-    - assets/icons/m_percent_1.svg
-    - assets/icons/m_location_0.svg
-    - assets/icons/m_location_1.svg
-    - assets/icons/m_plan_0.svg
-    - assets/icons/m_plan_1.svg
-    - assets/icons/chat_support.svg
-    - assets/images/review_no_answer.svg
-    - assets/icons/attach_icon.svg
-    - assets/icons/send_message_icon.svg
-    - assets/icons/map_pin_black.png
-    - assets/icons/map_pin_accent.png
-    - assets/icons/start_chat_icon.svg
-    - assets/icons/start_chat_icon.png
-    - assets/icons/flag_icon.svg
-    - assets/icons/checkbox_empty.svg
-    - assets/icons/checkbox_full.svg
-    - assets/images/loyalty_card.png
-    - assets/images/loyalty_progress.png
-    - assets/icons/bronze_assik.png
-    - assets/icons/silver_assik.png
-    - assets/icons/gold_assik.png
-    - assets/icons/progress_assik.png
+    - assets/icons/
+    - assets/images/
+    - assets/gifs/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

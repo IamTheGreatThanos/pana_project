@@ -30,12 +30,13 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
+  TextEditingController commentController = TextEditingController();
   var _switchValue = false;
   double sum = 0;
   String dateFrom = '-';
   String dateTo = '-';
   List<CreditCard> cards = [];
-  int selectedCardIndex = 0;
+  int selectedCardIndex = -1;
 
   @override
   void initState() {
@@ -350,6 +351,49 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                     ),
                   ),
+                  widget.housing.guestPayCheckIn == 0
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: Text(
+                                'Альтернативные методы',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.blackWithOpacity,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                selectedCardIndex = -1;
+                                setState(() {});
+                              },
+                              child: PaymentMethodCard(
+                                'assets/icons/payment_type_in_a_place.svg',
+                                'Оплата при заселении',
+                                'Нужно оплатить на ресепшене',
+                                -1 == selectedCardIndex,
+                              ),
+                            ),
+                            const Divider(),
+                          ],
+                        )
+                      : const SizedBox(),
+                  const SizedBox(height: 10),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      'Карты',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.blackWithOpacity,
+                      ),
+                    ),
+                  ),
                   for (int i = 0; i < cards.length; i++)
                     Column(
                       children: [
@@ -439,6 +483,38 @@ class _PaymentPageState extends State<PaymentPage> {
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: TextField(
+                      controller: commentController,
+                      maxLines: 8,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.black,
+                      ),
+                      decoration: const InputDecoration(
+                        hintStyle: TextStyle(
+                          color: AppColors.blackWithOpacity,
+                        ),
+                        hintText: "Добавьте заметку владельцу (по желанию)",
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: AppColors.grey,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: AppColors.accent,
+                          ),
                         ),
                       ),
                     ),
@@ -538,60 +614,90 @@ class _PaymentPageState extends State<PaymentPage> {
     var paymentPermissionResponse =
         await MainProvider().requestPaymentPermission();
     if (paymentPermissionResponse['data']['is_public'] == true) {
-      if (cards.isNotEmpty) {
+      if (selectedCardIndex == -1) {
         var response = await HousingProvider().housingPayment(
           widget.housing.id!,
           dateFrom,
           dateTo,
           sharedHousingPaymentData.peopleCount,
           widget.selectedRooms,
-          cards[selectedCardIndex].id!,
+          -1,
+          commentController.text,
         );
         if (response['response_status'] == 'ok') {
-          String acsUrl =
-              response['data']['payment_operation']['acs_url'].toString();
-          String transactionId = response['data']['payment_operation']
-                  ['transaction_id']
-              .toString();
-          String paReq =
-              response['data']['payment_operation']['pa_req'].toString();
-
-          final result = await Cloudpayments.show3ds(
-              acsUrl: acsUrl, transactionId: transactionId, paReq: paReq);
-
-          if (result?.success == true) {
-            var response3ds = await HousingProvider()
-                .housingPaymentSend3ds(result!.md!, result.paRes!);
-            if (response3ds['response_status'] == 'ok') {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Жилье успешно забронировано!',
-                    style: const TextStyle(fontSize: 14)),
-              ));
-
-              Future.delayed(
-                const Duration(seconds: 3),
-                () => _key.currentState!.reset(),
-              ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => TabBarPage()),
-                  (Route<dynamic> route) => false));
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(response3ds['data']['message'],
-                    style: const TextStyle(fontSize: 14)),
-              ));
-            }
-          }
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(response['data']['message'],
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Жилье успешно забронировано!',
                 style: const TextStyle(fontSize: 14)),
           ));
+
+          Future.delayed(
+            const Duration(seconds: 3),
+            () => _key.currentState!.reset(),
+          ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => TabBarPage()),
+              (Route<dynamic> route) => false));
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content:
-              Text("Добавьте способ оплаты.", style: TextStyle(fontSize: 14)),
-        ));
+        if (cards.isNotEmpty) {
+          var response = await HousingProvider().housingPayment(
+            widget.housing.id!,
+            dateFrom,
+            dateTo,
+            sharedHousingPaymentData.peopleCount,
+            widget.selectedRooms,
+            cards[selectedCardIndex].id!,
+            commentController.text,
+          );
+          if (response['response_status'] == 'ok' &&
+              response['data']['payment_operation']['status'] == 1) {
+            String acsUrl =
+                response['data']['payment_operation']['acs_url'].toString();
+            String transactionId = response['data']['payment_operation']
+                    ['transaction_id']
+                .toString();
+            String paReq =
+                response['data']['payment_operation']['pa_req'].toString();
+
+            final result = await Cloudpayments.show3ds(
+                acsUrl: acsUrl, transactionId: transactionId, paReq: paReq);
+
+            if (result?.success == true) {
+              var response3ds = await HousingProvider()
+                  .housingPaymentSend3ds(result!.md!, result.paRes!);
+              if (response3ds['response_status'] == 'ok') {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Жилье успешно забронировано!',
+                      style: const TextStyle(fontSize: 14)),
+                ));
+
+                Future.delayed(
+                  const Duration(seconds: 3),
+                  () => _key.currentState!.reset(),
+                ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => TabBarPage()),
+                    (Route<dynamic> route) => false));
+              } else {
+                _key.currentState!.reset();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(response3ds['data']['message'],
+                      style: const TextStyle(fontSize: 14)),
+                ));
+              }
+            }
+          } else {
+            _key.currentState!.reset();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(response['data']['payment_operation']['message'],
+                  style: const TextStyle(fontSize: 14)),
+            ));
+          }
+        } else {
+          _key.currentState!.reset();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content:
+                Text("Добавьте способ оплаты.", style: TextStyle(fontSize: 14)),
+          ));
+        }
       }
     } else {
       _key.currentState!.reset();

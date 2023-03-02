@@ -36,11 +36,20 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HousingInfo extends StatefulWidget {
   const HousingInfo(
-      this.id, this.thisStoryItems, this.mediaStoryItems, this.distance);
+    this.id,
+    this.thisStoryItems,
+    this.mediaStoryItems,
+    this.distance,
+    this.dateFrom,
+    this.dateTo,
+  );
+
   final int id;
   final List<StoryItem?> thisStoryItems;
   final List<StoryItem?> mediaStoryItems;
   final String distance;
+  final String dateFrom;
+  final String dateTo;
 
   @override
   _HousingInfoState createState() => _HousingInfoState();
@@ -75,6 +84,7 @@ class _HousingInfoState extends State<HousingInfo> {
     getReels();
     getAudioReviews();
     getTextReviews();
+    initDate();
     super.initState();
   }
 
@@ -82,6 +92,15 @@ class _HousingInfoState extends State<HousingInfo> {
   void dispose() {
     storyController.dispose();
     super.dispose();
+  }
+
+  void initDate() {
+    if (widget.dateFrom != '') {
+      startDate = widget.dateFrom;
+      endDate = widget.dateTo;
+      selectedRange =
+          '${DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.dateFrom))} - ${DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.dateTo))}';
+    }
   }
 
   void _onMapCreated(GoogleMapController controller) {

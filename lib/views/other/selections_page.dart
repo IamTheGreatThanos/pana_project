@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/housing_card.dart';
@@ -94,244 +93,229 @@ class _SelectionsPageState extends State<SelectionsPage> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: MediaQuery.of(context).size.height - 120,
-                          child: ListView(
-                                  children: [
-                                    for (int i = 0;
-                                        i < widget.selections.items!.length;
-                                        i++)
-                                      widget.selections.items![i].type ==
-                                              'housing'
-                                          ? Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 20),
-                                              child: GestureDetector(
-                                                onTap: () async {
-                                                  StoryController
-                                                      _storyController =
-                                                      StoryController();
-                                                  List<StoryItem?>
-                                                      thisStoryItems = [];
-                                                  List<StoryItem?>
-                                                      mediaStoryItems = [];
+                            height: MediaQuery.of(context).size.height - 120,
+                            child: ListView(
+                              children: [
+                                for (int i = 0;
+                                    i < widget.selections.items!.length;
+                                    i++)
+                                  widget.selections.items![i].type == 'housing'
+                                      ? Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 20),
+                                          child: GestureDetector(
+                                            onTap: () async {
+                                              StoryController _storyController =
+                                                  StoryController();
+                                              List<StoryItem?> thisStoryItems =
+                                                  [];
+                                              List<StoryItem?> mediaStoryItems =
+                                                  [];
 
-                                                  // for (int j = 0;
-                                                  //     j <
-                                                  //         housingList[i]
-                                                  //             .videos!
-                                                  //             .length;
-                                                  //     j++) {
-                                                  //   thisStoryItems.add(
-                                                  //     StoryItem.pageVideo(
-                                                  //       housingList[i]
-                                                  //           .videos![j]
-                                                  //           .path!,
-                                                  //       controller:
-                                                  //           _storyController,
-                                                  //       imageFit: BoxFit.cover,
-                                                  //     ),
-                                                  //   );
-                                                  //
-                                                  //   mediaStoryItems.add(
-                                                  //     StoryItem.pageVideo(
-                                                  //       housingList[i]
-                                                  //           .videos![j]
-                                                  //           .path!,
-                                                  //       controller:
-                                                  //           _storyController,
-                                                  //       imageFit: BoxFit.fitWidth,
-                                                  //     ),
-                                                  //   );
-                                                  // }
+                                              // for (int j = 0;
+                                              //     j <
+                                              //         housingList[i]
+                                              //             .videos!
+                                              //             .length;
+                                              //     j++) {
+                                              //   thisStoryItems.add(
+                                              //     StoryItem.pageVideo(
+                                              //       housingList[i]
+                                              //           .videos![j]
+                                              //           .path!,
+                                              //       controller:
+                                              //           _storyController,
+                                              //       imageFit: BoxFit.cover,
+                                              //     ),
+                                              //   );
+                                              //
+                                              //   mediaStoryItems.add(
+                                              //     StoryItem.pageVideo(
+                                              //       housingList[i]
+                                              //           .videos![j]
+                                              //           .path!,
+                                              //       controller:
+                                              //           _storyController,
+                                              //       imageFit: BoxFit.fitWidth,
+                                              //     ),
+                                              //   );
+                                              // }
 
-                                                  for (int j = 0;
-                                                      j <
-                                                          widget
-                                                              .selections
-                                                              .items![i]
-                                                              .housing!
-                                                              .images!
-                                                              .length;
-                                                      j++) {
-                                                    thisStoryItems.add(
-                                                      StoryItem.pageImage(
-                                                        url: widget
-                                                            .selections
-                                                            .items![i]
-                                                            .housing!
-                                                            .images![j]
-                                                            .path!,
-                                                        controller:
-                                                            _storyController,
-                                                        imageFit: BoxFit.cover,
-                                                      ),
-                                                    );
+                                              for (int j = 0;
+                                                  j <
+                                                      widget
+                                                          .selections
+                                                          .items![i]
+                                                          .housing!
+                                                          .images!
+                                                          .length;
+                                                  j++) {
+                                                thisStoryItems.add(
+                                                  StoryItem.pageImage(
+                                                    url: widget
+                                                        .selections
+                                                        .items![i]
+                                                        .housing!
+                                                        .images![j]
+                                                        .path!,
+                                                    controller:
+                                                        _storyController,
+                                                    imageFit: BoxFit.cover,
+                                                  ),
+                                                );
 
-                                                    mediaStoryItems.add(
-                                                      StoryItem.pageImage(
-                                                        url: widget
-                                                            .selections
-                                                            .items![i]
-                                                            .housing!
-                                                            .images![j]
-                                                            .path!,
-                                                        controller:
-                                                            _storyController,
-                                                        imageFit:
-                                                            BoxFit.fitWidth,
-                                                      ),
-                                                    );
-                                                  }
+                                                mediaStoryItems.add(
+                                                  StoryItem.pageImage(
+                                                    url: widget
+                                                        .selections
+                                                        .items![i]
+                                                        .housing!
+                                                        .images![j]
+                                                        .path!,
+                                                    controller:
+                                                        _storyController,
+                                                    imageFit: BoxFit.fitWidth,
+                                                  ),
+                                                );
+                                              }
 
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          HousingInfo(
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HousingInfo(
+                                                    widget.selections.items![i]
+                                                        .housing!.id!,
+                                                    thisStoryItems,
+                                                    mediaStoryItems,
+                                                    widget.selections.items![i]
+                                                        .housing!.distance
+                                                        .toString(),
+                                                    '',
+                                                    '',
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: HousingCard(
+                                                widget.selections.items![i]
+                                                    .housing!,
+                                                () {}),
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 20),
+                                          child: GestureDetector(
+                                              onTap: () async {
+                                                StoryController
+                                                    _storyController =
+                                                    StoryController();
+                                                List<StoryItem?>
+                                                    thisStoryItems = [];
+                                                List<StoryItem?>
+                                                    mediaStoryItems = [];
+
+                                                for (int j = 0;
+                                                    j <
                                                         widget
                                                             .selections
                                                             .items![i]
-                                                            .housing!
-                                                            .id!,
-                                                        thisStoryItems,
-                                                        mediaStoryItems,
-                                                        widget
-                                                            .selections
-                                                            .items![i]
-                                                            .housing!
-                                                            .distance
-                                                            .toString(),
-                                                      ),
+                                                            .impression!
+                                                            .videos!
+                                                            .length;
+                                                    j++) {
+                                                  thisStoryItems.add(
+                                                    StoryItem.pageVideo(
+                                                      widget
+                                                          .selections
+                                                          .items![i]
+                                                          .impression!
+                                                          .videos![j]
+                                                          .path!,
+                                                      controller:
+                                                          _storyController,
+                                                      imageFit: BoxFit.cover,
                                                     ),
                                                   );
-                                                },
-                                                child: HousingCard(
-                                                    widget.selections.items![i]
-                                                        .housing!,
-                                                    () {}),
-                                              ),
-                                            )
-                                          : Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 20),
-                                              child: GestureDetector(
-                                                  onTap: () async {
-                                                    StoryController
-                                                        _storyController =
-                                                        StoryController();
-                                                    List<StoryItem?>
-                                                        thisStoryItems = [];
-                                                    List<StoryItem?>
-                                                        mediaStoryItems = [];
 
-                                                    for (int j = 0;
-                                                        j <
-                                                            widget
-                                                                .selections
-                                                                .items![i]
-                                                                .impression!
-                                                                .videos!
-                                                                .length;
-                                                        j++) {
-                                                      thisStoryItems.add(
-                                                        StoryItem.pageVideo(
-                                                          widget
-                                                              .selections
-                                                              .items![i]
-                                                              .impression!
-                                                              .videos![j]
-                                                              .path!,
-                                                          controller:
-                                                              _storyController,
-                                                          imageFit:
-                                                              BoxFit.cover,
-                                                        ),
-                                                      );
+                                                  mediaStoryItems.add(
+                                                    StoryItem.pageVideo(
+                                                      widget
+                                                          .selections
+                                                          .items![i]
+                                                          .impression!
+                                                          .videos![j]
+                                                          .path!,
+                                                      controller:
+                                                          _storyController,
+                                                      imageFit: BoxFit.fitWidth,
+                                                    ),
+                                                  );
+                                                }
 
-                                                      mediaStoryItems.add(
-                                                        StoryItem.pageVideo(
-                                                          widget
-                                                              .selections
-                                                              .items![i]
-                                                              .impression!
-                                                              .videos![j]
-                                                              .path!,
-                                                          controller:
-                                                              _storyController,
-                                                          imageFit:
-                                                              BoxFit.fitWidth,
-                                                        ),
-                                                      );
-                                                    }
+                                                for (int j = 0;
+                                                    j <
+                                                        widget
+                                                            .selections
+                                                            .items![i]
+                                                            .impression!
+                                                            .images!
+                                                            .length;
+                                                    j++) {
+                                                  thisStoryItems.add(
+                                                    StoryItem.pageImage(
+                                                      url: widget
+                                                          .selections
+                                                          .items![i]
+                                                          .impression!
+                                                          .images![j]
+                                                          .path!,
+                                                      controller:
+                                                          _storyController,
+                                                      imageFit: BoxFit.cover,
+                                                    ),
+                                                  );
 
-                                                    for (int j = 0;
-                                                        j <
-                                                            widget
-                                                                .selections
-                                                                .items![i]
-                                                                .impression!
-                                                                .images!
-                                                                .length;
-                                                        j++) {
-                                                      thisStoryItems.add(
-                                                        StoryItem.pageImage(
-                                                          url: widget
-                                                              .selections
-                                                              .items![i]
-                                                              .impression!
-                                                              .images![j]
-                                                              .path!,
-                                                          controller:
-                                                              _storyController,
-                                                          imageFit:
-                                                              BoxFit.cover,
-                                                        ),
-                                                      );
+                                                  mediaStoryItems.add(
+                                                    StoryItem.pageImage(
+                                                      url: widget
+                                                          .selections
+                                                          .items![i]
+                                                          .impression!
+                                                          .images![j]
+                                                          .path!,
+                                                      controller:
+                                                          _storyController,
+                                                      imageFit: BoxFit.fitWidth,
+                                                    ),
+                                                  );
+                                                }
 
-                                                      mediaStoryItems.add(
-                                                        StoryItem.pageImage(
-                                                          url: widget
-                                                              .selections
-                                                              .items![i]
-                                                              .impression!
-                                                              .images![j]
-                                                              .path!,
-                                                          controller:
-                                                              _storyController,
-                                                          imageFit:
-                                                              BoxFit.fitWidth,
-                                                        ),
-                                                      );
-                                                    }
-
-                                                    await Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ImpressionInfo(
-                                                          widget
-                                                              .selections
-                                                              .items![i]
-                                                              .impression!,
-                                                          thisStoryItems,
-                                                          mediaStoryItems,
-                                                        ),
-                                                      ),
-                                                    );
-
-                                                    setState(() {});
-                                                  },
-                                                  child: ImpressionCard(
+                                                await Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ImpressionInfo(
                                                       widget
                                                           .selections
                                                           .items![i]
                                                           .impression!,
-                                                      () {})),
-                                            )
-                                  ],
-                                )
+                                                      thisStoryItems,
+                                                      mediaStoryItems,
+                                                    ),
+                                                  ),
+                                                );
 
-                        ),
+                                                setState(() {});
+                                              },
+                                              child: ImpressionCard(
+                                                  widget.selections.items![i]
+                                                      .impression!,
+                                                  () {})),
+                                        )
+                              ],
+                            )),
                       ],
                     ),
                   ),

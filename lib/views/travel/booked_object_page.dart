@@ -9,6 +9,8 @@ import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/models/travelPlan.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
+import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/other/reels_video_selection_page.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
 import 'package:pana_project/views/travel/send_audio_review.dart';
@@ -571,36 +573,38 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 20),
-                    child: Container(
-                      height: 60,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: AppColors.grey),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(8),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Перенести в другую поездку',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // GestureDetector(
+                //   onTap: () {},
+                //   child: Padding(
+                //     padding: const EdgeInsets.symmetric(
+                //         vertical: 20, horizontal: 20),
+                //     child: Container(
+                //       height: 60,
+                //       width: MediaQuery.of(context).size.width,
+                //       decoration: BoxDecoration(
+                //         border: Border.all(width: 2, color: AppColors.grey),
+                //         borderRadius: const BorderRadius.all(
+                //           Radius.circular(8),
+                //         ),
+                //       ),
+                //       child: const Center(
+                //         child: Text(
+                //           'Перенести в другую поездку',
+                //           style: TextStyle(
+                //             color: Colors.black,
+                //             fontSize: 14,
+                //             fontWeight: FontWeight.w500,
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Center(
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      showCancelingConfirmation('24703', '8347');
+                    },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 40),
                       child: Text(
@@ -623,16 +627,17 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
     );
   }
 
-  void sendOrder() async {
-    // var response = await MainProvider().housingPayment();
+  void cancelOrder() async {
+    // var response = await HousingProvider().cancelOrder();
     // if (response['response_status'] == 'ok') {
-    //   print('Successfully created!');
+    //   showSuccessfullyCanceledSheet();
     // } else {
     //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content:
-    //         Text(response['data']['message'], style: const TextStyle(fontSize: 14)),
+    //     content: Text(response['data']['message'],
+    //         style: const TextStyle(fontSize: 14)),
     //   ));
     // }
+    showSuccessfullyCanceledSheet();
   }
 
   void getReels() async {
@@ -651,5 +656,245 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
             style: const TextStyle(fontSize: 14)),
       ));
     }
+  }
+
+  void showSuccessfullyCanceledSheet() async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: 400,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                topRight: Radius.circular(25.0),
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: 400,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      SvgPicture.asset('assets/icons/big_checkmark.svg'),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: const Text(
+                          'Вы отменили бронирование',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: const Text(
+                          'Поздравляем! Вы успешно отменили свое бронирование, средства за бронирование будут отправлены вам, в течение дня!',
+                          style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      SizedBox(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: AppColors.accent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(10), // <-- Radius
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => TabBarPage()),
+                                (Route<dynamic> route) => false);
+                          },
+                          child: const Text(
+                            "Отлично!",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showCancelingConfirmation(String returnPrice, String finePrice) async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: 400,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                topRight: Radius.circular(25.0),
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: 400,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: const Text(
+                          'Отменить бронирование?',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Вы уверены, что хотите отменить бронь? Для отмены брони штраф составит 25% (${formatNumberString(finePrice)}₸). Остальная сумма вернется вам на карту',
+                        style: const TextStyle(
+                          color: Colors.black45,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 1,
+                              color: AppColors.grey,
+                            ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            'Сумма к возврату: 75% (${formatNumberString(returnPrice)}₸)',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black45,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        children: [
+                          const Spacer(),
+                          SizedBox(
+                            height: 60,
+                            width: 150,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10), // <-- Radius
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                "Не отменять",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          SizedBox(
+                            height: 60,
+                            width: 150,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors.accent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10), // <-- Radius
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                cancelOrder();
+                              },
+                              child: const Text(
+                                "Да,отменить",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

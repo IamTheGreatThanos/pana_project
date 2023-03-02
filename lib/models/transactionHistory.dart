@@ -104,7 +104,7 @@ class RoomNumbers {
   int? roomNumberId;
   int? count;
   int? price;
-  int? totalPrice;
+  double? totalPrice;
   String? createdAt;
   String? updatedAt;
   String? roomName;
@@ -135,7 +135,7 @@ class RoomNumbers {
     roomNumberId = json['room_number_id'];
     count = json['count'];
     price = json['price'];
-    totalPrice = json['total_price'];
+    totalPrice = double.parse(json['total_price'].toString());
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     json['room']['room_name'] != null

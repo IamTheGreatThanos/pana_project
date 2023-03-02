@@ -59,7 +59,7 @@ class HousingCardModel {
       });
     }
     inFavorite = json['in_favorite'];
-    reviewsAvgBall = json['reviews_avg_ball'];
+    reviewsAvgBall = json['reviews_ball_avg'];
     reviewsCount = json['reviews_count'];
     distance = json['distance'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;

@@ -226,12 +226,14 @@ class HousingProvider {
   }
 
   Future<dynamic> housingPayment(
-      int housingId,
-      String dateFrom,
-      String dateTo,
-      int peopleCount,
-      List<Map<String, dynamic>> selectedRooms,
-      int paymentCardId) async {
+    int housingId,
+    String dateFrom,
+    String dateTo,
+    int peopleCount,
+    List<Map<String, dynamic>> selectedRooms,
+    int paymentCardId,
+    String comment,
+  ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
@@ -239,8 +241,15 @@ class HousingProvider {
       "housing_id": housingId,
       "count_people": peopleCount,
       "rooms": selectedRooms,
-      "payment_card_id": paymentCardId,
+      "comment": comment,
     };
+
+    if (paymentCardId == -1) {
+      bodyObject['payment_type'] = 3;
+    } else {
+      bodyObject['payment_type'] = 1;
+      bodyObject["payment_card_id"] = paymentCardId;
+    }
 
     if (dateFrom != '') {
       bodyObject["date_from"] = dateFrom;
@@ -319,6 +328,37 @@ class HousingProvider {
         'Authorization': "Bearer $token"
       },
     );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> cancelOrder(int orderId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    Map<String, dynamic> bodyObject = {"order_id": orderId};
+
+    final response = await http.post(
+      Uri.parse('${API_URL}api/mobile/order/refund'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(bodyObject),
+    );
+
+    print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> result = {};

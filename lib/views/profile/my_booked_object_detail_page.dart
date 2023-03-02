@@ -6,10 +6,13 @@ import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/impressionCard.dart';
+import 'package:pana_project/models/order.dart';
 import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
+import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
 import 'package:pana_project/views/other/reels_video_selection_page.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
@@ -17,10 +20,9 @@ import 'package:pana_project/views/travel/send_audio_review.dart';
 import 'package:pana_project/views/travel/send_text_review.dart';
 
 class MyBookedObjectDetailPage extends StatefulWidget {
-  MyBookedObjectDetailPage(this.type, this.housing, this.impression);
+  MyBookedObjectDetailPage(this.type, this.order);
   final int type;
-  final HousingCardModel housing;
-  final ImpressionCardModel impression;
+  final Order order;
 
   @override
   _MyBookedObjectDetailPageState createState() =>
@@ -120,8 +122,11 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                 child: CachedNetworkImage(
                                   fit: BoxFit.cover,
                                   imageUrl: widget.type == 2
-                                      ? widget.housing.images![0].path ?? ''
-                                      : widget.impression.images?[0].path ?? '',
+                                      ? widget.order.housing?.images![0].path ??
+                                          ''
+                                      : widget.order.impression?.images?[0]
+                                              .path ??
+                                          '',
                                 ),
                               ),
                             ),
@@ -134,8 +139,8 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                       MediaQuery.of(context).size.width * 0.6,
                                   child: Text(
                                     widget.type == 2
-                                        ? widget.housing.name ?? ''
-                                        : widget.impression.name ?? '',
+                                        ? widget.order.housing?.name ?? ''
+                                        : widget.order.impression?.name ?? '',
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
@@ -147,7 +152,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.6,
                                   child: Text(
-                                    '${widget.type == 2 ? widget.housing.city?.name ?? '' : widget.impression.city?.name ?? ''} , ${widget.type == 2 ? widget.housing.country?.name ?? '' : widget.impression.country?.name ?? ''}',
+                                    '${widget.type == 2 ? widget.order.housing?.city?.name ?? '' : widget.order.impression?.city?.name ?? ''} , ${widget.type == 2 ? widget.order.housing?.country?.name ?? '' : widget.order.impression?.country?.name ?? ''}',
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
@@ -173,9 +178,11 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Text(
                                           widget.type == 2
-                                              ? widget.housing.reviewsAvgBall
+                                              ? widget
+                                                  .order.housing!.reviewsAvgBall
                                                   .toString()
-                                              : widget.impression.reviewsAvgBall
+                                              : widget.order.impression!
+                                                  .reviewsAvgBall
                                                   .toString(),
                                           style: const TextStyle(
                                               fontSize: 16,
@@ -186,7 +193,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                         padding:
                                             const EdgeInsets.only(left: 10),
                                         child: Text(
-                                          '${widget.type == 2 ? widget.housing.reviewsCount ?? '0' : widget.impression.reviewsCount ?? '0'} Отзывов',
+                                          '${widget.type == 2 ? widget.order.housing?.reviewsCount ?? '0' : widget.order.impression?.reviewsCount ?? '0'} Отзывов',
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
@@ -219,10 +226,10 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                 children: [
                                   Text(
                                     widget.type == 2
-                                        ? widget.housing.dateFrom
+                                        ? widget.order.dateFrom
                                                 ?.substring(0, 10) ??
                                             '-'
-                                        : widget.impression.dateFrom
+                                        : widget.order.dateFrom
                                                 ?.substring(0, 10) ??
                                             '-',
                                     style: const TextStyle(
@@ -258,10 +265,10 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                 children: [
                                   Text(
                                     widget.type == 2
-                                        ? widget.housing.dateTo
+                                        ? widget.order.dateTo
                                                 ?.substring(0, 10) ??
                                             '-'
-                                        : widget.impression.dateTo
+                                        : widget.order.dateTo
                                                 ?.substring(0, 10) ??
                                             '-',
                                     style: const TextStyle(
@@ -293,8 +300,9 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                               ),
                               child: CachedNetworkImage(
                                 imageUrl: widget.type == 2
-                                    ? widget.housing.user?.avatar ?? ''
-                                    : widget.impression.user?.avatar ?? '',
+                                    ? widget.order.housing?.user?.avatar ?? ''
+                                    : widget.order.impression?.user?.avatar ??
+                                        '',
                                 height: 44,
                                 width: 44,
                                 fit: BoxFit.cover,
@@ -322,7 +330,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                       width: MediaQuery.of(context).size.width *
                                           0.6,
                                       child: Text(
-                                        '${widget.type == 2 ? widget.housing.user?.name ?? '' : widget.impression.user?.name ?? ''} ${widget.type == 2 ? widget.housing.user?.surname ?? '' : widget.impression.user?.surname ?? ''}',
+                                        '${widget.type == 2 ? widget.order.housing?.user?.name ?? '' : widget.order.impression?.user?.name ?? ''} ${widget.type == 2 ? widget.order.housing?.user?.surname ?? '' : widget.order.impression?.user?.surname ?? ''}',
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500,
@@ -342,8 +350,8 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                         builder: (context) => ChatMessagesPage(
                                           ChatModel(
                                             user: widget.type == 2
-                                                ? widget.housing.user
-                                                : widget.impression.user,
+                                                ? widget.order.housing?.user
+                                                : widget.order.impression?.user,
                                           ),
                                         ),
                                       ),
@@ -404,11 +412,11 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                                   ? 'housing'
                                                   : 'impression',
                                               widget.type == 2
-                                                  ? widget.housing
+                                                  ? widget.order.housing!
                                                   : HousingCardModel(),
                                               widget.type == 2
                                                   ? ImpressionCardModel()
-                                                  : widget.impression,
+                                                  : widget.order.impression!,
                                               false),
                                     ),
                                   );
@@ -514,8 +522,9 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                             SendAudioReviewPage(
                                                 widget.type,
                                                 widget.type == 2
-                                                    ? widget.housing.id!
-                                                    : widget.impression.id!)));
+                                                    ? widget.order.housing!.id!
+                                                    : widget.order.impression!
+                                                        .id!)));
                               },
                               child: Container(
                                 width: 162,
@@ -555,11 +564,13 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                             SendTextReviewPage(
                                                 widget.type,
                                                 widget.type == 2
-                                                    ? widget.housing.id!
-                                                    : widget.impression.id!,
+                                                    ? widget.order.housing!.id!
+                                                    : widget
+                                                        .order.impression!.id!,
                                                 widget.type == 2
-                                                    ? widget.housing.dateFrom!
-                                                    : widget.impression
+                                                    ? widget.order.housing!
+                                                        .dateFrom!
+                                                    : widget.order.impression!
                                                         .dateFrom!)));
                               },
                               child: Container(
@@ -601,7 +612,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      cancelOrder();
+                      showCancelingConfirmation('24703', '8347');
                     },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 40),
@@ -626,21 +637,22 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
   }
 
   void cancelOrder() async {
-    // var response = await MainProvider().housingPayment();
-    // if (response['response_status'] == 'ok') {
-    //   print('Successfully created!');
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content:
-    //         Text(response['data']['message'], style: const TextStyle(fontSize: 14)),
-    //   ));
-    // }
+    var response = await HousingProvider().cancelOrder(widget.order.id!);
+    if (response['response_status'] == 'ok') {
+      showSuccessfullyCanceledSheet();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
+    }
   }
 
   void getReels() async {
     reels = [];
     if (widget.type == 2) {
-      var response = await HousingProvider().getReelsById(widget.housing.id!);
+      var response =
+          await HousingProvider().getReelsById(widget.order.housing!.id!);
       if (response['response_status'] == 'ok') {
         for (int i = 0; i < response['data'].length; i++) {
           reels.add(Reels.fromJson(response['data'][i]));
@@ -656,7 +668,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
       }
     } else {
       var response =
-          await ImpressionProvider().getReelsById(widget.impression.id!);
+          await ImpressionProvider().getReelsById(widget.order.impression!.id!);
       if (response['response_status'] == 'ok') {
         for (int i = 0; i < response['data'].length; i++) {
           reels.add(Reels.fromJson(response['data'][i]));
@@ -671,5 +683,245 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
         ));
       }
     }
+  }
+
+  void showSuccessfullyCanceledSheet() async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: 400,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                topRight: Radius.circular(25.0),
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: 400,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      SvgPicture.asset('assets/icons/big_checkmark.svg'),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: const Text(
+                          'Вы отменили бронирование',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: const Text(
+                          'Поздравляем! Вы успешно отменили свое бронирование, средства за бронирование будут отправлены вам, в течение дня!',
+                          style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      SizedBox(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: AppColors.accent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(10), // <-- Radius
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => TabBarPage()),
+                                (Route<dynamic> route) => false);
+                          },
+                          child: const Text(
+                            "Отлично!",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showCancelingConfirmation(String returnPrice, String finePrice) async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: 400,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                topRight: Radius.circular(25.0),
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: 400,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: const Text(
+                          'Отменить бронирование?',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Вы уверены, что хотите отменить бронь? Для отмены брони штраф составит 25% (${formatNumberString(finePrice)}₸). Остальная сумма вернется вам на карту',
+                        style: const TextStyle(
+                          color: Colors.black45,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 1,
+                              color: AppColors.grey,
+                            ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            'Сумма к возврату: 75% (${formatNumberString(returnPrice)}₸)',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black45,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        children: [
+                          const Spacer(),
+                          SizedBox(
+                            height: 60,
+                            width: 150,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10), // <-- Radius
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                "Не отменять",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          SizedBox(
+                            height: 60,
+                            width: 150,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors.accent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10), // <-- Radius
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                cancelOrder();
+                              },
+                              child: const Text(
+                                "Да,отменить",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

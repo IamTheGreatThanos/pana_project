@@ -323,6 +323,7 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
     prefs.remove('user_avatar');
     prefs.remove('user_name');
     prefs.remove('user_surname');
+    prefs.remove('isBiometricsUse');
 
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => AuthPage()),

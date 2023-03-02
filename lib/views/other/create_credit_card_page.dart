@@ -1,7 +1,5 @@
 import 'package:cloudpayments/cloudpayments.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_credit_card/credit_card_form.dart';
-import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/services/main_api_provider.dart';
@@ -106,7 +104,6 @@ class _CreateCreditCardPageState extends State<CreateCreditCardPage> {
                                 onCreditCardWidgetChange: (CreditCardBrand) {
                                   cardType =
                                       CreditCardBrand.brandName.toString();
-                                  print(cardType);
                                 },
                               ),
                               CreditCardForm(

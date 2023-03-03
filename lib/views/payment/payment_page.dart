@@ -665,17 +665,14 @@ class _PaymentPageState extends State<PaymentPage> {
               var response3ds = await HousingProvider()
                   .housingPaymentSend3ds(result!.md!, result.paRes!);
               if (response3ds['response_status'] == 'ok') {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Жилье успешно забронировано!',
-                      style: const TextStyle(fontSize: 14)),
-                ));
+                showSuccessfullyPaySheet();
 
-                Future.delayed(
-                  const Duration(seconds: 3),
-                  () => _key.currentState!.reset(),
-                ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => TabBarPage()),
-                    (Route<dynamic> route) => false));
+                // Future.delayed(
+                //   const Duration(seconds: 3),
+                //   () => _key.currentState!.reset(),
+                // ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+                //     MaterialPageRoute(builder: (context) => TabBarPage()),
+                //     (Route<dynamic> route) => false));
               } else {
                 _key.currentState!.reset();
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -686,6 +683,7 @@ class _PaymentPageState extends State<PaymentPage> {
             }
           } else {
             _key.currentState!.reset();
+            showPaymentErrorSheet();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(response['data']['payment_operation']['message'],
                   style: const TextStyle(fontSize: 14)),
@@ -747,6 +745,480 @@ class _PaymentPageState extends State<PaymentPage> {
             style: const TextStyle(fontSize: 14)),
       ));
     }
+  }
+
+  void showSuccessfullyPaySheet() async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            // height: 400,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                topRight: Radius.circular(25.0),
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      SvgPicture.asset('assets/icons/big_checkmark.svg'),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: const Text(
+                          'Бронирование прошло успешно',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Text(
+                          'Поздравляем! Вы успешно забронировали “${widget.housing.name ?? ''}”',
+                          style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Divider(),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(12)),
+                            child: SizedBox(
+                              width: 86,
+                              height: 86,
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: widget.housing.images?[0].path ?? '',
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: Text(
+                                  widget.housing.name ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: Text(
+                                  '${widget.housing.city?.name ?? ''}, ${widget.housing.city?.country?.name ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 2),
+                                      child: SizedBox(
+                                        width: 15,
+                                        height: 15,
+                                        child: SvgPicture.asset(
+                                            'assets/icons/star.svg'),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 5),
+                                      child: Text(
+                                        widget.housing.reviewsBallAvg ?? '0',
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text(
+                                        checkReviewsCount(
+                                            (widget.housing.reviewsCount ?? 0)
+                                                .toString()),
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black45),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Даты',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  '$dateFrom / $dateTo',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 20, child: VerticalDivider()),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Гости',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                '${sharedHousingPaymentData.peopleCount} человек(а)',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black45,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              'Способ оплаты:',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.blackWithOpacity,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              const SizedBox(width: 10),
+                              SvgPicture.asset(selectedCardIndex == -1
+                                  ? 'assets/icons/payment_type_in_a_place.svg'
+                                  : cards[selectedCardIndex].type == 1
+                                      ? 'assets/icons/mastercard_icon.svg'
+                                      : 'assets/icons/visa_icon.svg'),
+                              const SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    selectedCardIndex == -1
+                                        ? 'Оплата при заселении'
+                                        : '**** ${cards[selectedCardIndex].number!.substring(12, 16)}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    selectedCardIndex == -1
+                                        ? 'Нужно оплатить на ресепшене'
+                                        : '${cards[selectedCardIndex].month}/${cards[selectedCardIndex].year}',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black45,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Divider(),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const Text(
+                            'Итого',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '${formatNumberString(sum.toString())} \₸',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: AppColors.accent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(10), // <-- Radius
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => TabBarPage()),
+                                (Route<dynamic> route) => false);
+                          },
+                          child: const Text(
+                            "Отлично!",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showPaymentErrorSheet() async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            // height: 400,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                topRight: Radius.circular(25.0),
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      SvgPicture.asset('assets/icons/big_checkmark.svg'),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: const Text(
+                          'Оплата не прошла',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: const Text(
+                          'Возникли проблемы, у вас на счету не хватает средств для оплаты, повторите попытку или выберите другой способ оплаты',
+                          style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              'Способ оплаты:',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.blackWithOpacity,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              const SizedBox(width: 10),
+                              SvgPicture.asset(selectedCardIndex == -1
+                                  ? 'assets/icons/payment_type_in_a_place.svg'
+                                  : cards[selectedCardIndex].type == 1
+                                      ? 'assets/icons/mastercard_icon.svg'
+                                      : 'assets/icons/visa_icon.svg'),
+                              const SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    selectedCardIndex == -1
+                                        ? 'Оплата при заселении'
+                                        : '**** ${cards[selectedCardIndex].number!.substring(12, 16)}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    selectedCardIndex == -1
+                                        ? 'Нужно оплатить на ресепшене'
+                                        : '${cards[selectedCardIndex].month}/${cards[selectedCardIndex].year}',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black45,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Divider(),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const Text(
+                            'Итого',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '${formatNumberString(sum.toString())} \₸',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: AppColors.accent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(10), // <-- Radius
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "Повторить",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 

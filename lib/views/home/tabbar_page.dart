@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/impressionCard.dart';
+import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/PageTransitionRoute.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
@@ -14,6 +16,7 @@ import 'package:pana_project/views/housing/housing_info.dart';
 import 'package:pana_project/views/impression/home_impression.dart';
 import 'package:pana_project/views/impression/impression_info.dart';
 import 'package:pana_project/views/messages/messages_main.dart';
+import 'package:pana_project/views/other/stories_view.dart';
 import 'package:pana_project/views/profile/profile_main.dart';
 import 'package:pana_project/views/travel/home_travel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,6 +75,12 @@ class _TabBarPageState extends State<TabBarPage> {
           if (uri.queryParameters.containsKey('id')) {
             if (uri.queryParameters['id'] != null) {
               getImpressionInfo(int.parse(uri.queryParameters['id']!));
+            }
+          }
+        } else if (uri.path == '/reels') {
+          if (uri.queryParameters.containsKey('id')) {
+            if (uri.queryParameters['id'] != null) {
+              getReelsInfo(int.parse(uri.queryParameters['id']!));
             }
           }
         }
@@ -199,6 +208,24 @@ class _TabBarPageState extends State<TabBarPage> {
         );
 
         setState(() {});
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AuthPage()));
+      }
+    } else {
+      print(response['data']['message']);
+    }
+  }
+
+  void getReelsInfo(int id) async {
+    var response = await MainProvider().getReelInfo(id);
+
+    if (response['response_status'] == 'ok') {
+      Reels reel = Reels.fromJson(response['data']);
+
+      if (isLoggedIn == true) {
+        await Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => StoriesView([reel], 0)));
       } else {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => AuthPage()));

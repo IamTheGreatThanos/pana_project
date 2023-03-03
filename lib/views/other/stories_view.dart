@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/services/main_api_provider.dart';
@@ -273,12 +274,22 @@ class _StoriesViewState extends State<StoriesView> {
                                       ),
                                     ),
                                     const SizedBox(height: 20),
-                                    SizedBox(
-                                      width: 32,
-                                      height: 32,
-                                      child: SvgPicture.asset(
-                                        "assets/icons/share.svg",
-                                        color: Colors.white,
+                                    GestureDetector(
+                                      onTap: () async {
+                                        await FlutterShare.share(
+                                          title: 'Pana',
+                                          text: 'Интересное в Pana',
+                                          linkUrl:
+                                              'pana://pana.app/reels?id=${widget.reels[widget.index].id}',
+                                        );
+                                      },
+                                      child: SizedBox(
+                                        width: 32,
+                                        height: 32,
+                                        child: SvgPicture.asset(
+                                          "assets/icons/share.svg",
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ],

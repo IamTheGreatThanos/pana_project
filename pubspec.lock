@@ -109,10 +109,10 @@ packages:
     dependency: "direct main"
     description:
       name: cached_video_player
-      sha256: "524607fadab166ae74f9191779849c2a53f2489e2de364be78eb4b2637236f10"
+      sha256: "13c25fc1af3bb239da83d9e965d119463a67a782fd9af3714ed86a1182ded20c"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   carousel_slider:
     dependency: "direct main"
     description:

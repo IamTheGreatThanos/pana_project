@@ -625,17 +625,19 @@ class _PaymentPageState extends State<PaymentPage> {
           commentController.text,
         );
         if (response['response_status'] == 'ok') {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Жилье успешно забронировано!',
-                style: const TextStyle(fontSize: 14)),
-          ));
+          showSuccessfullyPaySheet();
 
-          Future.delayed(
-            const Duration(seconds: 3),
-            () => _key.currentState!.reset(),
-          ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => TabBarPage()),
-              (Route<dynamic> route) => false));
+          // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          //   content: Text('Жилье успешно забронировано!',
+          //       style: const TextStyle(fontSize: 14)),
+          // ));
+          //
+          // Future.delayed(
+          //   const Duration(seconds: 3),
+          //   () => _key.currentState!.reset(),
+          // ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+          //     MaterialPageRoute(builder: (context) => TabBarPage()),
+          //     (Route<dynamic> route) => false));
         }
       } else {
         if (cards.isNotEmpty) {

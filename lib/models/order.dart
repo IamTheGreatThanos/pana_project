@@ -20,8 +20,6 @@ class Order {
   int? countPeople;
   String? timeStart;
   String? timeEnd;
-  Null? housingCompany;
-  Null? customerCompany;
   List<RoomNumbers>? roomNumbers;
 
   Order({
@@ -41,8 +39,6 @@ class Order {
     this.countPeople,
     this.timeStart,
     this.timeEnd,
-    this.housingCompany,
-    this.customerCompany,
     this.roomNumbers,
   });
 
@@ -57,9 +53,15 @@ class Order {
     impression = json['impression'] != null
         ? new ImpressionCardModel.fromJson(json['impression'])
         : null;
-    totalPrice = json['total_price'];
-    returnPrice = json['return_price'];
-    finePrice = json['fine_price'];
+    json['total_price'] != null
+        ? totalPrice = double.parse(json['total_price'].toString())
+        : totalPrice = json['total_price'];
+    json['return_price'] != null
+        ? returnPrice = double.parse(json['return_price'].toString())
+        : returnPrice = json['return_price'];
+    json['fine_price'] != null
+        ? finePrice = double.parse(json['fine_price'].toString())
+        : finePrice = json['fine_price'];
     dateFrom = json['date_from'];
     dateTo = json['date_to'];
     paymentAt = json['payment_at'];
@@ -67,9 +69,6 @@ class Order {
     countPeople = json['count_people'];
     timeStart = json['time_start'];
     timeEnd = json['time_end'];
-    housingCompany = json['housing_company'];
-
-    customerCompany = json['customer_company'];
     if (json['roomNumbers'] != null) {
       roomNumbers = <RoomNumbers>[];
       json['roomNumbers'].forEach((v) {
@@ -102,8 +101,6 @@ class Order {
     data['count_people'] = this.countPeople;
     data['time_start'] = this.timeStart;
     data['time_end'] = this.timeEnd;
-    data['housing_company'] = this.housingCompany;
-    data['customer_company'] = this.customerCompany;
     if (this.roomNumbers != null) {
       data['roomNumbers'] = this.roomNumbers!.map((v) => v.toJson()).toList();
     }

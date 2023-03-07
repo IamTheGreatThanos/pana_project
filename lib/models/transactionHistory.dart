@@ -9,7 +9,7 @@ class TransactionHistory {
   User? user;
   HousingDetailModel? housing;
   ImpressionDetailModel? impression;
-  int? totalPrice;
+  double? totalPrice;
   String? dateFrom;
   String? dateTo;
   String? paymentAt;
@@ -48,7 +48,9 @@ class TransactionHistory {
     impression = json['impression'] != null
         ? ImpressionDetailModel.fromJson(json['impression'])
         : null;
-    totalPrice = json['total_price'];
+    json['total_price'] != null
+        ? totalPrice = double.parse(json['total_price'].toString())
+        : totalPrice = json['total_price'];
     dateFrom = json['date_from'];
     dateTo = json['date_to'];
     paymentAt = json['payment_at'];

@@ -178,7 +178,7 @@ class HousingDetailModel {
     recipientInvoicePostalCode = json['recipient_invoice_postal_code'];
     createdAt = json['created_at'];
     roomCount = json['room_count'];
-    basePriceMin = json['base_price_min'];
+    basePriceMin = int.parse(json['base_price_min'].toString());
     reviewsCount = json['reviews_count'];
     reviewsBallAvg = json['reviews_ball_avg'].toString();
     reviewsPriceAvg = json['reviews_price_avg'].toString();

@@ -22,6 +22,14 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleTypeRole</key>
+	<string>Editor</string>
+	<key>CFBundleURLName</key>
+	<string>pana.app</string>
+	<key>CFBundleURLSchemes</key>
+	<array>
+		<string>pana</string>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -64,13 +72,5 @@
 	<false/>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>${PRODUCT_NAME} requests the use of the media library for attaching a audio feedback</string>
-	<key>CFBundleTypeRole</key>
-    <string>Editor</string>
-    <key>CFBundleURLName</key>
-    <string>pana.app</string>
-    <key>CFBundleURLSchemes</key>
-    <array>
-        <string>pana</string>
-    </array>
 </dict>
 </plist>

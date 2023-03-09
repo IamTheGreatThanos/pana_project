@@ -1,0 +1,8 @@
+NSFaceIDUsageDescription = "Pana запрашивает использование идентификатора лица для безопасного входа в систему";
+NSLocationAlwaysAndWhenInUseUsageDescription = "Pana просит использовать ваше местоположение, чтобы найти места рядом с вами";
+NSLocationWhenInUseUsageDescription = "Pana просит использовать ваше местоположение, чтобы найти места рядом с вами";
+NSMicrophoneUsageDescription = "Pana запрашивает использование микрофона для записи голосовой обратной связи";
+NSPhotoLibraryUsageDescription = "Pana запрашивает использование фотогалереи для прикрепления фото к чатам или установки аватара";
+NSUserNotificationsUsageDescription = "Pana хочет отправлять вам уведомления";
+kTCCServiceMediaLibrary = "Pana запрашивает использование медиатеки для прикрепления аудиоотзыва";
+

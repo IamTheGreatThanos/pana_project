@@ -1,0 +1,8 @@
+NSFaceIDUsageDescription = "Pana requests the use of a face ID for secure login";
+NSLocationAlwaysAndWhenInUseUsageDescription = "Pana requests the use your location to find places near you";
+NSLocationWhenInUseUsageDescription = "Pana requests the use your location to find places near you";
+NSMicrophoneUsageDescription = "Pana requests the use of a microphone to record voice feedback";
+NSPhotoLibraryUsageDescription = "Pana requests the use of the photo gallery for attaching a photo to chats or set an avatar";
+NSUserNotificationsUsageDescription = "Pana wants to send you notifications";
+kTCCServiceMediaLibrary = "Pana requests the use of the media library for attaching a audio feedback";
+

@@ -56,7 +56,7 @@ class RoomCardModel {
     status = json['status'];
     size = json['size'];
     description = json['description'];
-    basePrice = json['base_price'];
+    basePrice = int.parse(json['base_price'].toString());
     smoking = json['smoking'];
     disabledPeople = json['disabled_people'];
     countCopy = json['count_copy'];

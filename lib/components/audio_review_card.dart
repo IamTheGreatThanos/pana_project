@@ -166,7 +166,7 @@ class _AudioReviewCardState extends State<AudioReviewCard> {
               children: [
                 const SizedBox(width: 20),
                 Text(
-                  '00:${position.inSeconds > 9 ? position.inSeconds.toString() : '0' + position.inSeconds.toString()}',
+                  '00:${(position.inSeconds == 1 && duration.inSeconds == 1) ? '00' : position.inSeconds > 9 ? position.inSeconds.toString() : '0' + position.inSeconds.toString()}',
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,
@@ -174,7 +174,7 @@ class _AudioReviewCardState extends State<AudioReviewCard> {
                   ),
                 ),
                 Text(
-                  ' / 00:${duration.inSeconds > 9 ? duration.inSeconds.toString() : '0' + duration.inSeconds.toString()}',
+                  ' / 00:${(position.inSeconds == 1 && duration.inSeconds == 1) ? '00' : duration.inSeconds > 9 ? duration.inSeconds.toString() : '0' + duration.inSeconds.toString()}',
                   style: const TextStyle(
                     color: Colors.black54,
                     fontSize: 14,

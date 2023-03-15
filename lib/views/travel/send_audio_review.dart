@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/widgets/showLoaderDialog.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -437,6 +437,7 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
   }
 
   void saveChanges() async {
+    showLoaderDialog(context);
     var response =
         await MainProvider().sendAudioReview(widget.type, widget.id, audioFile);
 
@@ -444,7 +445,9 @@ class _SendAudioReviewPageState extends State<SendAudioReviewPage> {
 
     if (response['response_status'] == 'ok') {
       Navigator.of(context).pop();
+      Navigator.of(context).pop();
     } else {
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
             style: const TextStyle(fontSize: 14)),

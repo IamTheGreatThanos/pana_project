@@ -102,7 +102,7 @@ class _MyAudioReviewCardState extends State<MyAudioReviewCard> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.6,
                           child: Text(
-                            '${widget.review.housing?.city?.name ?? ''}, ${AppConstants.countries[(widget.review.housing?.city?.countryId ?? 1) - 1]}',
+                            '${widget.review.housing?.city?.name ?? ''}, ${widget.review.housing?.city?.country?.name ?? ''}',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -170,7 +170,7 @@ class _MyAudioReviewCardState extends State<MyAudioReviewCard> {
                 children: [
                   const SizedBox(width: 20),
                   Text(
-                    '00:${position.inSeconds > 9 ? position.inSeconds.toString() : '0' + position.inSeconds.toString()}',
+                    '00:${(position.inSeconds == 1 && duration.inSeconds == 1) ? '00' : position.inSeconds > 9 ? position.inSeconds.toString() : '0' + position.inSeconds.toString()}',
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 14,
@@ -178,7 +178,7 @@ class _MyAudioReviewCardState extends State<MyAudioReviewCard> {
                     ),
                   ),
                   Text(
-                    ' / 00:${duration.inSeconds > 9 ? duration.inSeconds.toString() : '0' + duration.inSeconds.toString()}',
+                    ' / 00:${(position.inSeconds == 1 && duration.inSeconds == 1) ? '00' : duration.inSeconds > 9 ? duration.inSeconds.toString() : '0' + duration.inSeconds.toString()}',
                     style: const TextStyle(
                       color: Colors.black54,
                       fontSize: 14,

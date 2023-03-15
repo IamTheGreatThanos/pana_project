@@ -109,21 +109,33 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
                           child: TabBarView(
                             children: [
                               // TODO: Аудио отзывы
-                              ListView(
-                                children: [
-                                  for (int i = 0; i < audioReviews.length; i++)
-                                    MyAudioReviewCard(audioReviews[i]),
-                                  const SizedBox(height: 20)
-                                ],
-                              ),
+                              audioReviews.isNotEmpty
+                                  ? ListView(
+                                      children: [
+                                        for (int i = 0;
+                                            i < audioReviews.length;
+                                            i++)
+                                          MyAudioReviewCard(audioReviews[i]),
+                                        const SizedBox(height: 20)
+                                      ],
+                                    )
+                                  : const Center(
+                                      child: Text('Аудио отзывов пока нет...'),
+                                    ),
                               // TODO: Текстовые отзывы
-                              ListView(
-                                children: [
-                                  for (int i = 0; i < textReviews.length; i++)
-                                    MyTextReviewCard(textReviews[i]),
-                                  const SizedBox(height: 20)
-                                ],
-                              ),
+                              textReviews.isNotEmpty
+                                  ? ListView(
+                                      children: [
+                                        for (int i = 0;
+                                            i < textReviews.length;
+                                            i++)
+                                          MyTextReviewCard(textReviews[i]),
+                                        const SizedBox(height: 20)
+                                      ],
+                                    )
+                                  : const Center(
+                                      child: Text('Отзывов пока нет...'),
+                                    )
                             ],
                           ),
                         ),

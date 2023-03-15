@@ -568,10 +568,8 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                                     : widget
                                                         .order.impression!.id!,
                                                 widget.type == 2
-                                                    ? widget.order.housing!
-                                                        .dateFrom!
-                                                    : widget.order.impression!
-                                                        .dateFrom!)));
+                                                    ? widget.order.dateFrom!
+                                                    : widget.order.dateFrom!)));
                               },
                               child: Container(
                                 width: 162,

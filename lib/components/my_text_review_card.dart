@@ -70,7 +70,7 @@ class _MyTextReviewCardState extends State<MyTextReviewCard> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.6,
                           child: Text(
-                            '${widget.review.housing?.city?.name ?? ''}, ${AppConstants.countries[(widget.review.housing?.city?.countryId ?? 1) - 1]}',
+                            '${widget.review.housing?.city?.name ?? ''}, ${widget.review.housing?.city?.country?.name ?? ''}',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,

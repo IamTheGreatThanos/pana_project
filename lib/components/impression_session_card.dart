@@ -4,17 +4,17 @@ import 'package:pana_project/models/impressionDetail.dart';
 import 'package:pana_project/models/impressionSession.dart';
 import 'package:pana_project/utils/ImpressionData.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/payment/impression_payment_page.dart';
+import 'package:pana_project/utils/format_number_string.dart';
 
 class ImpressionSessionCard extends StatelessWidget {
-  const ImpressionSessionCard(
-      {Key? key,
-      required this.session,
-      required this.impression,
-      required this.startDate,
-      required this.endDate,
-      required this.impressionData})
-      : super(key: key);
+  const ImpressionSessionCard({
+    Key? key,
+    required this.session,
+    required this.impression,
+    required this.startDate,
+    required this.endDate,
+    required this.impressionData,
+  }) : super(key: key);
   final ImpressionSessionModel session;
   final ImpressionDetailModel impression;
   final String startDate;
@@ -67,14 +67,14 @@ class ImpressionSessionCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'от ${session.openPrice} \₸',
+                    'от ${formatNumberString(session.openPrice.toString())}\₸',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   const Text(
-                    'за группу',
+                    ' за группу',
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -84,32 +84,23 @@ class ImpressionSessionCard extends StatelessWidget {
                   SizedBox(
                     height: 39,
                     width: 107,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        primary: AppColors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(
-                              width: 1,
-                              color: AppColors.accent,
-                            )),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ImpressionPaymentPage(
-                                impression, startDate, endDate, impressionData),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        "Выбрать",
-                        style: TextStyle(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        border: Border.all(
+                          width: 1,
                           color: AppColors.accent,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Выбрать",
+                          style: TextStyle(
+                            color: AppColors.accent,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),

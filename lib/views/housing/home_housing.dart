@@ -34,6 +34,7 @@ class _HomeHousingState extends State<HomeHousing>
   final StoryController controller = StoryController();
 
   List<Map<String, dynamic>> categories = [
+    {'name': 'Все', 'asset': 'assets/icons/category_0.svg', 'id': 0},
     {'name': 'Отели', 'asset': 'assets/icons/category_1.svg', 'id': 1},
     {'name': 'Бутик-отели', 'asset': 'assets/icons/category_2.svg', 'id': 2},
     {'name': 'Загородный дом', 'asset': 'assets/icons/category_3.svg', 'id': 3},
@@ -86,7 +87,7 @@ class _HomeHousingState extends State<HomeHousing>
     getSelections();
     getCurrentLocation();
     super.initState();
-    _tabController = TabController(vsync: this, length: 12);
+    _tabController = TabController(vsync: this, length: 13);
   }
 
   @override

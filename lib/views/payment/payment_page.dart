@@ -424,11 +424,30 @@ class _PaymentPageState extends State<PaymentPage> {
 
                       getCreditCards();
                     },
-                    child: const Text(
-                      'Добавить карту',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.accent,
+                    child: Container(
+                      width: double.infinity,
+                      height: 51,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(12),
+                        ),
+                        color: AppColors.lightGray,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('./assets/icons/payment_card.svg'),
+                          const SizedBox(width: 10),
+                          const Text(
+                            'Добавить карту',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.accent,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -579,7 +598,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             Icons.arrow_forward_ios,
                             color: Colors.white,
                           ),
-                          text: 'Проведите для оплаты',
+                          text: 'Проведите для бронирования',
                           textStyle: const TextStyle(
                             color: Colors.black45,
                             fontWeight: FontWeight.bold,
@@ -686,10 +705,10 @@ class _PaymentPageState extends State<PaymentPage> {
           } else {
             _key.currentState!.reset();
             showPaymentErrorSheet();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(response['data']['payment_operation']['message'],
-                  style: const TextStyle(fontSize: 14)),
-            ));
+            // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //   content: Text(response['data']['payment_operation']['message'],
+            //       style: const TextStyle(fontSize: 14)),
+            // ));
           }
         } else {
           _key.currentState!.reset();

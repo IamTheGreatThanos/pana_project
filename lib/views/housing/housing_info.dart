@@ -24,6 +24,7 @@ import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/utils/get_bytes_from_asset.dart';
 import 'package:pana_project/utils/globalVariables.dart';
+import 'package:pana_project/views/housing/comforts_detail_page.dart';
 import 'package:pana_project/views/housing/select_room_page.dart';
 import 'package:pana_project/views/impression/impression_info.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
@@ -452,13 +453,55 @@ class _HousingInfoState extends State<HousingInfo> {
                         ),
                       ),
                       const Divider(),
+                      Row(
+                        children: [
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                            child: Text(
+                              'Удобства',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HousingComfortsDetail(
+                                    comforts: thisHousing.comforts ?? [],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.only(
+                                  top: 20, left: 20, bottom: 10, right: 20),
+                              child: Text(
+                                'Все удобства',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.accent,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                        padding: EdgeInsets.only(
+                            top: 10, left: 20, bottom: 10, right: 20),
                         child: Text(
-                          'Удобства',
+                          'Популярные удобства',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 14,
                             fontWeight: FontWeight.w500,
+                            color: AppColors.blackWithOpacity,
                           ),
                         ),
                       ),
@@ -468,17 +511,20 @@ class _HousingInfoState extends State<HousingInfo> {
                         child: Wrap(
                           children: [
                             for (var item in thisHousing.comforts ?? [])
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 5),
-                                    child: FacilitiesWidget(
-                                        title: item.name ?? ''),
-                                  ),
-                                  const SizedBox(width: 10),
-                                ],
-                              ),
+                              item.parent['name'] == 'Популярные удобства'
+                                  ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 5),
+                                          child: FacilitiesWidget(
+                                              title: item.name ?? ''),
+                                        ),
+                                        const SizedBox(width: 10),
+                                      ],
+                                    )
+                                  : const SizedBox(),
                           ],
                         ),
                       ),

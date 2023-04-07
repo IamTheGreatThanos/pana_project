@@ -11,9 +11,13 @@ class HousingProvider {
   Future<dynamic> getHousingData(int id, String lat, String lng) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    String uri = '${API_URL}api/mobile/housing?page=1&category_id=$id';
+    String uri = '${API_URL}api/mobile/housing?page=1';
     if (lat != '' && lng != '') {
       uri += '&lat=$lat&lng=$lng';
+    }
+
+    if (id != 0) {
+      uri += '&category_id=$id';
     }
 
     final response = await http.get(

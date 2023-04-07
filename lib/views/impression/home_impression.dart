@@ -31,18 +31,50 @@ class _HomeImpressionState extends State<HomeImpression>
   final StoryController controller = StoryController();
 
   List<Map<String, dynamic>> categories = [
-    {'name': 'Отели', 'asset': 'assets/icons/category_1.svg', 'id': 1},
-    {'name': 'Бутик-отели', 'asset': 'assets/icons/category_2.svg', 'id': 2},
-    {'name': 'Загородный дом', 'asset': 'assets/icons/category_3.svg', 'id': 3},
-    {'name': 'Апартаменты', 'asset': 'assets/icons/category_4.svg', 'id': 4},
-    {'name': 'Юрта', 'asset': 'assets/icons/category_5.svg', 'id': 5},
-    {'name': 'Шалаши', 'asset': 'assets/icons/category_6.svg', 'id': 6},
-    {'name': 'У моря', 'asset': 'assets/icons/category_7.svg', 'id': 7},
-    {'name': 'Кемпинги', 'asset': 'assets/icons/category_8.svg', 'id': 8},
-    {'name': 'Авто-дом', 'asset': 'assets/icons/category_9.svg', 'id': 9},
-    {'name': 'Особняк', 'asset': 'assets/icons/category_10.svg', 'id': 10},
-    {'name': 'С историей', 'asset': 'assets/icons/category_11.svg', 'id': 11},
-    {'name': 'На дереве', 'asset': 'assets/icons/category_12.svg', 'id': 12},
+    {'name': 'Все', 'asset': 'assets/icons/category_0.svg', 'id': 0},
+    {
+      'name': 'Здоровье',
+      'asset': 'assets/icons/impression_cat_1.svg',
+      'id': 13
+    },
+    {
+      'name': 'Творчество',
+      'asset': 'assets/icons/impression_cat_2.svg',
+      'id': 14
+    },
+    {'name': 'Еда', 'asset': 'assets/icons/impression_cat_3.svg', 'id': 15},
+    {
+      'name': 'Историческое',
+      'asset': 'assets/icons/impression_cat_4.svg',
+      'id': 16
+    },
+    {'name': 'Напитки', 'asset': 'assets/icons/impression_cat_5.svg', 'id': 17},
+    {
+      'name': 'Развлечения',
+      'asset': 'assets/icons/impression_cat_6.svg',
+      'id': 18
+    },
+    {'name': 'Спорт', 'asset': 'assets/icons/impression_cat_7.svg', 'id': 19},
+    {
+      'name': 'Экскурсии',
+      'asset': 'assets/icons/impression_cat_8.svg',
+      'id': 20
+    },
+    {
+      'name': 'Животные',
+      'asset': 'assets/icons/impression_cat_9.svg',
+      'id': 21
+    },
+    {
+      'name': 'Культура',
+      'asset': 'assets/icons/impression_cat_10.svg',
+      'id': 22
+    },
+    {
+      'name': 'Природа',
+      'asset': 'assets/icons/impression_cat_11.svg',
+      'id': 23
+    },
   ];
 
   List<String> continentNames = [
@@ -78,6 +110,7 @@ class _HomeImpressionState extends State<HomeImpression>
   @override
   void dispose() {
     _tabController.dispose();
+
     super.dispose();
   }
 
@@ -465,7 +498,8 @@ class _HomeImpressionState extends State<HomeImpression>
 
   void getImpressionList() async {
     impressionList = [];
-    var response = await ImpressionProvider().getImpressionData();
+    var response =
+        await ImpressionProvider().getImpressionData(selectedCategoryId);
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         impressionList.add(ImpressionCardModel.fromJson(response['data'][i]));

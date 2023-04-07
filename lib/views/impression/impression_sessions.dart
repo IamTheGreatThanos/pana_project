@@ -7,6 +7,8 @@ import 'package:pana_project/models/impressionSession.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/utils/ImpressionData.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
+import 'package:pana_project/views/payment/impression_payment_page.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class ImpressionSessionsPage extends StatefulWidget {
@@ -26,7 +28,6 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
   List<ImpressionSessionModel> sessionList = [];
   String dateText = '';
   int sessionCount = 0;
-  bool isPrivat = false;
 
   String startDate = '';
   String endDate = '';
@@ -223,40 +224,6 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 6),
-                        GestureDetector(
-                          onTap: () {
-                            isPrivat = !isPrivat;
-                            setState(() {});
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 1,
-                                    color: isPrivat
-                                        ? AppColors.accent
-                                        : AppColors.grey),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(8))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 5),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Частная группа',
-                                    style: TextStyle(
-                                      color: isPrivat
-                                          ? AppColors.accent
-                                          : AppColors.blackWithOpacity,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
                       ],
                     ),
                   ),
@@ -266,12 +233,17 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
                   child: Column(
                     children: [
                       for (int i = 0; i < sessionList.length; i++)
-                        ImpressionSessionCard(
-                          session: sessionList[i],
-                          impressionData: impressionData,
-                          impression: widget.impression,
-                          startDate: widget.startDate,
-                          endDate: widget.endDate,
+                        GestureDetector(
+                          onTap: () {
+                            showPrivateModeModalSheet(i);
+                          },
+                          child: ImpressionSessionCard(
+                            session: sessionList[i],
+                            impressionData: impressionData,
+                            impression: widget.impression,
+                            startDate: widget.startDate,
+                            endDate: widget.endDate,
+                          ),
                         ),
                       const SizedBox(height: 20),
                     ],
@@ -390,6 +362,29 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
       backgroundColor: Colors.white,
       builder: (BuildContext context) {
         return ImpressionPeopleCountBottomSheet(impressionData);
+      },
+    );
+
+    setState(() {});
+  }
+
+  void showPrivateModeModalSheet(int index) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return ImpressionSessionPrivateModeModalBottomSheet(
+          session: sessionList[index],
+          impressionData: impressionData,
+          impression: widget.impression,
+          startDate: widget.startDate,
+          endDate: widget.endDate,
+        );
       },
     );
 
@@ -562,6 +557,233 @@ class _ImpressionPeopleCountBottomSheetState
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class ImpressionSessionPrivateModeModalBottomSheet extends StatefulWidget {
+  const ImpressionSessionPrivateModeModalBottomSheet({
+    Key? key,
+    required this.session,
+    required this.impression,
+    required this.startDate,
+    required this.endDate,
+    required this.impressionData,
+  }) : super(key: key);
+
+  final ImpressionSessionModel session;
+  final ImpressionDetailModel impression;
+  final String startDate;
+  final String endDate;
+  final ImpressionData impressionData;
+
+  @override
+  State<ImpressionSessionPrivateModeModalBottomSheet> createState() =>
+      _ImpressionSessionPrivateModeModalBottomSheetState();
+}
+
+class _ImpressionSessionPrivateModeModalBottomSheetState
+    extends State<ImpressionSessionPrivateModeModalBottomSheet> {
+  bool isPrivateSelected = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Выберите тип группы:',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: () {
+                isPrivateSelected = false;
+                setState(() {});
+              },
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.lightGray,
+                  border: Border.all(
+                    width: 2,
+                    color: AppColors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      isPrivateSelected
+                          ? SvgPicture.asset('assets/icons/radio_button_0.svg')
+                          : SvgPicture.asset('assets/icons/radio_button_1.svg'),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 15),
+                          const Text(
+                            'Открытая группа',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Это группа, доступная для \nбронирования любым человеком',
+                            style: TextStyle(
+                              color: AppColors.blackWithOpacity,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          RichText(
+                            text: TextSpan(
+                                text:
+                                    '${formatNumberString(widget.session.openPrice.toString())}₸ ',
+                                style: const TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                children: const <InlineSpan>[
+                                  TextSpan(
+                                      text: 'за человека',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppColors.blackWithOpacity,
+                                      ))
+                                ]),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            GestureDetector(
+              onTap: () {
+                isPrivateSelected = true;
+                setState(() {});
+              },
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.lightGray,
+                  border: Border.all(
+                    width: 2,
+                    color: AppColors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      isPrivateSelected
+                          ? SvgPicture.asset('assets/icons/radio_button_1.svg')
+                          : SvgPicture.asset('assets/icons/radio_button_0.svg'),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 15),
+                          const Text(
+                            'Закрытая группа',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Это группа, предназначеная для \nбронирования 1 человеком, \nсразу всех мест',
+                            style: TextStyle(
+                              color: AppColors.blackWithOpacity,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          RichText(
+                            text: TextSpan(
+                                text:
+                                    '${formatNumberString(widget.session.closedPrice.toString())}₸ ',
+                                style: const TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                children: const <InlineSpan>[
+                                  TextSpan(
+                                      text: 'за человека',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppColors.blackWithOpacity,
+                                      ))
+                                ]),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              height: 60,
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: AppColors.accent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10), // <-- Radius
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ImpressionPaymentPage(
+                        widget.impression,
+                        widget.startDate,
+                        widget.endDate,
+                        widget.impressionData,
+                        widget.session,
+                        isPrivateSelected ? 2 : 1,
+                      ),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "Далее",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

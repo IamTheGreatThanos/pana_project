@@ -8,12 +8,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ImpressionProvider {
   String API_URL = AppConstants.baseUrl;
 
-  Future<dynamic> getImpressionData() async {
+  Future<dynamic> getImpressionData(int categoryId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
+    String urlString = '${API_URL}api/mobile/impression/?page=1';
+
+    if (categoryId != 0) {
+      urlString += '&category_id=$categoryId';
+    }
+
     final response = await http.get(
-      Uri.parse('${API_URL}api/mobile/impression/?page=1'),
+      Uri.parse(urlString),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -300,6 +306,100 @@ class ImpressionProvider {
         'Authorization': "Bearer $token"
       },
     );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> impressionPayment(
+    int impressionId,
+    String dateFrom,
+    String dateTo,
+    int peopleCount,
+    int sessionId,
+    int sessionType,
+    int paymentCardId,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    Map<String, dynamic> bodyObject = {
+      "impression_id": impressionId,
+      "count_people": peopleCount,
+      "sessions": [
+        {
+          'impression_session_id': sessionId,
+          'type': sessionType,
+        }
+      ],
+    };
+
+    if (paymentCardId == -1) {
+      bodyObject['payment_type'] = 3;
+    } else {
+      bodyObject['payment_type'] = 1;
+      bodyObject["payment_card_id"] = paymentCardId;
+    }
+
+    if (dateFrom != '') {
+      bodyObject["date_from"] = dateFrom;
+      bodyObject["date_to"] = dateTo;
+    }
+
+    final response = await http.post(
+      Uri.parse('${API_URL}api/mobile/order/impression'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(bodyObject),
+    );
+
+    print(jsonDecode(response.body));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> impressionPaymentSend3ds(String md, String paRes) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    Map<String, dynamic> bodyObject = {
+      "MD": md,
+      "PaRes": paRes,
+    };
+
+    final response = await http.post(
+      Uri.parse('${API_URL}api/mobile/payment/post3ds'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(bodyObject),
+    );
+
+    print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> result = {};

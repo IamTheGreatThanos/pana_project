@@ -91,7 +91,7 @@ class _HomeImpressionState extends State<HomeImpression>
   Selections selections = Selections();
   List<Images> selectionsImage = [];
 
-  int selectedCategoryId = 1;
+  int selectedCategoryId = 0;
   String selectedRange = '';
   int selectedCountryId = 0;
   String searchText = '';

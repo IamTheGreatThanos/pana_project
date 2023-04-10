@@ -669,8 +669,9 @@ class _PaymentPageState extends State<PaymentPage> {
             cards[selectedCardIndex].id!,
             commentController.text,
           );
-          if (response['response_status'] == 'ok' &&
-              response['data']['payment_operation']['status'] == 1) {
+          if (response['response_status'] == 'ok'
+              // && response['data']['payment_operation']['status'] == 1
+              ) {
             String acsUrl =
                 response['data']['payment_operation']['acs_url'].toString();
             String transactionId = response['data']['payment_operation']

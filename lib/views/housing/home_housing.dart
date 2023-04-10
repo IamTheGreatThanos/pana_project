@@ -63,7 +63,7 @@ class _HomeHousingState extends State<HomeHousing>
   Selections selections = Selections();
   List<Images> selectionsImage = [];
 
-  int selectedCategoryId = 1;
+  int selectedCategoryId = 0;
 
   String selectedRange = '';
   int selectedCountryId = 0;

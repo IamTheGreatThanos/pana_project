@@ -296,11 +296,11 @@ class _ReelsVideoSelectionPageState extends State<ReelsVideoSelectionPage> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Text(
                             widget.type == 'housing'
                                 ? widget.housing.category?.name ?? ''
-                                : widget.impression.topic?[0].name ?? '',
+                                : widget.impression.category?.name ?? '-',
                             style: const TextStyle(
                               color: AppColors.blackWithOpacity,
                               fontSize: 12,
@@ -421,7 +421,7 @@ class _ReelsVideoSelectionPageState extends State<ReelsVideoSelectionPage> {
             : widget.impression.city!.id!,
         widget.type == 'housing'
             ? widget.housing.category!.id!
-            : widget.impression.topic![0].id!,
+            : widget.impression.category!.id!,
         video!,
         thumbnail!);
     if (response['response_status'] == 'ok') {

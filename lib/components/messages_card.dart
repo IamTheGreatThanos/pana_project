@@ -17,7 +17,12 @@ class MessagesWidget extends StatelessWidget {
       'percent',
       'housing',
       'location',
-      'plan'
+      'plan',
+      'plan',
+      'plan',
+      'plan',
+      'plan',
+      'plan',
     ];
     return Column(
       children: [

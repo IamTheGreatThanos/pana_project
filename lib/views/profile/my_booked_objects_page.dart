@@ -39,147 +39,137 @@ class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
         length: 2,
         child: Scaffold(
           backgroundColor: AppColors.lightGray,
-          body: SingleChildScrollView(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(color: AppColors.white, height: 30),
-                  Container(
-                    color: Colors.white,
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: SvgPicture.asset(
-                                  'assets/icons/back_arrow.svg'),
-                            ),
+          body: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(color: AppColors.white, height: 30),
+                Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child:
+                                SvgPicture.asset('assets/icons/back_arrow.svg'),
                           ),
                         ),
-                        const Spacer(),
-                        const Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Text(
-                            'Забронированное',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w500,
-                            ),
+                      ),
+                      const Spacer(),
+                      const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text(
+                          'Забронированное',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const Spacer(),
-                        const Padding(
-                          padding: EdgeInsets.only(right: 0),
-                          child: SizedBox(
-                            height: 50,
-                            width: 50,
-                          ),
-                        )
+                      ),
+                      const Spacer(),
+                      const Padding(
+                        padding: EdgeInsets.only(right: 0),
+                        child: SizedBox(
+                          height: 50,
+                          width: 50,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  color: Colors.white,
+                  height: 40,
+                  width: MediaQuery.of(context).size.width,
+                  child: const Center(
+                    child: TabBar(
+                      isScrollable: true,
+                      indicatorColor: AppColors.accent,
+                      labelColor: AppColors.black,
+                      labelStyle: TextStyle(
+                        fontSize: 14,
+                      ),
+                      unselectedLabelColor: AppColors.blackWithOpacity,
+                      indicatorWeight: 3,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      tabs: [
+                        Tab(
+                          text: 'Жилье',
+                        ),
+                        Tab(
+                          text: 'Впечатления',
+                        ),
                       ],
                     ),
                   ),
-                  Container(
-                    color: Colors.white,
-                    height: 40,
-                    width: MediaQuery.of(context).size.width,
-                    child: const Center(
-                      child: TabBar(
-                        isScrollable: true,
-                        indicatorColor: AppColors.accent,
-                        labelColor: AppColors.black,
-                        labelStyle: TextStyle(
-                          fontSize: 14,
-                        ),
-                        unselectedLabelColor: AppColors.blackWithOpacity,
-                        indicatorWeight: 3,
-                        indicatorSize: TabBarIndicatorSize.label,
-                        tabs: [
-                          Tab(
-                            text: 'Жилье',
-                          ),
-                          Tab(
-                            text: 'Впечатления',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    color: AppColors.lightGray,
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 120,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height - 120,
-                          child: TabBarView(
-                            children: [
-                              // TODO: Жилье
-                              ListView(
-                                children: [
-                                  for (int i = 0; i < housingList.length; i++)
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 20),
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MyBookedObjectDetailPage(
-                                                          2,
-                                                          housingList[i],
-                                                        )));
-                                          },
-                                          child: HousingCard(
-                                              housingList[i].housing!, () {})),
-                                    )
-                                ],
-                              ),
-                              // TODO: Впечатления
-                              ListView(
-                                children: [
-                                  for (int i = 0;
-                                      i < impressionList.length;
-                                      i++)
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 20),
-                                      child: GestureDetector(
+                ),
+                Container(
+                  color: AppColors.lightGray,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height - 140,
+                        child: TabBarView(
+                          children: [
+                            // TODO: Жилье
+                            ListView(
+                              children: [
+                                for (int i = 0; i < housingList.length; i++)
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    child: GestureDetector(
                                         onTap: () {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       MyBookedObjectDetailPage(
-                                                          3,
-                                                          impressionList[i])));
+                                                        2,
+                                                        housingList[i],
+                                                      )));
                                         },
-                                        child: ImpressionCard(
-                                            impressionList[i].impression!,
-                                            () {}),
-                                      ),
-                                    )
-                                ],
-                              ),
-                            ],
-                          ),
+                                        child: HousingCard(
+                                            housingList[i].housing!, () {})),
+                                  )
+                              ],
+                            ),
+                            // TODO: Впечатления
+                            ListView(
+                              children: [
+                                for (int i = 0; i < impressionList.length; i++)
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MyBookedObjectDetailPage(
+                                                        3, impressionList[i])));
+                                      },
+                                      child: ImpressionCard(
+                                          impressionList[i].impression!, () {}),
+                                    ),
+                                  )
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

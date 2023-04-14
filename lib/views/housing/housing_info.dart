@@ -429,7 +429,139 @@ class _HousingInfoState extends State<HousingInfo> {
                       ),
                       const Divider(),
                       const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                        padding: EdgeInsets.only(top: 10, left: 20, bottom: 15),
+                        child: Text(
+                          'Контактные данные',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 20, bottom: 10, right: 20),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.grey, width: 1),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(12)),
+                          ),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(15, 15, 15, 10),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                        './assets/icons/contact_info_user.svg',
+                                        color: AppColors.blackWithOpacity),
+                                    const SizedBox(width: 15),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Контактное лицо',
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          '${thisHousing.user?.name ?? ''} ${thisHousing.user?.surname ?? ''}',
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              color:
+                                                  AppColors.blackWithOpacity),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const Divider(),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                        './assets/icons/contact_info_phone.svg',
+                                        color: AppColors.blackWithOpacity),
+                                    const SizedBox(width: 15),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Номер телефона',
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          '+7${thisHousing.user?.phone ?? ''}',
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              color:
+                                                  AppColors.blackWithOpacity),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const Divider(),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(15, 10, 15, 15),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                        './assets/icons/contact_info_company.svg',
+                                        color: AppColors.blackWithOpacity),
+                                    const SizedBox(width: 15),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Управляющая компания',
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          thisHousing.user?.organizationName ??
+                                              '-',
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              color:
+                                                  AppColors.blackWithOpacity),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 10, left: 20, bottom: 10),
                         child: Text(
                           'Описание',
                           style: TextStyle(
@@ -455,7 +587,7 @@ class _HousingInfoState extends State<HousingInfo> {
                       const Divider(),
                       Row(
                         children: [
-                          Padding(
+                          const Padding(
                             padding:
                                 EdgeInsets.only(top: 20, left: 20, bottom: 10),
                             child: Text(
@@ -466,7 +598,7 @@ class _HousingInfoState extends State<HousingInfo> {
                               ),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(

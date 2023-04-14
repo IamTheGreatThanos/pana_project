@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pana_project/components/audio_review_card.dart';
+import 'package:pana_project/components/bonus_card.dart';
 import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/components/text_review_card.dart';
@@ -26,6 +27,7 @@ import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/impression/impression_sessions.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
+import 'package:pana_project/views/other/bonus_system_detail.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
 import 'package:story_view/controller/story_controller.dart';
@@ -320,6 +322,202 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                         ),
                       ),
                       const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(12)),
+                              child: SizedBox(
+                                width: 70,
+                                height: 70,
+                                child: CachedNetworkImage(
+                                  imageUrl: thisImpression.user?.avatar ?? '',
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Row(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.58,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          '${thisImpression.user?.name ?? ''} ${thisImpression.user?.surname ?? ''}',
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.58,
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          'Организатор впечатления',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black45,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatMessagesPage(
+                                          ChatModel(
+                                            user: thisImpression.user,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: SizedBox(
+                                      width: 28,
+                                      height: 28,
+                                      child: Image.asset(
+                                          'assets/icons/start_chat_icon.png')),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 20, left: 20, bottom: 10),
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Мои бонусы',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BonusSystemDetailPage()));
+                              },
+                              child: const Text(
+                                'Перейти',
+                                style: TextStyle(
+                                  color: AppColors.accent,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                          ],
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 0, left: 20, bottom: 10),
+                        child: Text(
+                          'Посещено кол-во раз: 7',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.blackWithOpacity,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 320,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 20),
+                                  Stack(
+                                    children: [
+                                      const Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 17, left: 75),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12)),
+                                          child: SizedBox(
+                                            height: 5,
+                                            width: 140 * 5,
+                                            child: LinearProgressIndicator(
+                                              value: 0.2,
+                                              color: AppColors.black,
+                                              backgroundColor:
+                                                  AppColors.lightGray,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(width: 20),
+                                          for (int i = 0; i < 5; i++)
+                                            Row(
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                        './assets/icons/bonus_gift_1.svg'),
+                                                    const SizedBox(height: 20),
+                                                    BonusCard(
+                                                      colorType: i + 2,
+                                                      title:
+                                                          '3 бесплатных кофе в кофейне Sandyq',
+                                                      imageUrl:
+                                                          'https://stories.starbucks.com/uploads/2021/07/SBX20210707-ColdCoffees-Iced-Chocolate-Almondmilk-Shaken-Espresso-1024x1024.jpg',
+                                                      isTaken: false,
+                                                      bonusType: 1,
+                                                      count: 245,
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  width: i == 5 - 1 ? 20 : 40,
+                                                )
+                                              ],
+                                            ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              SvgPicture.asset('./assets/phone.svg')
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Divider(),
                       const Padding(
                         padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                         child: Text(
@@ -604,85 +802,6 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black45),
                           ),
-                        ),
-                      ),
-                      const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(12)),
-                              child: SizedBox(
-                                width: 70,
-                                height: 70,
-                                child: CachedNetworkImage(
-                                  imageUrl: thisImpression.user?.avatar ?? '',
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.58,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
-                                        child: Text(
-                                          '${thisImpression.user?.name ?? ''} ${thisImpression.user?.surname ?? ''}',
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.58,
-                                      child: const Padding(
-                                        padding: EdgeInsets.only(left: 10),
-                                        child: Text(
-                                          'Организатор впечатления',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black45,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatMessagesPage(
-                                          ChatModel(
-                                            user: thisImpression.user,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: SizedBox(
-                                      width: 28,
-                                      height: 28,
-                                      child: Image.asset(
-                                          'assets/icons/start_chat_icon.png')),
-                                ),
-                              ],
-                            )
-                          ],
                         ),
                       ),
                       const Divider(),
@@ -1167,7 +1286,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
               ),
             ),
             const Divider(height: 3),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
               child: Row(

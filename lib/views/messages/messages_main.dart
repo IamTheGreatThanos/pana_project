@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/messages_card.dart';
@@ -252,7 +251,6 @@ class _MessagesPageState extends State<MessagesPage> {
   void getNotifications() async {
     var response = await MessagesProvider().getNotifications();
     if (response['response_status'] == 'ok') {
-      print(response['data']);
       int messageCount = 0;
       List<NotificationModel> tempList1 = [];
       List<NotificationModel> tempList2 = [];

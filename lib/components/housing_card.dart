@@ -76,6 +76,8 @@ class _HousingCardState extends State<HousingCard> {
                             SizedBox(
                           width: double.infinity,
                           child: CachedNetworkImage(
+                            maxWidthDiskCache: 1000,
+                            maxHeightDiskCache: 1000,
                             fit: BoxFit.cover,
                             imageUrl: widget.housing.images![itemIndex].path!,
                             placeholder: (context, url) => const Center(

@@ -1,7 +1,7 @@
+import 'package:pana_project/models/category.dart';
 import 'package:pana_project/models/city.dart';
 import 'package:pana_project/models/country.dart';
 import 'package:pana_project/models/images.dart';
-import 'package:pana_project/models/topic.dart';
 import 'package:pana_project/models/user.dart';
 import 'package:pana_project/models/videos.dart';
 
@@ -18,7 +18,7 @@ class ImpressionCardModel {
   bool? inFavorite;
   int? reviewsAvgBall;
   int? reviewsCount;
-  List<Topic>? topic;
+  Category? category;
   String? dateFrom;
   String? dateTo;
 
@@ -35,7 +35,7 @@ class ImpressionCardModel {
     this.inFavorite,
     this.reviewsAvgBall,
     this.reviewsCount,
-    this.topic,
+    this.category,
     this.dateFrom,
     this.dateTo,
   });
@@ -64,12 +64,8 @@ class ImpressionCardModel {
     inFavorite = json['in_favorite'];
     reviewsAvgBall = json['reviews_avg_ball'];
     reviewsCount = json['reviews_count'];
-    if (json['topics'] != null) {
-      topic = <Topic>[];
-      json['topics'].forEach((v) {
-        topic!.add(new Topic.fromJson(v));
-      });
-    }
+    category =
+        json['category'] != null ? Category.fromJson(json['category']) : null;
     dateFrom = json['date_from'];
     dateTo = json['date_to'];
   }
@@ -98,9 +94,6 @@ class ImpressionCardModel {
     data['in_favorite'] = inFavorite;
     data['reviews_avg_ball'] = reviewsAvgBall;
     data['reviews_count'] = reviewsCount;
-    if (this.topic != null) {
-      data['topics'] = this.topic!.map((v) => v.toJson()).toList();
-    }
     data['date_from'] = dateFrom;
     data['date_to'] = dateTo;
 

@@ -14,13 +14,30 @@ class TextWithBorderWidget extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black45,
-          ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: title.length > 30
+              ? SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black45,
+                    ),
+                  ),
+                )
+              : SizedBox(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black45,
+                    ),
+                  ),
+                ),
         ),
       ),
     );

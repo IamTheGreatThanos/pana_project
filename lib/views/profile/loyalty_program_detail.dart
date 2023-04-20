@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/profile/about_loyalty_program_page.dart';
 
 class LoyaltyProgramDetailPage extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class _LoyaltyProgramDetailPageState extends State<LoyaltyProgramDetailPage> {
       child: Scaffold(
         backgroundColor: AppColors.black.withOpacity(0.7),
         body: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
@@ -65,119 +66,235 @@ class _LoyaltyProgramDetailPageState extends State<LoyaltyProgramDetailPage> {
                     const SizedBox(width: 50)
                   ],
                 ),
-                const SizedBox(height: 30),
-                Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white10,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8),
-                    ),
-                  ),
-                  width: 161,
-                  height: 38,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      children: const [
-                        Text(
-                          'Кешбэк',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.white,
-                          ),
-                        ),
-                        Spacer(),
-                        Text(
-                          '5%',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 50),
                 const Text(
-                  'Собрано асыков для следующего уровня:',
+                  'Потраченные деньги для следующего уровня:',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: Colors.white60,
+                    color: AppColors.whiteWithOpacity,
                   ),
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  '2347 / 3000',
+                  '1 300 000 / 2 000 000',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 30,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 30),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: true
-                          ? 27
-                          : false
-                              ? MediaQuery.of(context).size.width * 0.44
-                              : MediaQuery.of(context).size.width * 0.81,
-                    ),
-                    SizedBox(
-                      width: 50,
-                      height: 67,
-                      child: Image.asset('assets/icons/progress_assik.png'),
-                    ),
-                  ],
-                ),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 44,
-                        height: 44,
-                        child: Image.asset('assets/icons/bronze_assik.png'),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: AppColors.blackWithOpacity2),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                              'assets/images/loyalty_progress_dark.png'),
+                          const ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            child: SizedBox(
+                              height: 3,
+                              child: LinearProgressIndicator(
+                                value: 0.3,
+                                color: AppColors.accent,
+                                backgroundColor: Colors.white24,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 40,
+                            child: Row(
+                              children: const [
+                                SizedBox(width: 40),
+                                Text(
+                                  '500 000',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.whiteWithOpacity,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Spacer(),
+                                Text(
+                                  '2 000 000',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.whiteWithOpacity,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Spacer(),
+                                Text(
+                                  '5 000 000',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.whiteWithOpacity,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(width: 40),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 5),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.23,
-                        child: const LinearProgressIndicator(
-                          value: 0.3,
-                          color: AppColors.white,
-                          backgroundColor: Colors.white10,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      SizedBox(
-                        width: 44,
-                        height: 44,
-                        child: Image.asset('assets/icons/silver_assik.png'),
-                      ),
-                      const SizedBox(width: 5),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.23,
-                        child: const LinearProgressIndicator(
-                          value: 0.0,
-                          color: AppColors.white,
-                          backgroundColor: Colors.white10,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      SizedBox(
-                        width: 44,
-                        height: 44,
-                        child: Image.asset('assets/icons/gold_assik.png'),
-                      ),
-                    ],
+                    ),
                   ),
-                )
+                ),
+                const SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: Container(
+                      width: double.infinity,
+                      height: 88,
+                      decoration: const BoxDecoration(
+                          color: AppColors.blackWithOpacity2),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    'Мои асыки',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.whiteWithOpacity,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    '12 624',
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const VerticalDivider(
+                            color: Colors.white24,
+                          ),
+                          const SizedBox(width: 20),
+                          SizedBox(
+                            child: Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 5),
+                                  const Text(
+                                    'Текущий кешбэк',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.whiteWithOpacity,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        '5%',
+                                        style: TextStyle(
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                          width: 50,
+                                          height: 50,
+                                          child: Image.asset(
+                                              './assets/icons/bronze_assik.png'))
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: Container(
+                      width: double.infinity,
+                      // height: 88,
+                      decoration: const BoxDecoration(
+                          color: AppColors.blackWithOpacity2),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              'Примечание:',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.white,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Здесь отображается общее количество асыков, которые вы получили, и даже если вы потратили часть из них, количество на этой странице не изменится.',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.whiteWithOpacity,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 60),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AboutLoyaltyProgramPage()));
+                  },
+                  child: const Text(
+                    'О программе лояльности',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white60,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
               ],
             ),
           ),

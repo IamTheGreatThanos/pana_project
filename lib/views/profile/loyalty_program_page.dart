@@ -135,10 +135,6 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                               Stack(
                                 children: [
                                   SizedBox(
-                                    height: MediaQuery.of(context).size.width *
-                                        0.45,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.9,
                                     child: Image.asset(
                                       'assets/images/loyalty_card.png',
                                     ),
@@ -189,7 +185,7 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Container(
                         decoration: const BoxDecoration(
                             color: Colors.white,
@@ -235,10 +231,13 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                               const ClipRRect(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(12)),
-                                child: LinearProgressIndicator(
-                                  value: 0.3,
-                                  color: AppColors.accent,
-                                  backgroundColor: AppColors.grey,
+                                child: SizedBox(
+                                  height: 3,
+                                  child: LinearProgressIndicator(
+                                    value: 0.3,
+                                    color: AppColors.accent,
+                                    backgroundColor: AppColors.grey,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 20),

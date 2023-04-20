@@ -1,7 +1,7 @@
 class Country {
   int? id;
   String? name;
-  Null? phoneCode;
+  int? phoneCode;
 
   Country({this.id, this.name, this.phoneCode});
 

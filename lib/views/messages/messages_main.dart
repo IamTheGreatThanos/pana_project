@@ -285,7 +285,6 @@ class _MessagesPageState extends State<MessagesPage> {
   void readNotification() async {
     var response = await MessagesProvider().readNotification();
     if (response['response_status'] == 'ok') {
-      print('Readed');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],

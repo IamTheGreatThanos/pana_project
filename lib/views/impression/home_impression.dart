@@ -97,6 +97,8 @@ class _HomeImpressionState extends State<HomeImpression>
   String searchText = '';
   bool isLoggedIn = false;
 
+  bool loading = true;
+
   @override
   void initState() {
     getImpressionList();
@@ -277,6 +279,7 @@ class _HomeImpressionState extends State<HomeImpression>
                   TabBar(
                     controller: _tabController,
                     onTap: (index) {
+                      loading = true;
                       setState(() {
                         selectedCategoryId = categories[index]['id'];
                       });
@@ -471,6 +474,25 @@ class _HomeImpressionState extends State<HomeImpression>
                       ],
                     ),
                   ),
+                  loading
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 200,
+                          color: Colors.white,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              SizedBox(
+                                width: 80,
+                                height: 80,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox()
                 ]),
               ),
             ),
@@ -513,6 +535,7 @@ class _HomeImpressionState extends State<HomeImpression>
             style: const TextStyle(fontSize: 14)),
       ));
     }
+    loading = false;
   }
 
   void openSearchPage() async {

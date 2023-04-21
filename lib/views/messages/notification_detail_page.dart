@@ -84,11 +84,9 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                 const SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topRight:
-                            Radius.circular(AppConstants.cardBorderRadius),
-                        topLeft:
-                            Radius.circular(AppConstants.cardBorderRadius)),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(AppConstants.cardBorderRadius),
+                    ),
                     color: AppColors.white,
                   ),
                   width: MediaQuery.of(context).size.width,

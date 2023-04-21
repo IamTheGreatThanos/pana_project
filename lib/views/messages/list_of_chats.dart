@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/chat_card.dart';
@@ -45,12 +44,10 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
     });
 
     socket.onConnect((_) {
-      print('Connected!');
       socket.emit('join', myUserId);
     });
 
     socket.on('chat', (newMessage) async {
-      print(newMessage);
       getChats();
     });
   }
@@ -114,7 +111,24 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
                     ],
                   ),
                 ),
-                Container(color: Colors.white, child: const Divider()),
+                listOfChats.isNotEmpty
+                    ? Container(color: Colors.white, child: const Divider())
+                    : const SizedBox(),
+                listOfChats.isEmpty
+                    ? const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            'Список пока пуст...',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.blackWithOpacity,
+                            ),
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
                 for (int i = 0; i < listOfChats.length; i++)
                   GestureDetector(
                       onTap: () {

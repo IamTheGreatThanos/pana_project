@@ -13,24 +13,23 @@ class NotificationModel {
   City? city;
   Map<String, dynamic>? impression;
   TravelCardModel? trip;
-  Null? order;
   Chat? chat;
-  Null? review;
+  int? iconType;
 
-  NotificationModel(
-      {this.id,
-      this.type,
-      this.typeInfoTestDeveloper,
-      this.title,
-      this.description,
-      this.readAt,
-      this.housing,
-      this.city,
-      this.impression,
-      this.trip,
-      this.order,
-      this.chat,
-      this.review});
+  NotificationModel({
+    this.id,
+    this.type,
+    this.typeInfoTestDeveloper,
+    this.title,
+    this.description,
+    this.readAt,
+    this.housing,
+    this.city,
+    this.impression,
+    this.trip,
+    this.chat,
+    this.iconType,
+  });
 
   NotificationModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -45,9 +44,8 @@ class NotificationModel {
     city = json['city'] != null ? City.fromJson(json['city']) : null;
     impression = json['impression'];
     trip = json['trip'] != null ? TravelCardModel.fromJson(json['trip']) : null;
-    order = json['order'];
     chat = json['chat'] != null ? Chat.fromJson(json['chat']) : null;
-    review = json['review'];
+    iconType = json['icon'];
   }
 
   Map<String, dynamic> toJson() {
@@ -62,11 +60,10 @@ class NotificationModel {
     data['city'] = city;
     data['impression'] = impression;
     data['trip'] = trip;
-    data['order'] = order;
     if (chat != null) {
       data['chat'] = chat!.toJson();
     }
-    data['review'] = review;
+    data['icon'] = iconType;
     return data;
   }
 }

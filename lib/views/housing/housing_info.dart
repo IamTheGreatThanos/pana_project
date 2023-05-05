@@ -31,6 +31,7 @@ import 'package:pana_project/views/messages/chat_messages_page.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -77,6 +78,8 @@ class _HousingInfoState extends State<HousingInfo> {
 
   String startDate = '';
   String endDate = '';
+
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -263,11 +266,16 @@ class _HousingInfoState extends State<HousingInfo> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20),
-                        child: Text(
-                          thisHousing.name ?? '',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
+                        child: Skeleton(
+                          isLoading: isLoading,
+                          skeleton: const SkeletonLine(),
+                          child: Text(
+                            thisHousing.name ?? '',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.start,
                           ),
                         ),
                       ),
@@ -285,13 +293,16 @@ class _HousingInfoState extends State<HousingInfo> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              '${thisHousing.city?.name ?? ''}, Казахстан',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            child: isLoading
+                                ? const SizedBox(
+                                    width: 60, child: SkeletonLine())
+                                : Text(
+                                    '${thisHousing.city?.name ?? ''}, Казахстан',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
                           ),
                         ],
                       ),
@@ -328,6 +339,22 @@ class _HousingInfoState extends State<HousingInfo> {
                                     color: Colors.black45),
                               ),
                             ),
+                            const SizedBox(width: 5),
+                            const Text(
+                              '•',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: Colors.black45),
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              '${thisHousing.star ?? 0} Звезд',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: Colors.black45),
+                            ),
                           ],
                         ),
                       ),
@@ -342,9 +369,13 @@ class _HousingInfoState extends State<HousingInfo> {
                               child: SizedBox(
                                 width: 70,
                                 height: 70,
-                                child: CachedNetworkImage(
-                                  imageUrl: thisHousing.user?.avatar ?? '',
-                                  fit: BoxFit.cover,
+                                child: Skeleton(
+                                  isLoading: isLoading,
+                                  skeleton: const SkeletonAvatar(),
+                                  child: CachedNetworkImage(
+                                    imageUrl: thisHousing.user?.avatar ?? '',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
@@ -364,13 +395,17 @@ class _HousingInfoState extends State<HousingInfo> {
                                           child: Padding(
                                             padding:
                                                 const EdgeInsets.only(left: 10),
-                                            child: Text(
-                                              '${thisHousing.user?.name ?? ''} ${thisHousing.user?.surname ?? ''}',
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
+                                            child: isLoading
+                                                ? const SkeletonLine()
+                                                : Text(
+                                                    '${thisHousing.user?.name ?? ''} ${thisHousing.user?.surname ?? ''}',
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                    textAlign: TextAlign.start,
+                                                  ),
                                           ),
                                         ),
                                         // Padding(
@@ -471,14 +506,18 @@ class _HousingInfoState extends State<HousingInfo> {
                                               color: Colors.black),
                                         ),
                                         const SizedBox(height: 5),
-                                        Text(
-                                          '${thisHousing.user?.name ?? ''} ${thisHousing.user?.surname ?? ''}',
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              color:
-                                                  AppColors.blackWithOpacity),
-                                        ),
+                                        isLoading
+                                            ? const SizedBox(
+                                                width: 60,
+                                                child: SkeletonLine())
+                                            : Text(
+                                                '${thisHousing.user?.name ?? ''} ${thisHousing.user?.surname ?? ''}',
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors
+                                                        .blackWithOpacity),
+                                              ),
                                       ],
                                     )
                                   ],
@@ -506,14 +545,18 @@ class _HousingInfoState extends State<HousingInfo> {
                                               color: Colors.black),
                                         ),
                                         const SizedBox(height: 5),
-                                        Text(
-                                          '+7${thisHousing.user?.phone ?? ''}',
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              color:
-                                                  AppColors.blackWithOpacity),
-                                        ),
+                                        isLoading
+                                            ? const SizedBox(
+                                                width: 60,
+                                                child: SkeletonLine())
+                                            : Text(
+                                                '+7${thisHousing.user?.phone ?? ''}',
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors
+                                                        .blackWithOpacity),
+                                              ),
                                       ],
                                     )
                                   ],
@@ -575,12 +618,16 @@ class _HousingInfoState extends State<HousingInfo> {
                             left: 20, bottom: 20, right: 20),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
-                          child: Text(
-                            thisHousing.description ?? '',
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black45),
+                          child: Skeleton(
+                            isLoading: isLoading,
+                            skeleton: SkeletonParagraph(),
+                            child: Text(
+                              thisHousing.description ?? '',
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black45),
+                            ),
                           ),
                         ),
                       ),
@@ -1203,7 +1250,11 @@ class _HousingInfoState extends State<HousingInfo> {
                     children: [
                       Row(
                         children: [
-                          Text(
+                          isLoading
+                              ? const SizedBox(
+                              width: 60,
+                              child: SkeletonLine())
+                              :Text(
                             'от ${formatNumberString(thisHousing.basePriceMin.toString())} \₸',
                             style: const TextStyle(
                                 fontWeight: FontWeight.w500,
@@ -1385,6 +1436,8 @@ class _HousingInfoState extends State<HousingInfo> {
   }
 
   void getHousingInfo() async {
+    isLoading = true;
+    setState(() {});
     var response = await HousingProvider().getHousingDetail(widget.id);
     if (response['response_status'] == 'ok') {
       thisHousing = HousingDetailModel.fromJson(response['data']);
@@ -1411,6 +1464,8 @@ class _HousingInfoState extends State<HousingInfo> {
 
       _mapController
           .animateCamera(CameraUpdate.newCameraPosition(housingLocation));
+
+      isLoading = false;
 
       setState(() {});
     } else {

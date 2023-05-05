@@ -30,6 +30,7 @@ import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/bonus_system_detail.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -64,6 +65,8 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
   String selectedRange = 'Выбрать даты';
   String startDate = '';
   String endDate = '';
+
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -240,11 +243,15 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20),
-                        child: Text(
-                          thisImpression.name ?? '',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
+                        child: Skeleton(
+                          isLoading: isLoading,
+                          skeleton: const SkeletonLine(),
+                          child: Text(
+                            thisImpression.name ?? '',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
@@ -262,13 +269,16 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                           // ),
                           Padding(
                             padding: const EdgeInsets.only(left: 20),
-                            child: Text(
-                              '${thisImpression.city?.name ?? ''}, ${thisImpression.city?.country?.name ?? ''}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            child: isLoading
+                                ? const SizedBox(
+                                    width: 120, child: SkeletonLine())
+                                : Text(
+                                    '${thisImpression.city?.name ?? ''}, ${thisImpression.city?.country?.name ?? ''}',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
                           ),
                         ],
                       ),
@@ -288,11 +298,15 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 5),
-                              child: Text(
-                                thisImpression.reviewsAvgBall ?? '',
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
-                              ),
+                              child: isLoading
+                                  ? const SizedBox(
+                                      width: 30, child: SkeletonLine())
+                                  : Text(
+                                      thisImpression.reviewsAvgBall ?? '',
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
@@ -312,12 +326,16 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                             left: 20, bottom: 20, right: 20, top: 20),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
-                          child: Text(
-                            thisImpression.description ?? '',
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black),
+                          child: Skeleton(
+                            isLoading: isLoading,
+                            skeleton: SkeletonParagraph(),
+                            child: Text(
+                              thisImpression.description ?? '',
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
+                            ),
                           ),
                         ),
                       ),
@@ -332,8 +350,12 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                               child: SizedBox(
                                 width: 70,
                                 height: 70,
-                                child: CachedNetworkImage(
-                                  imageUrl: thisImpression.user?.avatar ?? '',
+                                child: Skeleton(
+                                  isLoading: isLoading,
+                                  skeleton: const SkeletonAvatar(),
+                                  child: CachedNetworkImage(
+                                    imageUrl: thisImpression.user?.avatar ?? '',
+                                  ),
                                 ),
                               ),
                             ),
@@ -349,13 +371,17 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                       child: Padding(
                                         padding:
                                             const EdgeInsets.only(left: 10),
-                                        child: Text(
-                                          '${thisImpression.user?.name ?? ''} ${thisImpression.user?.surname ?? ''}',
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
+                                        child: isLoading
+                                            ? const SizedBox(
+                                                width: 100,
+                                                child: SkeletonLine())
+                                            : Text(
+                                                '${thisImpression.user?.name ?? ''} ${thisImpression.user?.surname ?? ''}',
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
                                       ),
                                     ),
                                     const SizedBox(height: 10),
@@ -1296,13 +1322,15 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                     children: [
                       Row(
                         children: [
-                          Text(
-                            '${formatNumberString(thisImpression.price.toString())} \₸',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
-                                color: AppColors.black),
-                          ),
+                          isLoading
+                              ? const SizedBox(width: 60, child: SkeletonLine())
+                              : Text(
+                                  '${formatNumberString(thisImpression.price.toString())} \₸',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 18,
+                                      color: AppColors.black),
+                                ),
                           const Text(
                             ' за чел.',
                             style: TextStyle(
@@ -1372,6 +1400,8 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
   }
 
   void getImpressionInfo() async {
+    isLoading = true;
+    setState(() {});
     var response =
         await ImpressionProvider().getImpressionDetail(widget.impression.id!);
     if (response['response_status'] == 'ok') {
@@ -1418,6 +1448,8 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
 
       _mapController
           .animateCamera(CameraUpdate.newCameraPosition(meetingLocation));
+
+      isLoading = false;
 
       setState(() {});
     } else {

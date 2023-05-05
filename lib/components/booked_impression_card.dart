@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -122,7 +121,7 @@ class _BookedImpressionCardState extends State<BookedImpressionCard> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    widget.impression.city!.name ?? '',
+                    widget.impression.city?.name ?? '',
                     style: const TextStyle(
                       color: AppColors.accent,
                       fontWeight: FontWeight.w500,
@@ -151,23 +150,6 @@ class _BookedImpressionCardState extends State<BookedImpressionCard> {
                 widget.impression.name ?? '',
                 style:
                     const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: Text(
-                      widget.impression.duration ?? '',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Colors.black45),
-                    ),
-                  ),
-                ],
               ),
               const SizedBox(
                 height: 8,

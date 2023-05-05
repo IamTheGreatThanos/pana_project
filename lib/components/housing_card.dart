@@ -189,6 +189,22 @@ class _HousingCardState extends State<HousingCard> {
                       fontSize: 14,
                       color: Colors.black45),
                 ),
+                const SizedBox(width: 5),
+                Text(
+                  '•',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Colors.black45),
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  '${widget.housing.star} Звезд',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Colors.black45),
+                ),
               ],
             ),
             const SizedBox(

@@ -1052,7 +1052,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           onPressed: () {
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                    builder: (context) => TabBarPage()),
+                                    builder: (context) => TabBarPage(2)),
                                 (Route<dynamic> route) => false);
                           },
                           child: const Text(

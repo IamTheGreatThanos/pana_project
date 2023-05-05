@@ -48,9 +48,16 @@ class _SplashScreenState extends State<SplashScreen> {
         getOneSignalUserToken();
         OneSignal.shared.setNotificationWillShowInForegroundHandler((event) {
           OSNotificationDisplayType.notification;
+          event.complete(event.notification);
         });
         OneSignal.shared.setOnWillDisplayInAppMessageHandler((message) {
           OSNotificationDisplayType.notification;
+        });
+        OneSignal.shared
+            .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => TabBarPage(3)),
+              (Route<dynamic> route) => false);
         });
       }
     });
@@ -93,11 +100,11 @@ class _SplashScreenState extends State<SplashScreen> {
           if (isLocked) {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
-                    builder: (context) => LockScreen(TabBarPage())),
+                    builder: (context) => LockScreen(TabBarPage(2))),
                 (Route<dynamic> route) => false);
           } else {
             Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => TabBarPage()),
+                MaterialPageRoute(builder: (context) => TabBarPage(2)),
                 (Route<dynamic> route) => false);
           }
 

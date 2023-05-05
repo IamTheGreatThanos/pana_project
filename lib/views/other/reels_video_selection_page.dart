@@ -434,7 +434,7 @@ class _ReelsVideoSelectionPageState extends State<ReelsVideoSelectionPage> {
         Future.delayed(
           const Duration(seconds: 3),
         ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => TabBarPage()),
+            MaterialPageRoute(builder: (context) => TabBarPage(2)),
             (Route<dynamic> route) => false));
       } else {
         Navigator.pop(context);

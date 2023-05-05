@@ -123,7 +123,7 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      '${widget.housing.city!.name}, ${widget.housing.country!.name}',
+                      '${widget.housing.city?.name ?? ''}, ${widget.housing.country?.name ?? ''}',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),

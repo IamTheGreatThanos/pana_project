@@ -12,7 +12,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HomeTravel extends StatefulWidget {
   const HomeTravel(this.onButtonPressed);
-  final void Function() onButtonPressed;
+  final void Function(int) onButtonPressed;
 
   @override
   _HomeTravelState createState() => _HomeTravelState();
@@ -200,7 +200,7 @@ class _HomeTravelState extends State<HomeTravel> {
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      widget.onButtonPressed();
+                                      widget.onButtonPressed(2);
                                     });
                                   },
                                   child: const Text("Перейти к поиску жилья",
@@ -557,7 +557,7 @@ class _HomeTravelState extends State<HomeTravel> {
     Widget cancelButton = TextButton(
       child: const Text("Отмена"),
       onPressed: () {
-        widget.onButtonPressed();
+        widget.onButtonPressed(2);
         Navigator.of(context).pop();
       },
     );
@@ -583,6 +583,6 @@ class _HomeTravelState extends State<HomeTravel> {
       builder: (BuildContext context) {
         return alert;
       },
-    ).whenComplete(() => widget.onButtonPressed());
+    ).whenComplete(() => widget.onButtonPressed(2));
   }
 }

@@ -136,8 +136,14 @@ class ImpressionProvider {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
+    String url = '${API_URL}api/mobile/impression/session?impression_id=$id';
+
+    if (startDate != '' && endDate != '') {
+      url += '&start_date=$startDate&end_date=$endDate';
+    }
+
     final response = await http.get(
-      Uri.parse('${API_URL}api/mobile/impression/session?impression_id=$id'),
+      Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',

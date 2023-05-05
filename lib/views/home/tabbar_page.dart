@@ -24,12 +24,14 @@ import 'package:story_view/story_view.dart';
 import 'package:uni_links/uni_links.dart';
 
 class TabBarPage extends StatefulWidget {
+  TabBarPage(this.selectedTab);
+  int selectedTab;
   @override
   _TabBarPageState createState() => _TabBarPageState();
 }
 
 class _TabBarPageState extends State<TabBarPage> {
-  int selectedTabIndex = 2;
+  late int selectedTabIndex;
   GlobalKey globalKey = GlobalKey(debugLabel: 'btm_nav_bar');
 
   List<Widget> tabViews = <Widget>[];
@@ -40,6 +42,7 @@ class _TabBarPageState extends State<TabBarPage> {
 
   @override
   void initState() {
+    selectedTabIndex = widget.selectedTab;
     checkIsLogedIn();
     super.initState();
     initUniLinks();
@@ -324,9 +327,9 @@ class _TabBarPageState extends State<TabBarPage> {
     );
   }
 
-  void changeTabMethod() {
+  void changeTabMethod(int index) {
     setState(() {
-      selectedTabIndex = 2;
+      selectedTabIndex = index;
     });
   }
 }

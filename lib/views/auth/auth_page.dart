@@ -480,7 +480,7 @@ class _AuthPageState extends State<AuthPage> {
           context,
           MaterialPageRoute(
               builder: (context) => SmsVerificationPage(
-                  0, TabBarPage(), authPhoneController.text, '', '', '')));
+                  0, TabBarPage(2), authPhoneController.text, '', '', '')));
     } else {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -497,7 +497,7 @@ class _AuthPageState extends State<AuthPage> {
     var isLogedIn = prefs.getBool('isLogedIn');
     if (isLogedIn == true) {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => TabBarPage()),
+          MaterialPageRoute(builder: (context) => TabBarPage(2)),
           (Route<dynamic> route) => false);
     }
   }

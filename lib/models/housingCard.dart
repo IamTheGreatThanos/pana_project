@@ -21,6 +21,7 @@ class HousingCardModel {
   Category? category;
   String? dateFrom;
   String? dateTo;
+  int? star;
 
   HousingCardModel({
     this.id,
@@ -38,6 +39,7 @@ class HousingCardModel {
     this.category,
     this.dateFrom,
     this.dateTo,
+    this.star,
   });
 
   HousingCardModel.fromJson(Map<String, dynamic> json) {
@@ -63,11 +65,12 @@ class HousingCardModel {
     reviewsCount = json['reviews_count'];
     distance = json['distance'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
-    basePriceMin = int.parse(json['base_price_min'].toString());
+    basePriceMin = int.parse((json['base_price_min'] ?? 0).toString());
     category =
         json['category'] != null ? Category.fromJson(json['category']) : null;
     dateFrom = json['date_from'];
     dateTo = json['date_to'];
+    star = json['star'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

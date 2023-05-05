@@ -20,7 +20,7 @@ import '../../utils/const.dart';
 
 class ProfileMainPage extends StatefulWidget {
   const ProfileMainPage(this.onButtonPressed);
-  final void Function() onButtonPressed;
+  final void Function(int) onButtonPressed;
   @override
   _ProfileMainPageState createState() => _ProfileMainPageState();
 }
@@ -350,7 +350,7 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
     Widget cancelButton = TextButton(
       child: const Text("Отмена"),
       onPressed: () {
-        widget.onButtonPressed();
+        widget.onButtonPressed(2);
         Navigator.of(context).pop();
       },
     );
@@ -376,6 +376,6 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
       builder: (BuildContext context) {
         return alert;
       },
-    ).whenComplete(() => widget.onButtonPressed());
+    ).whenComplete(() => widget.onButtonPressed(2));
   }
 }

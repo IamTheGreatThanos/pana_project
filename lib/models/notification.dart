@@ -1,5 +1,8 @@
+import 'package:pana_project/models/audioReview.dart';
 import 'package:pana_project/models/city.dart';
-import 'package:pana_project/models/housingDetail.dart';
+import 'package:pana_project/models/housingCard.dart';
+import 'package:pana_project/models/impressionCard.dart';
+import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/models/travelCard.dart';
 
 class NotificationModel {
@@ -9,12 +12,14 @@ class NotificationModel {
   String? title;
   String? description;
   String? readAt;
-  HousingDetailModel? housing;
+  HousingCardModel? housing;
   City? city;
-  Map<String, dynamic>? impression;
+  ImpressionCardModel? impression;
   TravelCardModel? trip;
   Chat? chat;
   int? iconType;
+  TextReviewModel? textReview;
+  AudioReviewModel? audioReview;
 
   NotificationModel({
     this.id,
@@ -29,6 +34,8 @@ class NotificationModel {
     this.trip,
     this.chat,
     this.iconType,
+    this.textReview,
+    this.audioReview,
   });
 
   NotificationModel.fromJson(Map<String, dynamic> json) {
@@ -39,13 +46,25 @@ class NotificationModel {
     description = json['description'];
     readAt = json['read_at'];
     housing = json['housing'] != null
-        ? HousingDetailModel.fromJson(json['housing'])
+        ? HousingCardModel.fromJson(json['housing'])
         : null;
     city = json['city'] != null ? City.fromJson(json['city']) : null;
-    impression = json['impression'];
+    impression = json['impression'] != null
+        ? ImpressionCardModel.fromJson(json['impression'])
+        : null;
     trip = json['trip'] != null ? TravelCardModel.fromJson(json['trip']) : null;
     chat = json['chat'] != null ? Chat.fromJson(json['chat']) : null;
     iconType = json['icon'];
+    textReview = json['review'] != null
+        ? json['review']['audio'] != ''
+            ? null
+            : TextReviewModel.fromJson(json['review'])
+        : null;
+    audioReview = json['review'] != null
+        ? json['review']['audio'] == ''
+            ? null
+            : AudioReviewModel.fromJson(json['review'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {

@@ -13,6 +13,7 @@ import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/PageTransitionRoute.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
+import 'package:pana_project/views/housing/filter_page.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
 import 'package:pana_project/views/housing/search_page.dart';
 import 'package:pana_project/views/other/favorites_page.dart';
@@ -79,6 +80,10 @@ class _HomeHousingState extends State<HomeHousing>
   String lng = '';
   String dateFrom = '';
   String dateTo = '';
+
+  List<dynamic> savedFilter = [];
+  List<dynamic> filterList = [];
+  bool isFilterOn = false;
 
   @override
   void initState() {
@@ -213,11 +218,17 @@ class _HomeHousingState extends State<HomeHousing>
                                       vertical: 12, horizontal: 5),
                                   child: VerticalDivider(),
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 5, 15, 5),
-                                  child: SvgPicture.asset(
-                                      'assets/icons/slider_01.svg'),
+                                GestureDetector(
+                                  onTap: () {
+                                    goToFiltersPage();
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 15, 5),
+                                    child: SvgPicture.asset(isFilterOn
+                                        ? 'assets/icons/slider_11.svg'
+                                        : 'assets/icons/slider_01.svg'),
+                                  ),
                                 ),
                               ],
                             ),
@@ -510,6 +521,51 @@ class _HomeHousingState extends State<HomeHousing>
     setState(() {});
   }
 
+  void goToFiltersPage() async {
+    var result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FiltersPage(true, savedFilter),
+      ),
+    );
+
+    savedFilter = result;
+
+    List<int> rating = [];
+    List<int> star = [];
+
+    for (int i = 0; i < result[0].length; i++) {
+      if (result[0][i]['state'] == true) {
+        rating.add(5 - i);
+      }
+    }
+
+    for (int i = 0; i < result[1].length; i++) {
+      if (result[1][i]['state'] == true) {
+        star.add(5 - i);
+      }
+    }
+
+    filterList = [rating, star, result[2], result[3]];
+    print(filterList);
+
+    if (rating.isEmpty && star.isEmpty) {
+      isFilterOn = false;
+    } else {
+      isFilterOn = true;
+    }
+
+    loading = true;
+    housingList = [];
+    setState(() {});
+
+    if (fromSearch) {
+      searchHousingList(searchParams);
+    } else {
+      getCurrentLocation();
+    }
+  }
+
   void getHousingList(String lat, String lng) async {
     housingList = [];
     var response =
@@ -519,7 +575,7 @@ class _HomeHousingState extends State<HomeHousing>
         housingList.add(HousingCardModel.fromJson(response['data'][i]));
       }
       if (mounted) {
-        setState(() {});
+        isFilterOn ? filterHousingList() : setState(() {});
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -549,7 +605,7 @@ class _HomeHousingState extends State<HomeHousing>
         housingList.add(HousingCardModel.fromJson(response['data'][i]));
       }
       if (mounted) {
-        setState(() {});
+        isFilterOn ? filterHousingList() : setState(() {});
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -557,6 +613,7 @@ class _HomeHousingState extends State<HomeHousing>
             style: const TextStyle(fontSize: 14)),
       ));
     }
+    loading = false;
   }
 
   void openSearchPage() async {
@@ -678,6 +735,51 @@ class _HomeHousingState extends State<HomeHousing>
         content: Text(response['data']['message'],
             style: const TextStyle(fontSize: 14)),
       ));
+    }
+  }
+
+  void filterHousingList() async {
+    List<HousingCardModel> filteredList1 = await checkRating(housingList);
+    List<HousingCardModel> filteredList2 = await checkStar(filteredList1);
+
+    housingList = filteredList2;
+
+    setState(() {});
+  }
+
+  Future<List<HousingCardModel>> checkRating(
+      List<HousingCardModel> housings) async {
+    List<HousingCardModel> tempList = [];
+    if (filterList[0].length == 0) {
+      return housings;
+    } else {
+      for (var i in housings) {
+        for (var j in filterList[0]) {
+          if ((i.reviewsAvgBall ?? 0) >= j && (i.reviewsAvgBall ?? 0) < j + 1) {
+            tempList.add(i);
+            break;
+          }
+        }
+      }
+      return tempList;
+    }
+  }
+
+  Future<List<HousingCardModel>> checkStar(
+      List<HousingCardModel> housings) async {
+    List<HousingCardModel> tempList = [];
+    if (filterList[1].length == 0) {
+      return housings;
+    } else {
+      for (var i in housings) {
+        for (var j in filterList[1]) {
+          if ((i.star ?? 0) == j) {
+            tempList.add(i);
+            break;
+          }
+        }
+      }
+      return tempList;
     }
   }
 }

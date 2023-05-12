@@ -231,10 +231,14 @@ class _HomeImpressionState extends State<HomeImpression>
                                     vertical: 12, horizontal: 5),
                                 child: VerticalDivider(),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 5, 15, 5),
-                                child: SvgPicture.asset(
-                                    'assets/icons/slider_01.svg'),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 5, 15, 5),
+                                  child: SvgPicture.asset(
+                                      'assets/icons/slider_01.svg'),
+                                ),
                               ),
                             ],
                           ),

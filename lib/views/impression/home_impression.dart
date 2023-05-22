@@ -12,6 +12,7 @@ import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
+import 'package:pana_project/views/housing/filter_page.dart';
 import 'package:pana_project/views/housing/search_page.dart';
 import 'package:pana_project/views/impression/impression_info.dart';
 import 'package:pana_project/views/other/favorites_page.dart';
@@ -99,9 +100,20 @@ class _HomeImpressionState extends State<HomeImpression>
 
   bool loading = true;
 
+  List<dynamic> searchParams = [0, 0, 0, 0, 0, 'Выбрать даты', '', '', 0, ''];
+  List<dynamic> savedFilter = [];
+  List<dynamic> filterList = [
+    0,
+    150000,
+    <int>[],
+    <int>[],
+    <int>[],
+  ];
+  bool isFilterOn = false;
+
   @override
   void initState() {
-    getImpressionList();
+    searchImpressionList(searchParams);
     checkIsLogedIn();
     getReels();
     getSelections();
@@ -232,12 +244,15 @@ class _HomeImpressionState extends State<HomeImpression>
                                 child: VerticalDivider(),
                               ),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  goToFilterPage();
+                                },
                                 child: Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 5, 15, 5),
-                                  child: SvgPicture.asset(
-                                      'assets/icons/slider_01.svg'),
+                                  child: SvgPicture.asset(isFilterOn
+                                      ? 'assets/icons/slider_11.svg'
+                                      : 'assets/icons/slider_01.svg'),
                                 ),
                               ),
                             ],
@@ -287,7 +302,7 @@ class _HomeImpressionState extends State<HomeImpression>
                       setState(() {
                         selectedCategoryId = categories[index]['id'];
                       });
-                      getImpressionList();
+                      searchImpressionList(searchParams);
                     },
                     isScrollable: true,
                     indicatorColor: AppColors.accent,
@@ -507,7 +522,7 @@ class _HomeImpressionState extends State<HomeImpression>
   }
 
   Future<void> _pullRefresh() async {
-    getImpressionList();
+    searchImpressionList(searchParams);
     getReels();
   }
 
@@ -522,24 +537,58 @@ class _HomeImpressionState extends State<HomeImpression>
     setState(() {});
   }
 
-  void getImpressionList() async {
-    impressionList = [];
-    var response =
-        await ImpressionProvider().getImpressionData(selectedCategoryId);
-    if (response['response_status'] == 'ok') {
-      for (int i = 0; i < response['data'].length; i++) {
-        impressionList.add(ImpressionCardModel.fromJson(response['data'][i]));
+  void goToFilterPage() async {
+    var result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FiltersPage(false, savedFilter),
+      ),
+    );
+
+    savedFilter = result;
+
+    List<int> rating = [];
+    List<int> comforts = [];
+    List<int> languages = [];
+
+    for (int i = 0; i < result[2].length; i++) {
+      if (result[2][i]['state'] == true) {
+        rating.add(5 - i);
       }
-      if (mounted) {
-        setState(() {});
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 14)),
-      ));
     }
-    loading = false;
+
+    for (var i in result[3]) {
+      for (var j in i['comforts']) {
+        if (j['state'] == true) {
+          comforts.add(j['id']);
+        }
+      }
+    }
+
+    for (int i = 0; i < result[4].length; i++) {
+      if (result[4][i]['state'] == true) {
+        languages.add(result[4][i]['id']);
+      }
+    }
+
+    filterList = [result[0], result[1], rating, comforts, languages];
+    print(filterList);
+
+    if (rating.isEmpty &&
+        comforts.isEmpty &&
+        languages.isEmpty &&
+        result[0] == 0 &&
+        result[1] == 150000) {
+      isFilterOn = false;
+    } else {
+      isFilterOn = true;
+    }
+
+    loading = true;
+    impressionList = [];
+    setState(() {});
+
+    searchImpressionList(searchParams);
   }
 
   void openSearchPage() async {
@@ -552,6 +601,7 @@ class _HomeImpressionState extends State<HomeImpression>
 
     if (mounted) {
       if (result != null) {
+        searchParams = result;
         searchImpressionList(result);
         setState(() {
           selectedCountryId = result[0];
@@ -574,6 +624,7 @@ class _HomeImpressionState extends State<HomeImpression>
   void searchImpressionList(List<dynamic> params) async {
     impressionList = [];
     var response = await ImpressionProvider().getImpressionFromSearch(
+      selectedCategoryId,
       params[0],
       params[1],
       params[2],
@@ -583,6 +634,11 @@ class _HomeImpressionState extends State<HomeImpression>
       params[7],
       params[8],
       params[9],
+      double.parse(filterList[0].toString()),
+      double.parse(filterList[1].toString()),
+      filterList[2],
+      filterList[3],
+      filterList[4],
     );
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {

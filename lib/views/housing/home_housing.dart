@@ -72,7 +72,7 @@ class _HomeHousingState extends State<HomeHousing>
   bool isLoggedIn = false;
 
   bool fromSearch = false;
-  List<dynamic> searchParams = [];
+  List<dynamic> searchParams = [0, 0, 0, 0, 0, 'Выбрать даты', '', '', 0, ''];
 
   bool loading = true;
 
@@ -82,7 +82,20 @@ class _HomeHousingState extends State<HomeHousing>
   String dateTo = '';
 
   List<dynamic> savedFilter = [];
-  List<dynamic> filterList = [];
+  List<dynamic> filterList = [
+    0, // price from
+    150000, // price to
+    <int>[], // rating
+    <int>[], // star
+    <int>[], // comforts
+    <int>[], // foods
+    <int>[], // beds
+    <int>[], // languages
+    0, // pets
+    0, // children
+    <int>[], // positions
+  ];
+
   bool isFilterOn = false;
 
   @override
@@ -533,23 +546,89 @@ class _HomeHousingState extends State<HomeHousing>
 
     List<int> rating = [];
     List<int> star = [];
+    List<int> comforts = [];
+    List<int> breakfasts = [];
+    List<int> beds = [];
+    List<int> languages = [];
+    List<int> locations = [];
 
-    for (int i = 0; i < result[0].length; i++) {
-      if (result[0][i]['state'] == true) {
+    for (int i = 0; i < result[2].length; i++) {
+      if (result[2][i]['state'] == true) {
         rating.add(5 - i);
       }
     }
 
-    for (int i = 0; i < result[1].length; i++) {
-      if (result[1][i]['state'] == true) {
+    for (int i = 0; i < result[3].length; i++) {
+      if (result[3][i]['state'] == true) {
         star.add(5 - i);
       }
     }
 
-    filterList = [rating, star, result[2], result[3]];
+    for (var i in result[4]) {
+      for (var j in i['comforts']) {
+        if (j['state'] == true) {
+          comforts.add(j['id']);
+        }
+      }
+    }
+
+    for (int i = 0; i < result[5].length; i++) {
+      if (result[5][i]['state'] == true) {
+        breakfasts.add(result[5][i]['id']);
+      }
+    }
+
+    for (int i = 0; i < result[6].length; i++) {
+      if (result[6][i]['state'] == true) {
+        beds.add(result[6][i]['id']);
+      }
+    }
+
+    for (int i = 0; i < result[7].length; i++) {
+      if (result[7][i]['state'] == true) {
+        languages.add(result[7][i]['id']);
+      }
+    }
+
+    for (int i = 0; i < result[10].length; i++) {
+      if (result[10][i]['state'] == true) {
+        locations.add(result[10][i]['id']);
+      }
+    }
+
+    filterList = [
+      result[0],
+      result[1],
+      rating,
+      star,
+      comforts,
+      breakfasts,
+      beds,
+      languages,
+      result[8][0]['state'] == true
+          ? 2
+          : result[8][1]['state']
+              ? 1
+              : 0,
+      result[9][0]['state'] == true
+          ? 2
+          : result[9][1]['state']
+              ? 1
+              : 0,
+      locations,
+    ];
+
     print(filterList);
 
-    if (rating.isEmpty && star.isEmpty) {
+    if (rating.isEmpty &&
+        star.isEmpty &&
+        comforts.isEmpty &&
+        breakfasts.isEmpty &&
+        beds.isEmpty &&
+        languages.isEmpty &&
+        locations.isEmpty &&
+        result[0] == 0 &&
+        result[1] == 150000) {
       isFilterOn = false;
     } else {
       isFilterOn = true;
@@ -559,53 +638,62 @@ class _HomeHousingState extends State<HomeHousing>
     housingList = [];
     setState(() {});
 
-    if (fromSearch) {
-      searchHousingList(searchParams);
-    } else {
-      getCurrentLocation();
-    }
+    searchHousingList(searchParams);
   }
 
-  void getHousingList(String lat, String lng) async {
-    housingList = [];
-    var response =
-        await HousingProvider().getHousingData(selectedCategoryId, lat, lng);
-    if (response['response_status'] == 'ok') {
-      for (int i = 0; i < response['data'].length; i++) {
-        housingList.add(HousingCardModel.fromJson(response['data'][i]));
-      }
-      if (mounted) {
-        isFilterOn ? filterHousingList() : setState(() {});
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 14)),
-      ));
-    }
-    loading = false;
-  }
+  // void getHousingList(String lat, String lng) async {
+  //   housingList = [];
+  //   var response =
+  //       await HousingProvider().getHousingData(selectedCategoryId, lat, lng);
+  //   if (response['response_status'] == 'ok') {
+  //     for (int i = 0; i < response['data'].length; i++) {
+  //       housingList.add(HousingCardModel.fromJson(response['data'][i]));
+  //     }
+  //     if (mounted) {
+  //       setState(() {});
+  //     }
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text(response['data']['message'],
+  //           style: const TextStyle(fontSize: 14)),
+  //     ));
+  //   }
+  //   loading = false;
+  // }
 
   void searchHousingList(List<dynamic> params) async {
     housingList = [];
     var response = await HousingProvider().getHousingFromSearch(
-        params[0],
-        params[1],
-        params[2],
-        params[3],
-        params[4],
-        params[6],
-        params[7],
-        params[8],
-        params[9],
-        lat,
-        lng);
+      selectedCategoryId,
+      params[0],
+      params[1],
+      params[2],
+      params[3],
+      params[4],
+      params[6],
+      params[7],
+      params[8],
+      params[9],
+      lat,
+      lng,
+      double.parse(filterList[0].toString()),
+      double.parse(filterList[1].toString()),
+      filterList[2],
+      filterList[3],
+      filterList[4],
+      filterList[5],
+      filterList[6],
+      filterList[7],
+      filterList[8],
+      filterList[9],
+      filterList[10],
+    );
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
         housingList.add(HousingCardModel.fromJson(response['data'][i]));
       }
       if (mounted) {
-        isFilterOn ? filterHousingList() : setState(() {});
+        setState(() {});
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -702,10 +790,12 @@ class _HomeHousingState extends State<HomeHousing>
       prefs.setString('lastLat', lat);
       prefs.setString('lastLng', lng);
 
-      getHousingList(
-          position.latitude.toString(), position.longitude.toString());
+      searchHousingList(searchParams);
+
+      // getHousingList(
+      //     position.latitude.toString(), position.longitude.toString());
     } catch (error) {
-      getHousingList(lat, lng);
+      searchHousingList(searchParams);
     }
   }
 
@@ -735,51 +825,6 @@ class _HomeHousingState extends State<HomeHousing>
         content: Text(response['data']['message'],
             style: const TextStyle(fontSize: 14)),
       ));
-    }
-  }
-
-  void filterHousingList() async {
-    List<HousingCardModel> filteredList1 = await checkRating(housingList);
-    List<HousingCardModel> filteredList2 = await checkStar(filteredList1);
-
-    housingList = filteredList2;
-
-    setState(() {});
-  }
-
-  Future<List<HousingCardModel>> checkRating(
-      List<HousingCardModel> housings) async {
-    List<HousingCardModel> tempList = [];
-    if (filterList[0].length == 0) {
-      return housings;
-    } else {
-      for (var i in housings) {
-        for (var j in filterList[0]) {
-          if ((i.reviewsAvgBall ?? 0) >= j && (i.reviewsAvgBall ?? 0) < j + 1) {
-            tempList.add(i);
-            break;
-          }
-        }
-      }
-      return tempList;
-    }
-  }
-
-  Future<List<HousingCardModel>> checkStar(
-      List<HousingCardModel> housings) async {
-    List<HousingCardModel> tempList = [];
-    if (filterList[1].length == 0) {
-      return housings;
-    } else {
-      for (var i in housings) {
-        for (var j in filterList[1]) {
-          if ((i.star ?? 0) == j) {
-            tempList.add(i);
-            break;
-          }
-        }
-      }
-      return tempList;
     }
   }
 }

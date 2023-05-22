@@ -69,21 +69,32 @@ class ImpressionProvider {
   }
 
   Future<dynamic> getImpressionFromSearch(
-      int countryId,
-      int adultCount,
-      int childCount,
-      int babyCount,
-      int petCount,
-      String startDate,
-      String endDate,
-      int cityId,
-      String searchText) async {
+    int categoryId,
+    int countryId,
+    int adultCount,
+    int childCount,
+    int babyCount,
+    int petCount,
+    String startDate,
+    String endDate,
+    int cityId,
+    String searchText,
+    double priceFrom,
+    double priceTo,
+    List<int> reviewBalls,
+    List<int> comforts,
+    List<int> languages,
+  ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     String urlParams = 'api/mobile/impression?page=1';
 
+    if (categoryId != 0) {
+      urlParams += '&category_id=$categoryId';
+    }
+
     if (countryId != 0) {
-      urlParams += '&country_id=${countryId}';
+      urlParams += '&country_id=$countryId';
     }
     // if (adultCount != 0) {
     //   urlParams += '&max_adult_count=${adultCount}';
@@ -98,13 +109,37 @@ class ImpressionProvider {
     //   urlParams += '&max_ped_count=$petCount';
     // }
     if (startDate != '') {
-      urlParams += '&date_from=${startDate}&date_to=${endDate}';
+      urlParams += '&date_from=$startDate&date_to=$endDate';
     }
     if (cityId != 0) {
       urlParams += '&city_id=$cityId';
     }
     if (searchText != '') {
       urlParams += '&search=${Uri.encodeComponent(searchText)}';
+    }
+
+    urlParams += '&price_from=$priceFrom&price_to=$priceTo';
+
+    if (reviewBalls.toString() != '[]') {
+      String tempString = '';
+      for (var i in reviewBalls) {
+        tempString += '$i,';
+      }
+      urlParams += '&review_balls=$tempString';
+    }
+    if (comforts.toString() != '[]') {
+      String tempString = '';
+      for (var i in comforts) {
+        tempString += '$i,';
+      }
+      urlParams += '&comforts=$tempString';
+    }
+    if (languages.toString() != '[]') {
+      String tempString = '';
+      for (var i in languages) {
+        tempString += '$i,';
+      }
+      urlParams += '&languages=$tempString';
     }
 
     print(urlParams);

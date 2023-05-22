@@ -45,6 +45,7 @@ class HousingProvider {
   }
 
   Future<dynamic> getHousingFromSearch(
+    int categoryId,
     int countryId,
     int adultCount,
     int childCount,
@@ -56,31 +57,45 @@ class HousingProvider {
     String searchText,
     String lat,
     String lng,
+    double priceFrom,
+    double priceTo,
+    List<int> reviewBalls,
+    List<int> stars,
+    List<int> comforts,
+    List<int> breakfasts,
+    List<int> languages,
+    List<int> beds,
+    int pets,
+    int children,
+    List<int> locations,
   ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     String urlParams = 'api/mobile/housing?page=1';
 
+    if (categoryId != 0) {
+      urlParams += '&category_id=$categoryId';
+    }
     if (countryId != 0) {
-      urlParams += '&country_id=${countryId}';
+      urlParams += '&country_id=$countryId';
     }
     if (adultCount != 0) {
-      urlParams += '&max_adult_count=${adultCount}';
+      urlParams += '&max_adult_count=$adultCount';
     }
     if (childCount != 0) {
-      urlParams += '&max_child_count=${childCount}';
+      urlParams += '&max_child_count=$childCount';
     }
     if (babyCount != 0) {
-      urlParams += '&max_baby_count=${babyCount}';
+      urlParams += '&max_baby_count=$babyCount';
     }
     if (petCount != 0) {
-      urlParams += '&max_ped_count=${petCount}';
+      urlParams += '&max_ped_count=$petCount';
     }
     if (startDate != '') {
-      urlParams += '&date_from=${startDate}&date_to=${endDate}';
+      urlParams += '&date_from=$startDate&date_to=$endDate';
     }
     if (cityId != 0) {
-      urlParams += '&city_id=${cityId}';
+      urlParams += '&city_id=$cityId';
     }
     if (searchText != '') {
       urlParams += '&search=${Uri.encodeComponent(searchText)}';
@@ -88,8 +103,79 @@ class HousingProvider {
     if (lat != '' && lng != '') {
       urlParams += '&lat=$lat&lng=$lng';
     }
+    urlParams += '&price_from=$priceFrom&price_to=$priceTo';
+
+    if (stars.toString() != '[]') {
+      String tempString = '';
+      for (var i in stars) {
+        tempString += '$i,';
+      }
+      urlParams += '&stars=$tempString';
+    }
+    if (reviewBalls.toString() != '[]') {
+      String tempString = '';
+      for (var i in reviewBalls) {
+        tempString += '$i,';
+      }
+      urlParams += '&review_balls=$tempString';
+    }
+    if (comforts.toString() != '[]') {
+      String tempString = '';
+      for (var i in comforts) {
+        tempString += '$i,';
+      }
+      urlParams += '&comforts=$tempString';
+    }
+    if (breakfasts.toString() != '[]') {
+      String tempString = '';
+      for (var i in breakfasts) {
+        tempString += '$i,';
+      }
+      urlParams += '&breakfasts=$tempString';
+    }
+    if (languages.toString() != '[]') {
+      String tempString = '';
+      for (var i in languages) {
+        tempString += '$i,';
+      }
+      urlParams += '&languages=$tempString';
+    }
+    if (beds.toString() != '[]') {
+      String tempString = '';
+      for (var i in beds) {
+        tempString += '$i,';
+      }
+      urlParams += '&beds=$tempString';
+    }
+    if (pets != 0) {
+      urlParams += '&pet=${pets == 2 ? 1 : 0}';
+    }
+    if (children != 0) {
+      urlParams += '&children_allowed=${children == 2 ? 'yes' : 'no'}';
+    }
+    if (locations.toString() != '[]') {
+      String tempString = '';
+      for (var i in locations) {
+        tempString += '$i,';
+      }
+      urlParams += '&positions=$tempString';
+    }
 
     print(urlParams);
+
+    final queryParameters = {
+      'page': 1,
+      'lat': lat,
+      'lng': lng,
+      'price_from': priceFrom,
+      'price_to': priceTo,
+      'stars': stars,
+      'review_balls': reviewBalls,
+      'comforts': comforts,
+      'breakfasts': breakfasts,
+      'languages': languages,
+      'beds': beds,
+    };
 
     final response = await http.get(
       Uri.parse(API_URL + urlParams),

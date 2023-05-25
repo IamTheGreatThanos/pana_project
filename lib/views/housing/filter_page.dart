@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/filter_checkbox_item.dart';
+import 'package:pana_project/components/filter_checkbox_item_for_stars.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/housing/filter_comforts_page.dart';
@@ -26,12 +27,11 @@ class _FiltersPageState extends State<FiltersPage> {
     {'title': 'Ужасно (1)', 'state': false},
   ];
   List<Map<String, dynamic>> starFilterList = [
-    {'title': '5 Звезд', 'state': false},
-    {'title': '4 Звезды', 'state': false},
-    {'title': '3 Звезды', 'state': false},
-    {'title': '2 Звезды', 'state': false},
-    {'title': '1 Звезда', 'state': false},
-    {'title': 'Без звезд', 'state': false},
+    {'title': '5', 'state': false},
+    {'title': '4', 'state': false},
+    {'title': '3', 'state': false},
+    {'title': '2', 'state': false},
+    {'title': '1', 'state': false},
   ];
   List<Map<String, dynamic>> foodFilterList = [];
   List<Map<String, dynamic>> bedsFilterList = [];
@@ -46,7 +46,7 @@ class _FiltersPageState extends State<FiltersPage> {
   ];
   List<Map<String, dynamic>> locationFilterList = [];
 
-  double startVal = 0, endVal = 150000;
+  double startVal = 0, endVal = 5000000;
   List<int> comforts = [];
   List<Map<String, dynamic>> comfortsTemp = [];
 
@@ -212,7 +212,7 @@ class _FiltersPageState extends State<FiltersPage> {
                                       startVal = 0;
                                       priceFrom.text =
                                           startVal.toInt().toString();
-                                      endVal = 150000;
+                                      endVal = 5000000;
                                       priceTo.text = endVal.toInt().toString();
 
                                       setState(() {});
@@ -244,8 +244,8 @@ class _FiltersPageState extends State<FiltersPage> {
                                 data: const SliderThemeData(trackHeight: 2),
                                 child: RangeSlider(
                                   min: 0,
-                                  max: 150000,
-                                  divisions: 150000,
+                                  max: 5000000,
+                                  divisions: 5000000,
                                   labels: RangeLabels("от ${startVal.toInt()}",
                                       "до ${endVal.toInt()}"),
                                   values: RangeValues(startVal, endVal),
@@ -442,10 +442,9 @@ class _FiltersPageState extends State<FiltersPage> {
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  FilterCheckboxItem(
+                                                  FilterCheckboxItemForStars(
                                                     title: i['title'],
                                                     isChecked: i['state'],
-                                                    withCheckbox: true,
                                                   ),
                                                   const SizedBox(width: 10),
                                                 ],
@@ -1085,7 +1084,7 @@ class _FiltersPageState extends State<FiltersPage> {
                     }
                     startVal = 0;
                     priceFrom.text = startVal.toInt().toString();
-                    endVal = 150000;
+                    endVal = 5000000;
                     priceTo.text = endVal.toInt().toString();
                     comforts = [];
                     comfortsTemp = [];

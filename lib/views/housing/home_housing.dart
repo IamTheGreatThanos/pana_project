@@ -84,7 +84,7 @@ class _HomeHousingState extends State<HomeHousing>
   List<dynamic> savedFilter = [];
   List<dynamic> filterList = [
     0, // price from
-    150000, // price to
+    5000000, // price to
     <int>[], // rating
     <int>[], // star
     <int>[], // comforts
@@ -628,7 +628,7 @@ class _HomeHousingState extends State<HomeHousing>
         languages.isEmpty &&
         locations.isEmpty &&
         result[0] == 0 &&
-        result[1] == 150000) {
+        result[1] == 5000000) {
       isFilterOn = false;
     } else {
       isFilterOn = true;

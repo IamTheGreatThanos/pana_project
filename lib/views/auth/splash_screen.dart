@@ -68,13 +68,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
     var deviceState = await OneSignal.shared.getDeviceState();
     if (deviceState != null || deviceState?.userId != null) {
-      String userId = deviceState!.userId!;
+      String? userId = deviceState!.userId;
       // print("TOKEN ID: " + userId);
 
       if (prefs.getBool('isLogedIn') == true) {
-        var response = await ProfileProvider().setOneSignalUserToken(userId);
-        if (response['response_status'] == 'ok') {
-          // print(response);
+        if (userId != null) {
+          var response = await ProfileProvider().setOneSignalUserToken(userId);
+          if (response['response_status'] == 'ok') {
+            // print(response);
+          }
         }
       }
     }

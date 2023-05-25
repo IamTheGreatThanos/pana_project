@@ -190,20 +190,153 @@ class _RoomCardState extends State<RoomCard> {
                           fontSize: 16,
                           color: AppColors.black),
                     ),
-                    const Text(
-                      ' за сутки',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Colors.black45),
-                    ),
+                    // const Text(
+                    //   ' за сутки',
+                    //   style: TextStyle(
+                    //       fontWeight: FontWeight.w500,
+                    //       fontSize: 14,
+                    //       color: Colors.black45),
+                    // ),
                   ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    showRoomPrices();
+                  },
+                  child: Text(
+                    'Сумма за выбранный период (${widget.date.substring(0, 5)} - ${widget.date.substring(13, 18)})',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Colors.black45,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                 ),
                 const Divider(),
                 const SizedBox(height: 10),
               ],
             ),
           )),
+    );
+  }
+
+  void showRoomPrices() async {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: SizedBox(
+            // height: 370,
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Разбивка базовой цены',
+                          style: TextStyle(
+                            color: AppColors.black,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(
+                            Icons.close,
+                            color: AppColors.blackWithOpacity,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  for (var item in widget.room.roomPrices ?? [])
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.grey, width: 1),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(12),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Row(
+                            children: [
+                              Text(
+                                item.date,
+                                style: const TextStyle(
+                                  color: AppColors.blackWithOpacity,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                '${formatNumberString(item.price.toString())} тг',
+                                style: const TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Divider(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Итоговая базовая цена:',
+                          style: TextStyle(
+                            color: AppColors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${formatNumberString(widget.room.basePrice.toString())} тг',
+                          style: const TextStyle(
+                            color: AppColors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

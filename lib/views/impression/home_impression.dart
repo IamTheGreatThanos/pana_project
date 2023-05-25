@@ -104,7 +104,7 @@ class _HomeImpressionState extends State<HomeImpression>
   List<dynamic> savedFilter = [];
   List<dynamic> filterList = [
     0,
-    150000,
+    5000000,
     <int>[],
     <int>[],
     <int>[],
@@ -578,7 +578,7 @@ class _HomeImpressionState extends State<HomeImpression>
         comforts.isEmpty &&
         languages.isEmpty &&
         result[0] == 0 &&
-        result[1] == 150000) {
+        result[1] == 5000000) {
       isFilterOn = false;
     } else {
       isFilterOn = true;

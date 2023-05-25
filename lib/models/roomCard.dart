@@ -23,27 +23,30 @@ class RoomCardModel {
   List<Images>? images;
   List<Beds>? beds;
   List<Comforts>? comforts;
+  List<RoomPrice>? roomPrices;
 
-  RoomCardModel(
-      {this.id,
-      this.roomName,
-      this.housingId,
-      this.roomType,
-      this.status,
-      this.size,
-      this.description,
-      this.basePrice,
-      this.smoking,
-      this.disabledPeople,
-      this.countCopy,
-      this.maxPeople,
-      this.maxAdultCount,
-      this.maxChildCount,
-      this.maxBabyCount,
-      this.maxPedCount,
-      this.images,
-      this.beds,
-      this.comforts});
+  RoomCardModel({
+    this.id,
+    this.roomName,
+    this.housingId,
+    this.roomType,
+    this.status,
+    this.size,
+    this.description,
+    this.basePrice,
+    this.smoking,
+    this.disabledPeople,
+    this.countCopy,
+    this.maxPeople,
+    this.maxAdultCount,
+    this.maxChildCount,
+    this.maxBabyCount,
+    this.maxPedCount,
+    this.images,
+    this.beds,
+    this.comforts,
+    this.roomPrices,
+  });
 
   RoomCardModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -81,6 +84,12 @@ class RoomCardModel {
       comforts = <Comforts>[];
       json['comforts'].forEach((v) {
         comforts!.add(Comforts.fromJson(v));
+      });
+    }
+    if (json['room_prices'] != null) {
+      roomPrices = <RoomPrice>[];
+      json['room_prices'].forEach((v) {
+        roomPrices!.add(RoomPrice.fromJson(v));
       });
     }
   }
@@ -146,5 +155,17 @@ class RoomName {
       data['room_type'] = this.roomType!.toJson();
     }
     return data;
+  }
+}
+
+class RoomPrice {
+  String? date;
+  double? price;
+
+  RoomPrice({this.date, this.price});
+
+  RoomPrice.fromJson(Map<String, dynamic> json) {
+    date = json['date'];
+    price = double.parse(json['price'].toString());
   }
 }

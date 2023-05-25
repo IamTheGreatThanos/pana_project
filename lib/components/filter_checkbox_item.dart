@@ -28,7 +28,7 @@ class FilterCheckboxItem extends StatelessWidget {
               padding: const EdgeInsets.only(left: 5),
               child: title.length > 30
                   ? SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
+                      width: MediaQuery.of(context).size.width * 0.68,
                       child: Text(
                         title,
                         style: TextStyle(

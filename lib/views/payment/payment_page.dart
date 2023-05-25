@@ -297,15 +297,20 @@ class _PaymentPageState extends State<PaymentPage> {
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Row(
                         children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            child: Text(
-                              (widget.roomList[i].roomName?.name ?? '') +
-                                  ' x ${widget.selectedRooms[i]['count']}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black45,
+                          GestureDetector(
+                            onTap: () {
+                              showRoomPrices(i);
+                            },
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: Text(
+                                '${widget.roomList[i].roomName?.name ?? ''} x ${widget.selectedRooms[i]['count']}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black45,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                           ),
@@ -767,6 +772,122 @@ class _PaymentPageState extends State<PaymentPage> {
             style: const TextStyle(fontSize: 14)),
       ));
     }
+  }
+
+  void showRoomPrices(int index) async {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: SizedBox(
+            // height: 370,
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Разбивка базовой цены',
+                          style: TextStyle(
+                            color: AppColors.black,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(
+                            Icons.close,
+                            color: AppColors.blackWithOpacity,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  for (var item in widget.roomList[index].roomPrices ?? [])
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.grey, width: 1),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(12),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Row(
+                            children: [
+                              Text(
+                                item.date,
+                                style: const TextStyle(
+                                  color: AppColors.blackWithOpacity,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                '${formatNumberString(item.price.toString())} тг',
+                                style: const TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Divider(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Итоговая базовая цена:',
+                          style: TextStyle(
+                            color: AppColors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${formatNumberString(widget.roomList[index].basePrice.toString())} тг',
+                          style: const TextStyle(
+                            color: AppColors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void showSuccessfullyPaySheet() async {

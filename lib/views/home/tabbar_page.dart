@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/impressionCard.dart';
@@ -66,6 +67,7 @@ class _TabBarPageState extends State<TabBarPage> {
 
   Future<void> initUniLinks() async {
     _sub = uriLinkStream.listen((uri) {
+      print('URI LINK: $uri');
       if (!mounted) return;
       if (uri != null) {
         if (uri.path == '/housing') {
@@ -90,12 +92,36 @@ class _TabBarPageState extends State<TabBarPage> {
       }
     });
 
-    // try {
-    //   String? initialLink = await getInitialLink();
-    //   print(initialLink);
-    // } on PlatformException {
-    //   print('Platfrom exception unilink.');
-    // }
+    try {
+      String? initialLink = await getInitialLink();
+
+      if (!mounted) return;
+      if (initialLink != null) {
+        Uri uri = Uri.parse(initialLink);
+
+        if (uri.path == '/housing') {
+          if (uri.queryParameters.containsKey('id')) {
+            if (uri.queryParameters['id'] != null) {
+              getHousingInfo(int.parse(uri.queryParameters['id']!));
+            }
+          }
+        } else if (uri.path == '/impression') {
+          if (uri.queryParameters.containsKey('id')) {
+            if (uri.queryParameters['id'] != null) {
+              getImpressionInfo(int.parse(uri.queryParameters['id']!));
+            }
+          }
+        } else if (uri.path == '/reels') {
+          if (uri.queryParameters.containsKey('id')) {
+            if (uri.queryParameters['id'] != null) {
+              getReelsInfo(int.parse(uri.queryParameters['id']!));
+            }
+          }
+        }
+      }
+    } on PlatformException {
+      print('Platfrom exception unilink.');
+    }
   }
 
   void getHousingInfo(int id) async {

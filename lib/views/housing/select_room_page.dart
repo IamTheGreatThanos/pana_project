@@ -484,6 +484,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                     headerStyle: const DateRangePickerHeaderStyle(
                         textAlign: TextAlign.center),
                     selectionMode: DateRangePickerSelectionMode.range,
+                    minDate: DateTime.now(),
                   ),
                 ],
               ),

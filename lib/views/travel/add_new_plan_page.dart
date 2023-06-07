@@ -584,6 +584,7 @@ class _AddNewPlanPageState extends State<AddNewPlanPage> {
                     headerStyle: const DateRangePickerHeaderStyle(
                         textAlign: TextAlign.center),
                     selectionMode: DateRangePickerSelectionMode.single,
+                    minDate: DateTime.now(),
                   ),
                 ],
               ),

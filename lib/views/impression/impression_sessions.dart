@@ -173,57 +173,57 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        GestureDetector(
-                          onTap: () {
-                            showPeopleCountModalSheet();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 1, color: AppColors.accent),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(8))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 5),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    checkPersonCount(
-                                        impressionData.peopleCount.toString()),
-                                    style: const TextStyle(
-                                      color: AppColors.accent,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  // StreamBuilder(
-                                  //   stream: impressionData.dataStream
-                                  //       .asBroadcastStream(),
-                                  //   builder: (context, snapshot) {
-                                  //     if (snapshot.hasData) {
-                                  //       return Text(
-                                  //         '${snapshot.data} персоны',
-                                  //         style: const TextStyle(
-                                  //           color: AppColors.accent,
-                                  //           fontWeight: FontWeight.w500,
-                                  //         ),
-                                  //       );
-                                  //     } else {
-                                  //       return const Text(
-                                  //         '1 персоны',
-                                  //         style: TextStyle(
-                                  //           color: AppColors.accent,
-                                  //           fontWeight: FontWeight.w500,
-                                  //         ),
-                                  //       );
-                                  //     }
-                                  //   },
-                                  // ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     showPeopleCountModalSheet();
+                        //   },
+                        //   child: Container(
+                        //     decoration: BoxDecoration(
+                        //         border: Border.all(
+                        //             width: 1, color: AppColors.accent),
+                        //         borderRadius:
+                        //             const BorderRadius.all(Radius.circular(8))),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.symmetric(
+                        //           horizontal: 8, vertical: 5),
+                        //       child: Row(
+                        //         children: [
+                        //           Text(
+                        //             checkPersonCount(
+                        //                 impressionData.peopleCount.toString()),
+                        //             style: const TextStyle(
+                        //               color: AppColors.accent,
+                        //               fontWeight: FontWeight.w500,
+                        //             ),
+                        //           ),
+                        //           // StreamBuilder(
+                        //           //   stream: impressionData.dataStream
+                        //           //       .asBroadcastStream(),
+                        //           //   builder: (context, snapshot) {
+                        //           //     if (snapshot.hasData) {
+                        //           //       return Text(
+                        //           //         '${snapshot.data} персоны',
+                        //           //         style: const TextStyle(
+                        //           //           color: AppColors.accent,
+                        //           //           fontWeight: FontWeight.w500,
+                        //           //         ),
+                        //           //       );
+                        //           //     } else {
+                        //           //       return const Text(
+                        //           //         '1 персоны',
+                        //           //         style: TextStyle(
+                        //           //           color: AppColors.accent,
+                        //           //           fontWeight: FontWeight.w500,
+                        //           //         ),
+                        //           //       );
+                        //           //     }
+                        //           //   },
+                        //           // ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -327,6 +327,7 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
                     headerStyle: const DateRangePickerHeaderStyle(
                         textAlign: TextAlign.center),
                     selectionMode: DateRangePickerSelectionMode.range,
+                    minDate: DateTime.now(),
                   ),
                 ],
               ),
@@ -351,22 +352,30 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
     });
   }
 
-  void showPeopleCountModalSheet() async {
-    await showModalBottomSheet<void>(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(AppConstants.cardBorderRadius),
-            topRight: Radius.circular(AppConstants.cardBorderRadius)),
-      ),
-      backgroundColor: Colors.white,
-      builder: (BuildContext context) {
-        return ImpressionPeopleCountBottomSheet(impressionData);
-      },
-    );
-
-    setState(() {});
-  }
+  // void showPeopleCountModalSheet() async {
+  //   await showModalBottomSheet<void>(
+  //     context: context,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.only(
+  //           topLeft: Radius.circular(AppConstants.cardBorderRadius),
+  //           topRight: Radius.circular(AppConstants.cardBorderRadius)),
+  //     ),
+  //     backgroundColor: Colors.white,
+  //     builder: (BuildContext context) {
+  //       return ImpressionPeopleCountBottomSheet(
+  //         session: ImpressionSessionModel(),
+  //         impression: ImpressionDetailModel(),
+  //         startDate: '',
+  //         endDate: '',
+  //         impressionData: ImpressionData(),
+  //         isPrivate: 1,
+  //         fromSearch: true,
+  //       );
+  //     },
+  //   );
+  //
+  //   setState(() {});
+  // }
 
   void showPrivateModeModalSheet(int index) async {
     await showModalBottomSheet<void>(
@@ -427,8 +436,25 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
 }
 
 class ImpressionPeopleCountBottomSheet extends StatefulWidget {
-  ImpressionPeopleCountBottomSheet(this.impressionData);
+  ImpressionPeopleCountBottomSheet({
+    Key? key,
+    required this.session,
+    required this.impression,
+    required this.startDate,
+    required this.endDate,
+    required this.impressionData,
+    required this.isPrivate,
+    required this.fromSearch,
+  }) : super(key: key);
+
+  final ImpressionSessionModel session;
+  final ImpressionDetailModel impression;
+  final String startDate;
+  final String endDate;
   final ImpressionData impressionData;
+  final int isPrivate;
+  final bool fromSearch;
+
   @override
   _ImpressionPeopleCountBottomSheetState createState() =>
       _ImpressionPeopleCountBottomSheetState();
@@ -543,7 +569,24 @@ class _ImpressionPeopleCountBottomSheetState
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    if (widget.fromSearch) {
+                      Navigator.pop(context);
+                    } else {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ImpressionPaymentPage(
+                            widget.impression,
+                            widget.startDate,
+                            widget.endDate,
+                            widget.impressionData,
+                            widget.session,
+                            widget.isPrivate,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: const Text(
                     "Продолжить",
@@ -759,18 +802,16 @@ class _ImpressionSessionPrivateModeModalBottomSheetState
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ImpressionPaymentPage(
-                        widget.impression,
-                        widget.startDate,
-                        widget.endDate,
-                        widget.impressionData,
-                        widget.session,
-                        isPrivateSelected ? 2 : 1,
-                      ),
-                    ),
+                  Navigator.pop(context);
+
+                  showPeopleCountModalSheet(
+                    false,
+                    isPrivateSelected ? 2 : 1,
+                    widget.session,
+                    widget.impression,
+                    widget.startDate,
+                    widget.endDate,
+                    widget.impressionData,
                   );
                 },
                 child: const Text(
@@ -787,5 +828,38 @@ class _ImpressionSessionPrivateModeModalBottomSheetState
         ),
       ),
     );
+  }
+
+  void showPeopleCountModalSheet(
+    bool fromSearch,
+    int isPrivate,
+    ImpressionSessionModel session,
+    ImpressionDetailModel impression,
+    String startDate,
+    String endDate,
+    ImpressionData impressionData,
+  ) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return ImpressionPeopleCountBottomSheet(
+          session: session,
+          impression: impression,
+          startDate: startDate,
+          endDate: endDate,
+          impressionData: impressionData,
+          isPrivate: isPrivate,
+          fromSearch: fromSearch,
+        );
+      },
+    );
+
+    setState(() {});
   }
 }

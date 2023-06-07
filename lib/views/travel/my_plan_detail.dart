@@ -698,6 +698,7 @@ class _MyPlanDetailPageState extends State<MyPlanDetailPage> {
                     headerStyle: const DateRangePickerHeaderStyle(
                         textAlign: TextAlign.center),
                     selectionMode: DateRangePickerSelectionMode.single,
+                    minDate: DateTime.now(),
                   ),
                 ],
               ),

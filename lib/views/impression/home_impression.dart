@@ -245,7 +245,7 @@ class _HomeImpressionState extends State<HomeImpression>
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  goToFilterPage();
+                                  goToFiltersPage();
                                 },
                                 child: Padding(
                                   padding:
@@ -537,7 +537,7 @@ class _HomeImpressionState extends State<HomeImpression>
     setState(() {});
   }
 
-  void goToFilterPage() async {
+  void goToFiltersPage() async {
     var result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -601,17 +601,21 @@ class _HomeImpressionState extends State<HomeImpression>
 
     if (mounted) {
       if (result != null) {
-        searchParams = result;
-        searchImpressionList(result);
-        setState(() {
-          selectedCountryId = result[0];
-          if (result[5] != 'Выбрать даты') {
-            selectedRange = result[5];
-          } else {
-            selectedRange = '';
-          }
-          searchText = result[9];
-        });
+        if (result == 'toFilter') {
+          goToFiltersPage();
+        } else {
+          searchParams = result;
+          searchImpressionList(result);
+          setState(() {
+            selectedCountryId = result[0];
+            if (result[5] != 'Выбрать даты') {
+              selectedRange = result[5];
+            } else {
+              selectedRange = '';
+            }
+            searchText = result[9];
+          });
+        }
       } else {
         setState(() {
           selectedCountryId = 0;
@@ -645,6 +649,7 @@ class _HomeImpressionState extends State<HomeImpression>
         impressionList.add(ImpressionCardModel.fromJson(response['data'][i]));
       }
       if (mounted) {
+        loading = false;
         setState(() {});
       }
     } else {

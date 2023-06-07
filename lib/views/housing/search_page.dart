@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
@@ -42,7 +44,10 @@ class _SearchPageState extends State<SearchPage> {
     {'name': 'ОАЭ', 'asset': 'assets/images/map_6.png'},
   ];
 
-  List<String> filteredSuggestions = [];
+  List<Map<String, String>> countrySuggestions = [];
+  List<Map<String, String>> citySuggestions = [];
+  List<Map<String, String>> impressionSuggestions = [];
+  List<Map<String, String>> housingSuggestions = [];
 
   @override
   void initState() {
@@ -142,7 +147,10 @@ class _SearchPageState extends State<SearchPage> {
                                           searchBool) {
                                         getAutocompleteVariants();
                                       } else {
-                                        filteredSuggestions = [];
+                                        countrySuggestions = [];
+                                        citySuggestions = [];
+                                        housingSuggestions = [];
+                                        impressionSuggestions = [];
                                       }
                                     });
                                   },
@@ -224,13 +232,17 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                             Visibility(
                               visible: nameController.text.isNotEmpty &&
-                                  filteredSuggestions.isNotEmpty,
+                                  (citySuggestions.isNotEmpty ||
+                                      countrySuggestions.isNotEmpty ||
+                                      (widget.fromHousing
+                                          ? housingSuggestions.isNotEmpty
+                                          : impressionSuggestions.isNotEmpty)),
                               child: Padding(
-                                padding: const EdgeInsets.fromLTRB(60, 8, 8, 8),
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 10, 20, 0),
                                 child: Container(
-                                  height: 160,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.74,
+                                  height: 190,
+                                  width: MediaQuery.of(context).size.width,
                                   decoration: const BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
@@ -241,38 +253,452 @@ class _SearchPageState extends State<SearchPage> {
                                             0, 4), // changes position of shadow
                                       ),
                                     ],
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(16)),
                                     color: AppColors.white,
                                   ),
                                   child: SingleChildScrollView(
                                     child: Column(
                                       children: [
-                                        for (int h = 0;
-                                            h < filteredSuggestions.length;
-                                            h++)
-                                          Column(
-                                            children: [
-                                              SizedBox(
-                                                height: 30,
-                                                child: ListTile(
-                                                  title: Text(
-                                                    filteredSuggestions[h],
-                                                    style: const TextStyle(
-                                                        fontSize: 14),
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                        // TODO: Country suggestion
+                                        countrySuggestions.isNotEmpty &&
+                                                widget.fromHousing
+                                            ? Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 10, left: 20),
+                                                    child: Text(
+                                                      'Страна',
+                                                      style: TextStyle(
+                                                          color: AppColors
+                                                              .blackWithOpacity,
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
                                                   ),
-                                                  onTap: () {
-                                                    nameController.text =
-                                                        filteredSuggestions[h];
-                                                    filteredSuggestions.clear();
-                                                    setState(() {});
-                                                  },
-                                                ),
-                                              ),
-                                              const Divider(),
-                                            ],
-                                          ),
+                                                  for (int h = 0;
+                                                      h <
+                                                          countrySuggestions
+                                                              .length;
+                                                      h++)
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        nameController.text =
+                                                            countrySuggestions[
+                                                                h]['name']!;
+                                                        countrySuggestions
+                                                            .clear();
+                                                        citySuggestions.clear();
+                                                        housingSuggestions
+                                                            .clear();
+                                                        impressionSuggestions
+                                                            .clear();
+                                                        setState(() {});
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 20),
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              decoration: const BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              12))),
+                                                              width: 24,
+                                                              height: 24,
+                                                              child:
+                                                                  CachedNetworkImage(
+                                                                imageUrl:
+                                                                    countrySuggestions[
+                                                                            h][
+                                                                        'img']!,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                width: 20),
+                                                            Text(
+                                                              countrySuggestions[
+                                                                  h]['name']!,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                            const Spacer(),
+                                                            const Icon(Icons
+                                                                .arrow_forward_ios),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  const Divider(),
+                                                ],
+                                              )
+                                            : const SizedBox.shrink(),
+                                        // TODO: City suggestion
+                                        citySuggestions.isNotEmpty
+                                            ? Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 10, left: 20),
+                                                    child: Text(
+                                                      'Город',
+                                                      style: TextStyle(
+                                                          color: AppColors
+                                                              .blackWithOpacity,
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ),
+                                                  for (int h = 0;
+                                                      h <
+                                                          citySuggestions
+                                                              .length;
+                                                      h++)
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        nameController.text =
+                                                            citySuggestions[h]
+                                                                ['name']!;
+                                                        countrySuggestions
+                                                            .clear();
+                                                        citySuggestions.clear();
+                                                        housingSuggestions
+                                                            .clear();
+                                                        impressionSuggestions
+                                                            .clear();
+                                                        setState(() {});
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 20),
+                                                        child: Row(
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  citySuggestions[
+                                                                          h]
+                                                                      ['name']!,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                  ),
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                                const SizedBox(
+                                                                    height: 5),
+                                                                Text(
+                                                                  citySuggestions[
+                                                                          h][
+                                                                      'country']!,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    color: AppColors
+                                                                        .blackWithOpacity,
+                                                                  ),
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const Spacer(),
+                                                            const Icon(Icons
+                                                                .arrow_forward_ios),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  const Divider(),
+                                                ],
+                                              )
+                                            : const SizedBox.shrink(),
+                                        // TODO: Housing suggestion
+                                        housingSuggestions.isNotEmpty &&
+                                                widget.fromHousing
+                                            ? Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 10, left: 20),
+                                                    child: Text(
+                                                      'Отель',
+                                                      style: TextStyle(
+                                                          color: AppColors
+                                                              .blackWithOpacity,
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ),
+                                                  for (int h = 0;
+                                                      h <
+                                                          housingSuggestions
+                                                              .length;
+                                                      h++)
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        nameController.text =
+                                                            housingSuggestions[
+                                                                h]['name']!;
+                                                        countrySuggestions
+                                                            .clear();
+                                                        citySuggestions.clear();
+                                                        housingSuggestions
+                                                            .clear();
+                                                        impressionSuggestions
+                                                            .clear();
+                                                        setState(() {});
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 20),
+                                                        child: Row(
+                                                          children: [
+                                                            ClipRRect(
+                                                              borderRadius:
+                                                                  const BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    12),
+                                                              ),
+                                                              child: SizedBox(
+                                                                width: 40,
+                                                                height: 40,
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      housingSuggestions[
+                                                                              h]
+                                                                          [
+                                                                          'img']!,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                width: 20),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  housingSuggestions[
+                                                                          h]
+                                                                      ['name']!,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                  ),
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                                const SizedBox(
+                                                                    height: 5),
+                                                                Text(
+                                                                  housingSuggestions[
+                                                                          h]
+                                                                      ['city']!,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    color: AppColors
+                                                                        .blackWithOpacity,
+                                                                  ),
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const Spacer(),
+                                                            const Icon(Icons
+                                                                .arrow_forward_ios),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  const Divider(),
+                                                ],
+                                              )
+                                            : const SizedBox.shrink(),
+                                        // TODO: Impression suggestion
+                                        impressionSuggestions.isNotEmpty &&
+                                                !widget.fromHousing
+                                            ? Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 0, left: 20),
+                                                    child: Text(
+                                                      'Впечатление',
+                                                      style: TextStyle(
+                                                          color: AppColors
+                                                              .blackWithOpacity,
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ),
+                                                  for (int h = 0;
+                                                      h <
+                                                          impressionSuggestions
+                                                              .length;
+                                                      h++)
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        nameController.text =
+                                                            impressionSuggestions[
+                                                                h]['name']!;
+                                                        countrySuggestions
+                                                            .clear();
+                                                        citySuggestions.clear();
+                                                        housingSuggestions
+                                                            .clear();
+                                                        impressionSuggestions
+                                                            .clear();
+                                                        setState(() {});
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 20),
+                                                        child: Row(
+                                                          children: [
+                                                            ClipRRect(
+                                                              borderRadius:
+                                                                  const BorderRadius
+                                                                          .all(
+                                                                      Radius.circular(
+                                                                          12)),
+                                                              child: SizedBox(
+                                                                width: 24,
+                                                                height: 24,
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      impressionSuggestions[
+                                                                              h]
+                                                                          [
+                                                                          'img']!,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                width: 20),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  impressionSuggestions[
+                                                                          h]
+                                                                      ['name']!,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                  ),
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                                const SizedBox(
+                                                                    height: 5),
+                                                                Text(
+                                                                  impressionSuggestions[
+                                                                          h]
+                                                                      ['city']!,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    color: AppColors
+                                                                        .blackWithOpacity,
+                                                                  ),
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const Spacer(),
+                                                            const Icon(Icons
+                                                                .arrow_forward_ios),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  const Divider(),
+                                                ],
+                                              )
+                                            : const SizedBox.shrink(),
                                       ],
                                     ),
                                   ),
@@ -331,6 +757,41 @@ class _SearchPageState extends State<SearchPage> {
                               )
                             : Container(),
                       ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop('toFilter');
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 72,
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(AppConstants.cardBorderRadius),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 20),
+                          SvgPicture.asset('assets/icons/slider_01.svg'),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text(
+                              'Фильтры',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          const Spacer(),
+                          const Icon(Icons.arrow_forward_ios),
+                          const SizedBox(width: 20),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -917,6 +1378,7 @@ class _SearchPageState extends State<SearchPage> {
                     headerStyle: const DateRangePickerHeaderStyle(
                         textAlign: TextAlign.center),
                     selectionMode: DateRangePickerSelectionMode.range,
+                    minDate: DateTime.now(),
                   ),
                 ],
               ),
@@ -948,20 +1410,45 @@ class _SearchPageState extends State<SearchPage> {
         await MainProvider().getAutocompleteText(nameController.text);
     print(response['data']);
     if (response['response_status'] == 'ok') {
-      filteredSuggestions = [];
-      if (widget.fromHousing) {
-        for (int i = 0; i < response['data']['housings'].length; i++) {
-          filteredSuggestions.add(response['data']['housings'][i]['name']);
-        }
-      } else {
-        for (int i = 0; i < response['data']['impressions'].length; i++) {
-          filteredSuggestions.add(response['data']['impressions'][i]['name']);
-        }
+      countrySuggestions = [];
+      citySuggestions = [];
+      impressionSuggestions = [];
+      housingSuggestions = [];
+
+      for (int i = 0; i < response['data']['countries'].length; i++) {
+        countrySuggestions.add({
+          'name': response['data']['countries'][i]['name'],
+          'img': response['data']['countries'][i]['icon'],
+        });
       }
 
       for (int i = 0; i < response['data']['cities'].length; i++) {
-        filteredSuggestions.add(response['data']['cities'][i]['name']);
+        citySuggestions.add({
+          'name': response['data']['cities'][i]['name'],
+          'country': response['data']['cities'][i]['country'] ?? '',
+        });
       }
+
+      for (int i = 0; i < response['data']['housings'].length; i++) {
+        housingSuggestions.add({
+          'name': response['data']['housings'][i]['name'],
+          'city': response['data']['housings'][i]['city'] ?? '',
+          'img': response['data']['housings'][i]['images'].length > 0
+              ? response['data']['housings'][i]['images'][0]['path']
+              : 'https://hryoutest.in.ua/uploads/images/default.jpg',
+        });
+      }
+
+      for (int i = 0; i < response['data']['impressions'].length; i++) {
+        impressionSuggestions.add({
+          'name': response['data']['impressions'][i]['name'],
+          'city': response['data']['impressions'][i]['city'] ?? '',
+          'img': response['data']['impressions'][i]['images'].length > 0
+              ? response['data']['impressions'][i]['images'][0]['path']
+              : 'https://hryoutest.in.ua/uploads/images/default.jpg',
+        });
+      }
+
       if (mounted) {
         setState(() {});
         searchBool = true;

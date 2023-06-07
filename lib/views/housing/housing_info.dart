@@ -690,7 +690,7 @@ class _HousingInfoState extends State<HousingInfo> {
                         child: Wrap(
                           children: [
                             for (var item in thisHousing.comforts ?? [])
-                              item.parent['name'] == 'Популярные удобства'
+                              item.parent?['name'] == 'Популярные удобства'
                                   ? Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -1251,16 +1251,14 @@ class _HousingInfoState extends State<HousingInfo> {
                       Row(
                         children: [
                           isLoading
-                              ? const SizedBox(
-                              width: 60,
-                              child: SkeletonLine())
-                              :Text(
-                            'от ${formatNumberString(thisHousing.basePriceMin.toString())} \₸',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
-                                color: AppColors.black),
-                          ),
+                              ? const SizedBox(width: 60, child: SkeletonLine())
+                              : Text(
+                                  'от ${formatNumberString(thisHousing.basePriceMin.toString())} \₸',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 18,
+                                      color: AppColors.black),
+                                ),
                           const Text(
                             ' за сутки',
                             style: TextStyle(
@@ -1410,6 +1408,7 @@ class _HousingInfoState extends State<HousingInfo> {
                     headerStyle: const DateRangePickerHeaderStyle(
                         textAlign: TextAlign.center),
                     selectionMode: DateRangePickerSelectionMode.range,
+                    minDate: DateTime.now(),
                   ),
                 ],
               ),

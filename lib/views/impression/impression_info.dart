@@ -1641,6 +1641,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                     headerStyle: const DateRangePickerHeaderStyle(
                         textAlign: TextAlign.center),
                     selectionMode: DateRangePickerSelectionMode.range,
+                    minDate: DateTime.now(),
                   ),
                 ],
               ),

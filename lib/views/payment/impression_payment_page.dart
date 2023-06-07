@@ -562,7 +562,15 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
       ),
       backgroundColor: Colors.white,
       builder: (BuildContext context) {
-        return ImpressionPeopleCountBottomSheet(widget.impressionData);
+        return ImpressionPeopleCountBottomSheet(
+          session: widget.session,
+          impression: widget.impression,
+          startDate: widget.startDate,
+          endDate: widget.endDate,
+          impressionData: widget.impressionData,
+          isPrivate: widget.type,
+          fromSearch: true,
+        );
       },
     );
 

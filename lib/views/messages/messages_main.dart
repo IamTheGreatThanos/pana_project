@@ -30,16 +30,19 @@ class _MessagesPageState extends State<MessagesPage> {
 
   bool isLodingActive = false;
 
+  bool isHaveListOfChats = false;
+
   @override
   void initState() {
     checkIsLogedIn();
-
+    getChats();
     super.initState();
   }
 
   Future<void> _pullRefresh() async {
     getNotifications();
     readNotification();
+    getChats();
   }
 
   @override
@@ -219,22 +222,24 @@ class _MessagesPageState extends State<MessagesPage> {
                             )
                           : Container(),
                       const SizedBox(height: 20),
-                      Center(
-                        child: Column(
-                          children: [
-                            SvgPicture.asset('assets/images/smile.svg'),
-                            const SizedBox(height: 10),
-                            const Text(
-                              'Вы долистали до конца',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.black,
-                                fontWeight: FontWeight.w500,
+                      oldNotifications.isNotEmpty
+                          ? Center(
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset('assets/images/smile.svg'),
+                                  const SizedBox(height: 10),
+                                  const Text(
+                                    'Вы долистали до конца',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            )
+                          : const SizedBox.shrink(),
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -259,14 +264,16 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 
   void goToChats() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ListOfChatsPage(),
-      ),
-    );
+    if (isHaveListOfChats) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ListOfChatsPage(),
+        ),
+      );
 
-    getNotifications();
+      getNotifications();
+    }
   }
 
   void goToNotificationDetail(NotificationModel notification) async {
@@ -436,5 +443,14 @@ class _MessagesPageState extends State<MessagesPage> {
         return alert;
       },
     ).whenComplete(() => widget.onButtonPressed(2));
+  }
+
+  void getChats() async {
+    var response = await MessagesProvider().getListOfChats();
+    if (response['response_status'] == 'ok') {
+      if (response['data'].length > 0) {
+        isHaveListOfChats = true;
+      }
+    }
   }
 }

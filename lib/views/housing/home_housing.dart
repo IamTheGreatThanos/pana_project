@@ -714,20 +714,24 @@ class _HomeHousingState extends State<HomeHousing>
 
     if (mounted) {
       if (result != null) {
-        fromSearch = true;
-        searchParams = result;
-        searchHousingList(result);
-        setState(() {
-          selectedCountryId = result[0];
-          if (result[5] != 'Выбрать даты') {
-            selectedRange = result[5];
-            dateFrom = result[6];
-            dateTo = result[7];
-          } else {
-            selectedRange = '';
-          }
-          searchText = result[9];
-        });
+        if (result == 'toFilter') {
+          goToFiltersPage();
+        } else {
+          fromSearch = true;
+          searchParams = result;
+          searchHousingList(result);
+          setState(() {
+            selectedCountryId = result[0];
+            if (result[5] != 'Выбрать даты') {
+              selectedRange = result[5];
+              dateFrom = result[6];
+              dateTo = result[7];
+            } else {
+              selectedRange = '';
+            }
+            searchText = result[9];
+          });
+        }
       } else {
         setState(() {
           selectedCountryId = 0;

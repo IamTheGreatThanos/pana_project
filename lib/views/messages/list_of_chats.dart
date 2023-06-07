@@ -119,7 +119,7 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
                         child: Padding(
                           padding: EdgeInsets.all(10),
                           child: Text(
-                            'Список пока пуст...',
+                            'Загрузка...',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,

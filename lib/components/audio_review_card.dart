@@ -183,10 +183,12 @@ class _AudioReviewCardState extends State<AudioReviewCard> {
                 ),
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: Divider(),
-            ),
+            widget.review.answers?.isNotEmpty ?? false
+                ? const Padding(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    child: Divider(),
+                  )
+                : const SizedBox(height: 15),
             widget.review.answers?.isNotEmpty ?? false
                 ? Column(
                     children: [

@@ -2,6 +2,7 @@ import 'package:pana_project/models/breakfasts.dart';
 import 'package:pana_project/models/category.dart';
 import 'package:pana_project/models/city.dart';
 import 'package:pana_project/models/comforts.dart';
+import 'package:pana_project/models/country.dart';
 import 'package:pana_project/models/images.dart';
 import 'package:pana_project/models/languages.dart';
 import 'package:pana_project/models/user.dart';
@@ -12,6 +13,7 @@ class HousingDetailModel {
   User? user;
   Category? category;
   City? city;
+  Country? country;
   int? status;
   String? name;
   String? description;
@@ -72,6 +74,7 @@ class HousingDetailModel {
     this.user,
     this.category,
     this.city,
+    this.country,
     this.status,
     this.name,
     this.description,
@@ -134,6 +137,8 @@ class HousingDetailModel {
     category =
         json['category'] != null ? Category.fromJson(json['category']) : null;
     city = json['city'] != null ? City.fromJson(json['city']) : null;
+    country =
+        json['country'] != null ? Country.fromJson(json['country']) : null;
     status = json['status'];
     name = json['name'];
     description = json['description'];

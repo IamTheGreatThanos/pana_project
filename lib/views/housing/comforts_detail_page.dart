@@ -21,7 +21,7 @@ class _HousingComfortsDetailState extends State<HousingComfortsDetail> {
   void initState() {
     for (int i = 0; i < widget.comforts.length; i++) {
       !categories.contains(widget.comforts[i].parent?['name'])
-          ? categories.add(widget.comforts[i].parent?['name'])
+          ? categories.add(widget.comforts[i].parent?['name'] ?? '')
           : null;
     }
     super.initState();

@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -51,7 +50,7 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
   }
 
   void socketInit() {
-    socket = IO.io('http://167.235.196.229:3000', <String, dynamic>{
+    socket = IO.io('http://back.pana.world:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
     });
@@ -108,7 +107,7 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Text(
-                          '${widget.chat.user?.name ?? ''} ${widget.chat.user?.surname ?? ''}',
+                          '${widget.chat.user?.name ?? ''}',
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w500,

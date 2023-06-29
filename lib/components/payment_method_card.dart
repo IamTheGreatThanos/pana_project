@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PaymentMethodCard extends StatefulWidget {
-  PaymentMethodCard(this.path, this.title, this.subtitle, this.selected);
+  PaymentMethodCard(
+      this.path, this.title, this.subtitle, this.selected, this.isOffline);
   final String path;
   final String title;
   final String subtitle;
   final bool selected;
+  final bool isOffline;
 
   @override
   _PaymentMethodCardState createState() => _PaymentMethodCardState();
@@ -35,13 +37,15 @@ class _PaymentMethodCardState extends State<PaymentMethodCard> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Text(
-              widget.subtitle,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.black45,
-              ),
-            ),
+            widget.isOffline
+                ? Text(
+                    widget.subtitle,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black45,
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
         const Spacer(),

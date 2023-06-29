@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/bonus_card.dart';
+import 'package:pana_project/models/bonusItems.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/other/about_bonus_system_page.dart';
 
 class BonusSystemDetailPage extends StatefulWidget {
+  final List<BonusItems> bonusItems;
+  final int count1;
+  final int count2;
+  final int bonusSystemId;
+
+  BonusSystemDetailPage(
+      this.bonusItems, this.count1, this.count2, this.bonusSystemId);
+
   @override
   _BonusSystemDetailPageState createState() => _BonusSystemDetailPageState();
 }
@@ -69,7 +78,7 @@ class _BonusSystemDetailPageState extends State<BonusSystemDetailPage> {
                 ),
                 const SizedBox(height: 30),
                 const Text(
-                  'Собрано асыков для следующего уровня:',
+                  'Кол-во посещений до следующего подарка:',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -77,9 +86,9 @@ class _BonusSystemDetailPageState extends State<BonusSystemDetailPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  '2347 / 3000',
-                  style: TextStyle(
+                Text(
+                  '${widget.count1} / ${widget.count2}',
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
@@ -108,7 +117,15 @@ class _BonusSystemDetailPageState extends State<BonusSystemDetailPage> {
                                       Row(
                                         children: [
                                           SizedBox(
-                                            width: 120,
+                                            width: ((85 *
+                                                            ((widget.bonusItems
+                                                                        .length -
+                                                                    1) *
+                                                                2))
+                                                        .toDouble() *
+                                                    widget.bonusSystemId /
+                                                    widget.bonusItems.length) -
+                                                25,
                                           ),
                                           SizedBox(
                                             width: 50,
@@ -119,14 +136,19 @@ class _BonusSystemDetailPageState extends State<BonusSystemDetailPage> {
                                         ],
                                       ),
                                       const SizedBox(height: 20),
-                                      const ClipRRect(
+                                      ClipRRect(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(12)),
                                         child: SizedBox(
                                           height: 5,
-                                          width: 140 * 5,
+                                          width: (85 *
+                                                  ((widget.bonusItems.length -
+                                                          1) *
+                                                      2))
+                                              .toDouble(),
                                           child: LinearProgressIndicator(
-                                            value: 0.2,
+                                            value: widget.bonusSystemId /
+                                                widget.bonusItems.length,
                                             color: AppColors.white,
                                             backgroundColor: Color(0xFF2B2B2B),
                                           ),
@@ -138,7 +160,9 @@ class _BonusSystemDetailPageState extends State<BonusSystemDetailPage> {
                                 Row(
                                   children: [
                                     const SizedBox(width: 20),
-                                    for (int i = 0; i < 5; i++)
+                                    for (int i = 0;
+                                        i < widget.bonusItems.length;
+                                        i++)
                                       Row(
                                         children: [
                                           Column(
@@ -148,19 +172,35 @@ class _BonusSystemDetailPageState extends State<BonusSystemDetailPage> {
                                                   './assets/icons/bonus_gift_1.svg'),
                                               const SizedBox(height: 20),
                                               BonusCard(
-                                                colorType: i + 2,
-                                                title:
-                                                    '3 бесплатных кофе в кофейне Sandyq',
-                                                imageUrl:
-                                                    'https://stories.starbucks.com/uploads/2021/07/SBX20210707-ColdCoffees-Iced-Chocolate-Almondmilk-Shaken-Espresso-1024x1024.jpg',
+                                                colorType: (widget
+                                                            .bonusItems[i]
+                                                            .bonusSystemItem
+                                                            ?.level ??
+                                                        1) +
+                                                    1,
+                                                title: widget
+                                                        .bonusItems[i]
+                                                        .bonusSystemItem
+                                                        ?.description ??
+                                                    '',
+                                                imageUrl: widget
+                                                        .bonusItems[i]
+                                                        .bonusSystemItem
+                                                        ?.image ??
+                                                    '',
                                                 isTaken: false,
                                                 bonusType: 1,
-                                                count: 245,
+                                                count: widget.bonusItems[i]
+                                                        .countOrder ??
+                                                    0,
                                               ),
                                             ],
                                           ),
                                           SizedBox(
-                                            width: i == 5 - 1 ? 20 : 40,
+                                            width: i ==
+                                                    widget.bonusItems.length - 1
+                                                ? 20
+                                                : 40,
                                           )
                                         ],
                                       ),

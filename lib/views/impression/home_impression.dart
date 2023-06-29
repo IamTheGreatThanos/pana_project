@@ -43,19 +43,31 @@ class _HomeImpressionState extends State<HomeImpression>
       'asset': 'assets/icons/impression_cat_2.svg',
       'id': 14
     },
-    {'name': 'Еда', 'asset': 'assets/icons/impression_cat_3.svg', 'id': 15},
+    {
+      'name': 'Еда',
+      'asset': 'assets/icons/impression_cat_3.svg',
+      'id': 15,
+    },
     {
       'name': 'Историческое',
       'asset': 'assets/icons/impression_cat_4.svg',
       'id': 16
     },
-    {'name': 'Напитки', 'asset': 'assets/icons/impression_cat_5.svg', 'id': 17},
+    {
+      'name': 'Напитки',
+      'asset': 'assets/icons/impression_cat_5.svg',
+      'id': 17,
+    },
     {
       'name': 'Развлечения',
       'asset': 'assets/icons/impression_cat_6.svg',
       'id': 18
     },
-    {'name': 'Спорт', 'asset': 'assets/icons/impression_cat_7.svg', 'id': 19},
+    {
+      'name': 'Спорт',
+      'asset': 'assets/icons/impression_cat_7.svg',
+      'id': 19,
+    },
     {
       'name': 'Экскурсии',
       'asset': 'assets/icons/impression_cat_8.svg',

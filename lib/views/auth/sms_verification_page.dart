@@ -188,7 +188,7 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
         prefs.setInt("user_id", response['data']['user']['id']);
         prefs.setString("user_name", response['data']['user']['name']);
         prefs.setString("user_surname", response['data']['user']['surname']);
-        prefs.setString("user_email", response['data']['user']['email']);
+        prefs.setString("user_email", response['data']['user']['email'] ?? '');
         prefs.setString("user_phone", response['data']['user']['phone']);
         prefs.setInt("user_phone_code", response['data']['user']['phone_code']);
         prefs.setString("user_avatar", response['data']['user']['avatar']);

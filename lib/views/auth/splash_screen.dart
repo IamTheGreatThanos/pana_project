@@ -18,7 +18,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late Timer _timer;
-  int _start = 3;
+  int _start = 2;
   double iconPadding = 0;
   double wordPadding = 0;
   double _width = 0;
@@ -113,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen> {
           setState(() {
             timer.cancel();
           });
-        } else if (_start == 2) {
+        } else if (_start == 1) {
           setState(() {
             iconPadding = 80;
             wordPadding = 80;
@@ -143,7 +143,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Stack(
                 children: [
                   AnimatedPadding(
-                    duration: const Duration(seconds: 1),
+                    duration: const Duration(milliseconds: 800),
                     curve: Curves.easeInOut,
                     padding: EdgeInsets.fromLTRB(
                         ((MediaQuery.of(context).size.width - 210) / 2) +
@@ -166,7 +166,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                   ),
                   AnimatedPadding(
-                    duration: const Duration(seconds: 1),
+                    duration: const Duration(milliseconds: 800),
                     curve: Curves.easeInOut,
                     padding: EdgeInsets.only(
                         left: ((MediaQuery.of(context).size.width -
@@ -177,7 +177,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     child: Row(
                       children: [
                         AnimatedContainer(
-                          duration: const Duration(seconds: 1),
+                          duration: const Duration(milliseconds: 800),
                           color: Colors.white,
                           width: _width + _secondWidth,
                           height: 50,

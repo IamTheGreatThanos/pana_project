@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloudpayments/cloudpayments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,7 +12,7 @@ import 'package:pana_project/utils/checkReviewsCount.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
-import 'package:pana_project/views/other/create_credit_card_page.dart';
+import 'package:pana_project/views/payment/epay_webview.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -377,11 +376,11 @@ class _PaymentPageState extends State<PaymentPage> {
                                 setState(() {});
                               },
                               child: PaymentMethodCard(
-                                'assets/icons/payment_type_in_a_place.svg',
-                                'Оплата при заселении',
-                                'Нужно оплатить на ресепшене',
-                                -1 == selectedCardIndex,
-                              ),
+                                  'assets/icons/payment_type_in_a_place.svg',
+                                  'Оплата при заселении',
+                                  'Нужно оплатить на ресепшене',
+                                  -1 == selectedCardIndex,
+                                  true),
                             ),
                             const Divider(),
                           ],
@@ -408,54 +407,74 @@ class _PaymentPageState extends State<PaymentPage> {
                             setState(() {});
                           },
                           child: PaymentMethodCard(
-                            cards[i].type == 1
-                                ? 'assets/icons/mastercard_icon.svg'
-                                : 'assets/icons/visa_icon.svg',
-                            '**** ${cards[i].number!.substring(12, 16)}',
+                            cards[i].type == 'VISA'
+                                ? 'assets/icons/visa_icon.svg'
+                                : 'assets/icons/mastercard_icon.svg',
+                            '**** ${cards[i].number!.substring(9, 13)}',
                             '${cards[i].month}/${cards[i].year}',
                             i == selectedCardIndex,
+                            false,
                           ),
                         ),
                         const Divider(),
-                        const SizedBox(height: 10),
+                        // const SizedBox(height: 10),
                       ],
                     ),
-                  GestureDetector(
-                    onTap: () async {
-                      await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CreateCreditCardPage()));
-
-                      getCreditCards();
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 51,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(12),
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          selectedCardIndex = -2;
+                          setState(() {});
+                        },
+                        child: PaymentMethodCard(
+                          'assets/icons/payment_card.svg',
+                          'Оплата новой картой',
+                          '',
+                          selectedCardIndex == -2,
+                          false,
                         ),
-                        color: AppColors.lightGray,
                       ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset('./assets/icons/payment_card.svg'),
-                          const SizedBox(width: 10),
-                          const Text(
-                            'Добавить карту',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.accent,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                      const Divider(),
+                      // const SizedBox(height: 10),
+                    ],
                   ),
+                  // GestureDetector(
+                  //   onTap: () async {
+                  //     await Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => CreateCreditCardPage()));
+                  //
+                  //     getCreditCards();
+                  //   },
+                  //   child: Container(
+                  //     width: double.infinity,
+                  //     height: 51,
+                  //     decoration: const BoxDecoration(
+                  //       borderRadius: BorderRadius.all(
+                  //         Radius.circular(12),
+                  //       ),
+                  //       color: AppColors.lightGray,
+                  //     ),
+                  //     child: Row(
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         SvgPicture.asset('./assets/icons/payment_card.svg'),
+                  //         const SizedBox(width: 10),
+                  //         const Text(
+                  //           'Добавить карту',
+                  //           style: TextStyle(
+                  //             fontSize: 14,
+                  //             fontWeight: FontWeight.w500,
+                  //             color: AppColors.accent,
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
@@ -663,8 +682,34 @@ class _PaymentPageState extends State<PaymentPage> {
           //     MaterialPageRoute(builder: (context) => TabBarPage()),
           //     (Route<dynamic> route) => false));
         }
+      } else if (selectedCardIndex == -2) {
+        var response = await HousingProvider().housingPayment(
+          widget.housing.id!,
+          dateFrom,
+          dateTo,
+          sharedHousingPaymentData.peopleCount,
+          widget.selectedRooms,
+          -2,
+          commentController.text,
+        );
+        if (response['response_status'] == 'ok') {
+          goToEPay(_key, response['data']);
+
+          // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          //   content: Text('Жилье успешно забронировано!',
+          //       style: const TextStyle(fontSize: 14)),
+          // ));
+          //
+          // Future.delayed(
+          //   const Duration(seconds: 3),
+          //   () => _key.currentState!.reset(),
+          // ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+          //     MaterialPageRoute(builder: (context) => TabBarPage()),
+          //     (Route<dynamic> route) => false));
+        }
       } else {
         if (cards.isNotEmpty) {
+          // TODO: Cloud payments
           var response = await HousingProvider().housingPayment(
             widget.housing.id!,
             dateFrom,
@@ -674,40 +719,41 @@ class _PaymentPageState extends State<PaymentPage> {
             cards[selectedCardIndex].id!,
             commentController.text,
           );
-          if (response['response_status'] == 'ok'
-              // && response['data']['payment_operation']['status'] == 1
-              ) {
-            String acsUrl =
-                response['data']['payment_operation']['acs_url'].toString();
-            String transactionId = response['data']['payment_operation']
-                    ['transaction_id']
-                .toString();
-            String paReq =
-                response['data']['payment_operation']['pa_req'].toString();
+          if (response['response_status'] == 'ok') {
+            print(response['data']);
+            showSuccessfullyPaySheet();
 
-            final result = await Cloudpayments.show3ds(
-                acsUrl: acsUrl, transactionId: transactionId, paReq: paReq);
-
-            if (result?.success == true) {
-              var response3ds = await HousingProvider()
-                  .housingPaymentSend3ds(result!.md!, result.paRes!);
-              if (response3ds['response_status'] == 'ok') {
-                showSuccessfullyPaySheet();
-
-                // Future.delayed(
-                //   const Duration(seconds: 3),
-                //   () => _key.currentState!.reset(),
-                // ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
-                //     MaterialPageRoute(builder: (context) => TabBarPage()),
-                //     (Route<dynamic> route) => false));
-              } else {
-                _key.currentState!.reset();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(response3ds['data']['message'],
-                      style: const TextStyle(fontSize: 14)),
-                ));
-              }
-            }
+            //   String acsUrl =
+            //       response['data']['payment_operation']['acs_url'].toString();
+            //   String transactionId = response['data']['payment_operation']
+            //           ['transaction_id']
+            //       .toString();
+            //   String paReq =
+            //       response['data']['payment_operation']['pa_req'].toString();
+            //
+            //   final result = await Cloudpayments.show3ds(
+            //       acsUrl: acsUrl, transactionId: transactionId, paReq: paReq);
+            //
+            //   if (result?.success == true) {
+            //     var response3ds = await HousingProvider()
+            //         .housingPaymentSend3ds(result!.md!, result.paRes!);
+            //     if (response3ds['response_status'] == 'ok') {
+            //       showSuccessfullyPaySheet();
+            //
+            //       // Future.delayed(
+            //       //   const Duration(seconds: 3),
+            //       //   () => _key.currentState!.reset(),
+            //       // ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
+            //       //     MaterialPageRoute(builder: (context) => TabBarPage()),
+            //       //     (Route<dynamic> route) => false));
+            //     } else {
+            //       _key.currentState!.reset();
+            //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //         content: Text(response3ds['data']['message'],
+            //             style: const TextStyle(fontSize: 14)),
+            //       ));
+            //     }
+            //   }
           } else {
             _key.currentState!.reset();
             showPaymentErrorSheet();
@@ -716,6 +762,8 @@ class _PaymentPageState extends State<PaymentPage> {
             //       style: const TextStyle(fontSize: 14)),
             // ));
           }
+
+          // TODO: End ----------------------
         } else {
           _key.currentState!.reset();
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -730,6 +778,21 @@ class _PaymentPageState extends State<PaymentPage> {
         content: Text("Извините, ведутся технические работы, попробуйте позже.",
             style: TextStyle(fontSize: 14)),
       ));
+    }
+  }
+
+  // TODO: Go to payment widget
+
+  void goToEPay(
+      GlobalKey<SlideActionState> _key, Map<String, dynamic> data) async {
+    var response = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => EpayWebViewPage(data)));
+
+    if (response == 'Success') {
+      showSuccessfullyPaySheet();
+    } else {
+      _key.currentState?.reset();
+      showPaymentErrorSheet();
     }
   }
 
@@ -1104,32 +1167,22 @@ class _PaymentPageState extends State<PaymentPage> {
                               const SizedBox(width: 10),
                               SvgPicture.asset(selectedCardIndex == -1
                                   ? 'assets/icons/payment_type_in_a_place.svg'
-                                  : cards[selectedCardIndex].type == 1
-                                      ? 'assets/icons/mastercard_icon.svg'
-                                      : 'assets/icons/visa_icon.svg'),
+                                  : selectedCardIndex == -2
+                                      ? 'assets/icons/payment_card.svg'
+                                      : cards[selectedCardIndex].type == 'VISA'
+                                          ? 'assets/icons/visa_icon.svg'
+                                          : 'assets/icons/mastercard_icon.svg'),
                               const SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    selectedCardIndex == -1
-                                        ? 'Оплата при заселении'
-                                        : '**** ${cards[selectedCardIndex].number!.substring(12, 16)}',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    selectedCardIndex == -1
-                                        ? 'Нужно оплатить на ресепшене'
-                                        : '${cards[selectedCardIndex].month}/${cards[selectedCardIndex].year}',
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black45,
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                selectedCardIndex == -1
+                                    ? 'Оплата при заселении'
+                                    : selectedCardIndex == -2
+                                        ? 'Новой картой'
+                                        : '**** ${cards[selectedCardIndex].number!.substring(9, 13)}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
@@ -1275,32 +1328,22 @@ class _PaymentPageState extends State<PaymentPage> {
                               const SizedBox(width: 10),
                               SvgPicture.asset(selectedCardIndex == -1
                                   ? 'assets/icons/payment_type_in_a_place.svg'
-                                  : cards[selectedCardIndex].type == 1
-                                      ? 'assets/icons/mastercard_icon.svg'
-                                      : 'assets/icons/visa_icon.svg'),
+                                  : selectedCardIndex == -2
+                                      ? 'assets/icons/payment_card.svg'
+                                      : cards[selectedCardIndex].type == 'VISA'
+                                          ? 'assets/icons/visa_icon.svg'
+                                          : 'assets/icons/mastercard_icon.svg'),
                               const SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    selectedCardIndex == -1
-                                        ? 'Оплата при заселении'
-                                        : '**** ${cards[selectedCardIndex].number!.substring(12, 16)}',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    selectedCardIndex == -1
-                                        ? 'Нужно оплатить на ресепшене'
-                                        : '${cards[selectedCardIndex].month}/${cards[selectedCardIndex].year}',
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black45,
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                selectedCardIndex == -1
+                                    ? 'Оплата при заселении'
+                                    : selectedCardIndex == -2
+                                        ? 'Новой картой'
+                                        : '**** ${cards[selectedCardIndex].number!.substring(9, 13)}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),

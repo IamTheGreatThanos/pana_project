@@ -100,10 +100,12 @@ class _HomeHousingState extends State<HomeHousing>
 
   @override
   void initState() {
+    // searchHousingList(searchParams);
+    getCurrentLocation();
     checkIsLogedIn();
     getReels();
     getSelections();
-    getCurrentLocation();
+
     super.initState();
     _tabController = TabController(vsync: this, length: 13);
   }

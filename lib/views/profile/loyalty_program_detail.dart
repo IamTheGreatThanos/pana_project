@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/profile/about_loyalty_program_page.dart';
 
 class LoyaltyProgramDetailPage extends StatefulWidget {
+  final String cashbackBalance;
+  final int cashbackLevel;
+  final String spentMoney;
+  LoyaltyProgramDetailPage(
+      this.cashbackLevel, this.cashbackBalance, this.spentMoney);
+
   @override
   _LoyaltyProgramDetailPageState createState() =>
       _LoyaltyProgramDetailPageState();
@@ -76,10 +83,10 @@ class _LoyaltyProgramDetailPageState extends State<LoyaltyProgramDetailPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  '1 300 000 / 2 000 000',
-                  style: TextStyle(
-                    fontSize: 30,
+                Text(
+                  '${formatNumberString(widget.spentMoney)} / ${widget.cashbackLevel == 1 ? '500 000' : widget.cashbackLevel == 2 ? '2 000 000' : '5 000 000'}',
+                  style: const TextStyle(
+                    fontSize: 28,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -97,12 +104,17 @@ class _LoyaltyProgramDetailPageState extends State<LoyaltyProgramDetailPage> {
                         children: [
                           Image.asset(
                               'assets/images/loyalty_progress_dark.png'),
-                          const ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(12)),
                             child: SizedBox(
                               height: 3,
                               child: LinearProgressIndicator(
-                                value: 0.3,
+                                value: widget.cashbackLevel == 1
+                                    ? 0.33
+                                    : widget.cashbackLevel == 2
+                                        ? 0.66
+                                        : 1.00,
                                 color: AppColors.accent,
                                 backgroundColor: Colors.white24,
                               ),
@@ -159,80 +171,99 @@ class _LoyaltyProgramDetailPageState extends State<LoyaltyProgramDetailPage> {
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     child: Container(
                       width: double.infinity,
-                      height: 88,
+                      // height: 88,
                       decoration: const BoxDecoration(
                           color: AppColors.blackWithOpacity2),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            child: Center(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Text(
-                                    'Мои асыки',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.whiteWithOpacity,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    '12 624',
-                                    style: TextStyle(
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const VerticalDivider(
-                            color: Colors.white24,
-                          ),
-                          const SizedBox(width: 20),
-                          SizedBox(
-                            child: Center(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(height: 5),
-                                  const Text(
-                                    'Текущий кешбэк',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.whiteWithOpacity,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text(
-                                        '5%',
-                                        style: TextStyle(
-                                          fontSize: 32,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.white,
-                                        ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        child: Row(
+                          children: [
+                            // const SizedBox(width: 10),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              child: Center(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      'Мои асыки',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.whiteWithOpacity,
                                       ),
-                                      SizedBox(
-                                          width: 50,
-                                          height: 50,
-                                          child: Image.asset(
-                                              './assets/icons/bronze_assik.png'))
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      formatNumberString(
+                                          widget.cashbackBalance),
+                                      style: const TextStyle(
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.white,
+                                      ),
+                                      // maxLines: 1,
+                                      // overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          )
-                        ],
+                            const SizedBox(
+                              height: 60,
+                              child: VerticalDivider(
+                                color: Colors.white24,
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            SizedBox(
+                              child: Center(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 5),
+                                    const Text(
+                                      'Текущий кешбэк',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.whiteWithOpacity,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          widget.cashbackLevel == 1
+                                              ? '3%'
+                                              : widget.cashbackLevel == 2
+                                                  ? '5%'
+                                                  : '7%',
+                                          style: TextStyle(
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.white,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                            width: 50,
+                                            height: 50,
+                                            child: Image.asset(widget
+                                                        .cashbackLevel ==
+                                                    1
+                                                ? './assets/icons/bronze_assik.png'
+                                                : widget.cashbackLevel == 2
+                                                    ? './assets/icons/silver_assik.png'
+                                                    : './assets/icons/gold_assik.png'))
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

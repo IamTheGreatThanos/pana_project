@@ -30,6 +30,10 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
   XFile? image;
   String name = 'Пользователь';
   String avatarUrl = '';
+  int id = 0;
+  String cashbackBalance = '';
+  int cashbackLevel = 1;
+  String spentMoney = '';
 
   bool isLogedIn = false;
 
@@ -151,8 +155,14 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        LoyaltyProgramPage()));
+                                    builder: (context) => LoyaltyProgramPage(
+                                          id,
+                                          name,
+                                          avatarUrl,
+                                          cashbackBalance,
+                                          cashbackLevel,
+                                          spentMoney,
+                                        )));
                           },
                           child: Container(
                             decoration: const BoxDecoration(
@@ -311,6 +321,9 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
         avatarUrl = response['data']['avatar'];
       }
       name = '${response['data']['name']} ${response['data']['surname']}';
+      id = response['data']['id'];
+      cashbackBalance = response['data']['cashback_balance'].toString();
+      spentMoney = response['data']['money_spent'].toString();
       if (mounted) {
         setState(() {});
       }

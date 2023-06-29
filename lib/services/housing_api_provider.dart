@@ -336,6 +336,8 @@ class HousingProvider {
 
     if (paymentCardId == -1) {
       bodyObject['payment_type'] = 3;
+    } else if (paymentCardId == -2) {
+      bodyObject['payment_type'] = 1;
     } else {
       bodyObject['payment_type'] = 1;
       bodyObject["payment_card_id"] = paymentCardId;
@@ -356,9 +358,9 @@ class HousingProvider {
       body: jsonEncode(bodyObject),
     );
 
-    print(jsonDecode(response.body));
+    // print(jsonDecode(response.body));
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       Map<String, dynamic> result = {};
       result['data'] = jsonDecode(response.body);
       result['response_status'] = 'ok';
@@ -382,6 +384,39 @@ class HousingProvider {
 
     final response = await http.post(
       Uri.parse('${API_URL}api/mobile/payment/post3ds'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(bodyObject),
+    );
+
+    print(jsonDecode(response.body));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> initPaymentData(int orderId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    Map<String, dynamic> bodyObject = {
+      "order_id": orderId,
+    };
+
+    final response = await http.post(
+      Uri.parse('${API_URL}api/mobile/payment/init'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -502,6 +537,34 @@ class HousingProvider {
         'Authorization': "Bearer $token"
       },
     );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> getBonusSystem(int id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse('${API_URL}api/mobile/bonus-system?housing_id=$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+    );
+
+    print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> result = {};

@@ -13,6 +13,7 @@ import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/components/text_review_card.dart';
 import 'package:pana_project/components/text_with_border.dart';
 import 'package:pana_project/models/audioReview.dart';
+import 'package:pana_project/models/bonusItems.dart';
 import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/models/impressionDetail.dart';
@@ -67,10 +68,16 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
   String endDate = '';
 
   bool isLoading = false;
+  bool isHaveBonusSystem = false;
+
+  int visitingCount = 0;
+  int bonusSystemId = 1;
+  List<BonusItems> bonusItems = [];
 
   @override
   void initState() {
     getImpressionInfo();
+    getBonusSystem();
     getTextReviews();
     getAudioReviews();
     getSimilarImpressions();
@@ -353,8 +360,13 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                 child: Skeleton(
                                   isLoading: isLoading,
                                   skeleton: const SkeletonAvatar(),
-                                  child: CachedNetworkImage(
-                                    imageUrl: thisImpression.user?.avatar ?? '',
+                                  child: SizedBox(
+                                    width: 70,
+                                    height: 70,
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          thisImpression.user?.avatar ?? '',
+                                    ),
                                   ),
                                 ),
                               ),
@@ -427,123 +439,166 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                         ),
                       ),
                       const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 20, left: 20, bottom: 10),
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Мои бонусы',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            BonusSystemDetailPage()));
-                              },
-                              child: const Text(
-                                'Перейти',
-                                style: TextStyle(
-                                  color: AppColors.accent,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                          ],
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 0, left: 20, bottom: 10),
-                        child: Text(
-                          'Посещено кол-во раз: 7',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.blackWithOpacity,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 320,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 20),
-                                  Stack(
+                      isHaveBonusSystem
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 20, left: 20, bottom: 10),
+                                  child: Row(
                                     children: [
-                                      const Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 17, left: 75),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(12)),
-                                          child: SizedBox(
-                                            height: 5,
-                                            width: 140 * 5,
-                                            child: LinearProgressIndicator(
-                                              value: 0.2,
-                                              color: AppColors.black,
-                                              backgroundColor:
-                                                  AppColors.lightGray,
+                                      const Text(
+                                        'Мои бонусы',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BonusSystemDetailPage(
+                                                bonusItems,
+                                                visitingCount,
+                                                60,
+                                                bonusSystemId,
+                                              ),
                                             ),
+                                          );
+                                        },
+                                        child: const Text(
+                                          'Перейти',
+                                          style: TextStyle(
+                                            color: AppColors.accent,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ),
-                                      Row(
-                                        children: [
-                                          const SizedBox(width: 20),
-                                          for (int i = 0; i < 5; i++)
-                                            Row(
+                                      const SizedBox(width: 20),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 0, left: 20, bottom: 10),
+                                  child: Text(
+                                    'Посещено кол-во раз: $visitingCount',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.blackWithOpacity,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 320,
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: 20),
+                                            Stack(
                                               children: [
-                                                Column(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                        './assets/icons/bonus_gift_1.svg'),
-                                                    const SizedBox(height: 20),
-                                                    BonusCard(
-                                                      colorType: i + 2,
-                                                      title:
-                                                          '3 бесплатных кофе в кофейне Sandyq',
-                                                      imageUrl:
-                                                          'https://stories.starbucks.com/uploads/2021/07/SBX20210707-ColdCoffees-Iced-Chocolate-Almondmilk-Shaken-Espresso-1024x1024.jpg',
-                                                      isTaken: false,
-                                                      bonusType: 1,
-                                                      count: 245,
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 17, left: 75),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                12)),
+                                                    child: SizedBox(
+                                                      height: 5,
+                                                      width: (120 *
+                                                              bonusItems.length)
+                                                          .toDouble(),
+                                                      child:
+                                                          LinearProgressIndicator(
+                                                        value: bonusSystemId /
+                                                            bonusItems.length,
+                                                        color: AppColors.black,
+                                                        backgroundColor:
+                                                            AppColors.lightGray,
+                                                      ),
                                                     ),
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    const SizedBox(width: 20),
+                                                    for (int i = 0;
+                                                        i < bonusItems.length;
+                                                        i++)
+                                                      Row(
+                                                        children: [
+                                                          Column(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                  './assets/icons/bonus_gift_1.svg'),
+                                                              const SizedBox(
+                                                                  height: 20),
+                                                              BonusCard(
+                                                                colorType: (bonusItems[i]
+                                                                            .bonusSystemItem
+                                                                            ?.level ??
+                                                                        1) +
+                                                                    1,
+                                                                title: bonusItems[
+                                                                            i]
+                                                                        .bonusSystemItem
+                                                                        ?.description ??
+                                                                    '',
+                                                                imageUrl: bonusItems[
+                                                                            i]
+                                                                        .bonusSystemItem
+                                                                        ?.image ??
+                                                                    '',
+                                                                isTaken: false,
+                                                                bonusType: 1,
+                                                                count: bonusItems[
+                                                                            i]
+                                                                        .countOrder ??
+                                                                    0,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            width: i ==
+                                                                    bonusItems
+                                                                            .length -
+                                                                        1
+                                                                ? 20
+                                                                : 40,
+                                                          )
+                                                        ],
+                                                      ),
                                                   ],
                                                 ),
-                                                SizedBox(
-                                                  width: i == 5 - 1 ? 20 : 40,
-                                                )
                                               ],
-                                            ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              SvgPicture.asset('./assets/phone.svg')
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      const Divider(),
+                                            )
+                                          ],
+                                        ),
+                                        SvgPicture.asset('./assets/phone.svg')
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                const Divider(),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
                       const Padding(
                         padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                         child: Text(
@@ -1457,6 +1512,26 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
         content: Text(response['data']['message'],
             style: const TextStyle(fontSize: 14)),
       ));
+    }
+  }
+
+  // TODO: Bonus System
+
+  void getBonusSystem() async {
+    bonusItems = [];
+    var response =
+        await ImpressionProvider().getBonusSystem(widget.impression.id!);
+    if (response['response_status'] == 'ok') {
+      isHaveBonusSystem = true;
+      visitingCount = response['data']['bonus_system']['count_level'];
+      bonusSystemId = response['data']['bonus_system_id'] ?? 1;
+      for (var i in response['data']['bonus_items']) {
+        bonusItems.add(BonusItems.fromJson(i));
+      }
+
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 

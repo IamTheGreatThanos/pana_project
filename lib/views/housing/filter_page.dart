@@ -280,6 +280,19 @@ class _FiltersPageState extends State<FiltersPage> {
                                         keyboardType: TextInputType.number,
                                         textInputAction: TextInputAction.done,
                                         maxLength: 10,
+                                        onChanged: (value) {
+                                          if (int.tryParse(value.toString()) !=
+                                              null) {
+                                            double newValue =
+                                                double.parse(value.toString());
+                                            if (newValue < endVal &&
+                                                newValue >= 0) {
+                                              startVal = newValue;
+                                            }
+
+                                            setState(() {});
+                                          }
+                                        },
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(
                                             borderSide: const BorderSide(
@@ -335,6 +348,19 @@ class _FiltersPageState extends State<FiltersPage> {
                                         keyboardType: TextInputType.number,
                                         textInputAction: TextInputAction.done,
                                         maxLength: 10,
+                                        onChanged: (value) {
+                                          if (int.tryParse(value.toString()) !=
+                                              null) {
+                                            double newValue =
+                                                double.parse(value.toString());
+                                            if (newValue > startVal &&
+                                                newValue <= 5000000) {
+                                              endVal = newValue;
+                                            }
+
+                                            setState(() {});
+                                          }
+                                        },
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(
                                             borderSide: const BorderSide(

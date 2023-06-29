@@ -12,7 +12,7 @@ class CreditCard {
   String? token;
   String? createdAt;
   String? updatedAt;
-  int? type;
+  String? type;
 
   CreditCard({
     this.id,

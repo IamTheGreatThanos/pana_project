@@ -6,6 +6,22 @@ import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/profile/loyalty_program_detail.dart';
 
 class LoyaltyProgramPage extends StatefulWidget {
+  final int id;
+  final String name;
+  final String avatar;
+  final String cashbackBalance;
+  final int cashbackLevel;
+  final String spentMoney;
+
+  LoyaltyProgramPage(
+    this.id,
+    this.name,
+    this.avatar,
+    this.cashbackBalance,
+    this.cashbackLevel,
+    this.spentMoney,
+  );
+
   @override
   _LoyaltyProgramPageState createState() => _LoyaltyProgramPageState();
 }
@@ -14,6 +30,10 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  void getProfileData() async {
+    print(1);
   }
 
   @override
@@ -63,7 +83,7 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                       ),
                     ),
                     const Spacer(),
-                    SizedBox(width: 50)
+                    const SizedBox(width: 50)
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -92,9 +112,9 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                                     child: SizedBox(
                                       width: 60,
                                       height: 60,
-                                      child: false
+                                      child: widget.avatar != ''
                                           ? CachedNetworkImage(
-                                              imageUrl: '',
+                                              imageUrl: widget.avatar,
                                               fit: BoxFit.cover,
                                             )
                                           : SvgPicture.asset(
@@ -111,17 +131,17 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                                             MediaQuery.of(context).size.width *
                                                 0.65,
                                         child: Text(
-                                          '${'Анна'} ${'Бутурина'}',
-                                          style: TextStyle(
+                                          widget.name,
+                                          style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Text(
-                                        'ID: 12330949',
-                                        style: TextStyle(
+                                        'ID: ${widget.id}',
+                                        style: const TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           color: AppColors.blackWithOpacity,
@@ -146,7 +166,11 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Altyn',
+                                          widget.cashbackLevel == 1
+                                              ? 'Qola'
+                                              : widget.cashbackLevel == 2
+                                                  ? 'Kumis'
+                                                  : 'Altyn',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
@@ -169,7 +193,7 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          '2456',
+                                          widget.cashbackBalance,
                                           style: TextStyle(
                                             fontSize: 32,
                                             fontWeight: FontWeight.w500,
@@ -213,7 +237,11 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  LoyaltyProgramDetailPage()));
+                                                  LoyaltyProgramDetailPage(
+                                                    widget.cashbackLevel,
+                                                    widget.cashbackBalance,
+                                                    widget.spentMoney,
+                                                  )));
                                     },
                                     child: const Text(
                                       'Подробнее',
@@ -228,13 +256,17 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                               ),
                               const SizedBox(height: 20),
                               Image.asset('assets/images/loyalty_progress.png'),
-                              const ClipRRect(
+                              ClipRRect(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(12)),
                                 child: SizedBox(
                                   height: 3,
                                   child: LinearProgressIndicator(
-                                    value: 0.3,
+                                    value: widget.cashbackLevel == 1
+                                        ? 0.33
+                                        : widget.cashbackLevel == 2
+                                            ? 0.66
+                                            : 1.00,
                                     color: AppColors.accent,
                                     backgroundColor: AppColors.grey,
                                   ),

@@ -38,7 +38,7 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
   }
 
   void socketInit() {
-    socket = IO.io('http://167.235.196.229:3000', <String, dynamic>{
+    socket = IO.io('http://back.pana.world:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
     });

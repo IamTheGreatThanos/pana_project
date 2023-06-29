@@ -4,7 +4,6 @@ import 'package:pana_project/components/payment_method_card.dart';
 import 'package:pana_project/models/creditCard.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/other/create_credit_card_page.dart';
 
 class PaymentMethodsPage extends StatefulWidget {
   @override
@@ -116,6 +115,7 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                                             '**** ${cards[i].number!.substring(12, 16)}',
                                             '${cards[i].month}/${cards[i].year}',
                                             i == selectedCardIndex,
+                                            false,
                                           ),
                                         ),
                                         const Divider(),
@@ -123,24 +123,24 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                                       ],
                                     ),
                                   const SizedBox(height: 10),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CreateCreditCardPage()));
-
-                                      getCreditCards();
-                                    },
-                                    child: const Text(
-                                      'Добавить карту',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.accent,
-                                      ),
-                                    ),
-                                  ),
+                                  // GestureDetector(
+                                  //   onTap: () async {
+                                  //     await Navigator.push(
+                                  //         context,
+                                  //         MaterialPageRoute(
+                                  //             builder: (context) =>
+                                  //                 CreateCreditCardPage()));
+                                  //
+                                  //     getCreditCards();
+                                  //   },
+                                  //   child: const Text(
+                                  //     'Добавить карту',
+                                  //     style: TextStyle(
+                                  //       fontSize: 14,
+                                  //       color: AppColors.accent,
+                                  //     ),
+                                  //   ),
+                                  // ),
                                   const SizedBox(height: 10),
                                 ],
                               ),

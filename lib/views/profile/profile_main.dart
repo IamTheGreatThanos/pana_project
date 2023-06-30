@@ -99,7 +99,7 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                                       child: image != null
                                           ? Image.file(
                                               File(image!.path),
-                                              fit: BoxFit.fitWidth,
+                                              fit: BoxFit.cover,
                                             )
                                           : avatarUrl != ''
                                               ? CachedNetworkImage(

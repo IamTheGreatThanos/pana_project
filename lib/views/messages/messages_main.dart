@@ -198,7 +198,7 @@ class _MessagesPageState extends State<MessagesPage> {
                                     padding:
                                         EdgeInsets.fromLTRB(20, 40, 20, 20),
                                     child: Text(
-                                      'Просмотренно',
+                                      'Просмотрено',
                                       style: TextStyle(
                                         fontSize: 24,
                                         color: AppColors.black,

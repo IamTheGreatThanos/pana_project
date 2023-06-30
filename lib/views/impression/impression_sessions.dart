@@ -756,7 +756,7 @@ class _ImpressionSessionPrivateModeModalBottomSheetState
                           ),
                           const SizedBox(height: 10),
                           const Text(
-                            'Это группа, предназначеная для \nбронирования 1 человеком, \nсразу всех мест',
+                            'Это группа, предназначенная для \nбронирования 1 человеком, \nсразу всех мест',
                             style: TextStyle(
                               color: AppColors.blackWithOpacity,
                               fontSize: 14,

@@ -200,7 +200,7 @@ class _FiltersPageState extends State<FiltersPage> {
                               Row(
                                 children: [
                                   const Text(
-                                    'Ценновой диапазон',
+                                    'Ценовой диапазон',
                                     style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w600,

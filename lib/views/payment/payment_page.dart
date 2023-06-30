@@ -647,9 +647,15 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void calcSum() {
+    DateTime dateFromFormatted = DateTime.parse(dateFrom);
+    DateTime dateToFormatted = DateTime.parse(dateTo);
+
+    Duration difference = dateToFormatted.difference(dateFromFormatted);
+    int days = difference.inDays;
     for (int i = 0; i < widget.roomList.length; i++) {
       sum += (widget.roomList[i].basePrice ?? 0) *
-          widget.selectedRooms[i]['count'];
+          widget.selectedRooms[i]['count'] *
+          days;
     }
   }
 

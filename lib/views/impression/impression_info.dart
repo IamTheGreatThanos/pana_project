@@ -1069,126 +1069,126 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                               child: AudioReviewCard(audioReviews[i])),
                         ),
                       const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                        child: Text(
-                          'Свободные даты',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, bottom: 20, right: 20),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: const Text(
-                            'На 28 сен. - 2 окт. доступно 37',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black45),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 230,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            for (int i = 0; i < 5; i++)
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 20, top: 10, bottom: 20),
-                                child: Container(
-                                  width: 230,
-                                  decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(16),
-                                      ),
-                                      border: Border.all(
-                                          width: 1, color: AppColors.grey)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          'сб, 1 окт.',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        const Text(
-                                          '14:00 - 18:00',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black45),
-                                        ),
-                                        const Text(
-                                          'Только для частных групп',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black45),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Row(
-                                          children: const [
-                                            Text(
-                                              'от 324 \₸',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            Text(
-                                              'за группу',
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.black45),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 10),
-                                        SizedBox(
-                                          height: 45,
-                                          width: 149,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              primary: AppColors.accent,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10), // <-- Radius
-                                              ),
-                                            ),
-                                            onPressed: () {},
-                                            child: const Text(
-                                              "Выбрать",
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            const SizedBox(width: 20)
-                          ],
-                        ),
-                      ),
-                      const Divider(),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                      //   child: Text(
+                      //     'Свободные даты',
+                      //     style: TextStyle(
+                      //       fontSize: 24,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(
+                      //       left: 20, bottom: 20, right: 20),
+                      //   child: SizedBox(
+                      //     width: MediaQuery.of(context).size.width * 0.9,
+                      //     child: const Text(
+                      //       'На 28 сен. - 2 окт. доступно 37',
+                      //       style: TextStyle(
+                      //           fontSize: 14,
+                      //           fontWeight: FontWeight.w500,
+                      //           color: Colors.black45),
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   height: 230,
+                      //   child: ListView(
+                      //     scrollDirection: Axis.horizontal,
+                      //     children: <Widget>[
+                      //       for (int i = 0; i < 5; i++)
+                      //         Padding(
+                      //           padding: const EdgeInsets.only(
+                      //               left: 20, top: 10, bottom: 20),
+                      //           child: Container(
+                      //             width: 230,
+                      //             decoration: BoxDecoration(
+                      //                 borderRadius: const BorderRadius.all(
+                      //                   Radius.circular(16),
+                      //                 ),
+                      //                 border: Border.all(
+                      //                     width: 1, color: AppColors.grey)),
+                      //             child: Padding(
+                      //               padding: const EdgeInsets.all(20),
+                      //               child: Column(
+                      //                 crossAxisAlignment:
+                      //                     CrossAxisAlignment.start,
+                      //                 children: [
+                      //                   const Text(
+                      //                     'сб, 1 окт.',
+                      //                     style: TextStyle(
+                      //                       fontSize: 18,
+                      //                       fontWeight: FontWeight.w500,
+                      //                     ),
+                      //                   ),
+                      //                   const SizedBox(height: 10),
+                      //                   const Text(
+                      //                     '14:00 - 18:00',
+                      //                     style: TextStyle(
+                      //                         fontSize: 12,
+                      //                         fontWeight: FontWeight.w500,
+                      //                         color: Colors.black45),
+                      //                   ),
+                      //                   const Text(
+                      //                     'Только для частных групп',
+                      //                     style: TextStyle(
+                      //                         fontSize: 12,
+                      //                         fontWeight: FontWeight.w500,
+                      //                         color: Colors.black45),
+                      //                   ),
+                      //                   const SizedBox(height: 20),
+                      //                   Row(
+                      //                     children: const [
+                      //                       Text(
+                      //                         'от 324 \₸',
+                      //                         style: TextStyle(
+                      //                           fontSize: 18,
+                      //                           fontWeight: FontWeight.w500,
+                      //                         ),
+                      //                       ),
+                      //                       Text(
+                      //                         'за группу',
+                      //                         style: TextStyle(
+                      //                             fontSize: 14,
+                      //                             fontWeight: FontWeight.w500,
+                      //                             color: Colors.black45),
+                      //                       ),
+                      //                     ],
+                      //                   ),
+                      //                   const SizedBox(height: 10),
+                      //                   SizedBox(
+                      //                     height: 45,
+                      //                     width: 149,
+                      //                     child: ElevatedButton(
+                      //                       style: ElevatedButton.styleFrom(
+                      //                         primary: AppColors.accent,
+                      //                         shape: RoundedRectangleBorder(
+                      //                           borderRadius:
+                      //                               BorderRadius.circular(
+                      //                                   10), // <-- Radius
+                      //                         ),
+                      //                       ),
+                      //                       onPressed: () {},
+                      //                       child: const Text(
+                      //                         "Выбрать",
+                      //                         style: TextStyle(
+                      //                             fontSize: 14,
+                      //                             fontWeight: FontWeight.w500),
+                      //                       ),
+                      //                     ),
+                      //                   )
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       const SizedBox(width: 20)
+                      //     ],
+                      //   ),
+                      // ),
+                      // const Divider(),
                       const Padding(
                         padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                         child: Text(

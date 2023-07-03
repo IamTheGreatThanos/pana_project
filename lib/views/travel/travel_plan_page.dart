@@ -1,10 +1,9 @@
-import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:pana_project/components/travel_booked_card.dart';
 import 'package:pana_project/components/travel_own_card.dart';
 import 'package:pana_project/components/travel_user_card.dart';
@@ -18,6 +17,7 @@ import 'package:pana_project/views/travel/add_new_plan_page.dart';
 import 'package:pana_project/views/travel/add_user_to_travel_page.dart';
 import 'package:pana_project/views/travel/booked_plans_page.dart';
 import 'package:pana_project/views/travel/my_plan_detail.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class TravelPlanePage extends StatefulWidget {
   TravelPlanePage(this.travel);
@@ -28,12 +28,17 @@ class TravelPlanePage extends StatefulWidget {
 }
 
 class _TravelPlanePageState extends State<TravelPlanePage> {
+  final DateRangePickerController _datePickerController =
+      DateRangePickerController();
   late GoogleMapController _mapController;
   CameraPosition _initPosition = const CameraPosition(
       target: const LatLng(43.236431, 76.917994), zoom: 14);
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
   List<LatLng> mapPoints = [];
+
+  String startDate = '';
+  String endDate = '';
 
   List<TravelPlanModel> thisTravelPlans = [];
   List<User> userList = [];
@@ -44,6 +49,9 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
     getTravelPlans();
     getTravelUsers();
     super.initState();
+
+    startDate = widget.travel.dateStart?.substring(0, 10) ?? '';
+    endDate = widget.travel.dateEnd?.substring(0, 10) ?? '';
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -140,70 +148,79 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                       Row(
                         children: [
                           const Spacer(),
-                          Container(
-                            width: 162,
-                            height: 83,
-                            decoration: const BoxDecoration(
-                              color: AppColors.lightGray,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
+                          GestureDetector(
+                            onTap: () {
+                              showDatePicker();
+                            },
+                            child: Container(
+                              width: 162,
+                              height: 83,
+                              decoration: const BoxDecoration(
+                                color: AppColors.lightGray,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
                               ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  widget.travel.dateStart?.substring(0, 10) ??
-                                      '',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    startDate,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 5),
-                                const Text(
-                                  'Начало поездки',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black45,
+                                  const SizedBox(height: 5),
+                                  const Text(
+                                    'Начало поездки',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black45,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                           const SizedBox(width: 10),
-                          Container(
-                            width: 162,
-                            height: 83,
-                            decoration: const BoxDecoration(
-                              color: AppColors.lightGray,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
+                          GestureDetector(
+                            onTap: () {
+                              showDatePicker();
+                            },
+                            child: Container(
+                              width: 162,
+                              height: 83,
+                              decoration: const BoxDecoration(
+                                color: AppColors.lightGray,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
                               ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  widget.travel.dateEnd?.substring(0, 10) ?? '',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    endDate,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 5),
-                                const Text(
-                                  'Конец поездки',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black45,
+                                  const SizedBox(height: 5),
+                                  const Text(
+                                    'Конец поездки',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black45,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                           const Spacer(),
@@ -953,5 +970,119 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
         ));
       }
     }
+  }
+
+  void updateTravel() async {
+    var response = await TravelProvider()
+        .updateTravel(widget.travel.id!, startDate, endDate);
+    if (response['response_status'] == 'ok') {
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      startDate = widget.travel.dateStart?.substring(0, 10) ?? '';
+      endDate = widget.travel.dateEnd?.substring(0, 10) ?? '';
+
+      if (mounted) {
+        setState(() {});
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
+    }
+  }
+
+  void showDatePicker() async {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: SizedBox(
+            height: 370,
+            child: Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Назад',
+                            style: TextStyle(
+                                color: Colors.black45,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const Spacer(),
+                        const Text(
+                          'Выбрать даты',
+                          style: TextStyle(
+                              color: AppColors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            if (startDate != '' && endDate != '') {
+                              Navigator.of(context).pop();
+                              updateTravel();
+                            }
+                          },
+                          child: const Text(
+                            'Готово',
+                            style: TextStyle(
+                                color: AppColors.accent,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  SfDateRangePicker(
+                    controller: _datePickerController,
+                    onSelectionChanged: _onSelectionChanged,
+                    startRangeSelectionColor: Colors.black,
+                    endRangeSelectionColor: Colors.black,
+                    rangeSelectionColor: Colors.black12,
+                    selectionColor: AppColors.accent,
+                    headerStyle: const DateRangePickerHeaderStyle(
+                        textAlign: TextAlign.center),
+                    selectionMode: DateRangePickerSelectionMode.range,
+                    minDate: DateTime.now(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      if (args.value is PickerDateRange) {
+        if (args.value.startDate != null && args.value.endDate != null) {
+          startDate = DateFormat('yyyy-MM-dd').format(args.value.startDate);
+          endDate = DateFormat('yyyy-MM-dd').format(args.value.endDate);
+        }
+      }
+    });
   }
 }

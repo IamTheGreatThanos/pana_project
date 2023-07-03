@@ -277,12 +277,21 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 
   void goToNotificationDetail(NotificationModel notification) async {
-    // TODO: Избранные
-    if (notification.type == 1 || notification.type == 2) {
+    // TODO: Избранные жилье
+    if (notification.type == 1) {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => FavoritesPage(),
+          builder: (context) => FavoritesPage(false),
+        ),
+      );
+    }
+    // TODO: Избранные впечатления
+    else if (notification.type == 2) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => FavoritesPage(true),
         ),
       );
     }

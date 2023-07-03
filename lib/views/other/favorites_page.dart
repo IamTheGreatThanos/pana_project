@@ -14,11 +14,15 @@ import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
 class FavoritesPage extends StatefulWidget {
+  FavoritesPage(this.isImpression);
+  final bool isImpression;
   @override
   _FavoritesPageState createState() => _FavoritesPageState();
 }
 
-class _FavoritesPageState extends State<FavoritesPage> {
+class _FavoritesPageState extends State<FavoritesPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   List<HousingCardModel> housingList = [];
   List<ImpressionCardModel> impressionList = [];
 
@@ -30,6 +34,18 @@ class _FavoritesPageState extends State<FavoritesPage> {
     getHousingList();
     getImpressionList();
     super.initState();
+
+    _tabController = TabController(vsync: this, length: 2);
+
+    if (widget.isImpression) {
+      _tabController.animateTo(1);
+    }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,10 +60,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
       },
       child: DefaultTabController(
         length: 2,
+        initialIndex: 0,
         child: Scaffold(
           backgroundColor: AppColors.lightGray,
           body: SingleChildScrollView(
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Column(
@@ -98,18 +115,19 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     color: Colors.white,
                     height: 40,
                     width: MediaQuery.of(context).size.width,
-                    child: const Center(
+                    child: Center(
                       child: TabBar(
+                        controller: _tabController,
                         isScrollable: true,
                         indicatorColor: AppColors.accent,
                         labelColor: AppColors.black,
-                        labelStyle: TextStyle(
+                        labelStyle: const TextStyle(
                           fontSize: 14,
                         ),
                         unselectedLabelColor: AppColors.blackWithOpacity,
                         indicatorWeight: 3,
                         indicatorSize: TabBarIndicatorSize.label,
-                        tabs: [
+                        tabs: const [
                           Tab(
                             text: 'Жилье',
                           ),
@@ -129,6 +147,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                         SizedBox(
                           height: MediaQuery.of(context).size.height - 120,
                           child: TabBarView(
+                            controller: _tabController,
                             children: [
                               // TODO: Жилье
                               loadingHousing

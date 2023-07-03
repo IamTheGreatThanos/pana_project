@@ -542,7 +542,7 @@ class _HomeImpressionState extends State<HomeImpression>
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => FavoritesPage(),
+        builder: (context) => FavoritesPage(true),
       ),
     );
 

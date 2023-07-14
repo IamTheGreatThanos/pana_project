@@ -4,14 +4,14 @@ import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ConfirmEmailPage extends StatefulWidget {
-  final String email;
-  ConfirmEmailPage(this.email);
+class ConfirmPhonePage extends StatefulWidget {
+  final String phone;
+  ConfirmPhonePage(this.phone);
   @override
-  _ConfirmEmailPageState createState() => _ConfirmEmailPageState();
+  _ConfirmPhonePageState createState() => _ConfirmPhonePageState();
 }
 
-class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
+class _ConfirmPhonePageState extends State<ConfirmPhonePage> {
   TextEditingController codeController = TextEditingController();
 
   @override
@@ -57,7 +57,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                     const Padding(
                       padding: EdgeInsets.all(20),
                       child: Text(
-                        'Email',
+                        'Телефон',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w500,
@@ -65,7 +65,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                       ),
                     ),
                     const Spacer(),
-                    SizedBox(width: 50)
+                    const SizedBox(width: 50)
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -92,7 +92,7 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
                               ),
                               const SizedBox(height: 10),
                               const Text(
-                                'Вам пришло письмо с кодом на новый адрес, введите его для подтверждения',
+                                'Вам пришло письмо с кодом на новый телефон, введите его для подтверждения',
                                 style: TextStyle(
                                     fontSize: 14, color: Colors.black45),
                               ),
@@ -184,10 +184,10 @@ class _ConfirmEmailPageState extends State<ConfirmEmailPage> {
   void saveChanges() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var response =
-        await ProfileProvider().changeEmail(widget.email, codeController.text);
+        await ProfileProvider().changePhone(widget.phone, codeController.text);
 
     if (response['response_status'] == 'ok') {
-      prefs.setString("user_email", widget.email);
+      prefs.setString("user_phone", widget.phone);
       Navigator.of(context).pop('Success');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

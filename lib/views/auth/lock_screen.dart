@@ -44,14 +44,19 @@ class _LockScreenState extends State<LockScreen> {
     getUserData();
     super.initState();
 
-    auth.isDeviceSupported().then(
+    auth
+        .isDeviceSupported()
+        .then(
           (bool isSupported) => setState(() => _supportState = isSupported
               ? _SupportState.supported
               : _SupportState.unsupported),
-        );
-    if (_supportState == _SupportState.supported && useBiometrics == true) {
-      authByBiometrics();
-    }
+        )
+        .whenComplete(() => () {
+              if (_supportState == _SupportState.supported &&
+                  useBiometrics == true) {
+                authByBiometrics();
+              }
+            });
   }
 
   void getUserData() async {

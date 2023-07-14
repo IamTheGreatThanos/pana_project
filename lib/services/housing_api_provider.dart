@@ -331,7 +331,6 @@ class HousingProvider {
       "housing_id": housingId,
       "count_people": peopleCount,
       "rooms": selectedRooms,
-      "comment": comment,
     };
 
     if (paymentCardId == -1) {
@@ -346,6 +345,10 @@ class HousingProvider {
     if (dateFrom != '') {
       bodyObject["date_from"] = dateFrom;
       bodyObject["date_to"] = dateTo;
+    }
+
+    if (comment != '') {
+      bodyObject["comment"] = comment;
     }
 
     final response = await http.post(

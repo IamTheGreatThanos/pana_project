@@ -10,6 +10,7 @@ import 'package:pana_project/models/order.dart';
 import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
+import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
@@ -610,7 +611,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      showCancelingConfirmation('24703', '8347');
+                      requestReturnPrice();
                     },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 40),
@@ -680,6 +681,22 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
               style: const TextStyle(fontSize: 14)),
         ));
       }
+    }
+  }
+
+  void requestReturnPrice() async {
+    var response =
+        await MainProvider().requestOrderReturnPrices(widget.order.id!);
+    if (response['response_status'] == 'ok') {
+      var returnPrice =
+          double.parse(response['data']['refund_price'].toString());
+      var totalPrice = double.parse(response['data']['total_price'].toString());
+      showCancelingConfirmation(returnPrice, totalPrice);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
     }
   }
 
@@ -781,7 +798,8 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
     );
   }
 
-  void showCancelingConfirmation(String returnPrice, String finePrice) async {
+  void showCancelingConfirmation(double returnPrice, double totalPrice) async {
+    var returnPercent = (returnPrice / totalPrice * 100).toInt();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -827,7 +845,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'Вы уверены, что хотите отменить бронь? Для отмены брони штраф составит 25% (${formatNumberString(finePrice)}₸). Остальная сумма вернется вам на карту',
+                        'Вы уверены, что хотите отменить бронь? Для отмены брони штраф составит ${100 - returnPercent}% (${formatNumberString((totalPrice - returnPrice).toString())}₸). Остальная сумма вернется вам на карту',
                         style: const TextStyle(
                           color: Colors.black45,
                           fontSize: 14,
@@ -847,7 +865,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(20),
                           child: Text(
-                            'Сумма к возврату: 75% (${formatNumberString(returnPrice)}₸)',
+                            'Сумма к возврату: $returnPercent% (${formatNumberString(returnPrice.toString())}₸)',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -897,8 +915,10 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                 ),
                               ),
                               onPressed: () {
-                                Navigator.of(context).pop();
-                                cancelOrder();
+                                if (returnPrice != '0') {
+                                  Navigator.of(context).pop();
+                                  cancelOrder();
+                                }
                               },
                               child: const Text(
                                 "Да,отменить",

@@ -5,7 +5,6 @@ import 'package:pana_project/components/profile_menu_item.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/create_lock_code_page.dart';
 import 'package:pana_project/views/auth/lock_screen.dart';
-import 'package:pana_project/views/profile/change_password.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginSettingsPage extends StatefulWidget {
@@ -80,8 +79,8 @@ class _LoginSettingsPageState extends State<LoginSettingsPage> {
                       ),
                     ),
                     const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
+                    const Padding(
+                      padding: EdgeInsets.all(20),
                       child: Text(
                         'Настройки входа',
                         style: TextStyle(
@@ -91,7 +90,7 @@ class _LoginSettingsPageState extends State<LoginSettingsPage> {
                       ),
                     ),
                     const Spacer(),
-                    SizedBox(width: 50)
+                    const SizedBox(width: 50)
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -101,16 +100,6 @@ class _LoginSettingsPageState extends State<LoginSettingsPage> {
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChangePasswordPage()));
-                        },
-                        child: ProfileMenuItem(
-                            'assets/icons/lock_icon.svg', 'Сменить пароль'),
-                      ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(

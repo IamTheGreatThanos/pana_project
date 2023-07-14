@@ -60,8 +60,8 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                       ),
                     ),
                     const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
+                    const Padding(
+                      padding: EdgeInsets.all(20),
                       child: Text(
                         'Email',
                         style: TextStyle(
@@ -71,7 +71,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                       ),
                     ),
                     const Spacer(),
-                    SizedBox(width: 50)
+                    const SizedBox(width: 50)
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -123,7 +123,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                                       child: TextField(
                                         controller: emailController,
                                         keyboardType: TextInputType.text,
-                                        maxLength: 10,
+                                        maxLength: 30,
                                         decoration: const InputDecoration(
                                           counterStyle: TextStyle(
                                             height: double.minPositive,
@@ -189,20 +189,22 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
   }
 
   void saveChanges() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var response = await ProfileProvider().changeEmail(emailController.text);
+    var response =
+        await ProfileProvider().sendCodeToChangeEmail(emailController.text);
 
     if (response['response_status'] == 'ok') {
-      prefs.setString("user_email", emailController.text);
+      var result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ConfirmEmailPage(emailController.text)));
 
-      await Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ConfirmEmailPage()));
-
-      Navigator.of(context).pop();
+      if (result == 'Success') {
+        Navigator.of(context).pop();
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 14)),
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 14)),
       ));
     }
   }

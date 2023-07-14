@@ -67,12 +67,37 @@ class ProfileProvider {
     }
   }
 
-  Future<dynamic> changePhone(String phone) async {
+  Future<dynamic> sendCodeToChangePhone(String phone) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse(
+          '${API_URL}api/mobile/user/phone-change?phone=$phone&phone_code=7'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> changePhone(String phone, String code) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
     final response = await http.post(
-      Uri.parse('${API_URL}api/mobile/user/update'),
+      Uri.parse('${API_URL}api/mobile/user/phone-change'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -80,6 +105,8 @@ class ProfileProvider {
       },
       body: jsonEncode(<String, dynamic>{
         "phone": phone,
+        "phone_code": '7',
+        "code": code,
       }),
     );
 
@@ -94,12 +121,36 @@ class ProfileProvider {
     }
   }
 
-  Future<dynamic> changeEmail(String email) async {
+  Future<dynamic> sendCodeToChangeEmail(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse('${API_URL}api/mobile/user/email-change?email=$email'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  Future<dynamic> changeEmail(String email, String code) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
     final response = await http.post(
-      Uri.parse('${API_URL}api/mobile/user/update'),
+      Uri.parse('${API_URL}api/mobile/user/email-change'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -107,6 +158,7 @@ class ProfileProvider {
       },
       body: jsonEncode(<String, dynamic>{
         "email": email,
+        "code": code,
       }),
     );
 

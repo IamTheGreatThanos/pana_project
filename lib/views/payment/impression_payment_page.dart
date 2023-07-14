@@ -43,7 +43,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   String dateFrom = '-';
   String dateTo = '-';
   List<CreditCard> cards = [];
-  int selectedCardIndex = 0;
+  int selectedCardIndex = -2;
 
   @override
   void initState() {
@@ -604,20 +604,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
     var paymentPermissionResponse =
         await MainProvider().requestPaymentPermission();
     if (paymentPermissionResponse['data']['is_public'] == true) {
-      if (selectedCardIndex == -1) {
-        var response = await ImpressionProvider().impressionPayment(
-          widget.impression.id!,
-          dateFrom,
-          dateTo,
-          widget.impressionData.peopleCount,
-          widget.session.id!,
-          widget.type,
-          -1,
-        );
-        if (response['response_status'] == 'ok') {
-          showSuccessfullyPaySheet();
-        }
-      } else if (selectedCardIndex == -2) {
+      if (selectedCardIndex == -2) {
         var response = await ImpressionProvider().impressionPayment(
           widget.impression.id!,
           dateFrom,
@@ -734,6 +721,8 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   }
 
   void showSuccessfullyPaySheet() async {
+    widget.impressionData.peopleCount = 1;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

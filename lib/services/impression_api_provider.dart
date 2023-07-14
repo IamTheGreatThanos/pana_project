@@ -90,7 +90,7 @@ class ImpressionProvider {
     String urlParams = 'api/mobile/impression?page=1';
 
     if (categoryId != 0) {
-      urlParams += '&category_id=$categoryId';
+      urlParams += '&topic_id=$categoryId';
     }
 
     if (countryId != 0) {
@@ -384,8 +384,8 @@ class ImpressionProvider {
       ],
     };
 
-    if (paymentCardId == -1) {
-      bodyObject['payment_type'] = 3;
+    if (paymentCardId == -2) {
+      bodyObject['payment_type'] = 1;
     } else {
       bodyObject['payment_type'] = 1;
       bodyObject["payment_card_id"] = paymentCardId;

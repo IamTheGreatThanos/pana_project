@@ -12,8 +12,8 @@ import 'package:pana_project/views/profile/loyalty_program_page.dart';
 import 'package:pana_project/views/profile/my_booked_objects_page.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
 import 'package:pana_project/views/profile/my_transactions.dart';
-import 'package:pana_project/views/profile/payment_methods.dart';
 import 'package:pana_project/views/profile/personal_information_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/const.dart';
@@ -213,16 +213,16 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                         child: ProfileMenuItem(
                             'assets/icons/profile_card.svg', 'Мои транзакции'),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PaymentMethodsPage()));
-                        },
-                        child: ProfileMenuItem(
-                            'assets/icons/profile_card.svg', 'Способы оплаты'),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => PaymentMethodsPage()));
+                      //   },
+                      //   child: ProfileMenuItem(
+                      //       'assets/icons/profile_card.svg', 'Способы оплаты'),
+                      // ),
                       // GestureDetector(
                       //   onTap: () {
                       //     Navigator.push(
@@ -292,13 +292,51 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
   }
 
   void changeAvatar() async {
-    final XFile? selectedImage =
-        await _picker.pickImage(source: ImageSource.gallery);
-    if (selectedImage != null) {
-      setState(() {
-        image = selectedImage;
-      });
-      uploadAvatar(selectedImage);
+    PermissionStatus status = await Permission.photos.status;
+
+    if (status == PermissionStatus.granted) {
+      final XFile? selectedImage =
+          await _picker.pickImage(source: ImageSource.gallery);
+      if (selectedImage != null) {
+        setState(() {
+          image = selectedImage;
+        });
+        uploadAvatar(selectedImage);
+      }
+    } else if (status == PermissionStatus.denied) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Доступ к галерее запрещен'),
+          content: Text(
+              'Пожалуйста, откройте настройки и предоставьте доступ к галерее.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Отмена'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: Text('Настройки'),
+              onPressed: () {
+                openAppSettings();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    } else {
+      PermissionStatus requestStatus = await Permission.photos.request();
+      if (requestStatus.isGranted) {
+        final XFile? selectedImage =
+            await _picker.pickImage(source: ImageSource.gallery);
+        if (selectedImage != null) {
+          setState(() {
+            image = selectedImage;
+          });
+          uploadAvatar(selectedImage);
+        }
+      }
     }
   }
 

@@ -32,61 +32,65 @@ class _HomeImpressionState extends State<HomeImpression>
   final StoryController controller = StoryController();
 
   List<Map<String, dynamic>> categories = [
-    {'name': 'Все', 'asset': 'assets/icons/category_0.svg', 'id': 0},
+    {
+      'name': 'Все',
+      'asset': 'assets/icons/category_0.svg',
+      'id': 0,
+    },
     {
       'name': 'Здоровье',
       'asset': 'assets/icons/impression_cat_1.svg',
-      'id': 13
+      'id': 109,
     },
     {
       'name': 'Творчество',
       'asset': 'assets/icons/impression_cat_2.svg',
-      'id': 14
+      'id': 139,
     },
     {
       'name': 'Еда',
       'asset': 'assets/icons/impression_cat_3.svg',
-      'id': 15,
+      'id': 181,
     },
     {
       'name': 'Историческое',
       'asset': 'assets/icons/impression_cat_4.svg',
-      'id': 16
+      'id': 84,
     },
     {
       'name': 'Напитки',
       'asset': 'assets/icons/impression_cat_5.svg',
-      'id': 17,
+      'id': 153,
     },
     {
       'name': 'Развлечения',
       'asset': 'assets/icons/impression_cat_6.svg',
-      'id': 18
+      'id': 28,
     },
     {
       'name': 'Спорт',
       'asset': 'assets/icons/impression_cat_7.svg',
-      'id': 19,
+      'id': 233,
     },
     {
       'name': 'Экскурсии',
       'asset': 'assets/icons/impression_cat_8.svg',
-      'id': 20
+      'id': 93,
     },
     {
       'name': 'Животные',
       'asset': 'assets/icons/impression_cat_9.svg',
-      'id': 21
+      'id': 1,
     },
     {
       'name': 'Культура',
       'asset': 'assets/icons/impression_cat_10.svg',
-      'id': 22
+      'id': 17,
     },
     {
       'name': 'Природа',
       'asset': 'assets/icons/impression_cat_11.svg',
-      'id': 23
+      'id': 203,
     },
   ];
 

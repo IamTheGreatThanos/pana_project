@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/views/profile/confirm_phone_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChangePhonePage extends StatefulWidget {
@@ -203,16 +204,22 @@ class _ChangePhonePageState extends State<ChangePhonePage> {
   }
 
   void saveChanges() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var response = await ProfileProvider().changePhone(phoneController.text);
+    var response =
+        await ProfileProvider().sendCodeToChangePhone(phoneController.text);
 
     if (response['response_status'] == 'ok') {
-      prefs.setString("user_phone", phoneController.text);
-      Navigator.of(context).pop();
+      var result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ConfirmPhonePage(phoneController.text)));
+
+      if (result == 'Success') {
+        Navigator.of(context).pop();
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 14)),
+        content:
+            Text(response['message'], style: const TextStyle(fontSize: 14)),
       ));
     }
   }

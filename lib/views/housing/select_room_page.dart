@@ -546,6 +546,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
   void getRoomListByDate() async {
     roomsList = [];
     roomCounts = [];
+    selectedRooms = [];
     selectedRoomIds = [];
     selectedRoomCounts = [];
     var response = await HousingProvider()

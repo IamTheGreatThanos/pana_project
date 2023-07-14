@@ -698,6 +698,7 @@ class _PaymentPageState extends State<PaymentPage> {
           -2,
           commentController.text,
         );
+
         if (response['response_status'] == 'ok') {
           goToEPay(_key, response['data']);
 
@@ -715,7 +716,7 @@ class _PaymentPageState extends State<PaymentPage> {
         }
       } else {
         if (cards.isNotEmpty) {
-          // TODO: Cloud payments
+          // TODO: Payment
           var response = await HousingProvider().housingPayment(
             widget.housing.id!,
             dateFrom,
@@ -960,6 +961,8 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void showSuccessfullyPaySheet() async {
+    sharedHousingPaymentData.peopleCount = 1;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

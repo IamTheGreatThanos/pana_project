@@ -7,6 +7,7 @@ import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/chatMessage.dart';
 import 'package:pana_project/services/messages_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -337,10 +338,45 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
   }
 
   void chooseImage() async {
-    final XFile? selectedImage =
-        await _picker.pickImage(source: ImageSource.gallery);
-    if (selectedImage != null) {
-      sendFile(selectedImage);
+    PermissionStatus status = await Permission.photos.status;
+
+    if (status == PermissionStatus.granted) {
+      final XFile? selectedImage =
+          await _picker.pickImage(source: ImageSource.gallery);
+      if (selectedImage != null) {
+        sendFile(selectedImage);
+      }
+    } else if (status == PermissionStatus.denied) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Доступ к галерее запрещен'),
+          content: Text(
+              'Пожалуйста, откройте настройки и предоставьте доступ к галерее.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Отмена'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: Text('Настройки'),
+              onPressed: () {
+                openAppSettings();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    } else {
+      PermissionStatus requestStatus = await Permission.photos.request();
+      if (requestStatus.isGranted) {
+        final XFile? selectedImage =
+            await _picker.pickImage(source: ImageSource.gallery);
+        if (selectedImage != null) {
+          sendFile(selectedImage);
+        }
+      }
     }
   }
 

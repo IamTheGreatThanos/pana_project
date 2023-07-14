@@ -33,15 +33,20 @@ class _EpayWebViewPageState extends State<EpayWebViewPage> {
     <!DOCTYPE html>
     <html>
     <head>
+      <meta charset="UTF-8">
+      <meta name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>Pana</title>
       <script src="https://epay.homebank.kz/payform/payment-api.js"></script>
       <script>
         
         document.addEventListener('DOMContentLoaded', function() {
           halyk.showPaymentWidget(createPaymentObject(${jsonEncode(paymentObject['auth']['access_token'])}, ${jsonEncode(paymentObject['auth']['expires_in'])}, ${jsonEncode(paymentObject['invoiceId'])}, ${jsonEncode(paymentObject['amount'])}
-          , ${jsonEncode(paymentObject['backLink'])}, ${jsonEncode(paymentObject['failureBackLink'])}, ${jsonEncode(paymentObject['postLink'])}, ${jsonEncode(paymentObject['accountId'])}, ${jsonEncode(paymentObject['terminal'])}), callBk);
+          , ${jsonEncode(paymentObject['backLink'])}, ${jsonEncode(paymentObject['failureBackLink'])}, ${jsonEncode(paymentObject['postLink'])}, ${jsonEncode(paymentObject['accountId'])}, ${jsonEncode(paymentObject['terminal'])}, ${jsonEncode(paymentObject['description'])}), callBk);
         });
         
-        function createPaymentObject(accessToken, expiresIn, invoiceId, amount, backLink, failureBackLink, postLink, accountId, terminalId) {
+        function createPaymentObject(accessToken, expiresIn, invoiceId, amount, backLink, failureBackLink, postLink, accountId, terminalId, description) {
             var paymentObject = {
               invoiceId: invoiceId,
               backLink: backLink,
@@ -49,7 +54,7 @@ class _EpayWebViewPageState extends State<EpayWebViewPage> {
               postLink: postLink,
               failurePostLink: "https://back.pana.world/api/payment/postLink",
               language: "rus",
-              description: "Оплата Pana",
+              description: description,
               accountId: accountId,
               terminal: terminalId,
               amount: amount,
@@ -73,7 +78,7 @@ class _EpayWebViewPageState extends State<EpayWebViewPage> {
       </script>
     </head>
     <body>
-      <div class="loader"></div>
+      <!-- <div class="loader"></div> -->
     </body>
     <style>
       .loader {

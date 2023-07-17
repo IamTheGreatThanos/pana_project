@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,19 +46,21 @@ class _LockScreenState extends State<LockScreen> {
     getUserData();
     super.initState();
 
-    auth
-        .isDeviceSupported()
-        .then(
+    auth.isDeviceSupported().then(
           (bool isSupported) => setState(() => _supportState = isSupported
               ? _SupportState.supported
               : _SupportState.unsupported),
-        )
-        .whenComplete(() => () {
-              if (_supportState == _SupportState.supported &&
-                  useBiometrics == true) {
-                authByBiometrics();
-              }
-            });
+        );
+
+    fastStartBiometrics();
+  }
+
+  void fastStartBiometrics() async {
+    await Future.delayed(const Duration(seconds: 1));
+    print(123);
+    if (_supportState == _SupportState.supported && useBiometrics == true) {
+      authByBiometrics();
+    }
   }
 
   void getUserData() async {

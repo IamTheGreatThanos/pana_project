@@ -89,5 +89,7 @@
 	<false/>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>${PRODUCT_NAME} requests the use of the media library for attaching a audio feedback</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pana_project/components/profile_menu_item.dart';
+import 'package:pana_project/models/chat.dart';
+import 'package:pana_project/models/user.dart';
 import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
+import 'package:pana_project/views/messages/chat_messages_page.dart';
+import 'package:pana_project/views/messages/support_chat_page.dart';
 import 'package:pana_project/views/profile/change_language.dart';
 import 'package:pana_project/views/profile/loyalty_program_page.dart';
 import 'package:pana_project/views/profile/my_booked_objects_page.dart';
@@ -223,16 +227,18 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                       //   child: ProfileMenuItem(
                       //       'assets/icons/profile_card.svg', 'Способы оплаты'),
                       // ),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => LoyaltyProgramPage()));
-                      //   },
-                      //   child: ProfileMenuItem('assets/icons/profile_chat.svg',
-                      //       'Служба поддержки'),
-                      // ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SupportChatPage(),
+                            ),
+                          );
+                        },
+                        child: ProfileMenuItem('assets/icons/profile_chat.svg',
+                            'Служба поддержки'),
+                      ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(

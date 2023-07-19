@@ -120,7 +120,8 @@ class _TextReviewCardState extends State<TextReviewCard> {
                                   height: 70,
                                   child: CachedNetworkImage(
                                     imageUrl:
-                                        'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
+                                        widget.review.images?[i].path ?? '',
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
@@ -168,6 +169,7 @@ class _TextReviewCardState extends State<TextReviewCard> {
                                     imageUrl: widget
                                             .review.answers?[0].user?.avatar ??
                                         '',
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
@@ -176,8 +178,8 @@ class _TextReviewCardState extends State<TextReviewCard> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.6,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.53,
                                     child: Text(
                                       '${widget.review.answers?[0].user?.name ?? ''} ${widget.review.answers?[0].user?.surname ?? ''}',
                                       style: const TextStyle(
@@ -188,8 +190,8 @@ class _TextReviewCardState extends State<TextReviewCard> {
                                   ),
                                   const SizedBox(height: 10),
                                   SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.6,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.53,
                                     child: const Text(
                                       'Ответ от владельца',
                                       style: TextStyle(

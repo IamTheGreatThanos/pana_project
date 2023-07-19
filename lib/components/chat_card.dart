@@ -5,8 +5,9 @@ import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/utils/const.dart';
 
 class ChatCard extends StatelessWidget {
-  const ChatCard(this.chat);
+  const ChatCard(this.chat, this.isSupport);
   final ChatModel chat;
+  final bool isSupport;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,9 @@ class ChatCard extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.65,
                       child: Text(
-                        '${chat.user?.name ?? ''} ${chat.user?.surname ?? ''}',
+                        isSupport
+                            ? 'Служба поддержки'
+                            : '${chat.user?.name ?? ''} ${chat.user?.surname ?? ''}',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,

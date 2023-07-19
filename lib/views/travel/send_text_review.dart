@@ -38,6 +38,9 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
   int purityBall = 0;
   int staffBall = 0;
 
+  bool isValidReview = true;
+  bool isValidDate = true;
+
   @override
   void initState() {
     _dateController.text =
@@ -134,7 +137,10 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                           height: 60,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(width: 1, color: AppColors.grey),
+                            border: Border.all(
+                                width: 1,
+                                color:
+                                    isValidDate ? AppColors.grey : Colors.red),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -157,6 +163,15 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
+                              onChanged: (newValue) {
+                                if (newValue.length == 10) {
+                                  isValidDate = true;
+                                  setState(() {});
+                                } else {
+                                  isValidDate = false;
+                                  setState(() {});
+                                }
+                              },
                             ),
                           ),
                         ),
@@ -175,7 +190,11 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                           height: 115,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(width: 1, color: AppColors.grey),
+                            border: Border.all(
+                                width: 1,
+                                color: isValidReview
+                                    ? AppColors.grey
+                                    : Colors.red),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -186,7 +205,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                               keyboardType: TextInputType.multiline,
                               minLines: 1,
                               maxLines: 5,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 counterStyle: TextStyle(
                                   height: double.minPositive,
                                 ),
@@ -199,6 +218,15 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
+                              onChanged: (newValue) {
+                                if (newValue.isNotEmpty) {
+                                  isValidReview = true;
+                                  setState(() {});
+                                } else {
+                                  isValidReview = false;
+                                  setState(() {});
+                                }
+                              },
                             ),
                           ),
                         ),
@@ -516,21 +544,30 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                         primary: AppColors.accent,
                         minimumSize: const Size.fromHeight(50),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10), // <-- Radius
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       onPressed: () {
-                        if (_dateController.text.length == 10 &&
-                            _reviewController.text.isNotEmpty &&
-                            priceBall != 0 &&
-                            fieldBall != 0 &&
-                            purityBall != 0 &&
-                            staffBall != 0) {
-                          saveChanges();
+                        if (_dateController.text.length == 10) {
+                          if (_reviewController.text.isNotEmpty) {
+                            saveChanges();
+                          } else {
+                            isValidReview = false;
+                            setState(() {});
+
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text("Напишите отзыв.",
+                                  style: TextStyle(fontSize: 14)),
+                            ));
+                          }
                         } else {
+                          isValidDate = false;
+                          setState(() {});
+
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
-                            content: Text("Заполните все поля.",
+                            content: Text("Заполните дату.",
                                 style: TextStyle(fontSize: 14)),
                           ));
                         }

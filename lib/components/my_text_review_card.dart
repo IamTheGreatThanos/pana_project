@@ -49,6 +49,7 @@ class _MyTextReviewCardState extends State<MyTextReviewCard> {
                         height: 64,
                         child: CachedNetworkImage(
                           imageUrl: widget.review.user?.avatar ?? '',
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -119,7 +120,7 @@ class _MyTextReviewCardState extends State<MyTextReviewCard> {
                                   height: 70,
                                   child: CachedNetworkImage(
                                     imageUrl:
-                                        'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000',
+                                        widget.review.images?[i].path ?? '',
                                   ),
                                 ),
                               ),
@@ -167,6 +168,7 @@ class _MyTextReviewCardState extends State<MyTextReviewCard> {
                                     imageUrl: widget
                                             .review.answers?[0].user?.avatar ??
                                         '',
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),

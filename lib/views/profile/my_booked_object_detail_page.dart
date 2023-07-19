@@ -799,7 +799,8 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
   }
 
   void showCancelingConfirmation(double returnPrice, double totalPrice) async {
-    var returnPercent = (returnPrice / totalPrice * 100).toInt();
+    var returnPercent =
+        (returnPrice / (totalPrice == 0 ? 1 : totalPrice) * 100).toInt();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -845,7 +846,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'Вы уверены, что хотите отменить бронь? Для отмены брони штраф составит ${100 - returnPercent}% (${formatNumberString((totalPrice - returnPrice).toString())}₸). Остальная сумма вернется вам на карту',
+                        'Вы уверены, что хотите отменить бронь? Для отмены брони штраф составит ${totalPrice == 0 ? 0 : 100 - returnPercent}% (${formatNumberString((totalPrice - returnPrice).toString())}₸). Остальная сумма вернется вам на карту',
                         style: const TextStyle(
                           color: Colors.black45,
                           fontSize: 14,

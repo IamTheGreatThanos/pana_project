@@ -701,18 +701,11 @@ class _PaymentPageState extends State<PaymentPage> {
 
         if (response['response_status'] == 'ok') {
           goToEPay(_key, response['data']);
-
-          // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //   content: Text('Жилье успешно забронировано!',
-          //       style: const TextStyle(fontSize: 14)),
-          // ));
-          //
-          // Future.delayed(
-          //   const Duration(seconds: 3),
-          //   () => _key.currentState!.reset(),
-          // ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
-          //     MaterialPageRoute(builder: (context) => TabBarPage()),
-          //     (Route<dynamic> route) => false));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(response['data']['message'],
+                style: const TextStyle(fontSize: 14)),
+          ));
         }
       } else {
         if (cards.isNotEmpty) {

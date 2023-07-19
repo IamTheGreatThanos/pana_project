@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pana_project/components/chat_message_card.dart';
-import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/chatMessage.dart';
 import 'package:pana_project/services/messages_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
@@ -50,7 +49,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
   }
 
   void socketInit() {
-    socket = IO.io('http://back.pana.world:3000', <String, dynamic>{
+    socket = IO.io('https://back.pana.world:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
     });
@@ -150,7 +149,7 @@ class _SupportChatPageState extends State<SupportChatPage> {
                                           width: 28,
                                           height: 28,
                                           child: SvgPicture.asset(
-                                            'assets/icon/support_icon.svg',
+                                            'assets/icons/support_icon.svg',
                                             fit: BoxFit.cover,
                                           ),
                                         ),
@@ -158,7 +157,8 @@ class _SupportChatPageState extends State<SupportChatPage> {
                                     )
                                   : Container(),
                               const Spacer(),
-                              ChatMessageCard(listOfMessages[i], myUserId),
+                              ChatMessageCard(
+                                  listOfMessages[i], myUserId, true),
                               const Spacer(),
                               listOfMessages[i].user?.id == myUserId
                                   ? Padding(
@@ -262,48 +262,46 @@ class _SupportChatPageState extends State<SupportChatPage> {
   }
 
   void getMessages() async {
-    // var response =
-    //     await MessagesProvider().getChatMessages(widget.chat.user!.id!);
-    // if (response['response_status'] == 'ok') {
-    //   List<ChatMessageModel> tempList = [];
-    //   for (int i = 0; i < response['data'].length; i++) {
-    //     tempList.add(ChatMessageModel.fromJson(response['data'][i]));
-    //   }
-    //   listOfMessages = tempList;
-    //   if (mounted) {
-    //     setState(() {});
-    //     listViewController.animateTo(
-    //       listViewController.position.minScrollExtent,
-    //       curve: Curves.fastOutSlowIn,
-    //       duration: const Duration(milliseconds: 300),
-    //     );
-    //   }
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content: Text(response['data']['message'],
-    //         style: const TextStyle(fontSize: 14)),
-    //   ));
-    // }
+    var response = await MessagesProvider().getChatMessagesInSupport();
+    if (response['response_status'] == 'ok') {
+      List<ChatMessageModel> tempList = [];
+      for (int i = 0; i < response['data'].length; i++) {
+        tempList.add(ChatMessageModel.fromJson(response['data'][i]));
+      }
+      listOfMessages = tempList;
+      if (mounted) {
+        setState(() {});
+        listViewController.animateTo(
+          listViewController.position.minScrollExtent,
+          curve: Curves.fastOutSlowIn,
+          duration: const Duration(milliseconds: 300),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
+    }
   }
 
   void getMessagesFromBackground() async {
-    // var response =
-    //     await MessagesProvider().getChatMessages(widget.chat.user!.id!);
-    // if (response['response_status'] == 'ok') {
-    //   List<ChatMessageModel> tempList = [];
-    //   for (int i = 0; i < response['data'].length; i++) {
-    //     tempList.add(ChatMessageModel.fromJson(response['data'][i]));
-    //   }
-    //   listOfMessages = tempList;
-    //   if (mounted) {
-    //     setState(() {});
-    //   }
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content: Text(response['data']['message'],
-    //         style: const TextStyle(fontSize: 14)),
-    //   ));
-    // }
+    var response = await MessagesProvider().getChatMessagesInSupport();
+    if (response['response_status'] == 'ok') {
+      List<ChatMessageModel> tempList = [];
+      for (int i = 0; i < response['data'].length; i++) {
+        tempList.add(ChatMessageModel.fromJson(response['data'][i]));
+      }
+      listOfMessages = tempList;
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
+    }
   }
 
   void sendMessage() async {
@@ -321,16 +319,15 @@ class _SupportChatPageState extends State<SupportChatPage> {
   }
 
   void readMessages() async {
-    // var response =
-    //     await MessagesProvider().readMessageInChat(widget.chat.user!.id!);
-    // if (response['response_status'] == 'ok') {
-    //   print('Readed');
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content: Text(response['data']['message'],
-    //         style: const TextStyle(fontSize: 14)),
-    //   ));
-    // }
+    var response = await MessagesProvider().readMessageInSupportChat();
+    if (response['response_status'] == 'ok') {
+      print('Readed');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(response['data']['message'],
+            style: const TextStyle(fontSize: 14)),
+      ));
+    }
   }
 
   void chooseImage() async {

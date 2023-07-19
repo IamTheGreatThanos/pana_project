@@ -616,6 +616,11 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
         );
         if (response['response_status'] == 'ok') {
           goToEPay(_key, response['data']);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(response['data']['message'],
+                style: const TextStyle(fontSize: 14)),
+          ));
         }
       } else {
         if (cards.isNotEmpty) {

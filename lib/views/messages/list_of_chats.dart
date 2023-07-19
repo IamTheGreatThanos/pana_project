@@ -5,6 +5,7 @@ import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/services/messages_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
+import 'package:pana_project/views/messages/support_chat_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -22,9 +23,15 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
 
   late IO.Socket socket;
 
+  bool isHaveSupportChat = false;
+  ChatModel supportChat = ChatModel();
+
+  bool isLoading = true;
+
   @override
   void initState() {
     getChats();
+    getSupportChat();
     getUserId();
     super.initState();
   }
@@ -38,7 +45,7 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
   }
 
   void socketInit() {
-    socket = IO.io('http://back.pana.world:3000', <String, dynamic>{
+    socket = IO.io('https://back.pana.world:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
     });
@@ -49,6 +56,7 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
 
     socket.on('chat', (newMessage) async {
       getChats();
+      getSupportChat();
     });
   }
 
@@ -114,7 +122,14 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
                 listOfChats.isNotEmpty
                     ? Container(color: Colors.white, child: const Divider())
                     : const SizedBox(),
-                listOfChats.isEmpty
+                isHaveSupportChat
+                    ? GestureDetector(
+                        onTap: () {
+                          goToSupportChat();
+                        },
+                        child: ChatCard(supportChat, true))
+                    : Container(),
+                isLoading
                     ? const Center(
                         child: Padding(
                           padding: EdgeInsets.all(10),
@@ -134,7 +149,7 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
                       onTap: () {
                         goToChat(listOfChats[i]);
                       },
-                      child: ChatCard(listOfChats[i])),
+                      child: ChatCard(listOfChats[i], false)),
               ],
             ),
           ),
@@ -153,6 +168,7 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
         tempList.add(ChatModel.fromJson(response['data'][i]));
       }
       listOfChats = tempList;
+      isLoading = false;
       if (mounted) {
         setState(() {});
       }
@@ -161,6 +177,27 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
         content: Text(response['data']['message'],
             style: const TextStyle(fontSize: 14)),
       ));
+    }
+  }
+
+  void getSupportChat() async {
+    try {
+      var responseSupport = await MessagesProvider().getListOfChatsSupport();
+      print(responseSupport);
+
+      if (responseSupport['response_status'] == 'ok') {
+        isHaveSupportChat = true;
+        supportChat = ChatModel.fromJson(responseSupport['data']);
+        if (mounted) {
+          setState(() {});
+        }
+      }
+    } catch (error) {
+      isHaveSupportChat = false;
+      if (mounted) {
+        setState(() {});
+      }
+      print(error);
     }
   }
 
@@ -173,5 +210,18 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
     );
 
     getChats();
+    getSupportChat();
+  }
+
+  void goToSupportChat() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SupportChatPage(),
+      ),
+    );
+
+    getChats();
+    getSupportChat();
   }
 }

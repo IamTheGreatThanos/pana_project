@@ -461,5 +461,10 @@ class _MessagesPageState extends State<MessagesPage> {
         isHaveListOfChats = true;
       }
     }
+
+    var responseSupport = await MessagesProvider().getListOfChatsSupport();
+    if (responseSupport['response_status'] == 'ok') {
+      isHaveListOfChats = true;
+    }
   }
 }

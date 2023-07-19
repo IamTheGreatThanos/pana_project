@@ -148,10 +148,13 @@ class _HousingCardState extends State<HousingCard> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  widget.housing.name ?? '',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500, fontSize: 16),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.76,
+                  child: Text(
+                    widget.housing.name ?? '',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w500, fontSize: 16),
+                  ),
                 ),
                 const Spacer(),
                 Text(

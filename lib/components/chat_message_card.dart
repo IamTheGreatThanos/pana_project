@@ -4,9 +4,10 @@ import 'package:pana_project/models/chatMessage.dart';
 import 'package:pana_project/utils/const.dart';
 
 class ChatMessageCard extends StatelessWidget {
-  const ChatMessageCard(this.message, this.myUserId);
+  const ChatMessageCard(this.message, this.myUserId, this.isSupport);
   final ChatMessageModel message;
   final int myUserId;
+  final bool isSupport;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,9 @@ class ChatMessageCard extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.5,
                   child: Text(
                     message.user?.id != myUserId
-                        ? '${message.user?.name ?? ''} ${message.user?.surname ?? ''}'
+                        ? isSupport
+                            ? 'Служба поддержки'
+                            : '${message.user?.name ?? ''} ${message.user?.surname ?? ''}'
                         : 'Вы',
                     style: TextStyle(
                       color: message.user?.id == 3
@@ -61,7 +64,11 @@ class ChatMessageCard extends StatelessWidget {
               ),
             ),
             (message.files?.length ?? 0) != 0
-                ? CachedNetworkImage(imageUrl: message.files?[0].path ?? '')
+                ? CachedNetworkImage(
+                    imageUrl: message.files?[0].path ?? '',
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(color: AppColors.grey,),
+                  )
                 : Container(),
             const SizedBox(height: 10),
           ],

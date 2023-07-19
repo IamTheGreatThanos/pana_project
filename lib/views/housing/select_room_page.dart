@@ -511,17 +511,26 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
   }
 
   void plusFunction(int index) {
-    setState(() {
-      roomCounts[index] += 1;
-    });
+    roomCounts[index] += 1;
+
+    if (selectedRoomIds.contains(roomsList[index].id)) {
+      var indexOfRoom = selectedRoomIds.indexOf(roomsList[index].id!);
+      selectedRoomCounts[indexOfRoom] = roomCounts[index];
+    }
+
+    setState(() {});
   }
 
   void minusFunction(int index) {
-    setState(() {
-      if (roomCounts[index] > 1) {
-        roomCounts[index] -= 1;
+    if (roomCounts[index] > 1) {
+      roomCounts[index] -= 1;
+      if (selectedRoomIds.contains(roomsList[index].id)) {
+        var indexOfRoom = selectedRoomIds.indexOf(roomsList[index].id!);
+        selectedRoomCounts[indexOfRoom] = roomCounts[index];
       }
-    });
+
+      setState(() {});
+    }
   }
 
   void getRoomsList() async {

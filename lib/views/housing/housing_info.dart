@@ -925,6 +925,8 @@ class _HousingInfoState extends State<HousingInfo> {
                         ),
                       ),
                       const Divider(),
+
+                      // TODO: Reviews
                       Padding(
                         padding: const EdgeInsets.only(
                             top: 20, left: 20, bottom: 10),
@@ -977,7 +979,6 @@ class _HousingInfoState extends State<HousingInfo> {
                                 Text(
                                   double.parse(
                                           thisHousing.reviewsPriceAvg ?? '0')
-                                      .roundToDouble()
                                       .toString(),
                                   style: const TextStyle(
                                     color: AppColors.black,
@@ -1016,6 +1017,56 @@ class _HousingInfoState extends State<HousingInfo> {
                             child: Row(
                               children: [
                                 const Text(
+                                  'Атмосфера',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  double.parse(
+                                          thisHousing.reviewsAtmosphereAvg ??
+                                              '0')
+                                      .toString(),
+                                  style: const TextStyle(
+                                    color: AppColors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(width: 20),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 0, left: 20, bottom: 10, right: 20),
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                              child: LinearProgressIndicator(
+                                backgroundColor: AppColors.grey,
+                                color: AppColors.accent,
+                                minHeight: 3,
+                                value: double.parse(
+                                        thisHousing.reviewsAtmosphereAvg ??
+                                            '0') /
+                                    5,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 10, left: 20, bottom: 10),
+                            child: Row(
+                              children: [
+                                const Text(
                                   'Чистота',
                                   style: TextStyle(
                                     fontSize: 14,
@@ -1026,7 +1077,6 @@ class _HousingInfoState extends State<HousingInfo> {
                                 Text(
                                   double.parse(
                                           thisHousing.reviewsPurityAvg ?? '0')
-                                      .roundToDouble()
                                       .toString(),
                                   style: const TextStyle(
                                     color: AppColors.black,
@@ -1075,7 +1125,6 @@ class _HousingInfoState extends State<HousingInfo> {
                                 Text(
                                   double.parse(
                                           thisHousing.reviewsStaffAvg ?? '0')
-                                      .roundToDouble()
                                       .toString(),
                                   style: const TextStyle(
                                     color: AppColors.black,

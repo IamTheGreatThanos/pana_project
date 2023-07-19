@@ -51,7 +51,7 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
   }
 
   void socketInit() {
-    socket = IO.io('http://back.pana.world:3000', <String, dynamic>{
+    socket = IO.io('https://back.pana.world:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
     });
@@ -162,7 +162,8 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
                                     )
                                   : Container(),
                               const Spacer(),
-                              ChatMessageCard(listOfMessages[i], myUserId),
+                              ChatMessageCard(
+                                  listOfMessages[i], myUserId, false),
                               const Spacer(),
                               listOfMessages[i].user?.id == myUserId
                                   ? Padding(

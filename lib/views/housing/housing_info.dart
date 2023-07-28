@@ -6,11 +6,9 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/components/bonus_card.dart';
 import 'package:pana_project/components/facilities_widget.dart';
 import 'package:pana_project/components/impression_card.dart';
-import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/models/audioReview.dart';
 import 'package:pana_project/models/bonusItems.dart';
 import 'package:pana_project/models/chat.dart';
@@ -30,7 +28,6 @@ import 'package:pana_project/views/housing/comforts_detail_page.dart';
 import 'package:pana_project/views/housing/select_room_page.dart';
 import 'package:pana_project/views/impression/impression_info.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
-import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/bonus_system_detail.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
@@ -44,7 +41,9 @@ class HousingInfo extends StatefulWidget {
     this.id,
     this.thisStoryItems,
     this.mediaStoryItems,
-    this.distance,
+    // this.distance,
+    this.lat,
+    this.lng,
     this.dateFrom,
     this.dateTo,
   );
@@ -52,7 +51,9 @@ class HousingInfo extends StatefulWidget {
   final int id;
   final List<StoryItem?> thisStoryItems;
   final List<StoryItem?> mediaStoryItems;
-  final String distance;
+  // final String distance;
+  final String lat;
+  final String lng;
   final String dateFrom;
   final String dateTo;
 
@@ -293,7 +294,7 @@ class _HousingInfoState extends State<HousingInfo> {
                           Padding(
                             padding: const EdgeInsets.only(left: 20),
                             child: Text(
-                              '${widget.distance == '-1' ? "-" : widget.distance} км от вас',
+                              '${thisHousing.distance ?? '-'} км от вас',
                               style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -1157,110 +1158,117 @@ class _HousingInfoState extends State<HousingInfo> {
                       ),
                       const SizedBox(width: 20),
                       const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 20, left: 20, bottom: 10),
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Аудио-отзывы',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AudioReviewsPage(audioReviews)));
-                              },
-                              child: const Text(
-                                'Перейти',
-                                style: TextStyle(
-                                  color: AppColors.accent,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                          ],
-                        ),
-                      ),
-                      audioReviews.isEmpty
-                          ? const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 10),
-                              child: Text(
-                                'Аудио-отзывов пока нет...',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.blackWithOpacity),
-                              ),
-                            )
-                          : Container(),
-                      for (int i = 0;
-                          i <
-                              (audioReviews.length > 2
-                                  ? 2
-                                  : audioReviews.length);
-                          i++)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(24),
-                                ),
-                                border: Border.all(
-                                  width: 1,
-                                  color: AppColors.lightGray,
-                                ),
-                              ),
-                              child: AudioReviewCard(audioReviews[i])),
-                        ),
-                      const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                        child: Text(
-                          'Истории с этого места',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      reels.isNotEmpty
-                          ? Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 10),
-                              height: 150,
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: <Widget>[
-                                  for (int i = 0; i < reels.length; i++)
-                                    StoriesCard(reels, i),
-                                ],
-                              ),
-                            )
-                          : const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 10),
-                              child: Text(
-                                'Истории отсутствуют...',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.blackWithOpacity),
-                              ),
-                            ),
-                      const Divider(),
+
+                      // TODO: Audio reviews
+                      // Padding(
+                      //   padding: const EdgeInsets.only(
+                      //       top: 20, left: 20, bottom: 10),
+                      //   child: Row(
+                      //     children: [
+                      //       const Text(
+                      //         'Аудио-отзывы',
+                      //         style: TextStyle(
+                      //           fontSize: 24,
+                      //           fontWeight: FontWeight.w500,
+                      //         ),
+                      //       ),
+                      //       const Spacer(),
+                      //       GestureDetector(
+                      //         onTap: () {
+                      //           Navigator.push(
+                      //               context,
+                      //               MaterialPageRoute(
+                      //                   builder: (context) =>
+                      //                       AudioReviewsPage(audioReviews)));
+                      //         },
+                      //         child: const Text(
+                      //           'Перейти',
+                      //           style: TextStyle(
+                      //             color: AppColors.accent,
+                      //             fontSize: 14,
+                      //             fontWeight: FontWeight.w500,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       const SizedBox(width: 20),
+                      //     ],
+                      //   ),
+                      // ),
+                      // audioReviews.isEmpty
+                      //     ? const Padding(
+                      //         padding: EdgeInsets.symmetric(
+                      //             horizontal: 30, vertical: 10),
+                      //         child: Text(
+                      //           'Аудио-отзывов пока нет...',
+                      //           style: TextStyle(
+                      //               fontSize: 14,
+                      //               fontWeight: FontWeight.w400,
+                      //               color: AppColors.blackWithOpacity),
+                      //         ),
+                      //       )
+                      //     : Container(),
+                      // for (int i = 0;
+                      //     i <
+                      //         (audioReviews.length > 2
+                      //             ? 2
+                      //             : audioReviews.length);
+                      //     i++)
+                      //   Padding(
+                      //     padding: const EdgeInsets.symmetric(
+                      //         horizontal: 20, vertical: 5),
+                      //     child: Container(
+                      //         decoration: BoxDecoration(
+                      //           borderRadius: const BorderRadius.all(
+                      //             Radius.circular(24),
+                      //           ),
+                      //           border: Border.all(
+                      //             width: 1,
+                      //             color: AppColors.lightGray,
+                      //           ),
+                      //         ),
+                      //         child: AudioReviewCard(audioReviews[i])),
+                      //   ),
+                      // const Divider(),
+                      // TODO: End
+
+                      // TODO: Stories
+                      // const Padding(
+                      //   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                      //   child: Text(
+                      //     'Истории с этого места',
+                      //     style: TextStyle(
+                      //       fontSize: 24,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //   ),
+                      // ),
+                      // reels.isNotEmpty
+                      //     ? Container(
+                      //         margin: const EdgeInsets.symmetric(
+                      //             vertical: 20, horizontal: 10),
+                      //         height: 150,
+                      //         child: ListView(
+                      //           scrollDirection: Axis.horizontal,
+                      //           children: <Widget>[
+                      //             for (int i = 0; i < reels.length; i++)
+                      //               StoriesCard(reels, i),
+                      //           ],
+                      //         ),
+                      //       )
+                      //     : const Padding(
+                      //         padding: EdgeInsets.symmetric(
+                      //             horizontal: 30, vertical: 10),
+                      //         child: Text(
+                      //           'Истории отсутствуют...',
+                      //           style: TextStyle(
+                      //               fontSize: 14,
+                      //               fontWeight: FontWeight.w400,
+                      //               color: AppColors.blackWithOpacity),
+                      //         ),
+                      //       ),
+                      // const Divider(),
+
+                      // TODO: End
                       const Padding(
                         padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                         child: Text(
@@ -1658,7 +1666,8 @@ class _HousingInfoState extends State<HousingInfo> {
   void getHousingInfo() async {
     isLoading = true;
     setState(() {});
-    var response = await HousingProvider().getHousingDetail(widget.id);
+    var response = await HousingProvider()
+        .getHousingDetail(widget.id, widget.lat, widget.lng);
     if (response['response_status'] == 'ok') {
       thisHousing = HousingDetailModel.fromJson(response['data']);
       final Uint8List customMarker =

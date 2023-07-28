@@ -1,11 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/models/chat.dart';
-import 'package:pana_project/models/housingCard.dart';
-import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/models/order.dart';
 import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
@@ -15,9 +11,7 @@ import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
-import 'package:pana_project/views/other/reels_video_selection_page.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
-import 'package:pana_project/views/travel/send_audio_review.dart';
 import 'package:pana_project/views/travel/send_text_review.dart';
 
 class MyBookedObjectDetailPage extends StatefulWidget {
@@ -372,100 +366,101 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(AppConstants.cardBorderRadius),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Видео с локации',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 10),
-                          height: 150,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ReelsVideoSelectionPage(
-                                              widget.type == 2
-                                                  ? 'housing'
-                                                  : 'impression',
-                                              widget.type == 2
-                                                  ? widget.order.housing!
-                                                  : HousingCardModel(),
-                                              widget.type == 2
-                                                  ? ImpressionCardModel()
-                                                  : widget.order.impression!,
-                                              false),
-                                    ),
-                                  );
-
-                                  getReels();
-                                },
-                                child: DottedBorder(
-                                  color: AppColors.accent,
-                                  strokeWidth: 1,
-                                  dashPattern: const [6, 2],
-                                  strokeCap: StrokeCap.round,
-                                  borderType: BorderType.RRect,
-                                  radius: const Radius.circular(8),
-                                  child: Container(
-                                    width: 85,
-                                    height: 150,
-                                    decoration: const BoxDecoration(
-                                      color: AppColors.white,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(Icons.add,
-                                            color: AppColors.accent),
-                                        Text(
-                                          'Добавить',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.accent),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              for (int i = 0; i < reels.length; i++)
-                                StoriesCard(reels, i),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // TODO: Stories
+                // const SizedBox(height: 20),
+                // Container(
+                //   width: MediaQuery.of(context).size.width,
+                //   decoration: BoxDecoration(
+                //     color: AppColors.white,
+                //     borderRadius: BorderRadius.all(
+                //       Radius.circular(AppConstants.cardBorderRadius),
+                //     ),
+                //   ),
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(20),
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         const Text(
+                //           'Видео с локации',
+                //           style: TextStyle(
+                //             fontSize: 18,
+                //             fontWeight: FontWeight.w500,
+                //           ),
+                //           textAlign: TextAlign.center,
+                //         ),
+                //         const SizedBox(height: 20),
+                //         Container(
+                //           margin: const EdgeInsets.symmetric(
+                //               vertical: 20, horizontal: 10),
+                //           height: 150,
+                //           child: ListView(
+                //             scrollDirection: Axis.horizontal,
+                //             children: <Widget>[
+                //               GestureDetector(
+                //                 onTap: () async {
+                //                   await Navigator.push(
+                //                     context,
+                //                     MaterialPageRoute(
+                //                       builder: (context) =>
+                //                           ReelsVideoSelectionPage(
+                //                               widget.type == 2
+                //                                   ? 'housing'
+                //                                   : 'impression',
+                //                               widget.type == 2
+                //                                   ? widget.order.housing!
+                //                                   : HousingCardModel(),
+                //                               widget.type == 2
+                //                                   ? ImpressionCardModel()
+                //                                   : widget.order.impression!,
+                //                               false),
+                //                     ),
+                //                   );
+                //
+                //                   getReels();
+                //                 },
+                //                 child: DottedBorder(
+                //                   color: AppColors.accent,
+                //                   strokeWidth: 1,
+                //                   dashPattern: const [6, 2],
+                //                   strokeCap: StrokeCap.round,
+                //                   borderType: BorderType.RRect,
+                //                   radius: const Radius.circular(8),
+                //                   child: Container(
+                //                     width: 85,
+                //                     height: 150,
+                //                     decoration: const BoxDecoration(
+                //                       color: AppColors.white,
+                //                     ),
+                //                     child: Column(
+                //                       mainAxisAlignment:
+                //                           MainAxisAlignment.center,
+                //                       children: const [
+                //                         Icon(Icons.add,
+                //                             color: AppColors.accent),
+                //                         Text(
+                //                           'Добавить',
+                //                           style: TextStyle(
+                //                               fontSize: 12,
+                //                               fontWeight: FontWeight.w500,
+                //                               color: AppColors.accent),
+                //                           textAlign: TextAlign.center,
+                //                         ),
+                //                       ],
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ),
+                //               const SizedBox(width: 5),
+                //               for (int i = 0; i < reels.length; i++)
+                //                 StoriesCard(reels, i),
+                //             ],
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(height: 20),
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -514,48 +509,49 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                         Row(
                           children: [
                             const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            SendAudioReviewPage(
-                                                widget.type,
-                                                widget.type == 2
-                                                    ? widget.order.housing!.id!
-                                                    : widget.order.impression!
-                                                        .id!)));
-                              },
-                              child: Container(
-                                width: 162,
-                                height: 83,
-                                decoration: const BoxDecoration(
-                                  color: AppColors.lightGray,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8),
-                                  ),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                        'assets/icons/micro_icon.svg'),
-                                    const SizedBox(height: 5),
-                                    const Text(
-                                      'Голосовой',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
+                            // TODO: Audio review page.
+                            // GestureDetector(
+                            //   onTap: () {
+                            //     Navigator.push(
+                            //         context,
+                            //         MaterialPageRoute(
+                            //             builder: (context) =>
+                            //                 SendAudioReviewPage(
+                            //                     widget.type,
+                            //                     widget.type == 2
+                            //                         ? widget.order.housing!.id!
+                            //                         : widget.order.impression!
+                            //                             .id!)));
+                            //   },
+                            //   child: Container(
+                            //     width: 162,
+                            //     height: 83,
+                            //     decoration: const BoxDecoration(
+                            //       color: AppColors.lightGray,
+                            //       borderRadius: BorderRadius.all(
+                            //         Radius.circular(8),
+                            //       ),
+                            //     ),
+                            //     child: Column(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       crossAxisAlignment: CrossAxisAlignment.center,
+                            //       children: [
+                            //         SvgPicture.asset(
+                            //             'assets/icons/micro_icon.svg'),
+                            //         const SizedBox(height: 5),
+                            //         const Text(
+                            //           'Голосовой',
+                            //           style: TextStyle(
+                            //             fontSize: 14,
+                            //             fontWeight: FontWeight.w500,
+                            //             color: Colors.black,
+                            //           ),
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                            // const SizedBox(width: 10),
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(
@@ -573,7 +569,8 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                                     : widget.order.dateFrom!)));
                               },
                               child: Container(
-                                width: 162,
+                                // width: 162,
+                                width: MediaQuery.of(context).size.width * 0.8,
                                 height: 83,
                                 decoration: const BoxDecoration(
                                   color: AppColors.lightGray,

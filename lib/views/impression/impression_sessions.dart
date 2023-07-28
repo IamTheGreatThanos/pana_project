@@ -397,7 +397,9 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
       },
     );
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void getSessions() async {
@@ -514,7 +516,9 @@ class _ImpressionPeopleCountBottomSheetState
                       GestureDetector(
                         onTap: () {
                           widget.impressionData.minusFunction();
-                          setState(() {});
+                          if (mounted) {
+                            setState(() {});
+                          }
                         },
                         child: Container(
                           width: 32,
@@ -540,7 +544,9 @@ class _ImpressionPeopleCountBottomSheetState
                       GestureDetector(
                         onTap: () {
                           widget.impressionData.plusFunction();
-                          setState(() {});
+                          if (mounted) {
+                            setState(() {});
+                          }
                         },
                         child: Container(
                           width: 32,
@@ -650,7 +656,9 @@ class _ImpressionSessionPrivateModeModalBottomSheetState
             GestureDetector(
               onTap: () {
                 isPrivateSelected = false;
-                setState(() {});
+                if (mounted) {
+                  setState(() {});
+                }
               },
               child: Container(
                 width: double.infinity,
@@ -722,7 +730,9 @@ class _ImpressionSessionPrivateModeModalBottomSheetState
             GestureDetector(
               onTap: () {
                 isPrivateSelected = true;
-                setState(() {});
+                if (mounted) {
+                  setState(() {});
+                }
               },
               child: Container(
                 width: double.infinity,
@@ -860,6 +870,8 @@ class _ImpressionSessionPrivateModeModalBottomSheetState
       },
     );
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 }

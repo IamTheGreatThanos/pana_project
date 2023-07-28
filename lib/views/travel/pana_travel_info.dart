@@ -23,6 +23,7 @@ import 'package:pana_project/views/impression/impression_info.dart';
 import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -423,6 +424,12 @@ class _PanaTravelInfoState extends State<PanaTravelInfo> {
                                       );
                                     }
 
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+
+                                    String? lat = prefs.getString('lastLat');
+                                    String? lng = prefs.getString('lastLng');
+
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -430,8 +437,10 @@ class _PanaTravelInfoState extends State<PanaTravelInfo> {
                                           widget.travel.housings![0].id!,
                                           thisStoryItems,
                                           mediaStoryItems,
-                                          widget.travel.housings![0].distance
-                                              .toString(),
+                                          lat ?? '',
+                                          lng ?? '',
+                                          // widget.travel.housings![0].distance
+                                          //     .toString(),
                                           '',
                                           '',
                                         ),
@@ -1062,8 +1071,13 @@ class _PanaTravelInfoState extends State<PanaTravelInfo> {
   void getPanaTravelInfo() async {
     isLoading = true;
     setState(() {});
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? lat = prefs.getString('lastLat');
+    String? lng = prefs.getString('lastLng');
+
     var response = await HousingProvider()
-        .getHousingDetail(widget.travel.housings![0].id!);
+        .getHousingDetail(widget.travel.housings![0].id!, lat ?? '', lng ?? '');
     if (response['response_status'] == 'ok') {
       thisHousing = HousingDetailModel.fromJson(response['data']);
       final Uint8List customMarker =

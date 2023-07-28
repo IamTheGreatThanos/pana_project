@@ -184,14 +184,14 @@ class _HousingCardState extends State<HousingCard> {
                     fontSize: 14,
                   ),
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  '${widget.housing.distance == -1 ? "-" : widget.housing.distance} км от вас',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black45),
-                ),
+                // const SizedBox(width: 10),
+                // Text(
+                //   '${widget.housing.distance == -1 ? "-" : widget.housing.distance} км от вас',
+                //   style: const TextStyle(
+                //       fontWeight: FontWeight.w500,
+                //       fontSize: 14,
+                //       color: Colors.black45),
+                // ),
                 const SizedBox(width: 5),
                 Text(
                   '•',

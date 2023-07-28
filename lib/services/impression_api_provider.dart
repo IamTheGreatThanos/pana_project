@@ -369,6 +369,8 @@ class ImpressionProvider {
     int sessionId,
     int sessionType,
     int paymentCardId,
+    String timeFrom,
+    String timeTo,
   ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
@@ -394,6 +396,11 @@ class ImpressionProvider {
     if (dateFrom != '') {
       bodyObject["date_from"] = dateFrom;
       bodyObject["date_to"] = dateTo;
+    }
+
+    if (timeFrom != '') {
+      bodyObject["time_start"] = timeFrom;
+      bodyObject["time_end"] = timeTo;
     }
 
     final response = await http.post(

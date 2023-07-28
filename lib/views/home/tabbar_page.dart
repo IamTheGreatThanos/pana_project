@@ -19,7 +19,7 @@ import 'package:pana_project/views/impression/impression_info.dart';
 import 'package:pana_project/views/messages/messages_main.dart';
 import 'package:pana_project/views/other/stories_view.dart';
 import 'package:pana_project/views/profile/profile_main.dart';
-import 'package:pana_project/views/travel/home_travel.dart';
+import 'package:pana_project/widgets/coming_soon_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_view/story_view.dart';
 import 'package:uni_links/uni_links.dart';
@@ -48,7 +48,8 @@ class _TabBarPageState extends State<TabBarPage> {
     super.initState();
     initUniLinks();
     tabViews = <Widget>[
-      HomeTravel(changeTabMethod),
+      // HomeTravel(changeTabMethod),
+      const ComingSoonPage(),
       HomeImpression(),
       HomeHousing(),
       MessagesPage(changeTabMethod),
@@ -125,7 +126,11 @@ class _TabBarPageState extends State<TabBarPage> {
   }
 
   void getHousingInfo(int id) async {
-    var response = await HousingProvider().getHousingDetail(id);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? lat = prefs.getString('lastLat');
+    String? lng = prefs.getString('lastLng');
+    var response =
+        await HousingProvider().getHousingDetail(id, lat ?? '', lng ?? '');
     if (response['response_status'] == 'ok') {
       HousingCardModel thisHousing =
           HousingCardModel.fromJson(response['data']);
@@ -160,9 +165,10 @@ class _TabBarPageState extends State<TabBarPage> {
               thisHousing.id!,
               thisStoryItems,
               mediaStoryItems,
-              thisHousing.distance == -1
-                  ? '-'
-                  : thisHousing.distance.toString(),
+              lat ?? '', lng ?? '',
+              // thisHousing.distance == -1
+              //     ? '-'
+              //     : thisHousing.distance.toString(),
               '',
               '',
             ),

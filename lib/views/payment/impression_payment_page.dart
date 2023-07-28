@@ -44,6 +44,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   String dateTo = '-';
   List<CreditCard> cards = [];
   int selectedCardIndex = -2;
+  int daysDifference = 0;
 
   @override
   void initState() {
@@ -336,7 +337,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                       ),
                       const Spacer(),
                       Text(
-                        '${formatNumberString(((widget.type == 1 ? widget.session.openPrice ?? 0 : widget.session.closedPrice ?? 0) * widget.impressionData.peopleCount).toString())} \₸',
+                        '${formatNumberString(((widget.type == 1 ? widget.session.openPrice ?? 0 : widget.session.closedPrice ?? 0) * widget.impressionData.peopleCount * daysDifference).toString())} \₸',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -597,7 +598,17 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   }
 
   void calcSum() {
-    sum += (widget.session.openPrice ?? 0) * widget.impressionData.peopleCount;
+    DateTime dateFromFormatted = DateTime.parse(dateFrom);
+    DateTime dateToFormatted = DateTime.parse(dateTo);
+
+    Duration difference = dateToFormatted.difference(dateFromFormatted);
+    int days = difference.inDays;
+
+    daysDifference = days;
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void sendOrder(GlobalKey<SlideActionState> _key) async {
@@ -613,6 +624,8 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
           widget.session.id!,
           widget.type,
           -2,
+          widget.session.startTime!,
+          widget.session.endTime!,
         );
         if (response['response_status'] == 'ok') {
           goToEPay(_key, response['data']);
@@ -632,6 +645,8 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
             widget.session.id!,
             widget.type,
             cards[selectedCardIndex].id!,
+            widget.session.startTime!,
+            widget.session.endTime!,
           );
           if (response['response_status'] == 'ok'
               // && response['data']['payment_operation']['status'] == 1

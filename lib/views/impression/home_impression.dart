@@ -1,9 +1,6 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/impression_card.dart';
-import 'package:pana_project/components/selections_card.dart';
-import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/models/images.dart';
 import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/models/reels.dart';
@@ -16,7 +13,6 @@ import 'package:pana_project/views/housing/filter_page.dart';
 import 'package:pana_project/views/housing/search_page.dart';
 import 'package:pana_project/views/impression/impression_info.dart';
 import 'package:pana_project/views/other/favorites_page.dart';
-import 'package:pana_project/views/other/select_reels_booked_object_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
@@ -131,8 +127,8 @@ class _HomeImpressionState extends State<HomeImpression>
   void initState() {
     searchImpressionList(searchParams);
     checkIsLogedIn();
-    getReels();
-    getSelections();
+    // getReels();
+    // getSelections();
     _tabController = TabController(vsync: this, length: 12);
     super.initState();
   }
@@ -344,67 +340,69 @@ class _HomeImpressionState extends State<HomeImpression>
                   SizedBox(
                     child: Column(
                       children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
-                          height: 150,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  if (isLoggedIn == true) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                SelectReelsBookedObjectPage(
-                                                    'impression')));
-                                  } else {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => AuthPage()));
-                                  }
-                                },
-                                child: DottedBorder(
-                                  color: AppColors.accent,
-                                  strokeWidth: 1,
-                                  dashPattern: const [6, 2],
-                                  strokeCap: StrokeCap.round,
-                                  borderType: BorderType.RRect,
-                                  radius: const Radius.circular(8),
-                                  child: Container(
-                                    width: 85,
-                                    height: 150,
-                                    decoration: const BoxDecoration(
-                                      color: AppColors.lightGray,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(Icons.add,
-                                            color: AppColors.accent),
-                                        Text(
-                                          'Добавить',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.accent),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              for (int i = 0; i < reels.length; i++)
-                                StoriesCard(reels, i),
-                            ],
-                          ),
-                        ),
+                        const SizedBox(height: 20), // delete when stories shown
+                        // TODO: Истории
+                        // Container(
+                        //   margin: const EdgeInsets.symmetric(
+                        //       vertical: 10, horizontal: 10),
+                        //   height: 150,
+                        //   child: ListView(
+                        //     scrollDirection: Axis.horizontal,
+                        //     children: <Widget>[
+                        //       GestureDetector(
+                        //         onTap: () {
+                        //           if (isLoggedIn == true) {
+                        //             Navigator.push(
+                        //                 context,
+                        //                 MaterialPageRoute(
+                        //                     builder: (context) =>
+                        //                         SelectReelsBookedObjectPage(
+                        //                             'impression')));
+                        //           } else {
+                        //             Navigator.push(
+                        //                 context,
+                        //                 MaterialPageRoute(
+                        //                     builder: (context) => AuthPage()));
+                        //           }
+                        //         },
+                        //         child: DottedBorder(
+                        //           color: AppColors.accent,
+                        //           strokeWidth: 1,
+                        //           dashPattern: const [6, 2],
+                        //           strokeCap: StrokeCap.round,
+                        //           borderType: BorderType.RRect,
+                        //           radius: const Radius.circular(8),
+                        //           child: Container(
+                        //             width: 85,
+                        //             height: 150,
+                        //             decoration: const BoxDecoration(
+                        //               color: AppColors.lightGray,
+                        //             ),
+                        //             child: Column(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.center,
+                        //               children: const [
+                        //                 Icon(Icons.add,
+                        //                     color: AppColors.accent),
+                        //                 Text(
+                        //                   'Добавить',
+                        //                   style: TextStyle(
+                        //                       fontSize: 12,
+                        //                       fontWeight: FontWeight.w500,
+                        //                       color: AppColors.accent),
+                        //                   textAlign: TextAlign.center,
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //       const SizedBox(width: 5),
+                        //       for (int i = 0; i < reels.length; i++)
+                        //         StoriesCard(reels, i),
+                        //     ],
+                        //   ),
+                        // ),
                         for (int i = 0; i < impressionList.length; i++)
                           Column(
                             children: [
@@ -496,14 +494,15 @@ class _HomeImpressionState extends State<HomeImpression>
                                     child: ImpressionCard(
                                         impressionList[i], () {})),
                               ),
-                              (i + 1) % 3 == 0
-                                  ? Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 20),
-                                      child: SelectionsCard(selections,
-                                          selectionsImage, isLoggedIn),
-                                    )
-                                  : const SizedBox()
+                              // TODO: Подборки
+                              // (i + 1) % 3 == 0
+                              //     ? Padding(
+                              //         padding:
+                              //             const EdgeInsets.only(bottom: 20),
+                              //         child: SelectionsCard(selections,
+                              //             selectionsImage, isLoggedIn),
+                              //       )
+                              //     : const SizedBox()
                             ],
                           )
                       ],

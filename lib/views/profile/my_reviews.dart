@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/components/my_audio_review_card.dart';
 import 'package:pana_project/components/my_text_review_card.dart';
 import 'package:pana_project/models/audioReview.dart';
 import 'package:pana_project/models/textReview.dart';
@@ -21,7 +20,7 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
   @override
   void initState() {
     getTextReviews();
-    getAudioReviews();
+    // getAudioReviews();
     super.initState();
   }
 
@@ -35,17 +34,24 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
           currentFocus.unfocus();
         }
       },
-      child: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: SingleChildScrollView(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  const SizedBox(height: 30),
-                  Row(
+      child:
+          // DefaultTabController(
+          //   length: 2,
+          //   child:
+          Scaffold(
+        backgroundColor: AppColors.lightGray,
+        body: SingleChildScrollView(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Container(
+                  height: 30,
+                  color: AppColors.white,
+                ),
+                Container(
+                  color: AppColors.white,
+                  child: Row(
                     children: [
                       GestureDetector(
                         onTap: () {
@@ -76,77 +82,91 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
                       const SizedBox(width: 50)
                     ],
                   ),
-                  const SizedBox(
-                    height: 40,
-                    child: TabBar(
-                      isScrollable: true,
-                      indicatorColor: AppColors.accent,
-                      labelColor: AppColors.black,
-                      labelStyle: TextStyle(
-                        fontSize: 14,
+                ),
+                // TODO: Текстовые отзывы
+                textReviews.isNotEmpty
+                    ? Column(
+                        children: [
+                          for (int i = 0; i < textReviews.length; i++)
+                            MyTextReviewCard(textReviews[i]),
+                          const SizedBox(height: 20)
+                        ],
+                      )
+                    : const Center(
+                        child: Text('Отзывов пока нет...'),
                       ),
-                      unselectedLabelColor: AppColors.blackWithOpacity,
-                      indicatorWeight: 3,
-                      indicatorSize: TabBarIndicatorSize.label,
-                      tabs: [
-                        Tab(
-                          text: 'Аудио-отзывы',
-                        ),
-                        Tab(
-                          text: 'Текстовые',
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    color: AppColors.lightGray,
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 120,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height - 120,
-                          child: TabBarView(
-                            children: [
-                              // TODO: Аудио отзывы
-                              audioReviews.isNotEmpty
-                                  ? ListView(
-                                      children: [
-                                        for (int i = 0;
-                                            i < audioReviews.length;
-                                            i++)
-                                          MyAudioReviewCard(audioReviews[i]),
-                                        const SizedBox(height: 20)
-                                      ],
-                                    )
-                                  : const Center(
-                                      child: Text('Аудио отзывов пока нет...'),
-                                    ),
-                              // TODO: Текстовые отзывы
-                              textReviews.isNotEmpty
-                                  ? ListView(
-                                      children: [
-                                        for (int i = 0;
-                                            i < textReviews.length;
-                                            i++)
-                                          MyTextReviewCard(textReviews[i]),
-                                        const SizedBox(height: 20)
-                                      ],
-                                    )
-                                  : const Center(
-                                      child: Text('Отзывов пока нет...'),
-                                    )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+
+                // const SizedBox(
+                //   height: 40,
+                //   child: TabBar(
+                //     isScrollable: true,
+                //     indicatorColor: AppColors.accent,
+                //     labelColor: AppColors.black,
+                //     labelStyle: TextStyle(
+                //       fontSize: 14,
+                //     ),
+                //     unselectedLabelColor: AppColors.blackWithOpacity,
+                //     indicatorWeight: 3,
+                //     indicatorSize: TabBarIndicatorSize.label,
+                //     tabs: [
+                //       Tab(
+                //         text: 'Аудио-отзывы',
+                //       ),
+                //       Tab(
+                //         text: 'Текстовые',
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                // Container(
+                //   color: AppColors.lightGray,
+                //   width: MediaQuery.of(context).size.width,
+                //   height: MediaQuery.of(context).size.height - 120,
+                //   child: Column(
+                //     children: [
+                //       SizedBox(
+                //         height: MediaQuery.of(context).size.height - 120,
+                //         child: TabBarView(
+                //           children: [
+                //             // TODO: Аудио отзывы
+                //             audioReviews.isNotEmpty
+                //                 ? ListView(
+                //                     children: [
+                //                       for (int i = 0;
+                //                           i < audioReviews.length;
+                //                           i++)
+                //                         MyAudioReviewCard(audioReviews[i]),
+                //                       const SizedBox(height: 20)
+                //                     ],
+                //                   )
+                //                 : const Center(
+                //                     child: Text('Аудио отзывов пока нет...'),
+                //                   ),
+                //             // TODO: Текстовые отзывы
+                //             textReviews.isNotEmpty
+                //                 ? ListView(
+                //                     children: [
+                //                       for (int i = 0;
+                //                           i < textReviews.length;
+                //                           i++)
+                //                         MyTextReviewCard(textReviews[i]),
+                //                       const SizedBox(height: 20)
+                //                     ],
+                //                   )
+                //                 : const Center(
+                //                     child: Text('Отзывов пока нет...'),
+                //                   )
+                //           ],
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+              ],
             ),
           ),
         ),
+        // ),
       ),
     );
   }

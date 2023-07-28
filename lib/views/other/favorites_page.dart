@@ -239,6 +239,15 @@ class _FavoritesPageState extends State<FavoritesPage>
                                                       );
                                                     }
 
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+
+                                                    String? lat = prefs
+                                                        .getString('lastLat');
+                                                    String? lng = prefs
+                                                        .getString('lastLng');
+
                                                     await Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -247,9 +256,11 @@ class _FavoritesPageState extends State<FavoritesPage>
                                                           housingList[i].id!,
                                                           thisStoryItems,
                                                           mediaStoryItems,
-                                                          housingList[i]
-                                                              .distance
-                                                              .toString(),
+                                                          lat ?? '',
+                                                          lng ?? '',
+                                                          // housingList[i]
+                                                          //     .distance
+                                                          //     .toString(),
                                                           '',
                                                           '',
                                                         ),

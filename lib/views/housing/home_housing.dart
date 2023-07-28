@@ -1,9 +1,7 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pana_project/components/housing_card.dart';
-import 'package:pana_project/components/selections_card.dart';
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/images.dart';
 import 'package:pana_project/models/reels.dart';
@@ -17,12 +15,9 @@ import 'package:pana_project/views/housing/filter_page.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
 import 'package:pana_project/views/housing/search_page.dart';
 import 'package:pana_project/views/other/favorites_page.dart';
-import 'package:pana_project/views/other/select_reels_booked_object_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
-
-import '../../components/stories_card.dart';
 
 class HomeHousing extends StatefulWidget {
   @override
@@ -102,9 +97,10 @@ class _HomeHousingState extends State<HomeHousing>
   void initState() {
     // searchHousingList(searchParams);
     getCurrentLocation();
+    searchHousingList(searchParams);
     checkIsLogedIn();
-    getReels();
-    getSelections();
+    // getReels();
+    // getSelections();
 
     super.initState();
     _tabController = TabController(vsync: this, length: 13);
@@ -289,7 +285,8 @@ class _HomeHousingState extends State<HomeHousing>
                       controller: _tabController,
                       onTap: (index) {
                         fromSearch = false;
-                        getCurrentLocation();
+                        searchHousingList(searchParams);
+                        // getCurrentLocation();
                         housingList = [];
                         loading = true;
                         setState(() {
@@ -320,68 +317,71 @@ class _HomeHousingState extends State<HomeHousing>
                     SizedBox(
                       child: Column(
                         children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
-                            height: 150,
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () {
-                                    if (isLoggedIn == true) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SelectReelsBookedObjectPage(
-                                                      'housing')));
-                                    } else {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AuthPage()));
-                                    }
-                                  },
-                                  child: DottedBorder(
-                                    color: AppColors.accent,
-                                    strokeWidth: 1,
-                                    dashPattern: const [6, 2],
-                                    strokeCap: StrokeCap.round,
-                                    borderType: BorderType.RRect,
-                                    radius: const Radius.circular(8),
-                                    child: Container(
-                                      width: 85,
-                                      height: 150,
-                                      decoration: const BoxDecoration(
-                                        color: AppColors.lightGray,
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Icon(Icons.add,
-                                              color: AppColors.accent),
-                                          Text(
-                                            'Добавить',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.accent),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 5),
-                                for (int i = 0; i < reels.length; i++)
-                                  StoriesCard(reels, i),
-                              ],
-                            ),
-                          ),
+                          const SizedBox(
+                              height: 20), // delete when stories shown
+                          // TODO: Истории
+                          // Container(
+                          //   margin: const EdgeInsets.symmetric(
+                          //       vertical: 10, horizontal: 10),
+                          //   height: 150,
+                          //   child: ListView(
+                          //     scrollDirection: Axis.horizontal,
+                          //     children: <Widget>[
+                          //       GestureDetector(
+                          //         onTap: () {
+                          //           if (isLoggedIn == true) {
+                          //             Navigator.push(
+                          //                 context,
+                          //                 MaterialPageRoute(
+                          //                     builder: (context) =>
+                          //                         SelectReelsBookedObjectPage(
+                          //                             'housing')));
+                          //           } else {
+                          //             Navigator.push(
+                          //                 context,
+                          //                 MaterialPageRoute(
+                          //                     builder: (context) =>
+                          //                         AuthPage()));
+                          //           }
+                          //         },
+                          //         child: DottedBorder(
+                          //           color: AppColors.accent,
+                          //           strokeWidth: 1,
+                          //           dashPattern: const [6, 2],
+                          //           strokeCap: StrokeCap.round,
+                          //           borderType: BorderType.RRect,
+                          //           radius: const Radius.circular(8),
+                          //           child: Container(
+                          //             width: 85,
+                          //             height: 150,
+                          //             decoration: const BoxDecoration(
+                          //               color: AppColors.lightGray,
+                          //             ),
+                          //             child: Column(
+                          //               mainAxisAlignment:
+                          //                   MainAxisAlignment.center,
+                          //               children: const [
+                          //                 Icon(Icons.add,
+                          //                     color: AppColors.accent),
+                          //                 Text(
+                          //                   'Добавить',
+                          //                   style: TextStyle(
+                          //                       fontSize: 12,
+                          //                       fontWeight: FontWeight.w500,
+                          //                       color: AppColors.accent),
+                          //                   textAlign: TextAlign.center,
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //       const SizedBox(width: 5),
+                          //       for (int i = 0; i < reels.length; i++)
+                          //         StoriesCard(reels, i),
+                          //     ],
+                          //   ),
+                          // ),
                           for (int i = 0; i < housingList.length; i++)
                             Column(
                               children: [
@@ -390,78 +390,82 @@ class _HomeHousingState extends State<HomeHousing>
                                   child: GestureDetector(
                                     onTap: () async {
                                       if (isLoggedIn == true) {
-                                        StoryController storyController =
-                                            StoryController();
-                                        List<StoryItem?> thisStoryItems = [];
-                                        List<StoryItem?> mediaStoryItems = [];
+                                        if (lat != '') {
+                                          StoryController storyController =
+                                              StoryController();
+                                          List<StoryItem?> thisStoryItems = [];
+                                          List<StoryItem?> mediaStoryItems = [];
 
-                                        // for (int j = 0;
-                                        //     j < housingList[i].videos!.length;
-                                        //     j++) {
-                                        //   thisStoryItems.add(
-                                        //     StoryItem.pageVideo(
-                                        //       housingList[i].videos![j].path!,
-                                        //       controller: _storyController,
-                                        //       imageFit: BoxFit.cover,
-                                        //     ),
-                                        //   );
-                                        //
-                                        //   mediaStoryItems.add(
-                                        //     StoryItem.pageVideo(
-                                        //       housingList[i].videos![j].path!,
-                                        //       controller: _storyController,
-                                        //       imageFit: BoxFit.fitWidth,
-                                        //     ),
-                                        //   );
-                                        // }
+                                          // for (int j = 0;
+                                          //     j < housingList[i].videos!.length;
+                                          //     j++) {
+                                          //   thisStoryItems.add(
+                                          //     StoryItem.pageVideo(
+                                          //       housingList[i].videos![j].path!,
+                                          //       controller: _storyController,
+                                          //       imageFit: BoxFit.cover,
+                                          //     ),
+                                          //   );
+                                          //
+                                          //   mediaStoryItems.add(
+                                          //     StoryItem.pageVideo(
+                                          //       housingList[i].videos![j].path!,
+                                          //       controller: _storyController,
+                                          //       imageFit: BoxFit.fitWidth,
+                                          //     ),
+                                          //   );
+                                          // }
 
-                                        for (int j = 0;
-                                            j < housingList[i].images!.length;
-                                            j++) {
-                                          thisStoryItems.add(
-                                            StoryItem.pageImage(
-                                              url: housingList[i]
-                                                  .images![j]
-                                                  .path!,
-                                              controller: storyController,
-                                              imageFit: BoxFit.cover,
-                                            ),
-                                          );
-
-                                          mediaStoryItems.add(
-                                            StoryItem.pageImage(
-                                              url: housingList[i]
-                                                  .images![j]
-                                                  .path!,
-                                              controller: storyController,
-                                              imageFit: BoxFit.fitWidth,
-                                            ),
-                                          );
-                                        }
-
-                                        await Navigator.push(
-                                            context,
-                                            ThisPageRoute(
-                                              HousingInfo(
-                                                housingList[i].id!,
-                                                thisStoryItems,
-                                                mediaStoryItems,
-                                                housingList[i].distance == -1
-                                                    ? '-'
-                                                    : housingList[i]
-                                                        .distance
-                                                        .toString(),
-                                                dateFrom,
-                                                dateTo,
+                                          for (int j = 0;
+                                              j < housingList[i].images!.length;
+                                              j++) {
+                                            thisStoryItems.add(
+                                              StoryItem.pageImage(
+                                                url: housingList[i]
+                                                    .images![j]
+                                                    .path!,
+                                                controller: storyController,
+                                                imageFit: BoxFit.cover,
                                               ),
-                                            )
-                                            // MaterialPageRoute(
-                                            //     builder: (context) => HousingInfo(
-                                            //         housingList[i].id!,
-                                            //         thisStoryItems,
-                                            //         mediaStoryItems))
                                             );
-                                        setState(() {});
+
+                                            mediaStoryItems.add(
+                                              StoryItem.pageImage(
+                                                url: housingList[i]
+                                                    .images![j]
+                                                    .path!,
+                                                controller: storyController,
+                                                imageFit: BoxFit.fitWidth,
+                                              ),
+                                            );
+                                          }
+
+                                          await Navigator.push(
+                                              context,
+                                              ThisPageRoute(
+                                                HousingInfo(
+                                                  housingList[i].id!,
+                                                  thisStoryItems,
+                                                  mediaStoryItems,
+                                                  lat,
+                                                  lng,
+                                                  // housingList[i].distance == -1
+                                                  //     ? '-'
+                                                  //     : housingList[i]
+                                                  //         .distance
+                                                  //         .toString(),
+                                                  dateFrom,
+                                                  dateTo,
+                                                ),
+                                              )
+                                              // MaterialPageRoute(
+                                              //     builder: (context) => HousingInfo(
+                                              //         housingList[i].id!,
+                                              //         thisStoryItems,
+                                              //         mediaStoryItems))
+                                              );
+                                          setState(() {});
+                                        }
                                       } else {
                                         Navigator.push(
                                             context,
@@ -473,14 +477,15 @@ class _HomeHousingState extends State<HomeHousing>
                                     child: HousingCard(housingList[i], () {}),
                                   ),
                                 ),
-                                (i + 1) % 3 == 0
-                                    ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 20),
-                                        child: SelectionsCard(selections,
-                                            selectionsImage, isLoggedIn),
-                                      )
-                                    : const SizedBox()
+                                // TODO: Подборки
+                                // (i + 1) % 3 == 0
+                                //     ? Padding(
+                                //         padding:
+                                //             const EdgeInsets.only(bottom: 20),
+                                //         child: SelectionsCard(selections,
+                                //             selectionsImage, isLoggedIn),
+                                //       )
+                                //     : const SizedBox()
                               ],
                             )
                         ],
@@ -519,7 +524,8 @@ class _HomeHousingState extends State<HomeHousing>
     if (fromSearch) {
       searchHousingList(searchParams);
     } else {
-      getCurrentLocation();
+      searchHousingList(searchParams);
+      // getCurrentLocation();
     }
 
     getReels();
@@ -796,7 +802,7 @@ class _HomeHousingState extends State<HomeHousing>
       prefs.setString('lastLat', lat);
       prefs.setString('lastLng', lng);
 
-      searchHousingList(searchParams);
+      // searchHousingList(searchParams);
 
       // getHousingList(
       //     position.latitude.toString(), position.longitude.toString());

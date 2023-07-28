@@ -6,10 +6,8 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:pana_project/components/audio_review_card.dart';
 import 'package:pana_project/components/bonus_card.dart';
 import 'package:pana_project/components/impression_card.dart';
-import 'package:pana_project/components/stories_card.dart';
 import 'package:pana_project/components/text_review_card.dart';
 import 'package:pana_project/components/text_with_border.dart';
 import 'package:pana_project/models/audioReview.dart';
@@ -27,7 +25,6 @@ import 'package:pana_project/utils/get_bytes_from_asset.dart';
 import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/impression/impression_sessions.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
-import 'package:pana_project/views/other/audio_reviews_page.dart';
 import 'package:pana_project/views/other/bonus_system_detail.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
@@ -886,41 +883,45 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                         ),
                       ),
                       const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                        child: Text(
-                          'Истории с этой локации',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      reels.isNotEmpty
-                          ? Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 10),
-                              height: 150,
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: <Widget>[
-                                  for (int i = 0; i < reels.length; i++)
-                                    StoriesCard(reels, i),
-                                ],
-                              ),
-                            )
-                          : const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 10),
-                              child: Text(
-                                'Истории отсутствуют...',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.blackWithOpacity),
-                              ),
-                            ),
-                      const Divider(),
+
+                      // TODO: Stories
+                      // const Padding(
+                      //   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                      //   child: Text(
+                      //     'Истории с этой локации',
+                      //     style: TextStyle(
+                      //       fontSize: 24,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //   ),
+                      // ),
+                      // reels.isNotEmpty
+                      //     ? Container(
+                      //         margin: const EdgeInsets.symmetric(
+                      //             vertical: 20, horizontal: 10),
+                      //         height: 150,
+                      //         child: ListView(
+                      //           scrollDirection: Axis.horizontal,
+                      //           children: <Widget>[
+                      //             for (int i = 0; i < reels.length; i++)
+                      //               StoriesCard(reels, i),
+                      //           ],
+                      //         ),
+                      //       )
+                      //     : const Padding(
+                      //         padding: EdgeInsets.symmetric(
+                      //             horizontal: 30, vertical: 10),
+                      //         child: Text(
+                      //           'Истории отсутствуют...',
+                      //           style: TextStyle(
+                      //               fontSize: 14,
+                      //               fontWeight: FontWeight.w400,
+                      //               color: AppColors.blackWithOpacity),
+                      //         ),
+                      //       ),
+                      // const Divider(),
+
+                      // TODO: End
                       Padding(
                         padding: const EdgeInsets.only(
                             top: 20, left: 20, bottom: 10),
@@ -969,7 +970,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                               ),
                             )
                           : SizedBox(
-                              height: 310,
+                              height: 335,
                               child: ListView(
                                 scrollDirection: Axis.horizontal,
                                 children: <Widget>[
@@ -999,76 +1000,79 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                               ),
                             ),
                       const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 20, left: 20, bottom: 10),
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Аудио-отзывы',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AudioReviewsPage(audioReviews)));
-                              },
-                              child: const Text(
-                                'Перейти',
-                                style: TextStyle(
-                                  color: AppColors.accent,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                          ],
-                        ),
-                      ),
-                      audioReviews.isEmpty
-                          ? const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 10),
-                              child: Text(
-                                'Аудио-отзывов пока нет...',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.blackWithOpacity,
-                                ),
-                              ),
-                            )
-                          : Container(),
-                      for (int i = 0;
-                          i <
-                              (audioReviews.length > 2
-                                  ? 2
-                                  : audioReviews.length);
-                          i++)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(24),
-                                ),
-                                border: Border.all(
-                                  width: 1,
-                                  color: AppColors.lightGray,
-                                ),
-                              ),
-                              child: AudioReviewCard(audioReviews[i])),
-                        ),
-                      const Divider(),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(
+                      //       top: 20, left: 20, bottom: 10),
+                      //   child: Row(
+                      //     children: [
+                      //       const Text(
+                      //         'Аудио-отзывы',
+                      //         style: TextStyle(
+                      //           fontSize: 24,
+                      //           fontWeight: FontWeight.w500,
+                      //         ),
+                      //       ),
+                      //       const Spacer(),
+                      //       GestureDetector(
+                      //         onTap: () {
+                      //           Navigator.push(
+                      //               context,
+                      //               MaterialPageRoute(
+                      //                   builder: (context) =>
+                      //                       AudioReviewsPage(audioReviews)));
+                      //         },
+                      //         child: const Text(
+                      //           'Перейти',
+                      //           style: TextStyle(
+                      //             color: AppColors.accent,
+                      //             fontSize: 14,
+                      //             fontWeight: FontWeight.w500,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       const SizedBox(width: 20),
+                      //     ],
+                      //   ),
+                      // ),
+                      // audioReviews.isEmpty
+                      //     ? const Padding(
+                      //         padding: EdgeInsets.symmetric(
+                      //             horizontal: 30, vertical: 10),
+                      //         child: Text(
+                      //           'Аудио-отзывов пока нет...',
+                      //           style: TextStyle(
+                      //             fontSize: 14,
+                      //             fontWeight: FontWeight.w400,
+                      //             color: AppColors.blackWithOpacity,
+                      //           ),
+                      //         ),
+                      //       )
+                      //     : Container(),
+                      // for (int i = 0;
+                      //     i <
+                      //         (audioReviews.length > 2
+                      //             ? 2
+                      //             : audioReviews.length);
+                      //     i++)
+                      //   Padding(
+                      //     padding: const EdgeInsets.symmetric(
+                      //         horizontal: 20, vertical: 5),
+                      //     child: Container(
+                      //         decoration: BoxDecoration(
+                      //           borderRadius: const BorderRadius.all(
+                      //             const Radius.circular(24),
+                      //           ),
+                      //           border: Border.all(
+                      //             width: 1,
+                      //             color: AppColors.lightGray,
+                      //           ),
+                      //         ),
+                      //         child: AudioReviewCard(audioReviews[i])),
+                      //   ),
+                      // const Divider(),
+
+                      // TODO: End
+
                       // const Padding(
                       //   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                       //   child: Text(

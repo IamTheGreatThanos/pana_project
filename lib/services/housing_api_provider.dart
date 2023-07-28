@@ -199,12 +199,18 @@ class HousingProvider {
     }
   }
 
-  Future<dynamic> getHousingDetail(int id) async {
+  Future<dynamic> getHousingDetail(int id, String lat, String lng) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
+    String url = '${API_URL}api/mobile/housing/show/$id';
+
+    if (lat != '') {
+      url += '?lat=$lat&lng=$lng';
+    }
+
     final response = await http.get(
-      Uri.parse('${API_URL}api/mobile/housing/show/$id'),
+      Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',

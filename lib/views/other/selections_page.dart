@@ -6,6 +6,7 @@ import 'package:pana_project/models/selections.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
 import 'package:pana_project/views/impression/impression_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
@@ -179,6 +180,15 @@ class _SelectionsPageState extends State<SelectionsPage> {
                                                 );
                                               }
 
+                                              SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+
+                                              String? lat =
+                                                  prefs.getString('lastLat');
+                                              String? lng =
+                                                  prefs.getString('lastLng');
+
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -188,9 +198,11 @@ class _SelectionsPageState extends State<SelectionsPage> {
                                                         .housing!.id!,
                                                     thisStoryItems,
                                                     mediaStoryItems,
-                                                    widget.selections.items![i]
-                                                        .housing!.distance
-                                                        .toString(),
+                                                    lat ?? '',
+                                                    lng ?? '',
+                                                    // widget.selections.items![i]
+                                                    //     .housing!.distance
+                                                    //     .toString(),
                                                     '',
                                                     '',
                                                   ),

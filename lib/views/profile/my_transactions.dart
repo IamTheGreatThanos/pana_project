@@ -242,8 +242,10 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        isImpressionTapped =
-                                            !isImpressionTapped;
+                                        isHousingTapped == false
+                                            ? isImpressionTapped = true
+                                            : isImpressionTapped =
+                                                !isImpressionTapped;
                                       });
                                     },
                                     child: Container(
@@ -298,7 +300,10 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        isHousingTapped = !isHousingTapped;
+                                        isImpressionTapped == false
+                                            ? isHousingTapped = true
+                                            : isHousingTapped =
+                                                !isHousingTapped;
                                       });
                                     },
                                     child: Container(

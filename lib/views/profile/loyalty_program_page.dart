@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/loyalty_bonus_card.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/profile/loyalty_program_detail.dart';
 
 class LoyaltyProgramPage extends StatefulWidget {
@@ -171,7 +172,7 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                                               : widget.cashbackLevel == 2
                                                   ? 'Kumis'
                                                   : 'Altyn',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
                                             color: AppColors.white,
@@ -183,7 +184,7 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                                                   .width *
                                               0.1,
                                         ),
-                                        Text(
+                                        const Text(
                                           'Мои асыки',
                                           style: TextStyle(
                                             fontSize: 12,
@@ -191,10 +192,14 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                                             color: Colors.white60,
                                           ),
                                         ),
-                                        SizedBox(height: 5),
+                                        const SizedBox(height: 5),
                                         Text(
-                                          widget.cashbackBalance,
-                                          style: TextStyle(
+                                          formatNumberString((double.tryParse(
+                                                      widget.cashbackBalance) ??
+                                                  0.0)
+                                              .toInt()
+                                              .toString()),
+                                          style: const TextStyle(
                                             fontSize: 32,
                                             fontWeight: FontWeight.w500,
                                             color: AppColors.white,
@@ -258,7 +263,7 @@ class _LoyaltyProgramPageState extends State<LoyaltyProgramPage> {
                               Image.asset('assets/images/loyalty_progress.png'),
                               ClipRRect(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(12)),
+                                    const BorderRadius.all(Radius.circular(12)),
                                 child: SizedBox(
                                   height: 3,
                                   child: LinearProgressIndicator(

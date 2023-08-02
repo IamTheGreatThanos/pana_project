@@ -100,57 +100,57 @@ class _TextReviewCardState extends State<TextReviewCard> {
                 ),
               ),
               const SizedBox(height: 10),
-              (widget.review.images?.length ?? 0) > 0
-                  ? Container(
-                      margin: const EdgeInsets.fromLTRB(10, 0, 10, 15),
-                      height: 70,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          for (int i = 0;
-                              i < (widget.review.images?.length ?? 0);
-                              i++)
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(12)),
-                                child: SizedBox(
-                                  width: 70,
-                                  height: 70,
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        widget.review.images?[i].path ?? '',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          const SizedBox(width: 10),
-                          (widget.review.images?.length ?? 0) > 3
-                              ? ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(12)),
-                                  child: Container(
-                                    color: AppColors.grey,
-                                    width: 70,
-                                    height: 70,
-                                    child: Center(
-                                      child: Text(
-                                        '+ ${(widget.review.images?.length ?? 3) - 3}',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Container(),
-                        ],
-                      ),
-                    )
-                  : Container(),
+              // (widget.review.images?.length ?? 0) > 0
+              //     ? Container(
+              //         margin: const EdgeInsets.fromLTRB(10, 0, 10, 15),
+              //         height: 70,
+              //         child: ListView(
+              //           scrollDirection: Axis.horizontal,
+              //           children: <Widget>[
+              //             for (int i = 0;
+              //                 i < (widget.review.images?.length ?? 0);
+              //                 i++)
+              //               Padding(
+              //                 padding: const EdgeInsets.only(left: 10),
+              //                 child: ClipRRect(
+              //                   borderRadius:
+              //                       const BorderRadius.all(Radius.circular(12)),
+              //                   child: SizedBox(
+              //                     width: 70,
+              //                     height: 70,
+              //                     child: CachedNetworkImage(
+              //                       imageUrl:
+              //                           widget.review.images?[i].path ?? '',
+              //                       fit: BoxFit.cover,
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //             const SizedBox(width: 10),
+              //             (widget.review.images?.length ?? 0) > 3
+              //                 ? ClipRRect(
+              //                     borderRadius: const BorderRadius.all(
+              //                         Radius.circular(12)),
+              //                     child: Container(
+              //                       color: AppColors.grey,
+              //                       width: 70,
+              //                       height: 70,
+              //                       child: Center(
+              //                         child: Text(
+              //                           '+ ${(widget.review.images?.length ?? 3) - 3}',
+              //                           style: const TextStyle(
+              //                             fontSize: 16,
+              //                             fontWeight: FontWeight.w500,
+              //                           ),
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   )
+              //                 : Container(),
+              //           ],
+              //         ),
+              //       )
+              //     : Container(),
               widget.review.answers?.isNotEmpty ?? false
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

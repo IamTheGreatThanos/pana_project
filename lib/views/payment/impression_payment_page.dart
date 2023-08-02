@@ -235,7 +235,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            '$dateFrom / $dateTo',
+                            '${widget.session.startDate} / ${widget.session.endDate}',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -337,7 +337,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                       ),
                       const Spacer(),
                       Text(
-                        '${formatNumberString(((widget.type == 1 ? widget.session.openPrice ?? 0 : widget.session.closedPrice ?? 0) * widget.impressionData.peopleCount * daysDifference).toString())} \₸',
+                        '${formatNumberString(((widget.type == 1 ? widget.session.openPrice ?? 0 : widget.session.closedPrice ?? 0) * widget.impressionData.peopleCount).toString())} \₸',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -455,7 +455,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: const [
                                 Text(
-                                  'Использовать бонусы',
+                                  'Оплата с помощью Асыков',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -503,9 +503,9 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                     padding: const EdgeInsets.only(bottom: 20),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.9,
-                      child: const Text(
-                        'Заезд до 13:00, выезд до 12:00',
-                        style: TextStyle(
+                      child: Text(
+                        'Заезд до ${widget.session.startTime?.substring(0, 5) ?? ''}, выезд до ${widget.session.endTime?.substring(0, 5) ?? ''}',
+                        style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.black45),
@@ -614,12 +614,16 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   void sendOrder(GlobalKey<SlideActionState> _key) async {
     var paymentPermissionResponse =
         await MainProvider().requestPaymentPermission();
+    print(widget.session.startDate!);
+    print(widget.session.endDate!);
+    print(widget.session.startTime!);
+    print(widget.session.endTime!);
     if (paymentPermissionResponse['data']['is_public'] == true) {
       if (selectedCardIndex == -2) {
         var response = await ImpressionProvider().impressionPayment(
           widget.impression.id!,
-          dateFrom,
-          dateTo,
+          widget.session.startDate!,
+          widget.session.endDate!,
           widget.impressionData.peopleCount,
           widget.session.id!,
           widget.type,
@@ -639,8 +643,8 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
         if (cards.isNotEmpty) {
           var response = await ImpressionProvider().impressionPayment(
             widget.impression.id!,
-            dateFrom,
-            dateTo,
+            widget.session.startDate!,
+            widget.session.endDate!,
             widget.impressionData.peopleCount,
             widget.session.id!,
             widget.type,
@@ -741,7 +745,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   }
 
   void showSuccessfullyPaySheet() async {
-    widget.impressionData.peopleCount = 1;
+    // widget.impressionData.peopleCount = 1;
 
     showModalBottomSheet(
       context: context,

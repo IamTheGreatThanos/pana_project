@@ -201,7 +201,7 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
         prefs.setBool('isLogedIn', true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Извините, код введен неправильно. Попробуйте еще раз.",
+          content: Text("Введенный вами код не подходит. Попробуйте еще раз.",
               style: TextStyle(fontSize: 14)),
         ));
       }
@@ -232,7 +232,7 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
         prefs.setBool('isLogedIn', true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Извините, код введен неправильно. Попробуйте еще раз.",
+          content: Text("Введенный вами код не подходит. Попробуйте еще раз.",
               style: TextStyle(fontSize: 14)),
         ));
       }

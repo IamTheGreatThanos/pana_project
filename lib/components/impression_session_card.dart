@@ -38,47 +38,75 @@ class ImpressionSessionCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                DateFormat("EE, d MMMM", 'ru')
-                    .format(DateTime.parse(session.startDate ?? '')),
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              session.startDate != session.endDate
+                  ? Text(
+                      '${DateFormat("d MMMM", 'ru').format(DateTime.parse(session.startDate ?? ''))} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(session.endDate ?? ''))}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
+                  : Text(
+                      DateFormat("d MMMM", 'ru')
+                          .format(DateTime.parse(session.startDate ?? '')),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
               const SizedBox(height: 10),
               Text(
-                '${session.startTime?.substring(0, 5)} - ${session.endTime?.substring(0, 5)}',
+                'Начинается: ${session.startDate == session.endDate ? session.startTime?.substring(0, 5) : '${DateFormat("EEEE", 'ru').format(DateTime.parse(session.startDate ?? ''))}, ${session.startTime?.substring(0, 5)}'}',
                 style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                     color: Colors.black45),
               ),
-              const SizedBox(height: 2),
-              const Text(
-                'Только для частных групп',
-                style: TextStyle(
+              Text(
+                'Завершается: ${session.startDate == session.endDate ? session.endTime?.substring(0, 5) : '${DateFormat("EEEE", 'ru').format(DateTime.parse(session.endDate ?? ''))}, ${session.endTime?.substring(0, 5)}'}',
+                style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black45,
-                    decoration: TextDecoration.underline),
+                    color: Colors.black45),
               ),
               const SizedBox(height: 20),
               Row(
                 children: [
-                  Text(
-                    'от ${formatNumberString(session.openPrice.toString())}\₸',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const Text(
-                    ' за группу',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black45),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'от ${formatNumberString(session.openPrice.toString())}\₸',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const Text(
+                            ' за группу',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black45),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        session.type == 1
+                            ? 'Открытая группа'
+                            : session.type == 2
+                                ? 'Закрытая групп'
+                                : 'Открытая и закрытая групп',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.blackWithOpacity,
+                        ),
+                      ),
+                    ],
                   ),
                   const Spacer(),
                   SizedBox(

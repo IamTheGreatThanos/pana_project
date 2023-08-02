@@ -363,6 +363,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                     child: CachedNetworkImage(
                                       imageUrl:
                                           thisImpression.user?.avatar ?? '',
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
@@ -701,7 +702,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                       const Padding(
                         padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                         child: Text(
-                          'Что нужно взять с собой',
+                          'Что нужно взять собой',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
@@ -922,54 +923,45 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                       // const Divider(),
 
                       // TODO: End
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 20, left: 20, bottom: 10),
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Отзывы',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TextReviewsPage(textReviews)));
-                              },
-                              child: const Text(
-                                'Перейти',
-                                style: TextStyle(
-                                  color: AppColors.accent,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                          ],
-                        ),
-                      ),
-                      textReviews.isEmpty
-                          ? const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 10),
-                              child: Text(
-                                'Отзывов пока нет...',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.blackWithOpacity,
-                                ),
+                      textReviews.isNotEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 20, left: 20, bottom: 10),
+                              child: Row(
+                                children: [
+                                  const Text(
+                                    'Отзывы',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TextReviewsPage(
+                                                      textReviews)));
+                                    },
+                                    child: const Text(
+                                      'Перейти',
+                                      style: TextStyle(
+                                        color: AppColors.accent,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                ],
                               ),
                             )
-                          : SizedBox(
+                          : Container(),
+                      textReviews.isNotEmpty
+                          ? SizedBox(
                               height: 335,
                               child: ListView(
                                 scrollDirection: Axis.horizontal,
@@ -998,8 +990,9 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                   const SizedBox(width: 20)
                                 ],
                               ),
-                            ),
-                      const Divider(),
+                            )
+                          : Container(),
+                      textReviews.isNotEmpty ? const Divider() : Container(),
                       // Padding(
                       //   padding: const EdgeInsets.only(
                       //       top: 20, left: 20, bottom: 10),

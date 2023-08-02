@@ -1281,7 +1281,7 @@ class _HousingInfoState extends State<HousingInfo> {
                       ),
                       nearbyImpressionList.isNotEmpty
                           ? SizedBox(
-                              height: 430,
+                              height: 445,
                               child: ListView(
                                   scrollDirection: Axis.horizontal,
                                   children: <Widget>[
@@ -1430,7 +1430,7 @@ class _HousingInfoState extends State<HousingInfo> {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: Text(
-                            'Заезд до ${thisHousing.checkInFrom ?? ''}, выезд до ${thisHousing.checkOutFrom ?? ''}',
+                            'Заезд до ${thisHousing.checkInFrom?.substring(0, 5) ?? ''}, выезд до ${thisHousing.checkOutFrom?.substring(0, 5) ?? ''}',
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,

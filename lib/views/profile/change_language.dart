@@ -89,8 +89,8 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
                                   SizedBox(
                                       width: 30,
                                       height: 30,
-                                      child: SvgPicture.asset(
-                                          'assets/icons/kz_icon.svg')),
+                                      child: Image.asset(
+                                          'assets/icons/kz_icon.png')),
                                   const SizedBox(width: 10),
                                   Text(
                                     'Казахский',
@@ -111,8 +111,8 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
                                   SizedBox(
                                       width: 30,
                                       height: 30,
-                                      child: SvgPicture.asset(
-                                          'assets/icons/ru_icon.svg')),
+                                      child: Image.asset(
+                                          'assets/icons/ru_icon.png')),
                                   const SizedBox(width: 10),
                                   Text(
                                     'Русский',
@@ -133,8 +133,8 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
                                   SizedBox(
                                       width: 30,
                                       height: 30,
-                                      child: SvgPicture.asset(
-                                          'assets/icons/en_icon.svg')),
+                                      child: Image.asset(
+                                          'assets/icons/en_icon.png')),
                                   const SizedBox(width: 10),
                                   Text(
                                     'Английский',

@@ -84,7 +84,7 @@ class _LoyaltyProgramDetailPageState extends State<LoyaltyProgramDetailPage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  '${formatNumberString(widget.spentMoney)} / ${widget.cashbackLevel == 1 ? '500 000' : widget.cashbackLevel == 2 ? '2 000 000' : '5 000 000'}',
+                  '${formatNumberString((double.tryParse(widget.spentMoney) ?? 0.0).toInt().toString())} / ${widget.cashbackLevel == 1 ? '500 000' : widget.cashbackLevel == 2 ? '2 000 000' : '5 000 000'}',
                   style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w600,
@@ -196,8 +196,11 @@ class _LoyaltyProgramDetailPageState extends State<LoyaltyProgramDetailPage> {
                                     ),
                                     const SizedBox(height: 5),
                                     Text(
-                                      formatNumberString(
-                                          widget.cashbackBalance),
+                                      formatNumberString((double.tryParse(
+                                                  widget.cashbackBalance) ??
+                                              0.0)
+                                          .toInt()
+                                          .toString()),
                                       style: const TextStyle(
                                         fontSize: 32,
                                         fontWeight: FontWeight.w600,

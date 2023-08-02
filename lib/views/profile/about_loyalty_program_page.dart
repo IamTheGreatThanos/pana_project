@@ -83,7 +83,7 @@ class _AboutLoyaltyProgramPageState extends State<AboutLoyaltyProgramPage> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'Программа лояльности "Pana club" предоставляет клиентам возможность получать кэшбэк при посещении заведений-партнеров данной программы.',
+                      'Программа лояльности "Pana club" предоставляет клиентам возможность получать кэшбэк при посещении заведении партнеров данной программы.',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,

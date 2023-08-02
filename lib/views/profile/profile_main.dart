@@ -85,32 +85,40 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                                 const SizedBox(width: 15),
                                 Stack(
                                   children: [
-                                    Container(
-                                      decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(12)),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5),
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.all(
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (isLogedIn = true) {
+                                          changeAvatar();
+                                        }
+                                      },
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
                                               Radius.circular(12)),
-                                          child: SizedBox(
-                                            width: 90,
-                                            height: 90,
-                                            child: image != null
-                                                ? Image.file(
-                                                    File(image!.path),
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : avatarUrl != ''
-                                                    ? CachedNetworkImage(
-                                                        imageUrl: avatarUrl,
-                                                        fit: BoxFit.cover,
-                                                      )
-                                                    : SvgPicture.asset(
-                                                        'assets/images/add_photo_placeholder.svg'),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(12)),
+                                            child: SizedBox(
+                                              width: 90,
+                                              height: 90,
+                                              child: image != null
+                                                  ? Image.file(
+                                                      File(image!.path),
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : avatarUrl != ''
+                                                      ? CachedNetworkImage(
+                                                          imageUrl: avatarUrl,
+                                                          fit: BoxFit.cover,
+                                                        )
+                                                      : SvgPicture.asset(
+                                                          'assets/images/add_photo_placeholder.svg'),
+                                            ),
                                           ),
                                         ),
                                       ),

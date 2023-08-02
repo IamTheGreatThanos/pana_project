@@ -60,76 +60,80 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.lightGray,
         body: SingleChildScrollView(
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
-                const SizedBox(
+                Container(
+                  color: AppColors.white,
                   height: 20,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: const BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(50),
+                Container(
+                  color: AppColors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: SvgPicture.asset(
+                                  'assets/icons/back_arrow.svg'),
                             ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child:
-                                SvgPicture.asset('assets/icons/back_arrow.svg'),
+                        ),
+                        const Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Число сеансов: $sessionCount',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                'На $dateText',
+                                style: const TextStyle(
+                                  color: AppColors.blackWithOpacity,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Число сеансов: $sessionCount',
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              'На $dateText',
-                              style: const TextStyle(
-                                color: AppColors.blackWithOpacity,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Spacer(),
-                      const Padding(
-                        padding: EdgeInsets.only(right: 0),
-                        child: SizedBox(
-                          height: 50,
-                          width: 50,
-                        ),
-                      )
-                    ],
+                        const Spacer(),
+                        const Padding(
+                          padding: EdgeInsets.only(right: 0),
+                          child: SizedBox(
+                            height: 50,
+                            width: 50,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-                const Divider(),
+                Container(color: AppColors.white, child: const Divider()),
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: 45,
@@ -500,14 +504,6 @@ class _ImpressionPeopleCountBottomSheetState
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            '0 - 99 лет',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ],

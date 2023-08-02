@@ -497,7 +497,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: const [
                                 Text(
-                                  'Использовать бонусы',
+                                  'Оплата с помощью Асыков',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -577,9 +577,9 @@ class _PaymentPageState extends State<PaymentPage> {
                     padding: const EdgeInsets.only(bottom: 20),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.9,
-                      child: const Text(
-                        'Заезд до 13:00, выезд до 12:00',
-                        style: TextStyle(
+                      child: Text(
+                        'Заезд до ${widget.housing.checkInFrom?.substring(0, 5) ?? ''}, выезд до ${widget.housing.checkOutFrom?.substring(0, 5) ?? ''}',
+                        style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.black45),
@@ -954,7 +954,7 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void showSuccessfullyPaySheet() async {
-    sharedHousingPaymentData.peopleCount = 1;
+    // sharedHousingPaymentData.peopleCount = 1;
 
     showModalBottomSheet(
       context: context,
@@ -1473,14 +1473,6 @@ class _HousingPaymentBottomSheetState extends State<HousingPaymentBottomSheet> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            '0 - 99 лет',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ],

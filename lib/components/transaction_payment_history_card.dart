@@ -43,13 +43,16 @@ class _TransactionPaymentHistoryCardState
               children: [
                 Row(
                   children: [
-                    Text(
-                      widget.transaction.type == 'housing'
-                          ? 'Бронирование жилья'
-                          : 'Бронирование впечатления',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.65,
+                      child: Text(
+                        widget.transaction.type == 'housing'
+                            ? 'Бронирование "${widget.transaction.housing?.name ?? ''}"'
+                            : 'Бронирование "${widget.transaction.impression?.name ?? ''}"',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     const Spacer(),
@@ -67,9 +70,10 @@ class _TransactionPaymentHistoryCardState
                 Text(
                   'Сумма: ${formatNumberString(widget.transaction.totalPrice.toString())} тг',
                   style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.blackWithOpacity),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.blackWithOpacity,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 const Divider(),

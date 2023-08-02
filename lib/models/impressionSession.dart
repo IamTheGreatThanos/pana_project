@@ -18,27 +18,30 @@ class ImpressionSessionModel {
   String? startDateText;
   String? startDate;
   String? endDate;
+  int? type;
 
-  ImpressionSessionModel(
-      {this.id,
-      this.status,
-      this.openPrice,
-      this.openPriceCurrency,
-      this.openEarning,
-      this.closedPrice,
-      this.closedPriceCurrency,
-      this.closedEarning,
-      this.inDay,
-      this.startDay,
-      this.startTime,
-      this.endDay,
-      this.endTime,
-      this.duplicateWeek,
-      this.runDate,
-      this.runOutDate,
-      this.startDateText,
-      this.startDate,
-      this.endDate});
+  ImpressionSessionModel({
+    this.id,
+    this.status,
+    this.openPrice,
+    this.openPriceCurrency,
+    this.openEarning,
+    this.closedPrice,
+    this.closedPriceCurrency,
+    this.closedEarning,
+    this.inDay,
+    this.startDay,
+    this.startTime,
+    this.endDay,
+    this.endTime,
+    this.duplicateWeek,
+    this.runDate,
+    this.runOutDate,
+    this.startDateText,
+    this.startDate,
+    this.endDate,
+    this.type,
+  });
 
   ImpressionSessionModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -60,6 +63,7 @@ class ImpressionSessionModel {
     startDateText = json['start_date_text'];
     startDate = json['start_date'];
     endDate = json['end_date'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +87,7 @@ class ImpressionSessionModel {
     data['start_date_text'] = this.startDateText;
     data['start_date'] = this.startDate;
     data['end_date'] = this.endDate;
+    data['type'] = this.type;
     return data;
   }
 }

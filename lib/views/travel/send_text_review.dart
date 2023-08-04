@@ -548,26 +548,37 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                         ),
                       ),
                       onPressed: () {
-                        if (_dateController.text.length == 10) {
-                          if (_reviewController.text.isNotEmpty) {
-                            saveChanges();
+                        if (priceBall != 0 &&
+                            fieldBall != 0 &&
+                            purityBall != 0 &&
+                            staffBall != 0) {
+                          if (_dateController.text.length == 10) {
+                            if (_reviewController.text.isNotEmpty) {
+                              saveChanges();
+                            } else {
+                              isValidReview = false;
+                              setState(() {});
+
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Напишите отзыв",
+                                    style: TextStyle(fontSize: 14)),
+                              ));
+                            }
                           } else {
-                            isValidReview = false;
+                            isValidDate = false;
                             setState(() {});
 
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
-                              content: Text("Напишите отзыв.",
+                              content: Text("Заполните дату",
                                   style: TextStyle(fontSize: 14)),
                             ));
                           }
                         } else {
-                          isValidDate = false;
-                          setState(() {});
-
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
-                            content: Text("Заполните дату.",
+                            content: Text("Поставьте все оценки",
                                 style: TextStyle(fontSize: 14)),
                           ));
                         }

@@ -6,6 +6,7 @@ import 'package:pana_project/models/notification.dart';
 import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/services/messages_api_provider.dart';
+import 'package:pana_project/utils/checkMessagesCount.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/messages/list_of_chats.dart';
@@ -129,9 +130,8 @@ class _MessagesPageState extends State<MessagesPage> {
                                                     .width *
                                                 0.72,
                                             child: Text(
-                                              newMessageCount != 0
-                                                  ? '$newMessageCount новых сообщения'
-                                                  : 'Нет новых сообщений',
+                                              checkMessagesCount(
+                                                  newMessageCount.toString()),
                                               style: const TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w400,

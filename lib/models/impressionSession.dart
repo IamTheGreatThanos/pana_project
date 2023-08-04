@@ -19,6 +19,9 @@ class ImpressionSessionModel {
   String? startDate;
   String? endDate;
   int? type;
+  int? maxCountClosed;
+  int? maxCountOpen;
+  int? currentPeopleCount;
 
   ImpressionSessionModel({
     this.id,
@@ -41,6 +44,9 @@ class ImpressionSessionModel {
     this.startDate,
     this.endDate,
     this.type,
+    this.maxCountClosed,
+    this.maxCountOpen,
+    this.currentPeopleCount,
   });
 
   ImpressionSessionModel.fromJson(Map<String, dynamic> json) {
@@ -64,30 +70,36 @@ class ImpressionSessionModel {
     startDate = json['start_date'];
     endDate = json['end_date'];
     type = json['type'];
+    maxCountClosed = json['closed_groups'];
+    maxCountOpen = json['open_groups'];
+    currentPeopleCount = int.tryParse(json['count_people'].toString()) ?? 1;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['status'] = this.status;
-    data['open_price'] = this.openPrice;
-    data['open_price_currency'] = this.openPriceCurrency;
-    data['open_earning'] = this.openEarning;
-    data['closed_price'] = this.closedPrice;
-    data['closed_price_currency'] = this.closedPriceCurrency;
-    data['closed_earning'] = this.closedEarning;
-    data['in_day'] = this.inDay;
-    data['start_day'] = this.startDay;
-    data['start_time'] = this.startTime;
-    data['end_day'] = this.endDay;
-    data['end_time'] = this.endTime;
-    data['duplicate_week'] = this.duplicateWeek;
-    data['run_date'] = this.runDate;
-    data['run_out_date'] = this.runOutDate;
-    data['start_date_text'] = this.startDateText;
-    data['start_date'] = this.startDate;
-    data['end_date'] = this.endDate;
-    data['type'] = this.type;
+    data['id'] = id;
+    data['status'] = status;
+    data['open_price'] = openPrice;
+    data['open_price_currency'] = openPriceCurrency;
+    data['open_earning'] = openEarning;
+    data['closed_price'] = closedPrice;
+    data['closed_price_currency'] = closedPriceCurrency;
+    data['closed_earning'] = closedEarning;
+    data['in_day'] = inDay;
+    data['start_day'] = startDay;
+    data['start_time'] = startTime;
+    data['end_day'] = endDay;
+    data['end_time'] = endTime;
+    data['duplicate_week'] = duplicateWeek;
+    data['run_date'] = runDate;
+    data['run_out_date'] = runOutDate;
+    data['start_date_text'] = startDateText;
+    data['start_date'] = startDate;
+    data['end_date'] = endDate;
+    data['type'] = type;
+    data['closed_groups'] = maxCountClosed;
+    data['open_groups'] = maxCountOpen;
+    data['count_people'] = currentPeopleCount;
     return data;
   }
 }

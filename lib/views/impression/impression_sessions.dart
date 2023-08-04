@@ -539,7 +539,20 @@ class _ImpressionPeopleCountBottomSheetState
                       ),
                       GestureDetector(
                         onTap: () {
-                          widget.impressionData.plusFunction();
+                          if (widget.isPrivate == 2) {
+                            if ((widget.session.maxCountClosed ?? 0) -
+                                    (widget.session.currentPeopleCount ?? 0) >
+                                widget.impressionData.peopleCount) {
+                              widget.impressionData.plusFunction();
+                            }
+                          } else {
+                            if ((widget.session.maxCountOpen ?? 0) -
+                                    (widget.session.currentPeopleCount ?? 0) >
+                                widget.impressionData.peopleCount) {
+                              widget.impressionData.plusFunction();
+                            }
+                          }
+
                           if (mounted) {
                             setState(() {});
                           }
@@ -634,6 +647,13 @@ class _ImpressionSessionPrivateModeModalBottomSheetState
   bool isPrivateSelected = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    widget.session.type == 2 ? isPrivateSelected = true : null;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
@@ -649,153 +669,169 @@ class _ImpressionSessionPrivateModeModalBottomSheetState
               ),
             ),
             const SizedBox(height: 20),
-            GestureDetector(
-              onTap: () {
-                isPrivateSelected = false;
-                if (mounted) {
-                  setState(() {});
-                }
-              },
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: AppColors.lightGray,
-                  border: Border.all(
-                    width: 2,
-                    color: AppColors.grey,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      isPrivateSelected
-                          ? SvgPicture.asset('assets/icons/radio_button_0.svg')
-                          : SvgPicture.asset('assets/icons/radio_button_1.svg'),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 15),
-                          const Text(
-                            'Открытая группа',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Это группа, доступная для \nбронирования любым человеком',
-                            style: TextStyle(
-                              color: AppColors.blackWithOpacity,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          RichText(
-                            text: TextSpan(
-                                text:
-                                    '${formatNumberString(widget.session.openPrice.toString())}₸ ',
-                                style: const TextStyle(
-                                  color: AppColors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
+            widget.session.type != 2
+                ? GestureDetector(
+                    onTap: () {
+                      isPrivateSelected = false;
+                      if (mounted) {
+                        setState(() {});
+                      }
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.lightGray,
+                        border: Border.all(
+                          width: 2,
+                          color: AppColors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            isPrivateSelected
+                                ? SvgPicture.asset(
+                                    'assets/icons/radio_button_0.svg')
+                                : SvgPicture.asset(
+                                    'assets/icons/radio_button_1.svg'),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 15),
+                                const Text(
+                                  'Открытая группа',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                                children: const <InlineSpan>[
-                                  TextSpan(
-                                      text: 'за человека',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.blackWithOpacity,
-                                      ))
-                                ]),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.65,
+                                  child: const Text(
+                                    'Эта общая группа, которая доступна любому человеку',
+                                    style: TextStyle(
+                                      color: AppColors.blackWithOpacity,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                RichText(
+                                  text: TextSpan(
+                                      text:
+                                          '${formatNumberString(widget.session.openPrice.toString())}₸ ',
+                                      style: const TextStyle(
+                                        color: AppColors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      children: const <InlineSpan>[
+                                        TextSpan(
+                                            text: 'за человека',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: AppColors.blackWithOpacity,
+                                            ))
+                                      ]),
+                                ),
+                                const SizedBox(height: 10),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
             const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {
-                isPrivateSelected = true;
-                if (mounted) {
-                  setState(() {});
-                }
-              },
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: AppColors.lightGray,
-                  border: Border.all(
-                    width: 2,
-                    color: AppColors.grey,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      isPrivateSelected
-                          ? SvgPicture.asset('assets/icons/radio_button_1.svg')
-                          : SvgPicture.asset('assets/icons/radio_button_0.svg'),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 15),
-                          const Text(
-                            'Закрытая группа',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Это группа, предназначенная для \nбронирования 1 человеком, \nсразу всех мест',
-                            style: TextStyle(
-                              color: AppColors.blackWithOpacity,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          RichText(
-                            text: TextSpan(
-                                text:
-                                    '${formatNumberString(widget.session.closedPrice.toString())}₸ ',
-                                style: const TextStyle(
-                                  color: AppColors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
+            widget.session.type != 1
+                ? GestureDetector(
+                    onTap: () {
+                      isPrivateSelected = true;
+                      if (mounted) {
+                        setState(() {});
+                      }
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.lightGray,
+                        border: Border.all(
+                          width: 2,
+                          color: AppColors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            isPrivateSelected
+                                ? SvgPicture.asset(
+                                    'assets/icons/radio_button_1.svg')
+                                : SvgPicture.asset(
+                                    'assets/icons/radio_button_0.svg'),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 15),
+                                const Text(
+                                  'Закрытая группа',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                                children: const <InlineSpan>[
-                                  TextSpan(
-                                      text: 'за человека',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.blackWithOpacity,
-                                      ))
-                                ]),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.65,
+                                  child: const Text(
+                                    'Это приватная группа при бронировании которой, становится не доступным для других людей',
+                                    style: TextStyle(
+                                      color: AppColors.blackWithOpacity,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                RichText(
+                                  text: TextSpan(
+                                      text:
+                                          '${formatNumberString(widget.session.closedPrice.toString())}₸ ',
+                                      style: const TextStyle(
+                                        color: AppColors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      children: const <InlineSpan>[
+                                        TextSpan(
+                                            text: 'за человека',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: AppColors.blackWithOpacity,
+                                            ))
+                                      ]),
+                                ),
+                                const SizedBox(height: 10),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
             const SizedBox(height: 20),
             SizedBox(
               height: 60,

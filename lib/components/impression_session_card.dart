@@ -98,8 +98,8 @@ class ImpressionSessionCard extends StatelessWidget {
                         session.type == 1
                             ? 'Открытая группа'
                             : session.type == 2
-                                ? 'Закрытая групп'
-                                : 'Открытая и закрытая групп',
+                                ? 'Закрытая группа'
+                                : 'Открытая и закрытая группа',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,

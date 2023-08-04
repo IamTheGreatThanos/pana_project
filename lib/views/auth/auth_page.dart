@@ -403,8 +403,8 @@ class _AuthPageState extends State<AuthPage> {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
                                 behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.fromLTRB(20, 0, 20,
-                                    MediaQuery.of(context).size.height - 100),
+                                // margin: EdgeInsets.only(20, 0, 20,
+                                //     MediaQuery.of(context).size.height - 100),
                                 content: Text("Заполните все поля.",
                                     style: const TextStyle(fontSize: 14)),
                               ));
@@ -472,8 +472,8 @@ class _AuthPageState extends State<AuthPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.fromLTRB(
-            20, 0, 20, MediaQuery.of(context).size.height - 100),
+        // margin: EdgeInsets.fromLTRB(
+        //     20, 0, 20, MediaQuery.of(context).size.height - 100),
         content: Text(response['data']['message'],
             style: const TextStyle(fontSize: 14)),
       ));

@@ -16,7 +16,7 @@ class ImpressionCardModel {
   List<Videos>? videos;
   String? price;
   bool? inFavorite;
-  int? reviewsAvgBall;
+  double? reviewsAvgBall;
   int? reviewsCount;
   Category? category;
   String? dateFrom;
@@ -62,7 +62,7 @@ class ImpressionCardModel {
     }
     price = json['price'].toString();
     inFavorite = json['in_favorite'];
-    reviewsAvgBall = json['reviews_avg_ball'];
+    reviewsAvgBall = double.tryParse(json['reviews_avg_ball'].toString()) ?? 0;
     reviewsCount = json['reviews_count'];
     category =
         json['category'] != null ? Category.fromJson(json['category']) : null;

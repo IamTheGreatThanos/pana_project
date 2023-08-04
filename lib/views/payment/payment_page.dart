@@ -652,6 +652,9 @@ class _PaymentPageState extends State<PaymentPage> {
 
     Duration difference = dateToFormatted.difference(dateFromFormatted);
     int days = difference.inDays;
+
+    sum = 0;
+
     for (int i = 0; i < widget.roomList.length; i++) {
       sum += (widget.roomList[i].basePrice ?? 0) *
           widget.selectedRooms[i]['count'] *
@@ -809,6 +812,8 @@ class _PaymentPageState extends State<PaymentPage> {
         return HousingPaymentBottomSheet();
       },
     );
+
+    calcSum();
 
     setState(() {});
   }

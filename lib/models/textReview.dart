@@ -13,10 +13,10 @@ class TextReviewModel {
   String? audio;
   String? description;
   int? price;
-  int? purity;
-  int? staff;
-  int? ball;
-  int? atmosphere;
+  double? purity;
+  double? staff;
+  double? ball;
+  double? atmosphere;
   List<Answers>? answers;
   List<Images>? images;
   int? likeCount;
@@ -53,10 +53,10 @@ class TextReviewModel {
     audio = json['audio'];
     description = json['description'];
     price = json['price'];
-    purity = json['purity'];
-    staff = json['staff'];
-    ball = json['ball'];
-    atmosphere = json['atmosphere'];
+    purity = double.tryParse(json['purity'].toString()) ?? 0;
+    staff = double.tryParse(json['staff'].toString()) ?? 0;
+    ball = double.tryParse(json['ball'].toString()) ?? 0;
+    atmosphere = double.tryParse(json['atmosphere'].toString()) ?? 0;
     if (json['answers'] != null) {
       answers = <Answers>[];
       json['answers'].forEach((v) {

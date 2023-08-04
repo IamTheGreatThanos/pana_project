@@ -224,6 +224,35 @@ class _HomeHousingState extends State<HomeHousing>
                                         ),
                                       ),
                                 const Spacer(),
+                                searchText != ''
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          searchParams = [
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            'Выбрать даты',
+                                            '',
+                                            '',
+                                            0,
+                                            ''
+                                          ];
+                                          searchText = '';
+                                          selectedCountryId = 0;
+                                          selectedRange = '';
+                                          setState(() {});
+
+                                          searchHousingList(searchParams);
+                                        },
+                                        child: const Icon(
+                                          Icons.close,
+                                          color: AppColors.blackWithOpacity,
+                                          size: 18,
+                                        ),
+                                      )
+                                    : Container(),
                                 const Padding(
                                   padding: EdgeInsets.symmetric(
                                       vertical: 12, horizontal: 5),
@@ -671,6 +700,7 @@ class _HomeHousingState extends State<HomeHousing>
 
   void searchHousingList(List<dynamic> params) async {
     housingList = [];
+    loading = true;
     var response = await HousingProvider().getHousingFromSearch(
       selectedCategoryId,
       params[0],

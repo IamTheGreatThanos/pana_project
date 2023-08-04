@@ -19,6 +19,8 @@ class _EpayWebViewPageState extends State<EpayWebViewPage> {
 
   String htmlString = '';
 
+  String status = 'Error';
+
   @override
   void initState() {
     Map<String, dynamic> paymentObject = widget.paymentData;
@@ -149,7 +151,7 @@ class _EpayWebViewPageState extends State<EpayWebViewPage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(status);
                   },
                   child: Container(
                     width: 50,
@@ -211,6 +213,8 @@ class _EpayWebViewPageState extends State<EpayWebViewPage> {
   void callbackMethod(dynamic data) {
     print(data);
     if (data['success'] == true) {
+      status = 'Success';
+      setState(() {});
       Navigator.of(context).pop('Success');
       // Navigator.of(context).pushAndRemoveUntil(
       //     MaterialPageRoute(builder: (context) => TabBarPage(2)),

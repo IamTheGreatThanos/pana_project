@@ -249,7 +249,36 @@ class _HomeImpressionState extends State<HomeImpression>
                                         ],
                                       ),
                                     ),
-                              Spacer(),
+                              const Spacer(),
+                              searchText != ''
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        searchParams = [
+                                          0,
+                                          0,
+                                          0,
+                                          0,
+                                          0,
+                                          'Выбрать даты',
+                                          '',
+                                          '',
+                                          0,
+                                          ''
+                                        ];
+                                        searchText = '';
+                                        selectedCountryId = 0;
+                                        selectedRange = '';
+                                        setState(() {});
+
+                                        searchImpressionList(searchParams);
+                                      },
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: AppColors.blackWithOpacity,
+                                        size: 18,
+                                      ),
+                                    )
+                                  : Container(),
                               const Padding(
                                 padding: EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 5),
@@ -642,6 +671,7 @@ class _HomeImpressionState extends State<HomeImpression>
 
   void searchImpressionList(List<dynamic> params) async {
     impressionList = [];
+    loading = true;
     var response = await ImpressionProvider().getImpressionFromSearch(
       selectedCategoryId,
       params[0],

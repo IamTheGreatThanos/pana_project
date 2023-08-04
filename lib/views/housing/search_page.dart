@@ -1139,7 +1139,7 @@ class _SearchPageState extends State<SearchPage> {
                                         children: [
                                           const Padding(
                                             padding: EdgeInsets.only(
-                                                top: 0, left: 20),
+                                                top: 10, left: 20),
                                             child: Text(
                                               'Впечатление',
                                               style: TextStyle(

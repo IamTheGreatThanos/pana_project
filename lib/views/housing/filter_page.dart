@@ -645,34 +645,41 @@ class _FiltersPageState extends State<FiltersPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  goToComfortsPage();
-                                },
-                                child: Row(
-                                  children: const [
-                                    Text(
-                                      'Удобства',
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w600,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          goToComfortsPage();
+                                        },
+                                        child: const Text(
+                                          'Удобства',
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    Spacer(),
-                                    Icon(Icons.arrow_forward_ios)
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                comforts.isEmpty
-                                    ? 'Выберите необходимые удобства'
-                                    : 'Выбранно ${comforts.length} удобств',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.blackWithOpacity,
-                                ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        comforts.isEmpty
+                                            ? 'Выберите необходимые удобства'
+                                            : 'Выбранно ${comforts.length} удобств',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.blackWithOpacity,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Icon(Icons.arrow_forward_ios)
+                                ],
                               ),
                               comforts.isNotEmpty
                                   ? Padding(

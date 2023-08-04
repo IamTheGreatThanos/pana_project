@@ -38,6 +38,7 @@ class ImpressionPaymentPage extends StatefulWidget {
 }
 
 class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
+  TextEditingController commentController = TextEditingController();
   var _switchValue = false;
   double sum = 0;
   String dateFrom = '-';
@@ -488,6 +489,38 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: TextField(
+                      controller: commentController,
+                      maxLines: 8,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.black,
+                      ),
+                      decoration: const InputDecoration(
+                        hintStyle: TextStyle(
+                          color: AppColors.blackWithOpacity,
+                        ),
+                        hintText: "Добавьте заметку организатору (по желанию)",
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: AppColors.grey,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: AppColors.accent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   const Divider(),
                   const Padding(
                     padding: EdgeInsets.only(top: 20, bottom: 10),
@@ -513,30 +546,30 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                     ),
                   ),
                   const Divider(),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 10),
-                    child: Text(
-                      'Правила впечатления',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: const Text(
-                        'Отклонение проецирует суммарный поворот. Гировертикаль, в силу третьего закона Ньютона, даёт большую проекцию на оси, чем тангаж. Ротор безусловно заставляет иначе взглянуть на то, что такое уходящий ньютонометр, сводя задачу к квадратурам.',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black45),
-                      ),
-                    ),
-                  ),
-                  const Divider(),
+                  // const Padding(
+                  //   padding: EdgeInsets.only(top: 20, bottom: 10),
+                  //   child: Text(
+                  //     'Правила впечатления',
+                  //     style: TextStyle(
+                  //       fontSize: 24,
+                  //       fontWeight: FontWeight.w500,
+                  //     ),
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(bottom: 20),
+                  //   child: SizedBox(
+                  //     width: MediaQuery.of(context).size.width * 0.9,
+                  //     child: const Text(
+                  //       'Отклонение проецирует суммарный поворот. Гировертикаль, в силу третьего закона Ньютона, даёт большую проекцию на оси, чем тангаж. Ротор безусловно заставляет иначе взглянуть на то, что такое уходящий ньютонометр, сводя задачу к квадратурам.',
+                  //       style: TextStyle(
+                  //           fontSize: 14,
+                  //           fontWeight: FontWeight.w500,
+                  //           color: Colors.black45),
+                  //     ),
+                  //   ),
+                  // ),
+                  // const Divider(),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Builder(
@@ -594,6 +627,8 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
       },
     );
 
+    calcSum();
+
     setState(() {});
   }
 
@@ -606,6 +641,12 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
 
     daysDifference = days;
 
+    sum = ((widget.type == 1
+                ? widget.session.openPrice ?? 0
+                : widget.session.closedPrice ?? 0) *
+            widget.impressionData.peopleCount)
+        .toDouble();
+
     if (mounted) {
       setState(() {});
     }
@@ -614,10 +655,6 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   void sendOrder(GlobalKey<SlideActionState> _key) async {
     var paymentPermissionResponse =
         await MainProvider().requestPaymentPermission();
-    print(widget.session.startDate!);
-    print(widget.session.endDate!);
-    print(widget.session.startTime!);
-    print(widget.session.endTime!);
     if (paymentPermissionResponse['data']['is_public'] == true) {
       if (selectedCardIndex == -2) {
         var response = await ImpressionProvider().impressionPayment(
@@ -630,6 +667,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
           -2,
           widget.session.startTime!,
           widget.session.endTime!,
+          commentController.text,
         );
         if (response['response_status'] == 'ok') {
           goToEPay(_key, response['data']);
@@ -651,6 +689,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
             cards[selectedCardIndex].id!,
             widget.session.startTime!,
             widget.session.endTime!,
+            commentController.text,
           );
           if (response['response_status'] == 'ok'
               // && response['data']['payment_operation']['status'] == 1

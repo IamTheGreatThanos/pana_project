@@ -702,7 +702,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                       const Padding(
                         padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                         child: Text(
-                          'Что нужно взять собой',
+                          'Что нужно взять с собой',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
@@ -732,7 +732,11 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  TextWithBorderWidget(title: item.name),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 5),
+                                    child:
+                                        TextWithBorderWidget(title: item.name),
+                                  ),
                                   const SizedBox(width: 10),
                                 ],
                               ),
@@ -1248,7 +1252,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                       ),
                       similarImpressionList.isNotEmpty
                           ? SizedBox(
-                              height: 425,
+                              height: 445,
                               child: ListView(
                                   scrollDirection: Axis.horizontal,
                                   children: <Widget>[

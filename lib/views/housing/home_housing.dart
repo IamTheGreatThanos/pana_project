@@ -199,11 +199,9 @@ class _HomeHousingState extends State<HomeHousing>
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              (searchText != ''
-                                                      ? '$searchText, '
-                                                      : '') +
-                                                  continentNames[
-                                                      selectedCountryId],
+                                              searchText != ''
+                                                  ? '$searchText, '
+                                                  : '',
                                               style: const TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 14,

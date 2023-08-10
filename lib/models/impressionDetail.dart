@@ -1,7 +1,9 @@
 import 'package:pana_project/models/city.dart';
 import 'package:pana_project/models/images.dart';
 import 'package:pana_project/models/inventories.dart';
+import 'package:pana_project/models/languages.dart';
 import 'package:pana_project/models/provideItems.dart';
+import 'package:pana_project/models/topic.dart';
 import 'package:pana_project/models/user.dart';
 
 class ImpressionDetailModel {
@@ -35,6 +37,8 @@ class ImpressionDetailModel {
   String? reviewsAvgBall;
   int? reviewsCount;
   List<Images>? images;
+  List<Topic>? topics;
+  List<Languages>? languages;
 
   ImpressionDetailModel({
     this.id,
@@ -67,6 +71,8 @@ class ImpressionDetailModel {
     this.reviewsAvgBall,
     this.reviewsCount,
     this.images,
+    this.topics,
+    this.languages,
   });
 
   ImpressionDetailModel.fromJson(Map<String, dynamic> json) {
@@ -125,6 +131,18 @@ class ImpressionDetailModel {
       images = <Images>[];
       json['images'].forEach((v) {
         images!.add(Images.fromJson(v));
+      });
+    }
+    if (json['topics'] != null) {
+      topics = <Topic>[];
+      json['topics'].forEach((v) {
+        topics!.add(Topic.fromJson(v));
+      });
+    }
+    if (json['languages'] != null) {
+      languages = <Languages>[];
+      json['languages'].forEach((v) {
+        languages!.add(Languages.fromJson(v));
       });
     }
   }

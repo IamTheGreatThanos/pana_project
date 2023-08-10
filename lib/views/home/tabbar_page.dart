@@ -19,7 +19,6 @@ import 'package:pana_project/views/impression/impression_info.dart';
 import 'package:pana_project/views/messages/messages_main.dart';
 import 'package:pana_project/views/other/stories_view.dart';
 import 'package:pana_project/views/profile/profile_main.dart';
-import 'package:pana_project/widgets/coming_soon_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_view/story_view.dart';
 import 'package:uni_links/uni_links.dart';
@@ -49,7 +48,7 @@ class _TabBarPageState extends State<TabBarPage> {
     initUniLinks();
     tabViews = <Widget>[
       // HomeTravel(changeTabMethod),
-      const ComingSoonPage(),
+      // const ComingSoonPage(),
       HomeImpression(),
       HomeHousing(),
       MessagesPage(changeTabMethod),
@@ -285,17 +284,17 @@ class _TabBarPageState extends State<TabBarPage> {
         bottomNavigationBar: BottomNavigationBar(
           key: globalKey,
           items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                'assets/icons/tab_bar_icon1.svg',
-                color: AppColors.blackWithOpacity,
-              ),
-              activeIcon: SvgPicture.asset(
-                'assets/icons/tab_bar_icon1.svg',
-                color: AppColors.accent,
-              ),
-              label: 'Поездки',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: SvgPicture.asset(
+            //     'assets/icons/tab_bar_icon1.svg',
+            //     color: AppColors.blackWithOpacity,
+            //   ),
+            //   activeIcon: SvgPicture.asset(
+            //     'assets/icons/tab_bar_icon1.svg',
+            //     color: AppColors.accent,
+            //   ),
+            //   label: 'Поездки',
+            // ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
                 'assets/icons/tab_bar_icon2.svg',

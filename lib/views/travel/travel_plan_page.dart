@@ -351,7 +351,7 @@ class _TravelPlanePageState extends State<TravelPlanePage> {
                                           children: [
                                             TravelOwnCard(
                                                 thisTravelPlans[i].name ?? '',
-                                                '${thisTravelPlans[i].city?.name ?? ''}, ${AppConstants.countries[(thisTravelPlans[i].city?.countryId ?? 1) - 1]}',
+                                                '${thisTravelPlans[i].city?.name ?? ''}, ',
                                                 thisTravelPlans[i]
                                                         .dateStart
                                                         ?.substring(0, 16) ??

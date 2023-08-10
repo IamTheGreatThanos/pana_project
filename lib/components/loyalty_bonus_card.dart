@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/utils/const.dart';
 
 class LoyaltyBonusCard extends StatefulWidget {
@@ -66,15 +67,27 @@ class _LoyaltyBonusCardState extends State<LoyaltyBonusCard> {
                   decoration: BoxDecoration(
                       color: AppColors.black,
                       borderRadius: BorderRadius.circular(8)),
-                  width: 104,
-                  height: 54,
-                  child: Center(
-                    child: Text(
-                      '+345',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(7),
+                    child: Center(
+                      child: Row(
+                        children: [
+                          Text(
+                            '+345',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.white,
+                            ),
+                          ),
+                          const SizedBox(width: 3),
+                          SizedBox(
+                            height: 12,
+                            width: 12,
+                            child: SvgPicture.asset(
+                                'assets/icons/assik_icon_2.svg'),
+                          )
+                        ],
                       ),
                     ),
                   ),

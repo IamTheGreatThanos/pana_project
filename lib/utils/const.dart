@@ -16,11 +16,5 @@ class AppConstants {
   static const String baseUrl = "http://back.pana.world/";
   static String appVersion = '1.1.0';
   static double cardBorderRadius = 24;
-  static List<String> countries = [
-    "Казахстан",
-    "Россия",
-    "Узбекистан",
-    "Турция",
-    "ОАЭ"
-  ];
+  static int mainTabIndex = 1;
 }

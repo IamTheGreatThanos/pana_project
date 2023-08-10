@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -35,14 +34,14 @@ class _SearchPageState extends State<SearchPage> {
 
   bool searchBool = true;
 
-  List<Map<String, String>> continents = [
-    {'name': 'Гибкий поиск', 'asset': 'assets/images/map_1.png'},
-    {'name': 'Казахстан', 'asset': 'assets/images/map_2.png'},
-    {'name': 'Россия', 'asset': 'assets/images/map_3.png'},
-    {'name': 'Узбекистан', 'asset': 'assets/images/map_4.png'},
-    {'name': 'Турция', 'asset': 'assets/images/map_5.png'},
-    {'name': 'ОАЭ', 'asset': 'assets/images/map_6.png'},
-  ];
+  // List<Map<String, String>> continents = [
+  //   {'name': 'Гибкий поиск', 'asset': 'assets/images/map_1.png'},
+  //   {'name': 'Казахстан', 'asset': 'assets/images/map_2.png'},
+  //   {'name': 'Россия', 'asset': 'assets/images/map_3.png'},
+  //   {'name': 'Узбекистан', 'asset': 'assets/images/map_4.png'},
+  //   {'name': 'Турция', 'asset': 'assets/images/map_5.png'},
+  //   {'name': 'ОАЭ', 'asset': 'assets/images/map_6.png'},
+  // ];
 
   List<Map<String, String>> countrySuggestions = [];
   List<Map<String, String>> citySuggestions = [];
@@ -70,6 +69,7 @@ class _SearchPageState extends State<SearchPage> {
             child: Container(
               color: AppColors.lightGray,
               width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
               child: Stack(
                 children: [
                   Column(
@@ -80,11 +80,11 @@ class _SearchPageState extends State<SearchPage> {
                         height: 120,
                         decoration: BoxDecoration(
                           color: AppColors.white,
-                          borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(
-                                  AppConstants.cardBorderRadius),
-                              bottomLeft: Radius.circular(
-                                  AppConstants.cardBorderRadius)),
+                          // borderRadius: BorderRadius.only(
+                          //     bottomRight: Radius.circular(
+                          //         AppConstants.cardBorderRadius),
+                          //     bottomLeft: Radius.circular(
+                          //         AppConstants.cardBorderRadius)),
                         ),
                         child: Column(
                           children: [
@@ -284,40 +284,81 @@ class _SearchPageState extends State<SearchPage> {
                           ],
                         ),
                       ),
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Navigator.of(context).pop('toFilter');
+                      //   },
+                      //   child: Container(
+                      //     width: MediaQuery.of(context).size.width,
+                      //     height: 72,
+                      //     decoration: BoxDecoration(
+                      //       color: AppColors.white,
+                      //       borderRadius: BorderRadius.all(
+                      //         Radius.circular(AppConstants.cardBorderRadius),
+                      //       ),
+                      //     ),
+                      //     child: Row(
+                      //       children: [
+                      //         const SizedBox(width: 20),
+                      //         SvgPicture.asset('assets/icons/slider_01.svg'),
+                      //         const Padding(
+                      //           padding: EdgeInsets.only(left: 10),
+                      //           child: Text(
+                      //             'Фильтры',
+                      //             style: TextStyle(
+                      //                 fontSize: 18,
+                      //                 fontWeight: FontWeight.w500),
+                      //           ),
+                      //         ),
+                      //         const Spacer(),
+                      //         const Icon(Icons.arrow_forward_ios),
+                      //         const SizedBox(width: 20),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(
                         height: 20,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop('toFilter');
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 72,
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(AppConstants.cardBorderRadius),
-                            ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.cardBorderRadius),
                           ),
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 20),
-                              SvgPicture.asset('assets/icons/slider_01.svg'),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 10),
+                        ),
+                        child: Row(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: Text(
+                                'Дата поездки',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            const Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: GestureDetector(
                                 child: Text(
-                                  'Фильтры',
-                                  style: TextStyle(
-                                      fontSize: 18,
+                                  selectedRange,
+                                  style: const TextStyle(
+                                      color: Colors.black45,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.w500),
                                 ),
+                                onTap: () {
+                                  showDatePicker();
+                                },
                               ),
-                              const Spacer(),
-                              const Icon(Icons.arrow_forward_ios),
-                              const SizedBox(width: 20),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(
@@ -325,7 +366,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        height: 370,
+                        height: 300,
                         decoration: BoxDecoration(
                           color: AppColors.white,
                           borderRadius: BorderRadius.all(
@@ -632,131 +673,91 @@ class _SearchPageState extends State<SearchPage> {
                                 ),
                               ],
                             ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              child: Divider(),
-                            ),
-                            Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 5, left: 20),
-                                  child: Text(
-                                    'Домашние животные',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                const Spacer(),
-                                GestureDetector(
-                                  child: Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: const BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(30),
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black12,
-                                          spreadRadius: 0,
-                                          blurRadius: 24,
-                                          offset: Offset(0,
-                                              4), // changes position of shadow
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Icon(Icons.remove),
-                                  ),
-                                  onTap: () {
-                                    removeAction(4);
-                                  },
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Text(
-                                    petsCount.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: GestureDetector(
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: const BoxDecoration(
-                                        color: AppColors.white,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(30),
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            spreadRadius: 0,
-                                            blurRadius: 24,
-                                            offset: Offset(0,
-                                                4), // changes position of shadow
-                                          ),
-                                        ],
-                                      ),
-                                      child: const Icon(Icons.add),
-                                    ),
-                                    onTap: () {
-                                      addAction(4);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // const Padding(
+                            //   padding: EdgeInsets.symmetric(
+                            //       horizontal: 20, vertical: 10),
+                            //   child: Divider(),
+                            // ),
+                            // Row(
+                            //   children: [
+                            //     const Padding(
+                            //       padding: EdgeInsets.only(top: 5, left: 20),
+                            //       child: Text(
+                            //         'Домашние животные',
+                            //         style: TextStyle(
+                            //             fontSize: 16,
+                            //             fontWeight: FontWeight.w500),
+                            //       ),
+                            //     ),
+                            //     const Spacer(),
+                            //     GestureDetector(
+                            //       child: Container(
+                            //         width: 30,
+                            //         height: 30,
+                            //         decoration: const BoxDecoration(
+                            //           color: AppColors.white,
+                            //           borderRadius: BorderRadius.all(
+                            //             Radius.circular(30),
+                            //           ),
+                            //           boxShadow: [
+                            //             BoxShadow(
+                            //               color: Colors.black12,
+                            //               spreadRadius: 0,
+                            //               blurRadius: 24,
+                            //               offset: Offset(0,
+                            //                   4), // changes position of shadow
+                            //             ),
+                            //           ],
+                            //         ),
+                            //         child: const Icon(Icons.remove),
+                            //       ),
+                            //       onTap: () {
+                            //         removeAction(4);
+                            //       },
+                            //     ),
+                            //     Padding(
+                            //       padding: const EdgeInsets.all(10),
+                            //       child: Text(
+                            //         petsCount.toString(),
+                            //         style: const TextStyle(
+                            //             fontSize: 18,
+                            //             fontWeight: FontWeight.w500),
+                            //       ),
+                            //     ),
+                            //     Padding(
+                            //       padding: const EdgeInsets.only(right: 10),
+                            //       child: GestureDetector(
+                            //         child: Container(
+                            //           width: 30,
+                            //           height: 30,
+                            //           decoration: const BoxDecoration(
+                            //             color: AppColors.white,
+                            //             borderRadius: BorderRadius.all(
+                            //               Radius.circular(30),
+                            //             ),
+                            //             boxShadow: [
+                            //               BoxShadow(
+                            //                 color: Colors.black12,
+                            //                 spreadRadius: 0,
+                            //                 blurRadius: 24,
+                            //                 offset: Offset(0,
+                            //                     4), // changes position of shadow
+                            //               ),
+                            //             ],
+                            //           ),
+                            //           child: const Icon(Icons.add),
+                            //         ),
+                            //         onTap: () {
+                            //           addAction(4);
+                            //         },
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.cardBorderRadius),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Text(
-                                'Дата поездки',
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            const Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 20),
-                              child: GestureDetector(
-                                child: Text(
-                                  selectedRange,
-                                  style: const TextStyle(
-                                      color: Colors.black45,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                onTap: () {
-                                  showDatePicker();
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      Spacer(),
                       const SizedBox(
                         height: 20,
                       ),
@@ -807,7 +808,7 @@ class _SearchPageState extends State<SearchPage> {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 90),
+                    padding: const EdgeInsets.only(top: 110),
                     child: Visibility(
                       visible: nameController.text.isNotEmpty &&
                           (citySuggestions.isNotEmpty ||
@@ -816,19 +817,19 @@ class _SearchPageState extends State<SearchPage> {
                                   ? housingSuggestions.isNotEmpty
                                   : impressionSuggestions.isNotEmpty)),
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: Container(
-                          height: 250,
+                          height: MediaQuery.of(context).size.height - 120,
                           width: MediaQuery.of(context).size.width,
                           decoration: const BoxDecoration(
                             boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                spreadRadius: 0,
-                                blurRadius: 24,
-                                offset:
-                                    Offset(0, 4), // changes position of shadow
-                              ),
+                              // BoxShadow(
+                              //   color: Colors.black12,
+                              //   spreadRadius: 0,
+                              //   blurRadius: 24,
+                              //   offset:
+                              //       Offset(0, 4), // changes position of shadow
+                              // ),
                             ],
                             borderRadius: BorderRadius.all(Radius.circular(16)),
                             color: AppColors.white,
@@ -837,92 +838,92 @@ class _SearchPageState extends State<SearchPage> {
                             child: Column(
                               children: [
                                 // TODO: Country suggestion
-                                countrySuggestions.isNotEmpty &&
-                                        widget.fromHousing
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 10, left: 20),
-                                            child: Text(
-                                              'Страна',
-                                              style: TextStyle(
-                                                  color: AppColors
-                                                      .blackWithOpacity,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ),
-                                          for (int h = 0;
-                                              h < countrySuggestions.length;
-                                              h++)
-                                            GestureDetector(
-                                              onTap: () {
-                                                nameController.text =
-                                                    countrySuggestions[h]
-                                                        ['name']!;
-                                                countrySuggestions.clear();
-                                                citySuggestions.clear();
-                                                housingSuggestions.clear();
-                                                impressionSuggestions.clear();
-                                                setState(() {});
-                                              },
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 10,
-                                                        horizontal: 20),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      decoration: const BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          12))),
-                                                      width: 24,
-                                                      height: 24,
-                                                      child: CachedNetworkImage(
-                                                        imageUrl:
-                                                            countrySuggestions[
-                                                                h]['img']!,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 20),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.58,
-                                                      child: Text(
-                                                        countrySuggestions[h]
-                                                            ['name']!,
-                                                        style: const TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ),
-                                                    const Spacer(),
-                                                    const Icon(Icons
-                                                        .arrow_forward_ios),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          const Divider(),
-                                        ],
-                                      )
-                                    : const SizedBox.shrink(),
+                                // countrySuggestions.isNotEmpty &&
+                                //         widget.fromHousing
+                                //     ? Column(
+                                //         crossAxisAlignment:
+                                //             CrossAxisAlignment.start,
+                                //         children: [
+                                //           const Padding(
+                                //             padding: EdgeInsets.only(
+                                //                 top: 10, left: 20),
+                                //             child: Text(
+                                //               'Страна',
+                                //               style: TextStyle(
+                                //                   color: AppColors
+                                //                       .blackWithOpacity,
+                                //                   fontSize: 12,
+                                //                   fontWeight: FontWeight.w500),
+                                //             ),
+                                //           ),
+                                //           for (int h = 0;
+                                //               h < countrySuggestions.length;
+                                //               h++)
+                                //             GestureDetector(
+                                //               onTap: () {
+                                //                 nameController.text =
+                                //                     countrySuggestions[h]
+                                //                         ['name']!;
+                                //                 countrySuggestions.clear();
+                                //                 citySuggestions.clear();
+                                //                 housingSuggestions.clear();
+                                //                 impressionSuggestions.clear();
+                                //                 setState(() {});
+                                //               },
+                                //               child: Padding(
+                                //                 padding:
+                                //                     const EdgeInsets.symmetric(
+                                //                         vertical: 10,
+                                //                         horizontal: 20),
+                                //                 child: Row(
+                                //                   children: [
+                                //                     Container(
+                                //                       decoration: const BoxDecoration(
+                                //                           borderRadius:
+                                //                               BorderRadius.all(
+                                //                                   Radius
+                                //                                       .circular(
+                                //                                           12))),
+                                //                       width: 24,
+                                //                       height: 24,
+                                //                       child: CachedNetworkImage(
+                                //                         imageUrl:
+                                //                             countrySuggestions[
+                                //                                 h]['img']!,
+                                //                         fit: BoxFit.cover,
+                                //                       ),
+                                //                     ),
+                                //                     const SizedBox(width: 20),
+                                //                     SizedBox(
+                                //                       width:
+                                //                           MediaQuery.of(context)
+                                //                                   .size
+                                //                                   .width *
+                                //                               0.58,
+                                //                       child: Text(
+                                //                         countrySuggestions[h]
+                                //                             ['name']!,
+                                //                         style: const TextStyle(
+                                //                           fontSize: 16,
+                                //                           fontWeight:
+                                //                               FontWeight.w600,
+                                //                         ),
+                                //                         maxLines: 1,
+                                //                         overflow: TextOverflow
+                                //                             .ellipsis,
+                                //                       ),
+                                //                     ),
+                                //                     const Spacer(),
+                                //                     const Icon(Icons
+                                //                         .arrow_forward_ios),
+                                //                   ],
+                                //                 ),
+                                //               ),
+                                //             ),
+                                //           const Divider(),
+                                //         ],
+                                //       )
+                                //     : const SizedBox.shrink(),
                                 // TODO: City suggestion
                                 citySuggestions.isNotEmpty
                                     ? Column(
@@ -933,7 +934,7 @@ class _SearchPageState extends State<SearchPage> {
                                             padding: EdgeInsets.only(
                                                 top: 10, left: 20),
                                             child: Text(
-                                              'Город',
+                                              'Города',
                                               style: TextStyle(
                                                   color: AppColors
                                                       .blackWithOpacity,
@@ -966,21 +967,56 @@ class _SearchPageState extends State<SearchPage> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.7,
+                                                        Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 16,
+                                                              height: 16,
+                                                              child: SvgPicture.asset(
+                                                                  'assets/icons/map_pin_address.svg',
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            SizedBox(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.7,
+                                                              child: Text(
+                                                                citySuggestions[
+                                                                    h]['name']!,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 5),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 25),
                                                           child: Text(
                                                             citySuggestions[h]
-                                                                ['name']!,
+                                                                ['country']!,
                                                             style:
                                                                 const TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                              fontSize: 14,
+                                                              color: AppColors
+                                                                  .blackWithOpacity,
                                                             ),
                                                             maxLines: 1,
                                                             overflow:
@@ -988,26 +1024,13 @@ class _SearchPageState extends State<SearchPage> {
                                                                     .ellipsis,
                                                           ),
                                                         ),
-                                                        const SizedBox(
-                                                            height: 5),
-                                                        Text(
-                                                          citySuggestions[h]
-                                                              ['country']!,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            color: AppColors
-                                                                .blackWithOpacity,
-                                                          ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
                                                       ],
                                                     ),
                                                     const Spacer(),
-                                                    const Icon(Icons
-                                                        .arrow_forward_ios),
+                                                    const Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      size: 14,
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -1027,7 +1050,7 @@ class _SearchPageState extends State<SearchPage> {
                                             padding: EdgeInsets.only(
                                                 top: 10, left: 20),
                                             child: Text(
-                                              'Отель',
+                                              'Жилье',
                                               style: TextStyle(
                                                   color: AppColors
                                                       .blackWithOpacity,
@@ -1056,45 +1079,64 @@ class _SearchPageState extends State<SearchPage> {
                                                         horizontal: 20),
                                                 child: Row(
                                                   children: [
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .all(
-                                                        Radius.circular(12),
-                                                      ),
-                                                      child: SizedBox(
-                                                        width: 40,
-                                                        height: 40,
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl:
-                                                              housingSuggestions[
-                                                                  h]['img']!,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 20),
                                                     Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.58,
+                                                        Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 18,
+                                                              height: 18,
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                'assets/icons/tab_bar_icon3.svg',
+                                                                color: AppColors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                width: 10),
+                                                            SizedBox(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.58,
+                                                              child: Text(
+                                                                housingSuggestions[
+                                                                    h]['name']!,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 5),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 28),
                                                           child: Text(
                                                             housingSuggestions[
-                                                                h]['name']!,
+                                                                h]['city']!,
                                                             style:
                                                                 const TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                              fontSize: 14,
+                                                              color: AppColors
+                                                                  .blackWithOpacity,
                                                             ),
                                                             maxLines: 1,
                                                             overflow:
@@ -1102,26 +1144,13 @@ class _SearchPageState extends State<SearchPage> {
                                                                     .ellipsis,
                                                           ),
                                                         ),
-                                                        const SizedBox(
-                                                            height: 5),
-                                                        Text(
-                                                          housingSuggestions[h]
-                                                              ['city']!,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            color: AppColors
-                                                                .blackWithOpacity,
-                                                          ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
                                                       ],
                                                     ),
                                                     const Spacer(),
-                                                    const Icon(Icons
-                                                        .arrow_forward_ios),
+                                                    const Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      size: 14,
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -1141,7 +1170,7 @@ class _SearchPageState extends State<SearchPage> {
                                             padding: EdgeInsets.only(
                                                 top: 10, left: 20),
                                             child: Text(
-                                              'Впечатление',
+                                              'Впечатления',
                                               style: TextStyle(
                                                   color: AppColors
                                                       .blackWithOpacity,
@@ -1170,45 +1199,64 @@ class _SearchPageState extends State<SearchPage> {
                                                         horizontal: 20),
                                                 child: Row(
                                                   children: [
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                                  .all(
-                                                              Radius.circular(
-                                                                  12)),
-                                                      child: SizedBox(
-                                                        width: 24,
-                                                        height: 24,
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl:
-                                                              impressionSuggestions[
-                                                                  h]['img']!,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 20),
                                                     Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.58,
+                                                        Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 18,
+                                                              height: 18,
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                'assets/icons/tab_bar_icon2.svg',
+                                                                color: AppColors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                width: 10),
+                                                            SizedBox(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.58,
+                                                              child: Text(
+                                                                impressionSuggestions[
+                                                                    h]['name']!,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 5),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 28),
                                                           child: Text(
                                                             impressionSuggestions[
-                                                                h]['name']!,
+                                                                h]['city']!,
                                                             style:
                                                                 const TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                              fontSize: 14,
+                                                              color: AppColors
+                                                                  .blackWithOpacity,
                                                             ),
                                                             maxLines: 1,
                                                             overflow:
@@ -1216,26 +1264,13 @@ class _SearchPageState extends State<SearchPage> {
                                                                     .ellipsis,
                                                           ),
                                                         ),
-                                                        const SizedBox(
-                                                            height: 5),
-                                                        Text(
-                                                          impressionSuggestions[
-                                                              h]['city']!,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            color: AppColors
-                                                                .blackWithOpacity,
-                                                          ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
                                                       ],
                                                     ),
                                                     const Spacer(),
-                                                    const Icon(Icons
-                                                        .arrow_forward_ios),
+                                                    const Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      size: 14,
+                                                    ),
                                                   ],
                                                 ),
                                               ),

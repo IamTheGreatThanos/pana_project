@@ -230,31 +230,31 @@ class _RoomInfoPageState extends State<RoomInfoPage> {
                   ),
                 ),
                 const Divider(),
-                const Padding(
-                  padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                  child: Text(
-                    'Правила отмены',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20, bottom: 20, right: 20),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: const Text(
-                      'Отклонение проецирует суммарный поворот. Гировертикаль, в силу третьего закона Ньютона, даёт большую проекцию на оси, чем тангаж. Ротор безусловно заставляет иначе взглянуть на то, что такое уходящий ньютонометр, сводя задачу к квадратурам.',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black45),
-                    ),
-                  ),
-                ),
-                const Divider(),
+                // const Padding(
+                //   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                //   child: Text(
+                //     'Правила отмены',
+                //     style: TextStyle(
+                //       fontSize: 24,
+                //       fontWeight: FontWeight.w500,
+                //     ),
+                //   ),
+                // ),
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.only(left: 20, bottom: 20, right: 20),
+                //   child: SizedBox(
+                //     width: MediaQuery.of(context).size.width * 0.9,
+                //     child: const Text(
+                //       'Отклонение проецирует суммарный поворот. Гировертикаль, в силу третьего закона Ньютона, даёт большую проекцию на оси, чем тангаж. Ротор безусловно заставляет иначе взглянуть на то, что такое уходящий ньютонометр, сводя задачу к квадратурам.',
+                //       style: TextStyle(
+                //           fontSize: 14,
+                //           fontWeight: FontWeight.w500,
+                //           color: Colors.black45),
+                //     ),
+                //   ),
+                // ),
+                // const Divider(),
                 // Padding(
                 //   padding:
                 //       const EdgeInsets.only(left: 20, right: 20, bottom: 20),

@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/payment_method_card.dart';
@@ -475,61 +474,62 @@ class _PaymentPageState extends State<PaymentPage> {
                   //     ),
                   //   ),
                   // ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          color: AppColors.lightGray,
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 40,
-                              height: 40,
-                              child: SvgPicture.asset(
-                                  'assets/icons/bonus_icon.svg'),
-                            ),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text(
-                                  'Оплата с помощью Асыков',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Text(
-                                  '2156 тг',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: AppColors.blackWithOpacity,
-                                  ),
-                                )
-                              ],
-                            ),
-                            const Spacer(),
-                            Transform.scale(
-                              scale: 0.8,
-                              child: CupertinoSwitch(
-                                value: _switchValue,
-                                activeColor: AppColors.accent,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _switchValue = value;
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  // TODO: Bonus system
+                  // Padding(
+                  //   padding:
+                  //       const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+                  //   child: Container(
+                  //     decoration: const BoxDecoration(
+                  //         color: AppColors.lightGray,
+                  //         borderRadius: BorderRadius.all(Radius.circular(8))),
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.all(10),
+                  //       child: Row(
+                  //         children: [
+                  //           SizedBox(
+                  //             width: 40,
+                  //             height: 40,
+                  //             child: SvgPicture.asset(
+                  //                 'assets/icons/bonus_icon.svg'),
+                  //           ),
+                  //           const SizedBox(width: 10),
+                  //           Column(
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             children: const [
+                  //               Text(
+                  //                 'Оплата с помощью Асыков',
+                  //                 style: TextStyle(
+                  //                   fontSize: 14,
+                  //                   fontWeight: FontWeight.w500,
+                  //                 ),
+                  //               ),
+                  //               Text(
+                  //                 '2156 тг',
+                  //                 style: TextStyle(
+                  //                   fontSize: 14,
+                  //                   color: AppColors.blackWithOpacity,
+                  //                 ),
+                  //               )
+                  //             ],
+                  //           ),
+                  //           const Spacer(),
+                  //           Transform.scale(
+                  //             scale: 0.8,
+                  //             child: CupertinoSwitch(
+                  //               value: _switchValue,
+                  //               activeColor: AppColors.accent,
+                  //               onChanged: (value) {
+                  //                 setState(() {
+                  //                   _switchValue = value;
+                  //                 });
+                  //               },
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
@@ -1233,7 +1233,8 @@ class _PaymentPageState extends State<PaymentPage> {
                           onPressed: () {
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                    builder: (context) => TabBarPage(2)),
+                                    builder: (context) =>
+                                        TabBarPage(AppConstants.mainTabIndex)),
                                 (Route<dynamic> route) => false);
                           },
                           child: const Text(

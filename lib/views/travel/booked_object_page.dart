@@ -147,7 +147,7 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.6,
                                   child: Text(
-                                    '${widget.plan.city?.name ?? ''} , ${AppConstants.countries[(widget.plan.city?.countryId ?? 1) - 1]}',
+                                    '${widget.plan.city?.name ?? ''} , ',
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
@@ -733,7 +733,8 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                           onPressed: () {
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                    builder: (context) => TabBarPage(2)),
+                                    builder: (context) =>
+                                        TabBarPage(AppConstants.mainTabIndex)),
                                 (Route<dynamic> route) => false);
                           },
                           child: const Text(

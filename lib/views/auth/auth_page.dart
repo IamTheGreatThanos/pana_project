@@ -185,7 +185,8 @@ class _AuthPageState extends State<AuthPage> {
       builder: (context) => Scaffold(
         extendBody: false,
         // key: _modelScaffoldKey,
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset:
+            false, // TODO: Change to true if use modal bottom sheet
         body: Padding(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -488,7 +489,12 @@ class _AuthPageState extends State<AuthPage> {
           context,
           MaterialPageRoute(
               builder: (context) => SmsVerificationPage(
-                  0, TabBarPage(2), authPhoneController.text, '', '', '')));
+                  0,
+                  TabBarPage(AppConstants.mainTabIndex),
+                  authPhoneController.text,
+                  '',
+                  '',
+                  '')));
     } else {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -505,7 +511,8 @@ class _AuthPageState extends State<AuthPage> {
     var isLogedIn = prefs.getBool('isLogedIn');
     if (isLogedIn == true) {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => TabBarPage(2)),
+          MaterialPageRoute(
+              builder: (context) => TabBarPage(AppConstants.mainTabIndex)),
           (Route<dynamic> route) => false);
     }
   }

@@ -6,7 +6,6 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:pana_project/components/bonus_card.dart';
 import 'package:pana_project/components/facilities_widget.dart';
 import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/models/audioReview.dart';
@@ -28,7 +27,6 @@ import 'package:pana_project/views/housing/comforts_detail_page.dart';
 import 'package:pana_project/views/housing/select_room_page.dart';
 import 'package:pana_project/views/impression/impression_info.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
-import 'package:pana_project/views/other/bonus_system_detail.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
 import 'package:skeletons/skeletons.dart';
@@ -473,146 +471,147 @@ class _HousingInfoState extends State<HousingInfo> {
                         ),
                       ),
                       const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10, left: 20, bottom: 15),
-                        child: Text(
-                          'Контактные данные',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, bottom: 10, right: 20),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.grey, width: 1),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(12)),
-                          ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 15, 10),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                        './assets/icons/contact_info_user.svg',
-                                        color: AppColors.blackWithOpacity),
-                                    const SizedBox(width: 15),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          'Контактное лицо',
-                                          style: TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        isLoading
-                                            ? const SizedBox(
-                                                width: 60,
-                                                child: SkeletonLine())
-                                            : Text(
-                                                '${thisHousing.user?.name ?? ''} ${thisHousing.user?.surname ?? ''}',
-                                                style: const TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors
-                                                        .blackWithOpacity),
-                                              ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                              const Divider(),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                        './assets/icons/contact_info_phone.svg',
-                                        color: AppColors.blackWithOpacity),
-                                    const SizedBox(width: 15),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          'Номер телефона',
-                                          style: TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        isLoading
-                                            ? const SizedBox(
-                                                width: 60,
-                                                child: SkeletonLine())
-                                            : Text(
-                                                '+7${thisHousing.user?.phone ?? ''}',
-                                                style: const TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors
-                                                        .blackWithOpacity),
-                                              ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                              const Divider(),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 10, 15, 15),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                        './assets/icons/contact_info_company.svg',
-                                        color: AppColors.blackWithOpacity),
-                                    const SizedBox(width: 15),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          'Управляющая компания',
-                                          style: TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          thisHousing.user?.organizationName ??
-                                              '-',
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              color:
-                                                  AppColors.blackWithOpacity),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Divider(),
+                      // // TODO: Contact information
+                      // const Padding(
+                      //   padding: EdgeInsets.only(top: 10, left: 20, bottom: 15),
+                      //   child: Text(
+                      //     'Контактные данные',
+                      //     style: TextStyle(
+                      //       fontSize: 24,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(
+                      //       left: 20, bottom: 10, right: 20),
+                      //   child: Container(
+                      //     width: MediaQuery.of(context).size.width * 0.9,
+                      //     decoration: BoxDecoration(
+                      //       border: Border.all(color: AppColors.grey, width: 1),
+                      //       borderRadius:
+                      //           const BorderRadius.all(Radius.circular(12)),
+                      //     ),
+                      //     child: Column(
+                      //       children: [
+                      //         Padding(
+                      //           padding:
+                      //               const EdgeInsets.fromLTRB(15, 15, 15, 10),
+                      //           child: Row(
+                      //             children: [
+                      //               SvgPicture.asset(
+                      //                   './assets/icons/contact_info_user.svg',
+                      //                   color: AppColors.blackWithOpacity),
+                      //               const SizedBox(width: 15),
+                      //               Column(
+                      //                 crossAxisAlignment:
+                      //                     CrossAxisAlignment.start,
+                      //                 children: [
+                      //                   const Text(
+                      //                     'Контактное лицо',
+                      //                     style: TextStyle(
+                      //                         fontSize: 17,
+                      //                         fontWeight: FontWeight.w500,
+                      //                         color: Colors.black),
+                      //                   ),
+                      //                   const SizedBox(height: 5),
+                      //                   isLoading
+                      //                       ? const SizedBox(
+                      //                           width: 60,
+                      //                           child: SkeletonLine())
+                      //                       : Text(
+                      //                           '${thisHousing.user?.name ?? ''} ${thisHousing.user?.surname ?? ''}',
+                      //                           style: const TextStyle(
+                      //                               fontSize: 12,
+                      //                               fontWeight: FontWeight.w400,
+                      //                               color: AppColors
+                      //                                   .blackWithOpacity),
+                      //                         ),
+                      //                 ],
+                      //               )
+                      //             ],
+                      //           ),
+                      //         ),
+                      //         const Divider(),
+                      //         Padding(
+                      //           padding:
+                      //               const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                      //           child: Row(
+                      //             children: [
+                      //               SvgPicture.asset(
+                      //                   './assets/icons/contact_info_phone.svg',
+                      //                   color: AppColors.blackWithOpacity),
+                      //               const SizedBox(width: 15),
+                      //               Column(
+                      //                 crossAxisAlignment:
+                      //                     CrossAxisAlignment.start,
+                      //                 children: [
+                      //                   const Text(
+                      //                     'Номер телефона',
+                      //                     style: TextStyle(
+                      //                         fontSize: 17,
+                      //                         fontWeight: FontWeight.w500,
+                      //                         color: Colors.black),
+                      //                   ),
+                      //                   const SizedBox(height: 5),
+                      //                   isLoading
+                      //                       ? const SizedBox(
+                      //                           width: 60,
+                      //                           child: SkeletonLine())
+                      //                       : Text(
+                      //                           '+7${thisHousing.user?.phone ?? ''}',
+                      //                           style: const TextStyle(
+                      //                               fontSize: 12,
+                      //                               fontWeight: FontWeight.w400,
+                      //                               color: AppColors
+                      //                                   .blackWithOpacity),
+                      //                         ),
+                      //                 ],
+                      //               )
+                      //             ],
+                      //           ),
+                      //         ),
+                      //         const Divider(),
+                      //         Padding(
+                      //           padding:
+                      //               const EdgeInsets.fromLTRB(15, 10, 15, 15),
+                      //           child: Row(
+                      //             children: [
+                      //               SvgPicture.asset(
+                      //                   './assets/icons/contact_info_company.svg',
+                      //                   color: AppColors.blackWithOpacity),
+                      //               const SizedBox(width: 15),
+                      //               Column(
+                      //                 crossAxisAlignment:
+                      //                     CrossAxisAlignment.start,
+                      //                 children: [
+                      //                   const Text(
+                      //                     'Управляющая компания',
+                      //                     style: TextStyle(
+                      //                         fontSize: 17,
+                      //                         fontWeight: FontWeight.w500,
+                      //                         color: Colors.black),
+                      //                   ),
+                      //                   const SizedBox(height: 5),
+                      //                   Text(
+                      //                     thisHousing.user?.organizationName ??
+                      //                         '-',
+                      //                     style: const TextStyle(
+                      //                         fontSize: 12,
+                      //                         fontWeight: FontWeight.w400,
+                      //                         color:
+                      //                             AppColors.blackWithOpacity),
+                      //                   ),
+                      //                 ],
+                      //               )
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      // const Divider(),
                       const Padding(
                         padding: EdgeInsets.only(top: 10, left: 20, bottom: 10),
                         child: Text(
@@ -642,169 +641,170 @@ class _HousingInfoState extends State<HousingInfo> {
                         ),
                       ),
                       const Divider(),
-                      isHaveBonusSystem
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 20, left: 20, bottom: 10),
-                                  child: Row(
-                                    children: [
-                                      const Text(
-                                        'Мои бонусы',
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BonusSystemDetailPage(
-                                                bonusItems,
-                                                visitingCount,
-                                                60,
-                                                bonusSystemId,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: const Text(
-                                          'Перейти',
-                                          style: TextStyle(
-                                            color: AppColors.accent,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 0, left: 20, bottom: 10),
-                                  child: Text(
-                                    'Посещено кол-во раз: $visitingCount',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.blackWithOpacity,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 320,
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(height: 20),
-                                            Stack(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 17, left: 75),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius.circular(
-                                                                12)),
-                                                    child: SizedBox(
-                                                      height: 5,
-                                                      width: (85 *
-                                                              ((bonusItems.length -
-                                                                      1) *
-                                                                  2))
-                                                          .toDouble(),
-                                                      child:
-                                                          LinearProgressIndicator(
-                                                        value: bonusSystemId /
-                                                            bonusItems.length,
-                                                        color: AppColors.black,
-                                                        backgroundColor:
-                                                            AppColors.lightGray,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    const SizedBox(width: 20),
-                                                    for (int i = 0;
-                                                        i < bonusItems.length;
-                                                        i++)
-                                                      Row(
-                                                        children: [
-                                                          Column(
-                                                            children: [
-                                                              SvgPicture.asset(
-                                                                  './assets/icons/bonus_gift_1.svg'),
-                                                              const SizedBox(
-                                                                  height: 20),
-                                                              BonusCard(
-                                                                colorType: (bonusItems[i]
-                                                                            .bonusSystemItem
-                                                                            ?.level ??
-                                                                        1) +
-                                                                    1,
-                                                                title: bonusItems[
-                                                                            i]
-                                                                        .bonusSystemItem
-                                                                        ?.description ??
-                                                                    '',
-                                                                imageUrl: bonusItems[
-                                                                            i]
-                                                                        .bonusSystemItem
-                                                                        ?.image ??
-                                                                    '',
-                                                                isTaken: false,
-                                                                bonusType: 1,
-                                                                count: bonusItems[
-                                                                            i]
-                                                                        .countOrder ??
-                                                                    0,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          SizedBox(
-                                                            width: i ==
-                                                                    bonusItems
-                                                                            .length -
-                                                                        1
-                                                                ? 20
-                                                                : 40,
-                                                          )
-                                                        ],
-                                                      ),
-                                                  ],
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        SvgPicture.asset('./assets/phone.svg')
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                const Divider(),
-                              ],
-                            )
-                          : const SizedBox.shrink(),
+                      // TODO: Bonus system
+                      // isHaveBonusSystem
+                      //     ? Column(
+                      //         crossAxisAlignment: CrossAxisAlignment.start,
+                      //         children: [
+                      //           Padding(
+                      //             padding: const EdgeInsets.only(
+                      //                 top: 20, left: 20, bottom: 10),
+                      //             child: Row(
+                      //               children: [
+                      //                 const Text(
+                      //                   'Мои бонусы',
+                      //                   style: TextStyle(
+                      //                     fontSize: 24,
+                      //                     fontWeight: FontWeight.w500,
+                      //                   ),
+                      //                 ),
+                      //                 const Spacer(),
+                      //                 GestureDetector(
+                      //                   onTap: () {
+                      //                     Navigator.push(
+                      //                       context,
+                      //                       MaterialPageRoute(
+                      //                         builder: (context) =>
+                      //                             BonusSystemDetailPage(
+                      //                           bonusItems,
+                      //                           visitingCount,
+                      //                           60,
+                      //                           bonusSystemId,
+                      //                         ),
+                      //                       ),
+                      //                     );
+                      //                   },
+                      //                   child: const Text(
+                      //                     'Перейти',
+                      //                     style: TextStyle(
+                      //                       color: AppColors.accent,
+                      //                       fontSize: 14,
+                      //                       fontWeight: FontWeight.w500,
+                      //                     ),
+                      //                   ),
+                      //                 ),
+                      //                 const SizedBox(width: 20),
+                      //               ],
+                      //             ),
+                      //           ),
+                      //           Padding(
+                      //             padding: const EdgeInsets.only(
+                      //                 top: 0, left: 20, bottom: 10),
+                      //             child: Text(
+                      //               'Посещено кол-во раз: $visitingCount',
+                      //               style: const TextStyle(
+                      //                 fontSize: 14,
+                      //                 fontWeight: FontWeight.w500,
+                      //                 color: AppColors.blackWithOpacity,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           SizedBox(
+                      //             width: double.infinity,
+                      //             height: 320,
+                      //             child: SingleChildScrollView(
+                      //               scrollDirection: Axis.horizontal,
+                      //               child: Row(
+                      //                 children: [
+                      //                   Column(
+                      //                     crossAxisAlignment:
+                      //                         CrossAxisAlignment.start,
+                      //                     children: [
+                      //                       const SizedBox(height: 20),
+                      //                       Stack(
+                      //                         children: [
+                      //                           Padding(
+                      //                             padding:
+                      //                                 const EdgeInsets.only(
+                      //                                     top: 17, left: 75),
+                      //                             child: ClipRRect(
+                      //                               borderRadius:
+                      //                                   const BorderRadius.all(
+                      //                                       Radius.circular(
+                      //                                           12)),
+                      //                               child: SizedBox(
+                      //                                 height: 5,
+                      //                                 width: (85 *
+                      //                                         ((bonusItems.length -
+                      //                                                 1) *
+                      //                                             2))
+                      //                                     .toDouble(),
+                      //                                 child:
+                      //                                     LinearProgressIndicator(
+                      //                                   value: bonusSystemId /
+                      //                                       bonusItems.length,
+                      //                                   color: AppColors.black,
+                      //                                   backgroundColor:
+                      //                                       AppColors.lightGray,
+                      //                                 ),
+                      //                               ),
+                      //                             ),
+                      //                           ),
+                      //                           Row(
+                      //                             children: [
+                      //                               const SizedBox(width: 20),
+                      //                               for (int i = 0;
+                      //                                   i < bonusItems.length;
+                      //                                   i++)
+                      //                                 Row(
+                      //                                   children: [
+                      //                                     Column(
+                      //                                       children: [
+                      //                                         SvgPicture.asset(
+                      //                                             './assets/icons/bonus_gift_1.svg'),
+                      //                                         const SizedBox(
+                      //                                             height: 20),
+                      //                                         BonusCard(
+                      //                                           colorType: (bonusItems[i]
+                      //                                                       .bonusSystemItem
+                      //                                                       ?.level ??
+                      //                                                   1) +
+                      //                                               1,
+                      //                                           title: bonusItems[
+                      //                                                       i]
+                      //                                                   .bonusSystemItem
+                      //                                                   ?.description ??
+                      //                                               '',
+                      //                                           imageUrl: bonusItems[
+                      //                                                       i]
+                      //                                                   .bonusSystemItem
+                      //                                                   ?.image ??
+                      //                                               '',
+                      //                                           isTaken: false,
+                      //                                           bonusType: 1,
+                      //                                           count: bonusItems[
+                      //                                                       i]
+                      //                                                   .countOrder ??
+                      //                                               0,
+                      //                                         ),
+                      //                                       ],
+                      //                                     ),
+                      //                                     SizedBox(
+                      //                                       width: i ==
+                      //                                               bonusItems
+                      //                                                       .length -
+                      //                                                   1
+                      //                                           ? 20
+                      //                                           : 40,
+                      //                                     )
+                      //                                   ],
+                      //                                 ),
+                      //                             ],
+                      //                           ),
+                      //                         ],
+                      //                       )
+                      //                     ],
+                      //                   ),
+                      //                   SvgPicture.asset('./assets/phone.svg')
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           const SizedBox(height: 10),
+                      //           const Divider(),
+                      //         ],
+                      //       )
+                      //     : const SizedBox.shrink(),
                       Row(
                         children: [
                           const Padding(
@@ -923,6 +923,27 @@ class _HousingInfoState extends State<HousingInfo> {
                               markers: _markers,
                             ),
                           ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                                'assets/icons/map_pin_address.svg'),
+                            const SizedBox(width: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.75,
+                              child: Text(
+                                thisHousing.address ?? '',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.blackWithOpacity,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const Divider(),
@@ -1272,6 +1293,189 @@ class _HousingInfoState extends State<HousingInfo> {
                       const Padding(
                         padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
                         child: Text(
+                          'Важная информация',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 20, bottom: 10, right: 20),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Время заезда:',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                'C ${thisHousing.checkInFrom?.substring(0, 5) ?? ''} до ${thisHousing.checkInBefore?.substring(0, 5) ?? ''}',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            const Divider(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Время отъезда:',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                'C ${thisHousing.checkOutFrom?.substring(0, 5) ?? ''} до ${thisHousing.checkOutBefore?.substring(0, 5) ?? ''}',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            const Divider(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Правила отмены',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                thisHousing.cancelFineDay != null
+                                    ? 'Бесплатная отмена ${thisHousing.cancelFineDay ?? ''} дней до заезда'
+                                    : 'Бесплатная отмена',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            const Divider(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Язык обслуживания:',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                '${thisHousing.languages?.map((e) => e.name).join(', ')}',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            const Divider(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Парковка',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                thisHousing.parking == 'no'
+                                    ? 'Нет'
+                                    : thisHousing.parking == 'yes_free'
+                                        ? 'Бесплатная, ${thisHousing.parkingLocation == 'inside' ? 'на территории объекта' : 'за пределами территории объекта'}'
+                                        : 'Платная, ${thisHousing.parkingLocation == 'inside' ? 'на территории объекта' : 'за пределами территории объекта'}',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            const Divider(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Размещение детей:',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                thisHousing.childrenAllowed == 1
+                                    ? 'Возможно'
+                                    : 'Невозможно',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            const Divider(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Размещение животных:',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                thisHousing.pet == 'yes'
+                                    ? 'Возможно'
+                                    : 'Невозможно',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            const Divider(),
+                          ],
+                        ),
+                      ),
+
+                      const Padding(
+                        padding: EdgeInsets.only(top: 10, left: 20, bottom: 10),
+                        child: Text(
                           'Впечатления рядом',
                           style: TextStyle(
                             fontSize: 24,
@@ -1414,55 +1618,56 @@ class _HousingInfoState extends State<HousingInfo> {
                       //   ),
                       // ),
                       // const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                        child: Text(
-                          'Правила дома',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, bottom: 20, right: 20),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: Text(
-                            'Заезд до ${thisHousing.checkInFrom?.substring(0, 5) ?? ''}, выезд до ${thisHousing.checkOutFrom?.substring(0, 5) ?? ''}',
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black45),
-                          ),
-                        ),
-                      ),
-                      const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                        child: Text(
-                          'Правила отмены',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, bottom: 20, right: 20),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: const Text(
-                            'Гости могут получить полный возврат при отмене не позднее чем за 7 дней до начала Впечатления или в течение 24 часов с момента бронирования (при условии, что Впечатление забронировано более чем за 48 часов до начала).',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black45),
-                          ),
-                        ),
-                      ),
+                      // TODO: Home rules
+                      // const Padding(
+                      //   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                      //   child: Text(
+                      //     'Правила дома',
+                      //     style: TextStyle(
+                      //       fontSize: 24,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(
+                      //       left: 20, bottom: 20, right: 20),
+                      //   child: SizedBox(
+                      //     width: MediaQuery.of(context).size.width * 0.9,
+                      //     child: Text(
+                      //       'Заезд до ${thisHousing.checkInFrom?.substring(0, 5) ?? ''}, выезд до ${thisHousing.checkOutFrom?.substring(0, 5) ?? ''}',
+                      //       style: const TextStyle(
+                      //           fontSize: 14,
+                      //           fontWeight: FontWeight.w500,
+                      //           color: Colors.black45),
+                      //     ),
+                      //   ),
+                      // ),
+                      // const Divider(),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                      //   child: Text(
+                      //     'Правила отмены',
+                      //     style: TextStyle(
+                      //       fontSize: 24,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(
+                      //       left: 20, bottom: 20, right: 20),
+                      //   child: SizedBox(
+                      //     width: MediaQuery.of(context).size.width * 0.9,
+                      //     child: const Text(
+                      //       'Гости могут получить полный возврат при отмене не позднее чем за 7 дней до начала Впечатления или в течение 24 часов с момента бронирования (при условии, что Впечатление забронировано более чем за 48 часов до начала).',
+                      //       style: TextStyle(
+                      //           fontSize: 14,
+                      //           fontWeight: FontWeight.w500,
+                      //           color: Colors.black45),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

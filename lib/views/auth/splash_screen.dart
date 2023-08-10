@@ -11,6 +11,8 @@ import 'package:pana_project/views/auth/lock_screen.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../utils/const.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -56,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
         OneSignal.shared
             .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => TabBarPage(3)),
+              MaterialPageRoute(builder: (context) => TabBarPage(2)),
               (Route<dynamic> route) => false);
         });
       }
@@ -102,11 +104,14 @@ class _SplashScreenState extends State<SplashScreen> {
           if (isLocked) {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
-                    builder: (context) => LockScreen(TabBarPage(2))),
+                    builder: (context) =>
+                        LockScreen(TabBarPage(AppConstants.mainTabIndex))),
                 (Route<dynamic> route) => false);
           } else {
             Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => TabBarPage(2)),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        TabBarPage(AppConstants.mainTabIndex)),
                 (Route<dynamic> route) => false);
           }
 

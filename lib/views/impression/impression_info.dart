@@ -6,9 +6,8 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:pana_project/components/bonus_card.dart';
 import 'package:pana_project/components/impression_card.dart';
-import 'package:pana_project/components/text_review_card.dart';
+import 'package:pana_project/components/text_review_small_card.dart';
 import 'package:pana_project/components/text_with_border.dart';
 import 'package:pana_project/models/audioReview.dart';
 import 'package:pana_project/models/bonusItems.dart';
@@ -19,13 +18,13 @@ import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/utils/checkDaysCount.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/utils/get_bytes_from_asset.dart';
 import 'package:pana_project/utils/globalVariables.dart';
 import 'package:pana_project/views/impression/impression_sessions.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
-import 'package:pana_project/views/other/bonus_system_detail.dart';
 import 'package:pana_project/views/other/media_detail_page.dart';
 import 'package:pana_project/views/other/text_reviews_page.dart';
 import 'package:skeletons/skeletons.dart';
@@ -325,24 +324,6 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, bottom: 20, right: 20, top: 20),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: Skeleton(
-                            isLoading: isLoading,
-                            skeleton: SkeletonParagraph(),
-                            child: Text(
-                              thisImpression.description ?? '',
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ),
                       const Divider(),
                       Padding(
                         padding: const EdgeInsets.all(20),
@@ -401,7 +382,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                       child: const Padding(
                                         padding: EdgeInsets.only(left: 10),
                                         child: Text(
-                                          'Организатор впечатления',
+                                          'Организатор',
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -437,315 +418,155 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                         ),
                       ),
                       const Divider(),
-                      isHaveBonusSystem
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 20, left: 20, bottom: 10),
-                                  child: Row(
-                                    children: [
-                                      const Text(
-                                        'Мои бонусы',
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BonusSystemDetailPage(
-                                                bonusItems,
-                                                visitingCount,
-                                                60,
-                                                bonusSystemId,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: const Text(
-                                          'Перейти',
-                                          style: TextStyle(
-                                            color: AppColors.accent,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 0, left: 20, bottom: 10),
-                                  child: Text(
-                                    'Посещено кол-во раз: $visitingCount',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.blackWithOpacity,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 320,
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(height: 20),
-                                            Stack(
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 17, left: 75),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                12)),
-                                                    child: SizedBox(
-                                                      height: 5,
-                                                      width: (120 *
-                                                              bonusItems.length)
-                                                          .toDouble(),
-                                                      child:
-                                                          LinearProgressIndicator(
-                                                        value: bonusSystemId /
-                                                            bonusItems.length,
-                                                        color: AppColors.black,
-                                                        backgroundColor:
-                                                            AppColors.lightGray,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    const SizedBox(width: 20),
-                                                    for (int i = 0;
-                                                        i < bonusItems.length;
-                                                        i++)
-                                                      Row(
-                                                        children: [
-                                                          Column(
-                                                            children: [
-                                                              SvgPicture.asset(
-                                                                  './assets/icons/bonus_gift_1.svg'),
-                                                              const SizedBox(
-                                                                  height: 20),
-                                                              BonusCard(
-                                                                colorType: (bonusItems[i]
-                                                                            .bonusSystemItem
-                                                                            ?.level ??
-                                                                        1) +
-                                                                    1,
-                                                                title: bonusItems[
-                                                                            i]
-                                                                        .bonusSystemItem
-                                                                        ?.description ??
-                                                                    '',
-                                                                imageUrl: bonusItems[
-                                                                            i]
-                                                                        .bonusSystemItem
-                                                                        ?.image ??
-                                                                    '',
-                                                                isTaken: false,
-                                                                bonusType: 1,
-                                                                count: bonusItems[
-                                                                            i]
-                                                                        .countOrder ??
-                                                                    0,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          SizedBox(
-                                                            width: i ==
-                                                                    bonusItems
-                                                                            .length -
-                                                                        1
-                                                                ? 20
-                                                                : 40,
-                                                          )
-                                                        ],
-                                                      ),
-                                                  ],
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        SvgPicture.asset('./assets/phone.svg')
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                const Divider(),
-                              ],
-                            )
-                          : const SizedBox.shrink(),
                       const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                        padding: EdgeInsets.only(top: 10, left: 20, bottom: 0),
                         child: Text(
-                          'Что включено',
+                          'Описание',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 195,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            for (var item
-                                in (thisImpression.provideItems ?? []))
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 20, top: 10, bottom: 20),
-                                child: Container(
-                                  width: 248,
-                                  height: 173,
-                                  decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(16),
-                                      ),
-                                      border: Border.all(
-                                          width: 1, color: AppColors.grey)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                                'assets/icons/service_icon_${item.provideItem.provideId}.svg'),
-                                            const SizedBox(width: 10),
-                                            SizedBox(
-                                              width: 170,
-                                              child: Text(
-                                                item.provideItem.name,
-                                                style: const TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const Divider(),
-                                        SizedBox(
-                                          width: 200,
-                                          height: 83,
-                                          child: Text(
-                                            item.description ?? '',
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black45,
-                                            ),
-                                            maxLines: 6,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 20, bottom: 20, right: 20, top: 10),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: Skeleton(
+                            isLoading: isLoading,
+                            skeleton: SkeletonParagraph(),
+                            child: Text(
+                              thisImpression.description ?? '',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.blackWithOpacity,
                               ),
-                            const SizedBox(width: 20)
-                          ],
-                        ),
-                      ),
-                      const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                        child: Text(
-                          'Чем вы займетесь',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            left: 20, bottom: 20, right: 20),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: Text(
-                            thisImpression.about ?? '',
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black45),
-                          ),
-                        ),
-                      ),
-                      const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                        child: Text(
-                          'Что нужно взять с собой',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, bottom: 20, right: 20),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          child: const Text(
-                            'Подготовьте все предметы из списка ниже, которые нужны для проведения мероприятия',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black45),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, bottom: 20, right: 10),
-                        child: Wrap(
+                            left: 20, bottom: 10, right: 20),
+                        child: Column(
                           children: [
-                            for (var item in thisImpression.inventories ?? [])
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 5),
-                                    child:
-                                        TextWithBorderWidget(title: item.name),
-                                  ),
-                                  const SizedBox(width: 10),
-                                ],
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Тема мероприятия:',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
                               ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                '${thisImpression.topics?.map((e) => e.name).first}',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            const Divider(),
+                            // SizedBox(
+                            //   width: MediaQuery.of(context).size.width * 0.9,
+                            //   child: const Text(
+                            //     'Времени займет:',
+                            //     style: TextStyle(
+                            //         fontSize: 14,
+                            //         fontWeight: FontWeight.w500,
+                            //         color: Colors.black45),
+                            //   ),
+                            // ),
+                            // const SizedBox(height: 5),
+                            // SizedBox(
+                            //   width: MediaQuery.of(context).size.width * 0.9,
+                            //   child: Text(
+                            //     thisImpression.duration ?? '',
+                            //     style: const TextStyle(
+                            //         fontSize: 14,
+                            //         fontWeight: FontWeight.w500,
+                            //         color: Colors.black),
+                            //   ),
+                            // ),
+                            // const Divider(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Основной язык:',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                thisImpression.mainLanguage?.name ?? '',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            const Divider(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Дополнительные языки:',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                '${thisImpression.languages?.map((e) => e.name).join(', ')}',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            const Divider(),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Возраст:',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                'От ${thisImpression.minAge ?? ''} лет',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                            ),
                           ],
                         ),
                       ),
                       const Divider(),
                       const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                        padding: EdgeInsets.only(top: 10, left: 20, bottom: 0),
                         child: Text(
                           'Расположение',
                           style: TextStyle(
@@ -888,7 +709,369 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                         ),
                       ),
                       const Divider(),
-
+                      // TODO: Bonus system
+                      // isHaveBonusSystem
+                      //     ? Column(
+                      //         crossAxisAlignment: CrossAxisAlignment.start,
+                      //         children: [
+                      //           Padding(
+                      //             padding: const EdgeInsets.only(
+                      //                 top: 20, left: 20, bottom: 10),
+                      //             child: Row(
+                      //               children: [
+                      //                 const Text(
+                      //                   'Мои бонусы',
+                      //                   style: TextStyle(
+                      //                     fontSize: 24,
+                      //                     fontWeight: FontWeight.w500,
+                      //                   ),
+                      //                 ),
+                      //                 const Spacer(),
+                      //                 GestureDetector(
+                      //                   onTap: () {
+                      //                     Navigator.push(
+                      //                       context,
+                      //                       MaterialPageRoute(
+                      //                         builder: (context) =>
+                      //                             BonusSystemDetailPage(
+                      //                           bonusItems,
+                      //                           visitingCount,
+                      //                           60,
+                      //                           bonusSystemId,
+                      //                         ),
+                      //                       ),
+                      //                     );
+                      //                   },
+                      //                   child: const Text(
+                      //                     'Перейти',
+                      //                     style: TextStyle(
+                      //                       color: AppColors.accent,
+                      //                       fontSize: 14,
+                      //                       fontWeight: FontWeight.w500,
+                      //                     ),
+                      //                   ),
+                      //                 ),
+                      //                 const SizedBox(width: 20),
+                      //               ],
+                      //             ),
+                      //           ),
+                      //           Padding(
+                      //             padding: const EdgeInsets.only(
+                      //                 top: 0, left: 20, bottom: 10),
+                      //             child: Text(
+                      //               'Посещено кол-во раз: $visitingCount',
+                      //               style: const TextStyle(
+                      //                 fontSize: 14,
+                      //                 fontWeight: FontWeight.w500,
+                      //                 color: AppColors.blackWithOpacity,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           SizedBox(
+                      //             width: double.infinity,
+                      //             height: 320,
+                      //             child: SingleChildScrollView(
+                      //               scrollDirection: Axis.horizontal,
+                      //               child: Row(
+                      //                 children: [
+                      //                   Column(
+                      //                     crossAxisAlignment:
+                      //                         CrossAxisAlignment.start,
+                      //                     children: [
+                      //                       const SizedBox(height: 20),
+                      //                       Stack(
+                      //                         children: [
+                      //                           Padding(
+                      //                             padding: EdgeInsets.only(
+                      //                                 top: 17, left: 75),
+                      //                             child: ClipRRect(
+                      //                               borderRadius:
+                      //                                   BorderRadius.all(
+                      //                                       Radius.circular(
+                      //                                           12)),
+                      //                               child: SizedBox(
+                      //                                 height: 5,
+                      //                                 width: (120 *
+                      //                                         bonusItems.length)
+                      //                                     .toDouble(),
+                      //                                 child:
+                      //                                     LinearProgressIndicator(
+                      //                                   value: bonusSystemId /
+                      //                                       bonusItems.length,
+                      //                                   color: AppColors.black,
+                      //                                   backgroundColor:
+                      //                                       AppColors.lightGray,
+                      //                                 ),
+                      //                               ),
+                      //                             ),
+                      //                           ),
+                      //                           Row(
+                      //                             children: [
+                      //                               const SizedBox(width: 20),
+                      //                               for (int i = 0;
+                      //                                   i < bonusItems.length;
+                      //                                   i++)
+                      //                                 Row(
+                      //                                   children: [
+                      //                                     Column(
+                      //                                       children: [
+                      //                                         SvgPicture.asset(
+                      //                                             './assets/icons/bonus_gift_1.svg'),
+                      //                                         const SizedBox(
+                      //                                             height: 20),
+                      //                                         BonusCard(
+                      //                                           colorType: (bonusItems[i]
+                      //                                                       .bonusSystemItem
+                      //                                                       ?.level ??
+                      //                                                   1) +
+                      //                                               1,
+                      //                                           title: bonusItems[
+                      //                                                       i]
+                      //                                                   .bonusSystemItem
+                      //                                                   ?.description ??
+                      //                                               '',
+                      //                                           imageUrl: bonusItems[
+                      //                                                       i]
+                      //                                                   .bonusSystemItem
+                      //                                                   ?.image ??
+                      //                                               '',
+                      //                                           isTaken: false,
+                      //                                           bonusType: 1,
+                      //                                           count: bonusItems[
+                      //                                                       i]
+                      //                                                   .countOrder ??
+                      //                                               0,
+                      //                                         ),
+                      //                                       ],
+                      //                                     ),
+                      //                                     SizedBox(
+                      //                                       width: i ==
+                      //                                               bonusItems
+                      //                                                       .length -
+                      //                                                   1
+                      //                                           ? 20
+                      //                                           : 40,
+                      //                                     )
+                      //                                   ],
+                      //                                 ),
+                      //                             ],
+                      //                           ),
+                      //                         ],
+                      //                       )
+                      //                     ],
+                      //                   ),
+                      //                   SvgPicture.asset('./assets/phone.svg')
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           const SizedBox(height: 10),
+                      //           const Divider(),
+                      //         ],
+                      //       )
+                      //     : const SizedBox.shrink(),
+                      ExpansionTile(
+                        textColor: AppColors.black,
+                        iconColor: AppColors.black,
+                        title: const Text(
+                          'Чем вы займетесь',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, bottom: 20, right: 20),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                thisImpression.about ?? '',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      const Divider(),
+                      // TODO: Что нужно знать
+                      ExpansionTile(
+                        textColor: AppColors.black,
+                        iconColor: AppColors.black,
+                        title: const Text(
+                          'Что нужно знать',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, bottom: 20, right: 20),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Text(
+                                thisImpression.guestInfo ?? '',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      const Divider(),
+                      ExpansionTile(
+                        textColor: AppColors.black,
+                        iconColor: AppColors.black,
+                        title: const Text(
+                          'Что включено',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, bottom: 20, right: 20),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: const Text(
+                                'Список предметов, которые владелец предоставит вам в пользование во время впечатления',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 195,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: <Widget>[
+                                for (var item
+                                    in (thisImpression.provideItems ?? []))
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20, top: 10, bottom: 20),
+                                    child: Container(
+                                      width: 248,
+                                      height: 173,
+                                      decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(16),
+                                          ),
+                                          border: Border.all(
+                                              width: 1, color: AppColors.grey)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                    'assets/icons/service_icon_${item.provideItem.provideId}.svg'),
+                                                const SizedBox(width: 10),
+                                                SizedBox(
+                                                  width: 170,
+                                                  child: Text(
+                                                    item.provideItem.name,
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const Divider(),
+                                            SizedBox(
+                                              width: 200,
+                                              height: 83,
+                                              child: Text(
+                                                item.description ?? '',
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black45,
+                                                ),
+                                                maxLines: 6,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                const SizedBox(width: 20)
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+                        child: Text(
+                          'Что нужно взять с собой',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 20, bottom: 20, right: 20),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: const Text(
+                            'Подготовьте все предметы из списка ниже, которые нужны для проведения мероприятия',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black45),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 20, bottom: 10, right: 0),
+                        child: SizedBox(
+                          height: 40,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              for (var item in thisImpression.inventories ?? [])
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: TextWithBorderWidget(
+                                          title: item.name),
+                                    ),
+                                    const SizedBox(width: 10),
+                                  ],
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(),
                       // TODO: Stories
                       // const Padding(
                       //   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -964,9 +1147,10 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                               ),
                             )
                           : Container(),
+                      // TODO: Text reviews
                       textReviews.isNotEmpty
                           ? SizedBox(
-                              height: 335,
+                              height: 160,
                               child: ListView(
                                 scrollDirection: Axis.horizontal,
                                 children: <Widget>[
@@ -989,7 +1173,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                                   width: 1,
                                                   color: AppColors.lightGray,
                                                 )),
-                                            child: TextReviewCard(
+                                            child: TextReviewSmallCard(
                                                 textReviews[i]))),
                                   const SizedBox(width: 20)
                                 ],
@@ -1205,33 +1389,8 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                             left: 20, bottom: 20, right: 20),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
-                          child: const Text(
-                            'Гости могут получить полный возврат при отмене не позднее чем за 7 дней до начала Впечатления или в течение 24 часов с момента бронирования (при условии, что Впечатление забронировано более чем за 48 часов до начала).',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black45),
-                          ),
-                        ),
-                      ),
-                      const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                        child: Text(
-                          'Важно знать',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, bottom: 20, right: 20),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
                           child: Text(
-                            thisImpression.guestInfo ?? '',
+                            'Бесплатная отмена ${checkDaysCount(thisImpression.cancellationPolicy.toString())} до начала',
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,

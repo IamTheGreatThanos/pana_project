@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
-import 'package:pana_project/views/profile/about_loyalty_program_page.dart';
+import 'package:pana_project/views/profile/loyalty_program/about_loyalty_program_page.dart';
 
 class LoyaltyProgramDetailPage extends StatefulWidget {
   final String cashbackBalance;

@@ -143,27 +143,27 @@ class _ListOfCountriesPageState extends State<ListOfCountriesPage> {
                   ),
                 ),
                 const SizedBox(height: 20, child: Divider()),
-                for (var city in displayedCities)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: Text(
-                            city.name ?? '',
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          subtitle: Text(AppConstants
-                              .countries[(city.countryId ?? 1) - 1]),
-                          trailing: const Icon(Icons.arrow_forward_ios),
-                          onTap: () {
-                            Navigator.pop(context, [city.id, city.name]);
-                          },
-                        ),
-                        const Divider(),
-                      ],
-                    ),
-                  )
+                // for (var city in displayedCities)
+                //   Padding(
+                //     padding: const EdgeInsets.symmetric(horizontal: 10),
+                //     child: Column(
+                //       children: [
+                //         ListTile(
+                //           title: Text(
+                //             city.name ?? '',
+                //             style: TextStyle(fontWeight: FontWeight.w500),
+                //           ),
+                //           subtitle: Text(AppConstants
+                //               .countries[(city.countryId ?? 1) - 1]),
+                //           trailing: const Icon(Icons.arrow_forward_ios),
+                //           onTap: () {
+                //             Navigator.pop(context, [city.id, city.name]);
+                //           },
+                //         ),
+                //         const Divider(),
+                //       ],
+                //     ),
+                //   )
               ],
             ),
           ),

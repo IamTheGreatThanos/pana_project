@@ -225,11 +225,9 @@ class _HomeImpressionState extends State<HomeImpression>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            (searchText != ''
+                                            searchText != ''
                                                     ? '$searchText, '
-                                                    : '') +
-                                                continentNames[
-                                                    selectedCountryId],
+                                                    : '',
                                             style: const TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 14,

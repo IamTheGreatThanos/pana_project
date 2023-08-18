@@ -427,18 +427,6 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
       ));
     }
   }
-
-  String checkPersonCount(String personCount) {
-    if (personCount.endsWith('1')) {
-      return '$personCount персона';
-    } else if (personCount.endsWith('2') ||
-        personCount.endsWith('3') ||
-        personCount.endsWith('4')) {
-      return '$personCount персоны';
-    }
-
-    return '$personCount персон';
-  }
 }
 
 class ImpressionPeopleCountBottomSheet extends StatefulWidget {
@@ -469,10 +457,18 @@ class ImpressionPeopleCountBottomSheet extends StatefulWidget {
 class _ImpressionPeopleCountBottomSheetState
     extends State<ImpressionPeopleCountBottomSheet> {
   @override
+  void initState() {
+    super.initState();
+    widget.isPrivate == 2
+        ? widget.impressionData.peopleCount = widget.session.closedGroupMin!
+        : null;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: SizedBox(
-        height: 300,
+        // height: 300,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           child: Column(
@@ -480,13 +476,26 @@ class _ImpressionPeopleCountBottomSheetState
             children: [
               const SizedBox(height: 20),
               const Text(
-                'Выберите число персон:',
+                'Выберите кол-во \nучастников:',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 40),
+              widget.isPrivate == 2
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Text(
+                        'Для того чтобы забронировать данный сеанс для закрытой группы, требуется выбрать не менее ${widget.session.closedGroupMin} и не более ${widget.session.closedGroupMax} участников.',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black45,
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              const SizedBox(height: 30),
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
@@ -496,22 +505,25 @@ class _ImpressionPeopleCountBottomSheetState
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                   child: Row(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Персоны',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Человек',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       const Spacer(),
                       GestureDetector(
                         onTap: () {
-                          widget.impressionData.minusFunction();
+                          if (widget.isPrivate == 2) {
+                            if (widget.session.closedGroupMin! <
+                                widget.impressionData.peopleCount) {
+                              widget.impressionData.minusFunction();
+                            }
+                          } else {
+                            widget.impressionData.minusFunction();
+                          }
+
                           if (mounted) {
                             setState(() {});
                           }
@@ -540,8 +552,7 @@ class _ImpressionPeopleCountBottomSheetState
                       GestureDetector(
                         onTap: () {
                           if (widget.isPrivate == 2) {
-                            if ((widget.session.maxCountClosed ?? 0) -
-                                    (widget.session.currentPeopleCount ?? 0) >
+                            if (widget.session.closedGroupMax! >
                                 widget.impressionData.peopleCount) {
                               widget.impressionData.plusFunction();
                             }
@@ -650,7 +661,7 @@ class _ImpressionSessionPrivateModeModalBottomSheetState
   void initState() {
     super.initState();
 
-    widget.session.type == 2 ? isPrivateSelected = true : null;
+    widget.session.type == 2 ? isPrivateSelected = true : false;
   }
 
   @override

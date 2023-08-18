@@ -10,7 +10,6 @@ import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/PageTransitionRoute.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/housing/filter_page.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
 import 'package:pana_project/views/housing/search_page.dart';
@@ -20,6 +19,8 @@ import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
 class HomeHousing extends StatefulWidget {
+  const HomeHousing(this.onButtonPressed);
+  final void Function(int) onButtonPressed;
   @override
   _HomeHousingState createState() => _HomeHousingState();
 }
@@ -494,11 +495,7 @@ class _HomeHousingState extends State<HomeHousing>
                                           setState(() {});
                                         }
                                       } else {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AuthPage()));
+                                        widget.onButtonPressed(3);
                                       }
                                     },
                                     child: HousingCard(housingList[i], () {}),

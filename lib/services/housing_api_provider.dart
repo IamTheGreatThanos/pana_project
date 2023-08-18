@@ -325,7 +325,10 @@ class HousingProvider {
     int housingId,
     String dateFrom,
     String dateTo,
-    int peopleCount,
+    int adultCount,
+    int childCount,
+    int babyCount,
+    int petCount,
     List<Map<String, dynamic>> selectedRooms,
     int paymentCardId,
     String comment,
@@ -335,8 +338,12 @@ class HousingProvider {
 
     Map<String, dynamic> bodyObject = {
       "housing_id": housingId,
-      "count_people": peopleCount,
+      "adults": adultCount,
+      "children": childCount,
+      "babies": babyCount,
+      "pets": petCount,
       "rooms": selectedRooms,
+      "count_people": 0,
     };
 
     if (paymentCardId == -1) {
@@ -367,7 +374,7 @@ class HousingProvider {
       body: jsonEncode(bodyObject),
     );
 
-    // print(jsonDecode(response.body));
+    print(jsonDecode(response.body));
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       Map<String, dynamic> result = {};

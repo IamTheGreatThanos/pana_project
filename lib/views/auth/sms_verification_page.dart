@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,6 +57,42 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 60, left: 20),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(50),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                spreadRadius: 0,
+                                blurRadius: 24,
+                                offset:
+                                    Offset(0, 4), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child:
+                                SvgPicture.asset('assets/icons/back_arrow.svg'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const Spacer(),
                 SizedBox(
                     width: 150,

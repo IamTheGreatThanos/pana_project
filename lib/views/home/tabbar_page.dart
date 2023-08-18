@@ -49,8 +49,8 @@ class _TabBarPageState extends State<TabBarPage> {
     tabViews = <Widget>[
       // HomeTravel(changeTabMethod),
       // const ComingSoonPage(),
-      HomeImpression(),
-      HomeHousing(),
+      HomeImpression(changeTabMethod),
+      HomeHousing(changeTabMethod),
       MessagesPage(changeTabMethod),
       ProfileMainPage(changeTabMethod),
     ];

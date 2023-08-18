@@ -1,22 +1,22 @@
-import 'package:pana_project/models/housingCard.dart';
-import 'package:pana_project/models/impressionCard.dart';
+import 'package:pana_project/models/housingDetail.dart';
+import 'package:pana_project/models/impressionDetail.dart';
 import 'package:pana_project/models/transactionHistory.dart';
 import 'package:pana_project/models/user.dart';
 
-class Order {
+class ReceiptOrder {
   int? id;
   String? type;
-  int? status;
+  int? status; // 6 - отменено
   User? user;
-  HousingCardModel? housing;
-  ImpressionCardModel? impression;
+  HousingDetailModel? housing;
+  ImpressionDetailModel? impression;
   double? totalPrice;
   double? returnPrice;
   double? finePrice;
   String? dateFrom;
   String? dateTo;
   String? paymentAt;
-  int? paymentType;
+  int? paymentType; // 1 - card, 3 - при заселении
   String? createdAt;
   String? comment;
   int? countPeople;
@@ -25,7 +25,7 @@ class Order {
   List<RoomNumbers>? roomNumbers;
   Map<dynamic, dynamic>? successPaymentOperation;
 
-  Order({
+  ReceiptOrder({
     this.id,
     this.type,
     this.status,
@@ -47,16 +47,16 @@ class Order {
     this.successPaymentOperation,
   });
 
-  Order.fromJson(Map<String, dynamic> json) {
+  ReceiptOrder.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     type = json['type'];
     status = json['status'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     housing = json['housing'] != null
-        ? new HousingCardModel.fromJson(json['housing'])
+        ? new HousingDetailModel.fromJson(json['housing'])
         : null;
     impression = json['impression'] != null
-        ? new ImpressionCardModel.fromJson(json['impression'])
+        ? new ImpressionDetailModel.fromJson(json['impression'])
         : null;
     json['total_price'] != null
         ? totalPrice = double.parse(json['total_price'].toString())

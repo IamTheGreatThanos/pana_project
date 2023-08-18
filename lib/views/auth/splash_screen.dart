@@ -104,8 +104,8 @@ class _SplashScreenState extends State<SplashScreen> {
           if (isLocked) {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
-                    builder: (context) =>
-                        LockScreen(TabBarPage(AppConstants.mainTabIndex))),
+                    builder: (context) => LockScreen(
+                        TabBarPage(AppConstants.mainTabIndex), false)),
                 (Route<dynamic> route) => false);
           } else {
             Navigator.of(context).pushAndRemoveUntil(

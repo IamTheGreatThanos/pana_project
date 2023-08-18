@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:pana_project/components/payment_method_card.dart';
 import 'package:pana_project/models/creditCard.dart';
+import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/impressionDetail.dart';
 import 'package:pana_project/models/impressionSession.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
@@ -11,9 +13,9 @@ import 'package:pana_project/utils/ImpressionData.dart';
 import 'package:pana_project/utils/checkReviewsCount.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
-import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/impression/impression_sessions.dart';
 import 'package:pana_project/views/payment/epay_webview.dart';
+import 'package:pana_project/views/payment/payment_information_page.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class ImpressionPaymentPage extends StatefulWidget {
@@ -30,7 +32,7 @@ class ImpressionPaymentPage extends StatefulWidget {
   final String endDate;
   final ImpressionData impressionData;
   final ImpressionSessionModel session;
-  final int type;
+  final int type; // 2 - закрытый, 1 - открытый
 
   @override
   _ImpressionPaymentPageState createState() => _ImpressionPaymentPageState();
@@ -38,13 +40,13 @@ class ImpressionPaymentPage extends StatefulWidget {
 
 class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   TextEditingController commentController = TextEditingController();
-  var _switchValue = false;
   double sum = 0;
   String dateFrom = '-';
   String dateTo = '-';
   List<CreditCard> cards = [];
   int selectedCardIndex = -2;
   int daysDifference = 0;
+  int orderId = 0;
 
   @override
   void initState() {
@@ -227,19 +229,24 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Даты',
+                            'Сеанс',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           const SizedBox(height: 5),
-                          Text(
-                            '${widget.session.startDate} / ${widget.session.endDate}',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black45,
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: Text(
+                              widget.session.startDate == widget.session.endDate
+                                  ? '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}'
+                                  : '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.endDate ?? ''))}, ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black45,
+                              ),
                             ),
                           ),
                         ],
@@ -255,7 +262,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Персоны',
+                            'Участники',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -265,7 +272,8 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                           Text(
                             '${widget.impressionData.peopleCount} человек(а)',
                             style: const TextStyle(
-                              color: AppColors.accent,
+                              fontSize: 12,
+                              color: Colors.black45,
                               fontWeight: FontWeight.w500,
                             ),
                           )
@@ -306,7 +314,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.7,
                           child: Text(
-                            'Сеанс x ${widget.impressionData.peopleCount}',
+                            'Сеанс: ${widget.session.startDate == widget.session.endDate ? '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}' : '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.endDate ?? ''))}, ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}'}',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -316,7 +324,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                         ),
                         const Spacer(),
                         Text(
-                          '${formatNumberString((((widget.type == 1 ? widget.session.openPrice ?? 0 : widget.session.closedPrice ?? 0)) * widget.impressionData.peopleCount).toString())} \₸',
+                          '${formatNumberString((((widget.type == 1 ? widget.session.openPrice ?? 0 : widget.session.closedPrice ?? 0))).toString())} \₸',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -669,7 +677,9 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
           widget.session.endTime!,
           commentController.text,
         );
+
         if (response['response_status'] == 'ok') {
+          orderId = response['data']['order_id'];
           goToEPay(_key, response['data']);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -691,9 +701,11 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
             widget.session.endTime!,
             commentController.text,
           );
+
           if (response['response_status'] == 'ok'
               // && response['data']['payment_operation']['status'] == 1
               ) {
+            orderId = response['data']['order_id'];
             showSuccessfullyPaySheet();
             // String acsUrl =
             //     response['data']['payment_operation']['acs_url'].toString();
@@ -753,6 +765,9 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
 
     if (response == 'Success') {
       showSuccessfullyPaySheet();
+    } else if (response == '') {
+      _key.currentState?.reset();
+      return;
     } else {
       _key.currentState?.reset();
       showPaymentErrorSheet();
@@ -784,8 +799,6 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
   }
 
   void showSuccessfullyPaySheet() async {
-    // widget.impressionData.peopleCount = 1;
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -836,214 +849,13 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: Text(
                           'Поздравляем! Вы успешно забронировали “${widget.impression.name ?? ''}”',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black45,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      const Divider(),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(12)),
-                            child: SizedBox(
-                              width: 86,
-                              height: 86,
-                              child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                imageUrl:
-                                    widget.impression.images?[0].path ?? '',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 15),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: Text(
-                                  widget.impression.name ?? '',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: Text(
-                                  '${widget.impression.city?.name ?? ''}, ${widget.impression.city?.country?.name ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black45,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 2),
-                                      child: SizedBox(
-                                        width: 15,
-                                        height: 15,
-                                        child: SvgPicture.asset(
-                                            'assets/icons/star.svg'),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 5),
-                                      child: Text(
-                                        widget.impression.reviewsAvgBall ?? '0',
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: Text(
-                                        checkReviewsCount(
-                                            (widget.impression.reviewsCount ??
-                                                    0)
-                                                .toString()),
-                                        style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black45),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Даты',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  '$dateFrom / $dateTo',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black45,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 20, child: VerticalDivider()),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Гости',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                '${widget.impressionData.peopleCount} человек(а)',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black45,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const Divider(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                              'Способ оплаты:',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.blackWithOpacity,
-                              ),
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              const SizedBox(width: 10),
-                              SvgPicture.asset(selectedCardIndex == -1
-                                  ? 'assets/icons/payment_type_in_a_place.svg'
-                                  : selectedCardIndex == -2
-                                      ? 'assets/icons/payment_card.svg'
-                                      : cards[selectedCardIndex].type == 'VISA'
-                                          ? 'assets/icons/visa_icon.svg'
-                                          : 'assets/icons/mastercard_icon.svg'),
-                              const SizedBox(width: 10),
-                              Text(
-                                selectedCardIndex == -1
-                                    ? 'Оплата при заселении'
-                                    : selectedCardIndex == -2
-                                        ? 'Новой картой'
-                                        : '**** ${cards[selectedCardIndex].number!.substring(9, 13)}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      const Divider(),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const Text(
-                            'Итого',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            '${formatNumberString(sum.toString())} \₸',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
                       ),
                       const SizedBox(height: 20),
                       SizedBox(
@@ -1058,11 +870,37 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        TabBarPage(AppConstants.mainTabIndex)),
-                                (Route<dynamic> route) => false);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => PaymentInformationPage(
+                                      false,
+                                      widget.impression,
+                                      widget.session,
+                                      widget.impressionData.peopleCount,
+                                      widget.type,
+                                      [],
+                                      [],
+                                      0,
+                                      sum.toString(),
+                                      HousingDetailModel(),
+                                      0,
+                                      0,
+                                      '',
+                                      '',
+                                      selectedCardIndex == -1
+                                          ? 1
+                                          : selectedCardIndex == -2
+                                              ? 2
+                                              : 3,
+                                      selectedCardIndex < 0
+                                          ? ''
+                                          : cards[selectedCardIndex].type ?? '',
+                                      selectedCardIndex < 0
+                                          ? ''
+                                          : cards[selectedCardIndex]
+                                              .number!
+                                              .substring(9, 13),
+                                      orderId,
+                                    )));
                           },
                           child: const Text(
                             "Отлично!",
@@ -1134,7 +972,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: const Text(
-                          'Возникли проблемы, у вас на счету не хватает средств для оплаты, повторите попытку или выберите другой способ оплаты',
+                          'Возникли проблемы, возможно у вас на счету не хватает средств для оплаты, повторите попытку или выберите другой способ оплаты',
                           style: TextStyle(
                             color: Colors.black45,
                             fontSize: 14,

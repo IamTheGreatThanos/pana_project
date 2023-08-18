@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,8 +7,9 @@ import 'package:pana_project/utils/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LockScreen extends StatefulWidget {
-  LockScreen(this.page);
+  LockScreen(this.page, this.fromApp);
   final Widget page;
+  final bool fromApp;
 
   @override
   _LockScreenState createState() => _LockScreenState();
@@ -205,6 +204,7 @@ class _LockScreenState extends State<LockScreen> {
                     imageUrl: avatarUrl,
                     width: 100,
                     height: 100,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -695,9 +695,15 @@ class _LockScreenState extends State<LockScreen> {
   void checkCode() async {
     if (secureCode.length == 4) {
       if (secureCode == savedCode) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => widget.page),
-            (Route<dynamic> route) => false);
+        if (widget.fromApp) {
+          await Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => widget.page));
+          Navigator.of(context).pop();
+        } else {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => widget.page),
+              (Route<dynamic> route) => false);
+        }
       } else {
         setState(() {
           _width = 40;
@@ -713,18 +719,30 @@ class _LockScreenState extends State<LockScreen> {
     savedCode = prefs.getString('lock_code');
     useBiometrics = prefs.getBool('isBiometricsUse');
     if (savedCode == null) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => widget.page),
-          (Route<dynamic> route) => false);
+      if (widget.fromApp) {
+        await Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => widget.page));
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => widget.page),
+            (Route<dynamic> route) => false);
+      }
     }
   }
 
   void authByBiometrics() async {
-    _authenticateWithBiometrics().whenComplete(() {
+    _authenticateWithBiometrics().whenComplete(() async {
       if (_authorized == 'Authorized') {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => widget.page),
-            (Route<dynamic> route) => false);
+        if (widget.fromApp) {
+          await Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => widget.page));
+          Navigator.of(context).pop();
+        } else {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => widget.page),
+              (Route<dynamic> route) => false);
+        }
       }
     });
   }

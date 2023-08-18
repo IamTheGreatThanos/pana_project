@@ -10,10 +10,13 @@ class AppColors {
   static const Color lightGray = Color(0xFFF5F5F5);
   static const Color grey = Color(0xFFE7E7E7);
   static const Color main = Color(0xFF4546c0);
+  static const Color green = Color(0xFF46CB63);
+  static const Color red = Color(0xFFF65151);
 }
 
 class AppConstants {
-  static const String baseUrl = "http://back.pana.world/";
+  // static const String baseUrl = "http://back.pana.world/";
+  static const String baseUrl = "https://back.panaclub.kz/";
   static String appVersion = '1.1.0';
   static double cardBorderRadius = 24;
   static int mainTabIndex = 1;

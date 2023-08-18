@@ -8,7 +8,6 @@ import 'package:pana_project/models/selections.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
-import 'package:pana_project/views/auth/auth_page.dart';
 import 'package:pana_project/views/housing/filter_page.dart';
 import 'package:pana_project/views/housing/search_page.dart';
 import 'package:pana_project/views/impression/impression_info.dart';
@@ -18,6 +17,8 @@ import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
 class HomeImpression extends StatefulWidget {
+  const HomeImpression(this.onButtonPressed);
+  final void Function(int) onButtonPressed;
   @override
   _HomeImpressionState createState() => _HomeImpressionState();
 }
@@ -226,8 +227,8 @@ class _HomeImpressionState extends State<HomeImpression>
                                         children: [
                                           Text(
                                             searchText != ''
-                                                    ? '$searchText, '
-                                                    : '',
+                                                ? '$searchText, '
+                                                : '',
                                             style: const TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 14,
@@ -511,11 +512,7 @@ class _HomeImpressionState extends State<HomeImpression>
 
                                         setState(() {});
                                       } else {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AuthPage()));
+                                        widget.onButtonPressed(3);
                                       }
                                     },
                                     child: ImpressionCard(

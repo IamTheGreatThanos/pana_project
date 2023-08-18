@@ -132,22 +132,13 @@ class _RoomCardState extends State<RoomCard> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.6,
+                      width: MediaQuery.of(context).size.width * 0.8,
                       child: Text(
                         widget.room.roomName?.name ?? '',
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                         ),
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      '${widget.date.substring(0, 5)} - ${widget.date.substring(13, 18)}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black45,
                       ),
                     ),
                   ],

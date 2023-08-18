@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,11 +40,47 @@ class _ReenterLockCodePageState extends State<ReenterLockCodePage> {
           child: Container(
             color: Colors.white,
             width: MediaQuery.of(context).size.width,
-            height: 650,
+            height: 690,
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 60, left: 20),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(50),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                spreadRadius: 0,
+                                blurRadius: 24,
+                                offset:
+                                    Offset(0, 4), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child:
+                                SvgPicture.asset('assets/icons/back_arrow.svg'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const Spacer(),
-                const SizedBox(height: 80),
+                const SizedBox(height: 50),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 60),
                   child: Text(

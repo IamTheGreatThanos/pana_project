@@ -78,7 +78,7 @@ class _SearchPageState extends State<SearchPage> {
                         width: MediaQuery.of(context).size.width,
                         // height: selectedContinentIndex == 0 ? 300 : 380,
                         height: 120,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppColors.white,
                           // borderRadius: BorderRadius.only(
                           //     bottomRight: Radius.circular(
@@ -334,11 +334,13 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                         child: Row(
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.only(left: 20),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20),
                               child: Text(
-                                'Дата поездки',
-                                style: TextStyle(
+                                widget.fromHousing
+                                    ? 'Дата проживания'
+                                    : 'Дата проведения',
+                                style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w500),
                               ),
                             ),
@@ -366,7 +368,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        height: 300,
+                        height: widget.fromHousing ? 300 : 150,
                         decoration: BoxDecoration(
                           color: AppColors.white,
                           borderRadius: BorderRadius.all(
@@ -376,11 +378,11 @@ class _SearchPageState extends State<SearchPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.all(20),
+                            Padding(
+                              padding: const EdgeInsets.all(20),
                               child: Text(
-                                'Кто поедет?',
-                                style: TextStyle(
+                                widget.fromHousing ? 'Гости' : 'Кто участвует?',
+                                style: const TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.w500),
                               ),
                             ),
@@ -388,23 +390,25 @@ class _SearchPageState extends State<SearchPage> {
                               children: [
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     Padding(
                                       padding:
-                                          EdgeInsets.only(top: 5, left: 20),
+                                          const EdgeInsets.only(top: 5, left: 20),
                                       child: Text(
-                                        'Взрослые',
-                                        style: TextStyle(
+                                        widget.fromHousing ? 'Взрослые' : 'Человек',
+                                        style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500),
                                       ),
                                     ),
                                     Padding(
                                       padding:
-                                          EdgeInsets.only(top: 5, left: 20),
+                                          const EdgeInsets.only(top: 5, left: 20),
                                       child: Text(
-                                        'от 18 лет',
-                                        style: TextStyle(
+                                        widget.fromHousing
+                                            ? 'от 18 лет'
+                                            : '0-99 лет',
+                                        style: const TextStyle(
                                             color: Colors.black45,
                                             fontSize: 14,
                                             fontWeight: FontWeight.w400),
@@ -482,197 +486,212 @@ class _SearchPageState extends State<SearchPage> {
                                   horizontal: 20, vertical: 10),
                               child: Divider(),
                             ),
-                            Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 5, left: 20),
-                                      child: Text(
-                                        'Дети',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 5, left: 20),
-                                      child: Text(
-                                        'от 4 лет',
-                                        style: TextStyle(
-                                            color: Colors.black45,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const Spacer(),
-                                GestureDetector(
-                                  child: Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: const BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(30),
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black12,
-                                          spreadRadius: 0,
-                                          blurRadius: 24,
-                                          offset: Offset(0,
-                                              4), // changes position of shadow
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Icon(Icons.remove),
-                                  ),
-                                  onTap: () {
-                                    removeAction(2);
-                                  },
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Text(
-                                    childAfter4Count.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: GestureDetector(
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: const BoxDecoration(
-                                        color: AppColors.white,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(30),
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            spreadRadius: 0,
-                                            blurRadius: 24,
-                                            offset: Offset(0,
-                                                4), // changes position of shadow
+                            widget.fromHousing
+                                ? Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: const [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 5, left: 20),
+                                                child: Text(
+                                                  'Дети',
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 5, left: 20),
+                                                child: Text(
+                                                  'от 4 лет',
+                                                  style: TextStyle(
+                                                      color: Colors.black45,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const Spacer(),
+                                          GestureDetector(
+                                            child: Container(
+                                              width: 30,
+                                              height: 30,
+                                              decoration: const BoxDecoration(
+                                                color: AppColors.white,
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(30),
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black12,
+                                                    spreadRadius: 0,
+                                                    blurRadius: 24,
+                                                    offset: Offset(0,
+                                                        4), // changes position of shadow
+                                                  ),
+                                                ],
+                                              ),
+                                              child: const Icon(Icons.remove),
+                                            ),
+                                            onTap: () {
+                                              removeAction(2);
+                                            },
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Text(
+                                              childAfter4Count.toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 10),
+                                            child: GestureDetector(
+                                              child: Container(
+                                                width: 30,
+                                                height: 30,
+                                                decoration: const BoxDecoration(
+                                                  color: AppColors.white,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(30),
+                                                  ),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black12,
+                                                      spreadRadius: 0,
+                                                      blurRadius: 24,
+                                                      offset: Offset(0,
+                                                          4), // changes position of shadow
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: const Icon(Icons.add),
+                                              ),
+                                              onTap: () {
+                                                addAction(2);
+                                              },
+                                            ),
                                           ),
                                         ],
                                       ),
-                                      child: const Icon(Icons.add),
-                                    ),
-                                    onTap: () {
-                                      addAction(2);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              child: Divider(),
-                            ),
-                            Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 5, left: 20),
-                                      child: Text(
-                                        'Младенцы',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 10),
+                                        child: Divider(),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 5, left: 20),
-                                      child: Text(
-                                        'до 4 лет',
-                                        style: TextStyle(
-                                            color: Colors.black45,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const Spacer(),
-                                GestureDetector(
-                                  child: Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: const BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(30),
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black12,
-                                          spreadRadius: 0,
-                                          blurRadius: 24,
-                                          offset: Offset(0,
-                                              4), // changes position of shadow
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Icon(Icons.remove),
-                                  ),
-                                  onTap: () {
-                                    removeAction(3);
-                                  },
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Text(
-                                    childBefore4Count.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: GestureDetector(
-                                    child: Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: const BoxDecoration(
-                                        color: AppColors.white,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(30),
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            spreadRadius: 0,
-                                            blurRadius: 24,
-                                            offset: Offset(0,
-                                                4), // changes position of shadow
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
+                            widget.fromHousing
+                                ? Row(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: const [
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 5, left: 20),
+                                            child: Text(
+                                              'Младенцы',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 5, left: 20),
+                                            child: Text(
+                                              'до 4 лет',
+                                              style: TextStyle(
+                                                  color: Colors.black45,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
                                           ),
                                         ],
                                       ),
-                                      child: const Icon(Icons.add),
-                                    ),
-                                    onTap: () {
-                                      addAction(3);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+                                      const Spacer(),
+                                      GestureDetector(
+                                        child: Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: const BoxDecoration(
+                                            color: AppColors.white,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(30),
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black12,
+                                                spreadRadius: 0,
+                                                blurRadius: 24,
+                                                offset: Offset(0,
+                                                    4), // changes position of shadow
+                                              ),
+                                            ],
+                                          ),
+                                          child: const Icon(Icons.remove),
+                                        ),
+                                        onTap: () {
+                                          removeAction(3);
+                                        },
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Text(
+                                          childBefore4Count.toString(),
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: GestureDetector(
+                                          child: Container(
+                                            width: 30,
+                                            height: 30,
+                                            decoration: const BoxDecoration(
+                                              color: AppColors.white,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(30),
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  spreadRadius: 0,
+                                                  blurRadius: 24,
+                                                  offset: Offset(0,
+                                                      4), // changes position of shadow
+                                                ),
+                                              ],
+                                            ),
+                                            child: const Icon(Icons.add),
+                                          ),
+                                          onTap: () {
+                                            addAction(3);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
                             // const Padding(
                             //   padding: EdgeInsets.symmetric(
                             //       horizontal: 20, vertical: 10),
@@ -757,7 +776,7 @@ class _SearchPageState extends State<SearchPage> {
                           ],
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       const SizedBox(
                         height: 20,
                       ),
@@ -977,7 +996,8 @@ class _SearchPageState extends State<SearchPage> {
                                                                   color: Colors
                                                                       .black),
                                                             ),
-                                                            SizedBox(width: 10),
+                                                            const SizedBox(
+                                                                width: 10),
                                                             SizedBox(
                                                               width: MediaQuery.of(
                                                                           context)

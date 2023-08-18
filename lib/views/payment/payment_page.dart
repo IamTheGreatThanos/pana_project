@@ -1,17 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:pana_project/components/payment_method_card.dart';
 import 'package:pana_project/models/creditCard.dart';
 import 'package:pana_project/models/housingDetail.dart';
+import 'package:pana_project/models/impressionDetail.dart';
+import 'package:pana_project/models/impressionSession.dart';
 import 'package:pana_project/models/roomCard.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/utils/checkNightCount.dart';
 import 'package:pana_project/utils/checkReviewsCount.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
-import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/payment/epay_webview.dart';
+import 'package:pana_project/views/payment/payment_information_page.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -35,6 +39,8 @@ class _PaymentPageState extends State<PaymentPage> {
   String dateTo = '-';
   List<CreditCard> cards = [];
   int selectedCardIndex = -1;
+  int days = 0;
+  int orderId = 0;
 
   @override
   void initState() {
@@ -55,6 +61,8 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
+    int count = 0;
+    int count2 = 0;
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -225,7 +233,10 @@ class _PaymentPageState extends State<PaymentPage> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            '$dateFrom / $dateTo',
+                            dateFrom == dateTo
+                                ? DateFormat("d MMM", 'ru')
+                                    .format(DateTime.parse(dateFrom))
+                                : '${DateFormat("d MMM", 'ru').format(DateTime.parse(dateFrom))} - ${DateFormat("d MMM", 'ru').format(DateTime.parse(dateTo))}',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -236,7 +247,7 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   const Divider(),
                   const SizedBox(height: 5),
                   Row(
@@ -253,7 +264,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            '${sharedHousingPaymentData.peopleCount} человек(а)',
+                            '${sharedHousingPaymentData.adults + sharedHousingPaymentData.children} гостя, ${sharedHousingPaymentData.babies} младенца, ${sharedHousingPaymentData.pets} питомца',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -278,8 +289,46 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   const Divider(),
+                  for (int i = 0; i < widget.roomList.length; i++)
+                    for (int j = 0; j < widget.selectedRooms[i]['count']; j++)
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Номер №${count += 1}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    child: Text(
+                                      widget.roomList[i].roomName?.name ?? '',
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black45,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          const Divider(),
+                        ],
+                      ),
+
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),
                     child: Text(
@@ -291,38 +340,39 @@ class _PaymentPageState extends State<PaymentPage> {
                     ),
                   ),
                   for (int i = 0; i < widget.roomList.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              showRoomPrices(i);
-                            },
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              child: Text(
-                                '${widget.roomList[i].roomName?.name ?? ''} x ${widget.selectedRooms[i]['count']}',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black45,
-                                  decoration: TextDecoration.underline,
+                    for (int j = 0; j < widget.selectedRooms[i]['count']; j++)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showRoomPrices(i);
+                              },
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                child: Text(
+                                  '${count2 += 1}. ${widget.roomList[i].roomName?.name ?? ''} x ${checkNightCount(days.toString())}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black45,
+                                    decoration: TextDecoration.underline,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            '${formatNumberString(((widget.roomList[i].basePrice ?? 0) * widget.selectedRooms[i]['count']).toString())} \₸',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                            const Spacer(),
+                            Text(
+                              '${formatNumberString(((widget.roomList[i].basePrice ?? 0) * days).toString())} \₸',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
                   Row(
                     children: [
                       const Text(
@@ -630,7 +680,26 @@ class _PaymentPageState extends State<PaymentPage> {
                           ),
                           innerColor: AppColors.accent,
                           outerColor: AppColors.white,
-                          onSubmit: () {
+                          onSubmit: () async {
+                            // TODO: Submit action
+                            // await Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ReceiptPage(
+                            //       widget.housing,
+                            //       widget.startDate,
+                            //       widget.endDate,
+                            //       sharedHousingPaymentData.adults +
+                            //           sharedHousingPaymentData.children,
+                            //       sharedHousingPaymentData.babies,
+                            //       sharedHousingPaymentData.pets,
+                            //       widget.roomList,
+                            //       widget.selectedRooms,
+                            //       days,
+                            //       sum.toString(),
+                            //     ),
+                            //   ),
+                            // );
                             sendOrder(_key);
                           },
                         );
@@ -651,7 +720,11 @@ class _PaymentPageState extends State<PaymentPage> {
     DateTime dateToFormatted = DateTime.parse(dateTo);
 
     Duration difference = dateToFormatted.difference(dateFromFormatted);
-    int days = difference.inDays;
+    days = difference.inDays;
+
+    if (dateFromFormatted == dateToFormatted) {
+      days = 1;
+    }
 
     sum = 0;
 
@@ -671,12 +744,16 @@ class _PaymentPageState extends State<PaymentPage> {
           widget.housing.id!,
           dateFrom,
           dateTo,
-          sharedHousingPaymentData.peopleCount,
+          sharedHousingPaymentData.adults,
+          sharedHousingPaymentData.children,
+          sharedHousingPaymentData.babies,
+          sharedHousingPaymentData.pets,
           widget.selectedRooms,
           -1,
           commentController.text,
         );
         if (response['response_status'] == 'ok') {
+          orderId = response['data']['order_id'];
           showSuccessfullyPaySheet();
 
           // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -690,21 +767,34 @@ class _PaymentPageState extends State<PaymentPage> {
           // ).whenComplete(() => Navigator.of(context).pushAndRemoveUntil(
           //     MaterialPageRoute(builder: (context) => TabBarPage()),
           //     (Route<dynamic> route) => false));
+        } else {
+          _key.currentState!.reset();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(response['data']['message'],
+                style: const TextStyle(fontSize: 14)),
+          ));
         }
       } else if (selectedCardIndex == -2) {
         var response = await HousingProvider().housingPayment(
           widget.housing.id!,
           dateFrom,
           dateTo,
-          sharedHousingPaymentData.peopleCount,
+          sharedHousingPaymentData.adults,
+          sharedHousingPaymentData.children,
+          sharedHousingPaymentData.babies,
+          sharedHousingPaymentData.pets,
           widget.selectedRooms,
           -2,
           commentController.text,
         );
 
+        // print(response);
+
         if (response['response_status'] == 'ok') {
+          orderId = response['data']['order_id'];
           goToEPay(_key, response['data']);
         } else {
+          _key.currentState!.reset();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(response['data']['message'],
                 style: const TextStyle(fontSize: 14)),
@@ -717,13 +807,18 @@ class _PaymentPageState extends State<PaymentPage> {
             widget.housing.id!,
             dateFrom,
             dateTo,
-            sharedHousingPaymentData.peopleCount,
+            sharedHousingPaymentData.adults,
+            sharedHousingPaymentData.children,
+            sharedHousingPaymentData.babies,
+            sharedHousingPaymentData.pets,
             widget.selectedRooms,
             cards[selectedCardIndex].id!,
             commentController.text,
           );
+
           if (response['response_status'] == 'ok') {
-            print(response['data']);
+            orderId = response['data']['order_id'];
+            // print(response['data']);
             showSuccessfullyPaySheet();
 
             //   String acsUrl =
@@ -793,6 +888,9 @@ class _PaymentPageState extends State<PaymentPage> {
 
     if (response == 'Success') {
       showSuccessfullyPaySheet();
+    } else if (response == '') {
+      _key.currentState?.reset();
+      return;
     } else {
       _key.currentState?.reset();
       showPaymentErrorSheet();
@@ -959,8 +1057,6 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void showSuccessfullyPaySheet() async {
-    // sharedHousingPaymentData.peopleCount = 1;
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1019,205 +1115,6 @@ class _PaymentPageState extends State<PaymentPage> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      const Divider(),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(12)),
-                            child: SizedBox(
-                              width: 86,
-                              height: 86,
-                              child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                imageUrl: widget.housing.images?[0].path ?? '',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 15),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: Text(
-                                  widget.housing.name ?? '',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: Text(
-                                  '${widget.housing.city?.name ?? ''}, ${widget.housing.city?.country?.name ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black45,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 2),
-                                      child: SizedBox(
-                                        width: 15,
-                                        height: 15,
-                                        child: SvgPicture.asset(
-                                            'assets/icons/star.svg'),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 5),
-                                      child: Text(
-                                        widget.housing.reviewsBallAvg ?? '0',
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: Text(
-                                        checkReviewsCount(
-                                            (widget.housing.reviewsCount ?? 0)
-                                                .toString()),
-                                        style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black45),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Даты',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  '$dateFrom / $dateTo',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black45,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 20, child: VerticalDivider()),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Гости',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                '${sharedHousingPaymentData.peopleCount} человек(а)',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black45,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const Divider(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                              'Способ оплаты:',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.blackWithOpacity,
-                              ),
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              const SizedBox(width: 10),
-                              SvgPicture.asset(selectedCardIndex == -1
-                                  ? 'assets/icons/payment_type_in_a_place.svg'
-                                  : selectedCardIndex == -2
-                                      ? 'assets/icons/payment_card.svg'
-                                      : cards[selectedCardIndex].type == 'VISA'
-                                          ? 'assets/icons/visa_icon.svg'
-                                          : 'assets/icons/mastercard_icon.svg'),
-                              const SizedBox(width: 10),
-                              Text(
-                                selectedCardIndex == -1
-                                    ? 'Оплата при заселении'
-                                    : selectedCardIndex == -2
-                                        ? 'Новой картой'
-                                        : '**** ${cards[selectedCardIndex].number!.substring(9, 13)}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      const Divider(),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const Text(
-                            'Итого',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            '${formatNumberString(sum.toString())} \₸',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
                       const SizedBox(height: 20),
                       SizedBox(
                         height: 60,
@@ -1231,11 +1128,38 @@ class _PaymentPageState extends State<PaymentPage> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        TabBarPage(AppConstants.mainTabIndex)),
-                                (Route<dynamic> route) => false);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => PaymentInformationPage(
+                                      true,
+                                      ImpressionDetailModel(),
+                                      ImpressionSessionModel(),
+                                      sharedHousingPaymentData.adults +
+                                          sharedHousingPaymentData.children,
+                                      0,
+                                      widget.roomList,
+                                      widget.selectedRooms,
+                                      days,
+                                      sum.toString(),
+                                      widget.housing,
+                                      sharedHousingPaymentData.babies,
+                                      sharedHousingPaymentData.pets,
+                                      widget.startDate,
+                                      widget.endDate,
+                                      selectedCardIndex == -1
+                                          ? 1
+                                          : selectedCardIndex == -2
+                                              ? 2
+                                              : 3,
+                                      selectedCardIndex < 0
+                                          ? ''
+                                          : cards[selectedCardIndex].type ?? '',
+                                      selectedCardIndex < 0
+                                          ? ''
+                                          : cards[selectedCardIndex]
+                                              .number!
+                                              .substring(9, 13),
+                                      orderId,
+                                    )));
                           },
                           child: const Text(
                             "Отлично!",
@@ -1307,7 +1231,7 @@ class _PaymentPageState extends State<PaymentPage> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: const Text(
-                          'Возникли проблемы, у вас на счету не хватает средств для оплаты, повторите попытку или выберите другой способ оплаты',
+                          'Возникли проблемы, возможно у вас на счету не хватает средств для оплаты, повторите попытку или выберите другой способ оплаты',
                           style: TextStyle(
                             color: Colors.black45,
                             fontSize: 14,
@@ -1417,21 +1341,58 @@ class _PaymentPageState extends State<PaymentPage> {
 }
 
 class HousingPaymentData {
-  int peopleCount = 1;
+  int adults = 1;
+  int children = 0;
+  int babies = 0;
+  int pets = 0;
 
-  void minusFunction() {
-    if (peopleCount > 1) {
-      peopleCount -= 1;
+  void minusFunctionAdult() {
+    if (adults > 1) {
+      adults -= 1;
     }
   }
 
-  void plusFunction() {
-    if (peopleCount < 99) {
-      peopleCount += 1;
+  void plusFunctionAdult() {
+    if (adults < 99) {
+      adults += 1;
     }
   }
 
-  void dispose() {}
+  void minusFunctionChildren() {
+    if (children > 0) {
+      children -= 1;
+    }
+  }
+
+  void plusFunctionChildren() {
+    if (children < 99) {
+      children += 1;
+    }
+  }
+
+  void minusFunctionBabies() {
+    if (babies > 0) {
+      babies -= 1;
+    }
+  }
+
+  void plusFunctionBabies() {
+    if (babies < 99) {
+      babies += 1;
+    }
+  }
+
+  void minusFunctionPets() {
+    if (pets > 0) {
+      pets -= 1;
+    }
+  }
+
+  void plusFunctionPets() {
+    if (pets < 99) {
+      pets += 1;
+    }
+  }
 }
 
 HousingPaymentData sharedHousingPaymentData = HousingPaymentData();
@@ -1447,7 +1408,7 @@ class _HousingPaymentBottomSheetState extends State<HousingPaymentBottomSheet> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: SizedBox(
-        height: 300,
+        // height: 300,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           child: Column(
@@ -1475,7 +1436,7 @@ class _HousingPaymentBottomSheetState extends State<HousingPaymentBottomSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Персоны',
+                            'Взрослые',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -1486,7 +1447,7 @@ class _HousingPaymentBottomSheetState extends State<HousingPaymentBottomSheet> {
                       const Spacer(),
                       GestureDetector(
                         onTap: () {
-                          sharedHousingPaymentData.minusFunction();
+                          sharedHousingPaymentData.minusFunctionAdult();
                           setState(() {});
                         },
                         child: Container(
@@ -1503,7 +1464,7 @@ class _HousingPaymentBottomSheetState extends State<HousingPaymentBottomSheet> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
-                          sharedHousingPaymentData.peopleCount.toString(),
+                          sharedHousingPaymentData.adults.toString(),
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -1512,7 +1473,230 @@ class _HousingPaymentBottomSheetState extends State<HousingPaymentBottomSheet> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          sharedHousingPaymentData.plusFunction();
+                          sharedHousingPaymentData.plusFunctionAdult();
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(width: 1, color: AppColors.grey),
+                          ),
+                          child: const Icon(Icons.add),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(width: 1, color: AppColors.grey)),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Дети',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            'От 4 лет',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.blackWithOpacity,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          sharedHousingPaymentData.minusFunctionChildren();
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(width: 1, color: AppColors.grey),
+                          ),
+                          child: const Icon(Icons.remove),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          sharedHousingPaymentData.children.toString(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          sharedHousingPaymentData.plusFunctionChildren();
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(width: 1, color: AppColors.grey),
+                          ),
+                          child: const Icon(Icons.add),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(width: 1, color: AppColors.grey)),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Младенцы',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            'Младше 4 лет',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.blackWithOpacity,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          sharedHousingPaymentData.minusFunctionBabies();
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(width: 1, color: AppColors.grey),
+                          ),
+                          child: const Icon(Icons.remove),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          sharedHousingPaymentData.babies.toString(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          sharedHousingPaymentData.plusFunctionBabies();
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(width: 1, color: AppColors.grey),
+                          ),
+                          child: const Icon(Icons.add),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(width: 1, color: AppColors.grey)),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Домашние животные',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          sharedHousingPaymentData.minusFunctionPets();
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(width: 1, color: AppColors.grey),
+                          ),
+                          child: const Icon(Icons.remove),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          sharedHousingPaymentData.pets.toString(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          sharedHousingPaymentData.plusFunctionPets();
                           setState(() {});
                         },
                         child: Container(

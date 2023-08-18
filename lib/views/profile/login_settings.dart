@@ -106,7 +106,7 @@ class _LoginSettingsPageState extends State<LoginSettingsPage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      LockScreen(CreateLockCodePage())));
+                                      LockScreen(CreateLockCodePage(), true)));
                         },
                         child: ProfileMenuItem('assets/icons/pin_code_icon.svg',
                             'Изменить код-пароль'),
@@ -153,7 +153,8 @@ class _LoginSettingsPageState extends State<LoginSettingsPage> {
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         LockScreen(
-                                                            CreateLockCodePage())));
+                                                            CreateLockCodePage(),
+                                                            true)));
                                       } else {
                                         _switchValue = value;
                                       }

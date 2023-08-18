@@ -29,8 +29,9 @@ class _MessagesPageState extends State<MessagesPage> {
   List<NotificationModel> newNotifications = [];
   List<NotificationModel> oldNotifications = [];
 
-  bool isLodingActive = false;
-
+  bool isLoadingActive = false;
+  bool isLogIn = false;
+  bool isLoading = true;
   bool isHaveListOfChats = false;
 
   @override
@@ -58,207 +59,234 @@ class _MessagesPageState extends State<MessagesPage> {
       },
       child: Scaffold(
         backgroundColor: AppColors.lightGray,
-        body: Stack(
-          children: [
-            RefreshIndicator(
-              onRefresh: _pullRefresh,
-              child: SingleChildScrollView(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                color: AppColors.blackWithOpacity2,
+              ))
+            : isLogIn
+                ? Stack(
                     children: [
-                      Container(
-                        color: AppColors.white,
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
-                              child: Text(
-                                'Новые уведомления',
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: goToChats,
-                              child: Container(
-                                height: 70,
-                                color: newMessageCount != 0
-                                    ? AppColors.accent
-                                    : AppColors.black,
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 20),
-                                    SizedBox(
-                                        width: 34,
-                                        height: 34,
-                                        child: SvgPicture.asset(
-                                            'assets/icons/m_message_${newMessageCount != 0 ? '1' : '0'}.svg')),
-                                    const SizedBox(width: 10),
-                                    SizedBox(
-                                      height: 70,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.72,
-                                            child: const Text(
-                                              'Список чатов',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.white,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                            ),
+                      RefreshIndicator(
+                        onRefresh: _pullRefresh,
+                        child: SingleChildScrollView(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  color: AppColors.white,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(20, 40, 20, 20),
+                                        child: Text(
+                                          'Новые уведомления',
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                          const SizedBox(height: 2),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.72,
-                                            child: Text(
-                                              checkMessagesCount(
-                                                  newMessageCount.toString()),
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.white,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      GestureDetector(
+                                        onTap: goToChats,
+                                        child: Container(
+                                          height: 70,
+                                          color: newMessageCount != 0
+                                              ? AppColors.accent
+                                              : AppColors.black,
+                                          child: Row(
+                                            children: [
+                                              const SizedBox(width: 20),
+                                              SizedBox(
+                                                  width: 34,
+                                                  height: 34,
+                                                  child: SvgPicture.asset(
+                                                      'assets/icons/m_message_${newMessageCount != 0 ? '1' : '0'}.svg')),
+                                              const SizedBox(width: 10),
+                                              SizedBox(
+                                                height: 70,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.72,
+                                                      child: const Text(
+                                                        'Список чатов',
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color:
+                                                              AppColors.white,
+                                                        ),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 2,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 2),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.72,
+                                                      child: Text(
+                                                        checkMessagesCount(
+                                                            newMessageCount
+                                                                .toString()),
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              AppColors.white,
+                                                        ),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 2,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
+                                newNotifications.isNotEmpty
+                                    ? Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.white,
+                                          borderRadius: BorderRadius.only(
+                                              bottomRight: Radius.circular(
+                                                  AppConstants
+                                                      .cardBorderRadius),
+                                              bottomLeft: Radius.circular(
+                                                  AppConstants
+                                                      .cardBorderRadius)),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            for (int i = 0;
+                                                i < newNotifications.length;
+                                                i++)
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    goToNotificationDetail(
+                                                        newNotifications[i]);
+                                                  },
+                                                  child: MessagesWidget(
+                                                      newNotifications[i],
+                                                      true)),
+                                            const SizedBox(height: 20),
+                                          ],
+                                        ),
+                                      )
+                                    : Container(),
+                                const SizedBox(height: 20),
+                                oldNotifications.isNotEmpty
+                                    ? Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                AppConstants.cardBorderRadius),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  20, 40, 20, 20),
+                                              child: Text(
+                                                'Просмотрено',
+                                                style: TextStyle(
+                                                  fontSize: 24,
+                                                  color: AppColors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                            for (int i = 0;
+                                                i < oldNotifications.length;
+                                                i++)
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    goToNotificationDetail(
+                                                        oldNotifications[i]);
+                                                  },
+                                                  child: MessagesWidget(
+                                                      oldNotifications[i],
+                                                      false)),
+                                            const SizedBox(height: 20),
+                                          ],
+                                        ),
+                                      )
+                                    : Container(),
+                                const SizedBox(height: 20),
+                                oldNotifications.isNotEmpty
+                                    ? Center(
+                                        child: Column(
+                                          children: [
+                                            SvgPicture.asset(
+                                                'assets/images/smile.svg'),
+                                            const SizedBox(height: 10),
+                                            const Text(
+                                              'Вы долистали до конца',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: AppColors.black,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : const SizedBox.shrink(),
+                                const SizedBox(height: 20),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                      newNotifications.isNotEmpty
+                      isLoadingActive
                           ? Container(
+                              color: AppColors.blackWithOpacity,
                               width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(
-                                        AppConstants.cardBorderRadius),
-                                    bottomLeft: Radius.circular(
-                                        AppConstants.cardBorderRadius)),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  for (int i = 0;
-                                      i < newNotifications.length;
-                                      i++)
-                                    GestureDetector(
-                                        onTap: () {
-                                          goToNotificationDetail(
-                                              newNotifications[i]);
-                                        },
-                                        child: MessagesWidget(
-                                            newNotifications[i], true)),
-                                  const SizedBox(height: 20),
-                                ],
-                              ),
+                              height: MediaQuery.of(context).size.height,
+                              child: const Center(
+                                  child: CircularProgressIndicator(
+                                color: AppColors.blackWithOpacity2,
+                              )),
                             )
-                          : Container(),
-                      const SizedBox(height: 20),
-                      oldNotifications.isNotEmpty
-                          ? Container(
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                      AppConstants.cardBorderRadius),
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.fromLTRB(20, 40, 20, 20),
-                                    child: Text(
-                                      'Просмотрено',
-                                      style: TextStyle(
-                                        fontSize: 24,
-                                        color: AppColors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  for (int i = 0;
-                                      i < oldNotifications.length;
-                                      i++)
-                                    GestureDetector(
-                                        onTap: () {
-                                          goToNotificationDetail(
-                                              oldNotifications[i]);
-                                        },
-                                        child: MessagesWidget(
-                                            oldNotifications[i], false)),
-                                  const SizedBox(height: 20),
-                                ],
-                              ),
-                            )
-                          : Container(),
-                      const SizedBox(height: 20),
-                      oldNotifications.isNotEmpty
-                          ? Center(
-                              child: Column(
-                                children: [
-                                  SvgPicture.asset('assets/images/smile.svg'),
-                                  const SizedBox(height: 10),
-                                  const Text(
-                                    'Вы долистали до конца',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                      const SizedBox(height: 20),
+                          : const SizedBox.shrink()
                     ],
-                  ),
-                ),
-              ),
-            ),
-            isLodingActive
-                ? Container(
-                    color: AppColors.blackWithOpacity,
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: const Center(
-                        child: CircularProgressIndicator(
-                      color: AppColors.blackWithOpacity2,
-                    )),
                   )
-                : const SizedBox.shrink()
-          ],
-        ),
+                : AuthPage(),
       ),
     );
   }
@@ -297,7 +325,7 @@ class _MessagesPageState extends State<MessagesPage> {
     }
     // TODO: Переход впечатления
     else if (notification.type == 5) {
-      widget.onButtonPressed(1);
+      widget.onButtonPressed(0);
     }
     // TODO: Переход поездки
     else if (notification.type == 6 || notification.type == 13) {
@@ -305,7 +333,7 @@ class _MessagesPageState extends State<MessagesPage> {
     }
     // TODO: Переход жилье
     else if (notification.type == 12) {
-      widget.onButtonPressed(2);
+      widget.onButtonPressed(1);
     }
     // TODO: Переход список чатов
     else if (notification.type == 23 || notification.type == 24) {
@@ -320,7 +348,7 @@ class _MessagesPageState extends State<MessagesPage> {
     }
     // TODO: Переход отзыв детально
     else if (notification.type == 17 || notification.type == 19) {
-      isLodingActive = true;
+      isLoadingActive = true;
       setState(() {});
       if (notification.textReview != null) {
         var response =
@@ -348,7 +376,7 @@ class _MessagesPageState extends State<MessagesPage> {
           getNotifications();
         }
       }
-      isLodingActive = false;
+      isLoadingActive = false;
       setState(() {});
     }
     // TODO: Детальная информация
@@ -413,46 +441,48 @@ class _MessagesPageState extends State<MessagesPage> {
   void checkIsLogedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('isLogedIn') == true) {
+      isLogIn = true;
       readNotification();
       getNotifications();
-      setState(() {});
     } else {
-      showAlertDialog(context);
+      // showAlertDialog(context);
     }
+    isLoading = false;
+    setState(() {});
   }
 
-  showAlertDialog(BuildContext context) {
-    Widget cancelButton = TextButton(
-      child: const Text("Отмена"),
-      onPressed: () {
-        widget.onButtonPressed(2);
-        Navigator.of(context).pop();
-      },
-    );
-    Widget continueButton = TextButton(
-      child: const Text("Да"),
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AuthPage()));
-      },
-    );
-
-    AlertDialog alert = AlertDialog(
-      title: const Text("Внимание"),
-      content: const Text("Вы не вошли в аккаунт. Войти?"),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    ).whenComplete(() => widget.onButtonPressed(2));
-  }
+  // showAlertDialog(BuildContext context) {
+  //   Widget cancelButton = TextButton(
+  //     child: const Text("Отмена"),
+  //     onPressed: () {
+  //       widget.onButtonPressed(2);
+  //       Navigator.of(context).pop();
+  //     },
+  //   );
+  //   Widget continueButton = TextButton(
+  //     child: const Text("Да"),
+  //     onPressed: () {
+  //       Navigator.push(
+  //           context, MaterialPageRoute(builder: (context) => AuthPage()));
+  //     },
+  //   );
+  //
+  //   AlertDialog alert = AlertDialog(
+  //     title: const Text("Внимание"),
+  //     content: const Text("Вы не вошли в аккаунт. Войти?"),
+  //     actions: [
+  //       cancelButton,
+  //       continueButton,
+  //     ],
+  //   );
+  //
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return alert;
+  //     },
+  //   ).whenComplete(() => widget.onButtonPressed(2));
+  // }
 
   void getChats() async {
     var response = await MessagesProvider().getListOfChats();

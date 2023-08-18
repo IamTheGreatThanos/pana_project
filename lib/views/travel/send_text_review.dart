@@ -38,6 +38,11 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
   int purityBall = 0;
   int staffBall = 0;
 
+  bool priceBallValid = true;
+  bool fieldBallValid = true;
+  bool purityBallValid = true;
+  bool staffBallValid = true;
+
   bool isValidReview = true;
   bool isValidDate = true;
 
@@ -230,6 +235,17 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                             ),
                           ),
                         ),
+                        isValidReview
+                            ? const SizedBox()
+                            : const Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Text('Это поле обязательно к заполнению',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.red,
+                                    )),
+                              ),
                       ],
                     ),
                   ),
@@ -247,6 +263,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 25, horizontal: 30),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -265,6 +282,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                 onTap: () {
                                   setState(() {
                                     priceBall = i + 1;
+                                    priceBallValid = true;
                                   });
                                 },
                                 child: Padding(
@@ -281,6 +299,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                 onTap: () {
                                   setState(() {
                                     priceBall += i + 1;
+                                    priceBallValid = true;
                                   });
                                 },
                                 child: Padding(
@@ -295,6 +314,17 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                               ),
                           ],
                         ),
+                        priceBallValid
+                            ? const SizedBox()
+                            : const Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Text('Это поле обязательно к заполнению',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.red,
+                                    )),
+                              ),
                         const Divider(height: 30),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -313,6 +343,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                 onTap: () {
                                   setState(() {
                                     fieldBall = i + 1;
+                                    fieldBallValid = true;
                                   });
                                 },
                                 child: Padding(
@@ -329,6 +360,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                 onTap: () {
                                   setState(() {
                                     fieldBall += i + 1;
+                                    fieldBallValid = true;
                                   });
                                 },
                                 child: Padding(
@@ -343,6 +375,17 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                               ),
                           ],
                         ),
+                        fieldBallValid
+                            ? const SizedBox()
+                            : const Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Text('Это поле обязательно к заполнению',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.red,
+                                    )),
+                              ),
                         const Divider(height: 30),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -361,6 +404,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                 onTap: () {
                                   setState(() {
                                     purityBall = i + 1;
+                                    purityBallValid = true;
                                   });
                                 },
                                 child: Padding(
@@ -377,6 +421,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                 onTap: () {
                                   setState(() {
                                     purityBall += i + 1;
+                                    purityBallValid = true;
                                   });
                                 },
                                 child: Padding(
@@ -391,6 +436,17 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                               ),
                           ],
                         ),
+                        purityBallValid
+                            ? const SizedBox()
+                            : const Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Text('Это поле обязательно к заполнению',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.red,
+                                    )),
+                              ),
                         const Divider(height: 30),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -409,6 +465,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                 onTap: () {
                                   setState(() {
                                     staffBall = i + 1;
+                                    staffBallValid = true;
                                   });
                                 },
                                 child: Padding(
@@ -425,6 +482,7 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                 onTap: () {
                                   setState(() {
                                     staffBall += i + 1;
+                                    staffBallValid = true;
                                   });
                                 },
                                 child: Padding(
@@ -439,6 +497,17 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                               ),
                           ],
                         ),
+                        staffBallValid
+                            ? const SizedBox()
+                            : const Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Text('Это поле обязательно к заполнению',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.red,
+                                    )),
+                              ),
                       ],
                     ),
                   ),
@@ -576,6 +645,22 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                             ));
                           }
                         } else {
+                          if (priceBall == 0) {
+                            priceBallValid = false;
+                          }
+                          if (fieldBall == 0) {
+                            fieldBallValid = false;
+                          }
+                          if (purityBall == 0) {
+                            purityBallValid = false;
+                          }
+                          if (staffBall == 0) {
+                            staffBallValid = false;
+                          }
+                          if (_reviewController.text.isEmpty) {
+                            isValidReview = false;
+                          }
+                          setState(() {});
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             content: Text("Поставьте все оценки",

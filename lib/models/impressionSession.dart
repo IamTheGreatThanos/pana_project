@@ -22,6 +22,8 @@ class ImpressionSessionModel {
   int? maxCountClosed;
   int? maxCountOpen;
   int? currentPeopleCount;
+  int? closedGroupMin;
+  int? closedGroupMax;
 
   ImpressionSessionModel({
     this.id,
@@ -47,6 +49,8 @@ class ImpressionSessionModel {
     this.maxCountClosed,
     this.maxCountOpen,
     this.currentPeopleCount,
+    this.closedGroupMin,
+    this.closedGroupMax,
   });
 
   ImpressionSessionModel.fromJson(Map<String, dynamic> json) {
@@ -73,6 +77,8 @@ class ImpressionSessionModel {
     maxCountClosed = json['closed_groups'];
     maxCountOpen = json['open_groups'];
     currentPeopleCount = int.tryParse(json['count_people'].toString()) ?? 1;
+    closedGroupMin = int.tryParse(json['closed_groups_min'].toString()) ?? 1;
+    closedGroupMax = int.tryParse(json['closed_groups_max'].toString()) ?? 1;
   }
 
   Map<String, dynamic> toJson() {

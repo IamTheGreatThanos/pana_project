@@ -379,6 +379,10 @@ class ImpressionProvider {
     Map<String, dynamic> bodyObject = {
       "impression_id": impressionId,
       "count_people": peopleCount,
+      "adults": 0,
+      "children": 0,
+      "babies": 0,
+      "pets": 0,
       "sessions": [
         {
           'impression_session_id': sessionId,

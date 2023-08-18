@@ -36,7 +36,8 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
   int cashbackLevel = 1;
   String spentMoney = '';
 
-  bool isLogedIn = false;
+  bool isLogIn = false;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -56,261 +57,265 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: isLogedIn
-            ? SingleChildScrollView(
-                child: Container(
-                  color: AppColors.lightGray,
-                  width: MediaQuery.of(context).size.width,
-                  child: Stack(
-                    children: [
-                      Container(
-                        color: AppColors.grey,
-                        width: MediaQuery.of(context).size.width,
-                        height: 300,
-                      ),
-                      SvgPicture.asset(
-                        'assets/images/profile_bg.svg',
-                        width: MediaQuery.of(context).size.width,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 90),
-                            Row(
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                color: AppColors.blackWithOpacity2,
+              ))
+            : isLogIn
+                ? SingleChildScrollView(
+                    child: Container(
+                      color: AppColors.lightGray,
+                      width: MediaQuery.of(context).size.width,
+                      child: Stack(
+                        children: [
+                          Container(
+                            color: AppColors.grey,
+                            width: MediaQuery.of(context).size.width,
+                            height: 300,
+                          ),
+                          SvgPicture.asset(
+                            'assets/images/profile_bg.svg',
+                            width: MediaQuery.of(context).size.width,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                const Spacer(),
-                                const SizedBox(width: 15),
-                                Stack(
+                                const SizedBox(height: 90),
+                                Row(
                                   children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (isLogedIn = true) {
-                                          changeAvatar();
-                                        }
-                                      },
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(12)),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(5),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(12)),
-                                            child: SizedBox(
-                                              width: 90,
-                                              height: 90,
-                                              child: image != null
-                                                  ? Image.file(
-                                                      File(image!.path),
-                                                      fit: BoxFit.cover,
-                                                    )
-                                                  : avatarUrl != ''
-                                                      ? CachedNetworkImage(
-                                                          imageUrl: avatarUrl,
+                                    const Spacer(),
+                                    const SizedBox(width: 15),
+                                    Stack(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            changeAvatar();
+                                          },
+                                          child: Container(
+                                            decoration: const BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(12)),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(12)),
+                                                child: SizedBox(
+                                                  width: 90,
+                                                  height: 90,
+                                                  child: image != null
+                                                      ? Image.file(
+                                                          File(image!.path),
                                                           fit: BoxFit.cover,
                                                         )
-                                                      : SvgPicture.asset(
-                                                          'assets/images/add_photo_placeholder.svg'),
+                                                      : avatarUrl != ''
+                                                          ? CachedNetworkImage(
+                                                              imageUrl:
+                                                                  avatarUrl,
+                                                              fit: BoxFit.cover,
+                                                            )
+                                                          : SvgPicture.asset(
+                                                              'assets/images/add_photo_placeholder.svg'),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              70, 70, 0, 0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              changeAvatar();
+                                            },
+                                            child: SvgPicture.asset(
+                                              'assets/icons/avatar_edit_icon.svg',
+                                              width: 50,
+                                              height: 50,
+                                            ),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          70, 70, 0, 0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (isLogedIn = true) {
-                                            changeAvatar();
-                                          }
-                                        },
-                                        child: SvgPicture.asset(
-                                          'assets/icons/avatar_edit_icon.svg',
-                                          width: 50,
-                                          height: 50,
-                                        ),
-                                      ),
-                                    )
+                                    const Spacer(),
                                   ],
                                 ),
-                                const Spacer(),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(60, 10, 60, 0),
+                                  child: SizedBox(
+                                    height: 60,
+                                    child: Text(
+                                      name,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: AppColors.black,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // Padding(
+                                //   padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                //   child: GestureDetector(
+                                //     onTap: () {
+                                //       Navigator.push(
+                                //           context,
+                                //           MaterialPageRoute(
+                                //               builder: (context) =>
+                                //                   LoyaltyProgramPage(
+                                //                     id,
+                                //                     name,
+                                //                     avatarUrl,
+                                //                     cashbackBalance,
+                                //                     cashbackLevel,
+                                //                     spentMoney,
+                                //                   )));
+                                //     },
+                                //     child: Container(
+                                //       decoration: const BoxDecoration(
+                                //         color: Colors.black87,
+                                //         borderRadius: BorderRadius.all(
+                                //             const Radius.circular(8)),
+                                //       ),
+                                //       child: Padding(
+                                //         padding: const EdgeInsets.fromLTRB(
+                                //             15, 70, 15, 20),
+                                //         child: Row(
+                                //           children: const [
+                                //             Text(
+                                //               'Программа лояльности',
+                                //               style: TextStyle(
+                                //                   fontSize: 14,
+                                //                   color: Colors.white),
+                                //             ),
+                                //             Spacer(),
+                                //             Icon(
+                                //               Icons.arrow_forward_ios,
+                                //               color: Colors.white,
+                                //             ),
+                                //           ],
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                PersonalInformationPage()));
+                                    getProfile();
+                                  },
+                                  child: ProfileMenuItem(
+                                      'assets/icons/profile_user.svg',
+                                      'Личная информация'),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MyTransactionsPage()));
+                                  },
+                                  child: ProfileMenuItem(
+                                      'assets/icons/profile_card.svg',
+                                      'Мои транзакции'),
+                                ),
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     Navigator.push(
+                                //         context,
+                                //         MaterialPageRoute(
+                                //             builder: (context) => PaymentMethodsPage()));
+                                //   },
+                                //   child: ProfileMenuItem(
+                                //       'assets/icons/profile_card.svg', 'Способы оплаты'),
+                                // ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SupportChatPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: ProfileMenuItem(
+                                      'assets/icons/profile_chat.svg',
+                                      'Служба поддержки'),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ChangeLanguagePage()));
+                                  },
+                                  child: ProfileMenuItem(
+                                      'assets/icons/profile_globe.svg',
+                                      'Выбор языка'),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MyReviewsPage()));
+                                  },
+                                  child: ProfileMenuItem(
+                                      'assets/icons/profile_star.svg',
+                                      'Мои отзывы'),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MyBookedObjectsPage()));
+                                  },
+                                  child: ProfileMenuItem(
+                                      'assets/icons/flag_icon.svg',
+                                      'Забронированные места'),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    logOut();
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 40),
+                                    child: Text(
+                                      'Выйти из аккаунта',
+                                      style: TextStyle(
+                                        color: Colors.black45,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(60, 10, 60, 0),
-                              child: SizedBox(
-                                height: 60,
-                                child: Text(
-                                  name,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: AppColors.black,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            // Padding(
-                            //   padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                            //   child: GestureDetector(
-                            //     onTap: () {
-                            //       Navigator.push(
-                            //           context,
-                            //           MaterialPageRoute(
-                            //               builder: (context) =>
-                            //                   LoyaltyProgramPage(
-                            //                     id,
-                            //                     name,
-                            //                     avatarUrl,
-                            //                     cashbackBalance,
-                            //                     cashbackLevel,
-                            //                     spentMoney,
-                            //                   )));
-                            //     },
-                            //     child: Container(
-                            //       decoration: const BoxDecoration(
-                            //         color: Colors.black87,
-                            //         borderRadius: BorderRadius.all(
-                            //             const Radius.circular(8)),
-                            //       ),
-                            //       child: Padding(
-                            //         padding: const EdgeInsets.fromLTRB(
-                            //             15, 70, 15, 20),
-                            //         child: Row(
-                            //           children: const [
-                            //             Text(
-                            //               'Программа лояльности',
-                            //               style: TextStyle(
-                            //                   fontSize: 14,
-                            //                   color: Colors.white),
-                            //             ),
-                            //             Spacer(),
-                            //             Icon(
-                            //               Icons.arrow_forward_ios,
-                            //               color: Colors.white,
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
-                            GestureDetector(
-                              onTap: () async {
-                                await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            PersonalInformationPage()));
-                                getProfile();
-                              },
-                              child: ProfileMenuItem(
-                                  'assets/icons/profile_user.svg',
-                                  'Личная информация'),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            MyTransactionsPage()));
-                              },
-                              child: ProfileMenuItem(
-                                  'assets/icons/profile_card.svg',
-                                  'Мои транзакции'),
-                            ),
-                            // GestureDetector(
-                            //   onTap: () {
-                            //     Navigator.push(
-                            //         context,
-                            //         MaterialPageRoute(
-                            //             builder: (context) => PaymentMethodsPage()));
-                            //   },
-                            //   child: ProfileMenuItem(
-                            //       'assets/icons/profile_card.svg', 'Способы оплаты'),
-                            // ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SupportChatPage(),
-                                  ),
-                                );
-                              },
-                              child: ProfileMenuItem(
-                                  'assets/icons/profile_chat.svg',
-                                  'Служба поддержки'),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ChangeLanguagePage()));
-                              },
-                              child: ProfileMenuItem(
-                                  'assets/icons/profile_globe.svg',
-                                  'Выбор языка'),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MyReviewsPage()));
-                              },
-                              child: ProfileMenuItem(
-                                  'assets/icons/profile_star.svg',
-                                  'Мои отзывы'),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            MyBookedObjectsPage()));
-                              },
-                              child: ProfileMenuItem(
-                                  'assets/icons/flag_icon.svg',
-                                  'Забронированные места'),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                logOut();
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 40),
-                                child: Text(
-                                  'Выйти из аккаунта',
-                                  style: TextStyle(
-                                    color: Colors.black45,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            : const SizedBox.shrink(),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                : AuthPage(),
       ),
     );
   }
@@ -413,17 +418,17 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
   void checkIsLogedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('isLogedIn') == true) {
-      isLogedIn = true;
+      isLogIn = true;
       name = (prefs.getString('user_name') ?? '') +
           ' ' +
           (prefs.getString('user_surname') ?? '');
       avatarUrl = prefs.getString('user_avatar') ?? '';
       getProfile();
-      setState(() {});
     } else {
-      isLogedIn = false;
-      showAlertDialog(context);
+      // showAlertDialog(context);
     }
+    isLoading = false;
+    setState(() {});
   }
 
   showAlertDialog(BuildContext context) {

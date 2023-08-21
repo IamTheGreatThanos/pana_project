@@ -607,8 +607,8 @@ class _PanaTravelInfoState extends State<PanaTravelInfo> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            TextReviewsPage(textReviews)));
+                                        builder: (context) => TextReviewsPage(
+                                            textReviews, null, null)));
                               },
                               child: const Text(
                                 'Перейти',

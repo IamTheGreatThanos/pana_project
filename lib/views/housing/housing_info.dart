@@ -967,8 +967,8 @@ class _HousingInfoState extends State<HousingInfo> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            TextReviewsPage(textReviews)));
+                                        builder: (context) => TextReviewsPage(
+                                            textReviews, thisHousing, null)));
                               },
                               child: const Text(
                                 'Перейти',

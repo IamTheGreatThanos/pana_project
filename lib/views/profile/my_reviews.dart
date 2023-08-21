@@ -87,6 +87,8 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
                 textReviews.isNotEmpty
                     ? Column(
                         children: [
+                          Container(
+                              color: Colors.white, child: const Divider()),
                           for (int i = 0; i < textReviews.length; i++)
                             MyTextReviewCard(textReviews[i]),
                           const SizedBox(height: 20)

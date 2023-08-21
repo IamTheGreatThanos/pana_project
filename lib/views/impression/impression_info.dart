@@ -1130,8 +1130,8 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  TextReviewsPage(
-                                                      textReviews)));
+                                                  TextReviewsPage(textReviews,
+                                                      null, thisImpression)));
                                     },
                                     child: const Text(
                                       'Перейти',

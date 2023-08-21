@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/text_review_card.dart';
+import 'package:pana_project/models/housingDetail.dart';
+import 'package:pana_project/models/impressionDetail.dart';
 import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/utils/const.dart';
 
 class TextReviewsPage extends StatefulWidget {
-  TextReviewsPage(this.reviews);
+  TextReviewsPage(this.reviews, this.housing, this.impression);
   final List<TextReviewModel> reviews;
+  final HousingDetailModel? housing;
+  final ImpressionDetailModel? impression;
 
   @override
   _TextReviewsPageState createState() => _TextReviewsPageState();
@@ -177,31 +181,323 @@ class _TextReviewsPageState extends State<TextReviewsPage> {
                     ),
                   ),
                 ),
-                Container(
+                Container(color: Colors.white, child: const Divider()),
+                SizedBox(
                   height: MediaQuery.of(context).size.height * 0.77,
-                  color: AppColors.lightGray,
-                  child: ListView(
-                    children: [
-                      for (int i = 0; i < displayedReviews.length; i++)
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    AppConstants.cardBorderRadius),
-                                color: AppColors.white),
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              children: [
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Общая оценка',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Text(
+                                    widget.housing != null
+                                        ? (widget.housing?.reviewsBallAvg ??
+                                            '0')
+                                        : (widget.impression?.reviewsAvgBall ??
+                                            '0'),
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                              const Spacer(),
+                              for (int i = 0;
+                                  i <
+                                      double.parse(widget.housing != null
+                                              ? (widget.housing
+                                                      ?.reviewsBallAvg ??
+                                                  '0')
+                                              : (widget.impression
+                                                      ?.reviewsAvgBall ??
+                                                  '0'))
+                                          .toInt();
+                                  i++)
                                 Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: TextReviewCard(displayedReviews[i]),
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/star.svg',
+                                    width: 24,
+                                    height: 24,
+                                  ),
                                 ),
-                              ],
-                            ),
+                              for (int i = 0;
+                                  i <
+                                      5 -
+                                          double.parse(widget.housing != null
+                                                  ? (widget.housing
+                                                          ?.reviewsBallAvg ??
+                                                      '0')
+                                                  : (widget.impression
+                                                          ?.reviewsAvgBall ??
+                                                      '0'))
+                                              .toInt();
+                                  i++)
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/star.svg',
+                                    width: 24,
+                                    height: 24,
+                                    color: AppColors.lightGray,
+                                  ),
+                                ),
+                            ],
                           ),
-                        )
-                    ],
+                        ),
+                        widget.housing != null
+                            ? Column(
+                                children: [
+                                  Container(
+                                    color: Colors.white,
+                                    child: const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      child: Divider(),
+                                    ),
+                                  ),
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10, left: 20, bottom: 10),
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Цена/Качество',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            Text(
+                                              double.parse(widget.housing!
+                                                          .reviewsPriceAvg ??
+                                                      '0')
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                color: AppColors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 20),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 0,
+                                            left: 20,
+                                            bottom: 10,
+                                            right: 20),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(5),
+                                          ),
+                                          child: LinearProgressIndicator(
+                                            backgroundColor: AppColors.grey,
+                                            color: AppColors.accent,
+                                            minHeight: 3,
+                                            value: double.parse(widget.housing!
+                                                        .reviewsPriceAvg ??
+                                                    '0') /
+                                                5,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10, left: 20, bottom: 10),
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Атмосфера',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            Text(
+                                              double.parse(widget.housing!
+                                                          .reviewsAtmosphereAvg ??
+                                                      '0')
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                color: AppColors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 20),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 0,
+                                            left: 20,
+                                            bottom: 10,
+                                            right: 20),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(5),
+                                          ),
+                                          child: LinearProgressIndicator(
+                                            backgroundColor: AppColors.grey,
+                                            color: AppColors.accent,
+                                            minHeight: 3,
+                                            value: double.parse(widget.housing!
+                                                        .reviewsAtmosphereAvg ??
+                                                    '0') /
+                                                5,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10, left: 20, bottom: 10),
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Чистота',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            Text(
+                                              double.parse(widget.housing!
+                                                          .reviewsPurityAvg ??
+                                                      '0')
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                color: AppColors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 20),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 0,
+                                            left: 20,
+                                            bottom: 10,
+                                            right: 20),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(5),
+                                          ),
+                                          child: LinearProgressIndicator(
+                                            backgroundColor: AppColors.grey,
+                                            color: AppColors.accent,
+                                            minHeight: 3,
+                                            value: double.parse(widget.housing!
+                                                        .reviewsPurityAvg ??
+                                                    '0') /
+                                                5,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10, left: 20, bottom: 10),
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Персонал',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            Text(
+                                              double.parse(widget.housing!
+                                                          .reviewsStaffAvg ??
+                                                      '0')
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                color: AppColors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 20),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 0,
+                                            left: 20,
+                                            bottom: 10,
+                                            right: 20),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(5),
+                                          ),
+                                          child: LinearProgressIndicator(
+                                            backgroundColor: AppColors.grey,
+                                            color: AppColors.accent,
+                                            minHeight: 3,
+                                            value: double.parse(widget.housing!
+                                                        .reviewsStaffAvg ??
+                                                    '0') /
+                                                5,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            : const SizedBox.shrink(),
+                        Container(color: Colors.white, child: const Divider()),
+                        for (int i = 0; i < displayedReviews.length; i++)
+                          Column(
+                            children: [
+                              TextReviewCard(
+                                displayedReviews[i],
+                              ),
+                              const Divider(thickness: 2),
+                            ],
+                          )
+                      ],
+                    ),
                   ),
                 )
               ],
@@ -352,10 +648,40 @@ class _TextReviewsPageState extends State<TextReviewsPage> {
                   const SizedBox(height: 30),
                   Row(
                     children: [
+                      SizedBox(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            primary: AppColors.accent,
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  width: 1, color: AppColors.accent),
+                              borderRadius:
+                                  BorderRadius.circular(10), // <-- Radius
+                            ),
+                          ),
+                          onPressed: () {
+                            choseReviewFilterIndex = 0;
+                            reviewFilterText = 'По отзывам';
+                            sortByCategory();
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "Сбросить",
+                            style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
                       const Spacer(),
                       SizedBox(
                         height: 50,
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width * 0.4,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -380,7 +706,6 @@ class _TextReviewsPageState extends State<TextReviewsPage> {
                           ),
                         ),
                       ),
-                      const Spacer(),
                     ],
                   )
                 ],
@@ -532,10 +857,40 @@ class _TextReviewsPageState extends State<TextReviewsPage> {
                   const SizedBox(height: 30),
                   Row(
                     children: [
+                      SizedBox(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            primary: AppColors.accent,
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  width: 1, color: AppColors.accent),
+                              borderRadius:
+                                  BorderRadius.circular(10), // <-- Radius
+                            ),
+                          ),
+                          onPressed: () {
+                            choseCategoryFilterIndex = -1;
+                            categoryFilterText = 'По категориям';
+                            sortByCategory();
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "Сбросить",
+                            style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
                       const Spacer(),
                       SizedBox(
                         height: 50,
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width * 0.4,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -560,7 +915,6 @@ class _TextReviewsPageState extends State<TextReviewsPage> {
                           ),
                         ),
                       ),
-                      const Spacer(),
                     ],
                   )
                 ],

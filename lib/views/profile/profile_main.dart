@@ -332,28 +332,6 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
         });
         uploadAvatar(selectedImage);
       }
-    } else if (status == PermissionStatus.denied) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text('Доступ к галерее запрещен'),
-          content: Text(
-              'Пожалуйста, откройте настройки и предоставьте доступ к галерее.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Отмена'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            TextButton(
-              child: Text('Настройки'),
-              onPressed: () {
-                openAppSettings();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      );
     } else {
       PermissionStatus requestStatus = await Permission.photos.request();
       if (requestStatus.isGranted) {
@@ -365,6 +343,28 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
           });
           uploadAvatar(selectedImage);
         }
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('Доступ к галерее запрещен'),
+            content: Text(
+                'Пожалуйста, откройте настройки и предоставьте доступ к галерее.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Отмена'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              TextButton(
+                child: Text('Настройки'),
+                onPressed: () {
+                  openAppSettings();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
       }
     }
   }

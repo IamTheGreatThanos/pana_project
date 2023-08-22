@@ -64,9 +64,6 @@ class _ReceiptPageState extends State<ReceiptPage> {
     super.initState();
     getOrder();
     requestReturnPrice();
-
-    print(widget.startDate);
-    print(widget.endDate);
   }
 
   @override
@@ -300,34 +297,38 @@ class _ReceiptPageState extends State<ReceiptPage> {
                               ),
                             ),
                             const Spacer(),
-                            widget.fromHousing
-                                ? Text(
-                                    widget.startDate == widget.endDate
-                                        ? DateFormat("d MMM", 'ru').format(
-                                            DateTime.parse(widget.startDate))
-                                        : '${DateFormat("d MMM", 'ru').format(DateTime.parse(widget.startDate))} - ${DateFormat("d MMM", 'ru').format(DateTime.parse(widget.endDate))}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  )
-                                : SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    child: Text(
-                                      widget.session.startDate ==
-                                              widget.session.endDate
-                                          ? '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}'
-                                          : '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.endDate ?? ''))}, ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
+                            isLoading
+                                ? const SizedBox(
+                                    width: 70, child: SkeletonLine())
+                                : widget.fromHousing
+                                    ? Text(
+                                        widget.startDate == widget.endDate
+                                            ? DateFormat("d MMM", 'ru').format(
+                                                DateTime.parse(
+                                                    widget.startDate))
+                                            : '${DateFormat("d MMM", 'ru').format(DateTime.parse(widget.startDate))} - ${DateFormat("d MMM", 'ru').format(DateTime.parse(widget.endDate))}',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        ),
+                                      )
+                                    : SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        child: Text(
+                                          order.dateFrom == order.dateTo
+                                              ? '${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateFrom ?? ''))}, ${order.timeStart?.substring(0, 5)} - ${order.timeEnd?.substring(0, 5)}; ${order.session?.type == 2 ? 'Закрытая группа' : 'Открытая группа'}'
+                                              : '${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateFrom ?? ''))}, ${order.timeStart?.substring(0, 5)} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateTo ?? ''))}, ${order.timeEnd?.substring(0, 5)}; ${order.session?.type == 2 ? 'Закрытая группа' : 'Открытая группа'}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black,
+                                          ),
+                                          textAlign: TextAlign.end,
+                                        ),
                                       ),
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  ),
                           ],
                         ),
                         const SizedBox(height: 10),
@@ -418,7 +419,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                                   .width *
                                               0.7,
                                           child: Text(
-                                            'Сеанс: ${widget.session.startDate == widget.session.endDate ? '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}' : '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.endDate ?? ''))}, ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}'}',
+                                            'Сеанс: ${order.dateFrom == order.dateTo ? '${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateFrom ?? ''))}, ${order.timeStart?.substring(0, 5)} - ${order.timeEnd?.substring(0, 5)}; ${order.session?.type == 2 ? 'Закрытая группа' : 'Открытая группа'}' : '${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateFrom ?? ''))}, ${order.timeStart?.substring(0, 5)} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateTo ?? ''))}, ${order.timeEnd?.substring(0, 5)}; ${order.session?.type == 2 ? 'Закрытая группа' : 'Открытая группа'}'}',
                                             style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,

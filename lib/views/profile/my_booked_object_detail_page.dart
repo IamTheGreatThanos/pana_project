@@ -56,8 +56,6 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
     // getReels();
     calcSumAndDays();
     requestReturnPrice();
-
-    print(widget.order.successPaymentOperation);
   }
 
   void calcSumAndDays() async {
@@ -152,7 +150,29 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                     //         Radius.circular(AppConstants.cardBorderRadius)),
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              color: AppColors.lightGray,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8))),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
+                            child: Text(
+                              'Статус: ${widget.order.status == 1 ? '123' : '456'}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Column(children: [
@@ -1238,7 +1258,9 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                               ImpressionDetailModel(),
                                           widget.order.session ??
                                               ImpressionSessionModel(),
-                                          widget.type,
+                                          widget.order.session?.type == 2
+                                              ? 2
+                                              : 1,
                                         ),
                                       ),
                                     );

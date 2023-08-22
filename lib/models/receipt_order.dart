@@ -1,5 +1,8 @@
+import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/housingDetail.dart';
+import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/models/impressionDetail.dart';
+import 'package:pana_project/models/impressionSession.dart';
 import 'package:pana_project/models/transactionHistory.dart';
 import 'package:pana_project/models/user.dart';
 
@@ -9,7 +12,9 @@ class ReceiptOrder {
   int? status; // 6 - отменено
   User? user;
   HousingDetailModel? housing;
+  HousingCardModel? housingCard;
   ImpressionDetailModel? impression;
+  ImpressionCardModel? impressionCard;
   double? totalPrice;
   double? returnPrice;
   double? finePrice;
@@ -20,10 +25,15 @@ class ReceiptOrder {
   String? createdAt;
   String? comment;
   int? countPeople;
+  int? adults;
+  int? children;
+  int? babies;
+  int? pets;
   String? timeStart;
   String? timeEnd;
   List<RoomNumbers>? roomNumbers;
   Map<dynamic, dynamic>? successPaymentOperation;
+  ImpressionSessionModel? session;
 
   ReceiptOrder({
     this.id,
@@ -31,6 +41,8 @@ class ReceiptOrder {
     this.status,
     this.user,
     this.housing,
+    this.housingCard,
+    this.impressionCard,
     this.impression,
     this.totalPrice,
     this.returnPrice,
@@ -38,13 +50,19 @@ class ReceiptOrder {
     this.dateFrom,
     this.dateTo,
     this.paymentAt,
+    this.createdAt,
     this.paymentType,
     this.comment,
     this.countPeople,
+    this.adults,
+    this.children,
+    this.babies,
+    this.pets,
     this.timeStart,
     this.timeEnd,
     this.roomNumbers,
     this.successPaymentOperation,
+    this.session,
   });
 
   ReceiptOrder.fromJson(Map<String, dynamic> json) {
@@ -55,8 +73,14 @@ class ReceiptOrder {
     housing = json['housing'] != null
         ? new HousingDetailModel.fromJson(json['housing'])
         : null;
+    housingCard = json['housing'] != null
+        ? new HousingCardModel.fromJson(json['housing'])
+        : null;
     impression = json['impression'] != null
         ? new ImpressionDetailModel.fromJson(json['impression'])
+        : null;
+    impressionCard = json['impression'] != null
+        ? new ImpressionCardModel.fromJson(json['impression'])
         : null;
     json['total_price'] != null
         ? totalPrice = double.parse(json['total_price'].toString())
@@ -74,6 +98,10 @@ class ReceiptOrder {
     createdAt = json['created_at'];
     comment = json['comment'];
     countPeople = json['count_people'];
+    adults = json['adults'];
+    children = json['children'];
+    babies = json['babies'];
+    pets = json['pets'];
     timeStart = json['time_start'];
     timeEnd = json['time_end'];
     if (json['roomNumbers'] != null) {
@@ -83,6 +111,9 @@ class ReceiptOrder {
       });
     }
     successPaymentOperation = json['success_payment_operation'];
+    session = json['sessions'].length != 0
+        ? ImpressionSessionModel.fromJson(json['sessions'][0])
+        : null;
   }
 
   Map<String, dynamic> toJson() {

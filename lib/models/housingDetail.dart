@@ -187,11 +187,11 @@ class HousingDetailModel {
     roomCount = json['room_count'];
     basePriceMin = int.parse((json['base_price_min'] ?? 0).toString());
     reviewsCount = json['reviews_count'];
-    reviewsBallAvg = (json['reviews_ball_avg']?? 0).toString();
-    reviewsPriceAvg = (json['reviews_price_avg']?? 0).toString();
+    reviewsBallAvg = (json['reviews_ball_avg'] ?? 0).toString();
+    reviewsPriceAvg = (json['reviews_price_avg'] ?? 0).toString();
     reviewsAtmosphereAvg = (json['reviews_atmosphere_avg'] ?? 0).toString();
-    reviewsPurityAvg = (json['reviews_purity_avg']?? 0).toString();
-    reviewsStaffAvg = (json['reviews_staff_avg']?? 0).toString();
+    reviewsPurityAvg = (json['reviews_purity_avg'] ?? 0).toString();
+    reviewsStaffAvg = (json['reviews_staff_avg'] ?? 0).toString();
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
@@ -236,6 +236,9 @@ class HousingDetailModel {
     }
     if (city != null) {
       data['city'] = city!.toJson();
+    }
+    if (country != null) {
+      data['country'] = country!.toJson();
     }
     data['status'] = status;
     data['name'] = name;

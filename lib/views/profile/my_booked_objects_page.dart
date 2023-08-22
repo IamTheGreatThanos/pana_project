@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/components/housing_card.dart';
 import 'package:pana_project/components/impression_card.dart';
+import 'package:pana_project/models/housingCard.dart';
+import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/models/order.dart';
+import 'package:pana_project/models/receipt_order.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/views/profile/my_booked_object_detail_page.dart';
@@ -15,8 +18,8 @@ class MyBookedObjectsPage extends StatefulWidget {
 }
 
 class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
-  List<Order> housingList = [];
-  List<Order> impressionList = [];
+  List<ReceiptOrder> housingList = [];
+  List<ReceiptOrder> impressionList = [];
 
   @override
   void initState() {
@@ -138,7 +141,8 @@ class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
                                                       )));
                                         },
                                         child: HousingCard(
-                                            housingList[i].housing!, () {})),
+                                            housingList[i].housingCard!,
+                                            () {})),
                                   )
                               ],
                             ),
@@ -158,7 +162,8 @@ class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
                                                         3, impressionList[i])));
                                       },
                                       child: ImpressionCard(
-                                          impressionList[i].impression!, () {}),
+                                          impressionList[i].impressionCard!,
+                                          () {}),
                                     ),
                                   )
                               ],
@@ -182,7 +187,7 @@ class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
     var response = await TravelProvider().getBookedHousing();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
-        housingList.add(Order.fromJson(response['data'][i]));
+        housingList.add(ReceiptOrder.fromJson(response['data'][i]));
       }
       if (mounted) {
         setState(() {});
@@ -200,7 +205,7 @@ class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
     var response = await TravelProvider().getBookedImpression();
     if (response['response_status'] == 'ok') {
       for (int i = 0; i < response['data'].length; i++) {
-        impressionList.add(Order.fromJson(response['data'][i]));
+        impressionList.add(ReceiptOrder.fromJson(response['data'][i]));
       }
       if (mounted) {
         setState(() {});

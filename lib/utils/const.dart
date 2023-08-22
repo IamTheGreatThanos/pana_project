@@ -20,4 +20,6 @@ class AppConstants {
   static String appVersion = '1.1.0';
   static double cardBorderRadius = 24;
   static int mainTabIndex = 1;
+  static String imagePlaceholderUrl =
+      'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg';
 }

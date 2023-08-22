@@ -27,10 +27,6 @@ class ReceiptPage extends StatefulWidget {
     this.peopleCount,
     this.babies,
     this.pets,
-    this.roomList,
-    this.selectedRooms,
-    this.days,
-    this.sum,
     this.orderId,
     this.fromHousing,
     this.impression,
@@ -44,10 +40,6 @@ class ReceiptPage extends StatefulWidget {
   final int peopleCount;
   final int babies;
   final int pets;
-  final List<RoomCardModel> roomList;
-  final List<Map<String, dynamic>> selectedRooms;
-  final int days;
-  final String sum;
   final int orderId;
   final bool fromHousing;
   final ImpressionDetailModel impression;
@@ -64,11 +56,17 @@ class _ReceiptPageState extends State<ReceiptPage> {
   double returnPrice = 0;
   double totalPrice = 0;
 
+  int days = 0;
+  double sum = 0;
+
   @override
   void initState() {
     super.initState();
     getOrder();
     requestReturnPrice();
+
+    print(widget.startDate);
+    print(widget.endDate);
   }
 
   @override
@@ -76,9 +74,30 @@ class _ReceiptPageState extends State<ReceiptPage> {
     super.dispose();
   }
 
+  void calcSumAndDays() async {
+    DateTime dateFromFormatted =
+        DateTime.parse(order.dateFrom ?? DateTime.now().toString());
+    DateTime dateToFormatted =
+        DateTime.parse(order.dateTo ?? DateTime.now().toString());
+
+    Duration difference = dateToFormatted.difference(dateFromFormatted);
+    days = difference.inDays;
+
+    if (dateFromFormatted == dateToFormatted) {
+      days = 1;
+    }
+
+    sum = 0;
+
+    for (int i = 0; i < (order.roomNumbers?.length ?? 0); i++) {
+      sum += (order.roomNumbers?[i].price ?? 0) *
+          (order.roomNumbers?[i].count ?? 1) *
+          days;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    int count = 0;
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -318,7 +337,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                               widget.fromHousing
                                   ? 'Кол-во гостей:'
                                   : 'Кол-во участников:',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black45,
@@ -349,74 +368,75 @@ class _ReceiptPageState extends State<ReceiptPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        widget.fromHousing
-                            ? Column(
-                                children: [
-                                  for (int i = 0;
-                                      i < widget.roomList.length;
-                                      i++)
-                                    for (int j = 0;
-                                        j < widget.selectedRooms[i]['count'];
-                                        j++)
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 8),
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.7,
-                                              child: Text(
-                                                '${count += 1}. ${widget.roomList[i].roomName?.name ?? ''} x ${checkNightCount(widget.days.toString())}',
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.black45,
+                        isLoading
+                            ? const SizedBox(width: 70, child: SkeletonLine())
+                            : widget.fromHousing
+                                ? Column(
+                                    children: [
+                                      for (int i = 0;
+                                          i < (order.roomNumbers?.length ?? 0);
+                                          i++)
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 8),
+                                          child: Row(
+                                            children: [
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.7,
+                                                child: Text(
+                                                  '${i + 1}. ${order.roomNumbers?[i].roomName ?? ''} x ${checkNightCount(days.toString())}',
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.black45,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            const Spacer(),
-                                            Text(
-                                              '${formatNumberString(((widget.roomList[i].basePrice ?? 0) * widget.days).toString())} \₸',
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
+                                              const Spacer(),
+                                              Text(
+                                                '${formatNumberString(((order.roomNumbers?[i].price ?? 0) * days).toString())} \₸',
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
+                                            ],
+                                          ),
+                                        ),
+                                    ],
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.only(bottom: 8),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
+                                          child: Text(
+                                            'Сеанс: ${widget.session.startDate == widget.session.endDate ? '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}' : '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.endDate ?? ''))}, ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}'}',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black45,
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                ],
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.7,
-                                      child: Text(
-                                        'Сеанс: ${widget.session.startDate == widget.session.endDate ? '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}' : '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.endDate ?? ''))}, ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}'}',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black45,
+                                        const Spacer(),
+                                        Text(
+                                          '${formatNumberString((((widget.type == 1 ? widget.session.openPrice ?? 0 : widget.session.closedPrice ?? 0))).toString())} \₸',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                    const Spacer(),
-                                    Text(
-                                      '${formatNumberString((((widget.type == 1 ? widget.session.openPrice ?? 0 : widget.session.closedPrice ?? 0))).toString())} \₸',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  ),
                         const SizedBox(height: 10),
                         Row(
                           children: [
@@ -430,7 +450,9 @@ class _ReceiptPageState extends State<ReceiptPage> {
                             ),
                             const Spacer(),
                             Text(
-                              '${formatNumberString(widget.sum)} \₸',
+                              widget.fromHousing
+                                  ? '${formatNumberString(sum.toString())} \₸'
+                                  : '${formatNumberString(((order.session?.type == 1 ? order.session?.openPrice ?? 0 : order.session?.closedPrice ?? 0) * (order.countPeople ?? 1)).toString())} \₸',
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -542,7 +564,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                     order.paymentType == 1
                                         ? order.successPaymentOperation != null
                                             ? 'Картой **** ${jsonDecode(order.successPaymentOperation?['description'])['cardMask'].toString().substring(9, 13)}'
-                                            : '1'
+                                            : ''
                                         : 'Оплата при заезде',
                                     style: const TextStyle(
                                       fontSize: 14,
@@ -684,10 +706,9 @@ class _ReceiptPageState extends State<ReceiptPage> {
 
     if (response['response_status'] == 'ok') {
       order = ReceiptOrder.fromJson(response['data']);
-      print('<------------------------->');
-      print(order.successPaymentOperation);
-      print('<------------------------->');
+
       isLoading = false;
+      calcSumAndDays();
       setState(() {});
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

@@ -535,7 +535,10 @@ class _BookedObjectPageState extends State<BookedObjectPage> {
                                                         '')
                                                     : (widget.plan.impression
                                                             ?.dateFrom ??
-                                                        ''))));
+                                                        ''),
+                                                widget.plan.type == 2
+                                                    ? true
+                                                    : false)));
                               },
                               child: Container(
                                 width: 162,

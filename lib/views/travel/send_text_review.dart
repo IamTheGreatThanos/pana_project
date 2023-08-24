@@ -10,10 +10,11 @@ import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 
 class SendTextReviewPage extends StatefulWidget {
-  SendTextReviewPage(this.type, this.id, this.visitDate);
+  SendTextReviewPage(this.type, this.id, this.visitDate, this.fromHousing);
   final int type;
   final int id;
   final String visitDate;
+  final bool fromHousing;
 
   @override
   _SendTextReviewPageState createState() => _SendTextReviewPageState();
@@ -251,268 +252,282 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(AppConstants.cardBorderRadius),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 25, horizontal: 30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Цена / Качество',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const Spacer(),
-                            for (int i = 0; i < priceBall; i++)
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    priceBall = i + 1;
-                                    priceBallValid = true;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: SvgPicture.asset(
-                                    'assets/icons/star.svg',
-                                    width: 28,
-                                    height: 28,
-                                  ),
-                                ),
-                              ),
-                            for (int i = 0; i < 5 - priceBall; i++)
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    priceBall += i + 1;
-                                    priceBallValid = true;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: SvgPicture.asset(
-                                    'assets/icons/star.svg',
-                                    width: 28,
-                                    height: 28,
-                                    color: AppColors.lightGray,
-                                  ),
-                                ),
-                              ),
-                          ],
+                widget.fromHousing
+                    ? Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.cardBorderRadius),
+                          ),
                         ),
-                        priceBallValid
-                            ? const SizedBox()
-                            : const Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Text('Это поле обязательно к заполнению',
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 25, horizontal: 30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'Цена / Качество',
                                     style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.red,
-                                    )),
-                              ),
-                        const Divider(height: 30),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Атмосфера',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const Spacer(),
-                            for (int i = 0; i < fieldBall; i++)
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    fieldBall = i + 1;
-                                    fieldBallValid = true;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: SvgPicture.asset(
-                                    'assets/icons/star.svg',
-                                    width: 28,
-                                    height: 28,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                ),
+                                  const Spacer(),
+                                  for (int i = 0; i < priceBall; i++)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          priceBall = i + 1;
+                                          priceBallValid = true;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: SvgPicture.asset(
+                                          'assets/icons/star.svg',
+                                          width: 28,
+                                          height: 28,
+                                        ),
+                                      ),
+                                    ),
+                                  for (int i = 0; i < 5 - priceBall; i++)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          priceBall += i + 1;
+                                          priceBallValid = true;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: SvgPicture.asset(
+                                          'assets/icons/star.svg',
+                                          width: 28,
+                                          height: 28,
+                                          color: AppColors.lightGray,
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
-                            for (int i = 0; i < 5 - fieldBall; i++)
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    fieldBall += i + 1;
-                                    fieldBallValid = true;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: SvgPicture.asset(
-                                    'assets/icons/star.svg',
-                                    width: 28,
-                                    height: 28,
-                                    color: AppColors.lightGray,
+                              priceBallValid
+                                  ? const SizedBox()
+                                  : const Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Text(
+                                          'Это поле обязательно к заполнению',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.red,
+                                          )),
+                                    ),
+                              const Divider(height: 30),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'Атмосфера',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                ),
+                                  const Spacer(),
+                                  for (int i = 0; i < fieldBall; i++)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          fieldBall = i + 1;
+                                          fieldBallValid = true;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: SvgPicture.asset(
+                                          'assets/icons/star.svg',
+                                          width: 28,
+                                          height: 28,
+                                        ),
+                                      ),
+                                    ),
+                                  for (int i = 0; i < 5 - fieldBall; i++)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          fieldBall += i + 1;
+                                          fieldBallValid = true;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: SvgPicture.asset(
+                                          'assets/icons/star.svg',
+                                          width: 28,
+                                          height: 28,
+                                          color: AppColors.lightGray,
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
-                          ],
+                              fieldBallValid
+                                  ? const SizedBox()
+                                  : const Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Text(
+                                          'Это поле обязательно к заполнению',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.red,
+                                          )),
+                                    ),
+                              const Divider(height: 30),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'Чистота',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const Spacer(),
+                                  for (int i = 0; i < purityBall; i++)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          purityBall = i + 1;
+                                          purityBallValid = true;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: SvgPicture.asset(
+                                          'assets/icons/star.svg',
+                                          width: 28,
+                                          height: 28,
+                                        ),
+                                      ),
+                                    ),
+                                  for (int i = 0; i < 5 - purityBall; i++)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          purityBall += i + 1;
+                                          purityBallValid = true;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: SvgPicture.asset(
+                                          'assets/icons/star.svg',
+                                          width: 28,
+                                          height: 28,
+                                          color: AppColors.lightGray,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              purityBallValid
+                                  ? const SizedBox()
+                                  : const Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Text(
+                                          'Это поле обязательно к заполнению',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.red,
+                                          )),
+                                    ),
+                              const Divider(height: 30),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'Персонал',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const Spacer(),
+                                  for (int i = 0; i < staffBall; i++)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          staffBall = i + 1;
+                                          staffBallValid = true;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: SvgPicture.asset(
+                                          'assets/icons/star.svg',
+                                          width: 28,
+                                          height: 28,
+                                        ),
+                                      ),
+                                    ),
+                                  for (int i = 0; i < 5 - staffBall; i++)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          staffBall += i + 1;
+                                          staffBallValid = true;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: SvgPicture.asset(
+                                          'assets/icons/star.svg',
+                                          width: 28,
+                                          height: 28,
+                                          color: AppColors.lightGray,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              staffBallValid
+                                  ? const SizedBox()
+                                  : const Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Text(
+                                          'Это поле обязательно к заполнению',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.red,
+                                          )),
+                                    ),
+                            ],
+                          ),
                         ),
-                        fieldBallValid
-                            ? const SizedBox()
-                            : const Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Text('Это поле обязательно к заполнению',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.red,
-                                    )),
-                              ),
-                        const Divider(height: 30),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Чистота',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const Spacer(),
-                            for (int i = 0; i < purityBall; i++)
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    purityBall = i + 1;
-                                    purityBallValid = true;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: SvgPicture.asset(
-                                    'assets/icons/star.svg',
-                                    width: 28,
-                                    height: 28,
-                                  ),
-                                ),
-                              ),
-                            for (int i = 0; i < 5 - purityBall; i++)
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    purityBall += i + 1;
-                                    purityBallValid = true;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: SvgPicture.asset(
-                                    'assets/icons/star.svg',
-                                    width: 28,
-                                    height: 28,
-                                    color: AppColors.lightGray,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                        purityBallValid
-                            ? const SizedBox()
-                            : const Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Text('Это поле обязательно к заполнению',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.red,
-                                    )),
-                              ),
-                        const Divider(height: 30),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Персонал',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const Spacer(),
-                            for (int i = 0; i < staffBall; i++)
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    staffBall = i + 1;
-                                    staffBallValid = true;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: SvgPicture.asset(
-                                    'assets/icons/star.svg',
-                                    width: 28,
-                                    height: 28,
-                                  ),
-                                ),
-                              ),
-                            for (int i = 0; i < 5 - staffBall; i++)
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    staffBall += i + 1;
-                                    staffBallValid = true;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: SvgPicture.asset(
-                                    'assets/icons/star.svg',
-                                    width: 28,
-                                    height: 28,
-                                    color: AppColors.lightGray,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                        staffBallValid
-                            ? const SizedBox()
-                            : const Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Text('Это поле обязательно к заполнению',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.red,
-                                    )),
-                              ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
+                      )
+                    : const SizedBox.shrink(),
+                SizedBox(height: widget.fromHousing ? 20 : 0),
                 Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
@@ -617,10 +632,58 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                         ),
                       ),
                       onPressed: () {
-                        if (priceBall != 0 &&
-                            fieldBall != 0 &&
-                            purityBall != 0 &&
-                            staffBall != 0) {
+                        if (widget.fromHousing) {
+                          if (priceBall != 0 &&
+                              fieldBall != 0 &&
+                              purityBall != 0 &&
+                              staffBall != 0) {
+                            if (_dateController.text.length == 10) {
+                              if (_reviewController.text.isNotEmpty) {
+                                saveChanges();
+                              } else {
+                                isValidReview = false;
+                                setState(() {});
+
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text("Напишите отзыв",
+                                      style: TextStyle(fontSize: 14)),
+                                ));
+                              }
+                            } else {
+                              isValidDate = false;
+                              setState(() {});
+
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Заполните дату",
+                                    style: TextStyle(fontSize: 14)),
+                              ));
+                            }
+                          } else {
+                            if (priceBall == 0) {
+                              priceBallValid = false;
+                            }
+                            if (fieldBall == 0) {
+                              fieldBallValid = false;
+                            }
+                            if (purityBall == 0) {
+                              purityBallValid = false;
+                            }
+                            if (staffBall == 0) {
+                              staffBallValid = false;
+                            }
+                            if (_reviewController.text.isEmpty) {
+                              isValidReview = false;
+                            }
+                            setState(() {});
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text("Поставьте все оценки",
+                                  style: TextStyle(fontSize: 14)),
+                            ));
+                          }
+                        } else {
                           if (_dateController.text.length == 10) {
                             if (_reviewController.text.isNotEmpty) {
                               saveChanges();
@@ -644,28 +707,6 @@ class _SendTextReviewPageState extends State<SendTextReviewPage> {
                                   style: TextStyle(fontSize: 14)),
                             ));
                           }
-                        } else {
-                          if (priceBall == 0) {
-                            priceBallValid = false;
-                          }
-                          if (fieldBall == 0) {
-                            fieldBallValid = false;
-                          }
-                          if (purityBall == 0) {
-                            purityBallValid = false;
-                          }
-                          if (staffBall == 0) {
-                            staffBallValid = false;
-                          }
-                          if (_reviewController.text.isEmpty) {
-                            isValidReview = false;
-                          }
-                          setState(() {});
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text("Поставьте все оценки",
-                                style: TextStyle(fontSize: 14)),
-                          ));
                         }
                       },
                       child: const Text("Опубликовать отзыв",

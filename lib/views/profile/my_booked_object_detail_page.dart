@@ -4,12 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:pana_project/components/payment_method_card.dart';
 import 'package:pana_project/models/chat.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/impressionDetail.dart';
 import 'package:pana_project/models/impressionSession.dart';
-import 'package:pana_project/models/order.dart';
 import 'package:pana_project/models/receipt_order.dart';
 import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
@@ -163,7 +161,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 10),
                             child: Text(
-                              'Статус: ${widget.order.status == 1 ? '123' : '456'}',
+                              'Статус: ${widget.order.status == 6 ? 'Отменено' : widget.order.bookingStatus == 2 ? 'Завершено' : widget.order.bookingStatus == 3 ? 'Проживание' : widget.order.bookingStatus == 4 ? 'Незаезд' : 'Ожидается заезд'}',
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -1426,13 +1424,15 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => SendTextReviewPage(
-                                        widget.type,
-                                        widget.type == 2
-                                            ? widget.order.housing!.id!
-                                            : widget.order.impression!.id!,
-                                        widget.type == 2
-                                            ? widget.order.dateFrom!
-                                            : widget.order.dateFrom!)));
+                                          widget.type,
+                                          widget.type == 2
+                                              ? widget.order.housing!.id!
+                                              : widget.order.impression!.id!,
+                                          widget.type == 2
+                                              ? widget.order.dateFrom!
+                                              : widget.order.dateFrom!,
+                                          widget.type == 2 ? true : false,
+                                        )));
                           },
                           child: Container(
                             // width: 162,

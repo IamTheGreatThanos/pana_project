@@ -10,6 +10,7 @@ class ReceiptOrder {
   int? id;
   String? type;
   int? status; // 6 - отменено
+  int? bookingStatus;
   User? user;
   HousingDetailModel? housing;
   HousingCardModel? housingCard;
@@ -39,6 +40,7 @@ class ReceiptOrder {
     this.id,
     this.type,
     this.status,
+    this.bookingStatus,
     this.user,
     this.housing,
     this.housingCard,
@@ -69,6 +71,7 @@ class ReceiptOrder {
     id = json['id'];
     type = json['type'];
     status = json['status'];
+    bookingStatus = json['booking_status'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     housing = json['housing'] != null
         ? new HousingDetailModel.fromJson(json['housing'])
@@ -121,6 +124,7 @@ class ReceiptOrder {
     data['id'] = this.id;
     data['type'] = this.type;
     data['status'] = this.status;
+    data['booking_status'] = this.bookingStatus;
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }

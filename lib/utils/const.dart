@@ -15,8 +15,8 @@ class AppColors {
 }
 
 class AppConstants {
-  // static const String baseUrl = "http://back.pana.world/";
-  static const String baseUrl = "https://back.panaclub.kz/";
+  static const String baseUrl = "http://back.pana.world/";
+  // static const String baseUrl = "https://back.panaclub.kz/";
   static String appVersion = '1.1.0';
   static double cardBorderRadius = 24;
   static int mainTabIndex = 1;

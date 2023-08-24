@@ -386,7 +386,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width *
-                                                    0.7,
+                                                    0.6,
                                                 child: Text(
                                                   '${i + 1}. ${order.roomNumbers?[i].roomName ?? ''} x ${checkNightCount(days.toString())}',
                                                   style: const TextStyle(

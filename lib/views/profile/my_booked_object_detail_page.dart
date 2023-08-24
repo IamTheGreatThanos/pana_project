@@ -762,7 +762,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                       child: Text(
                                         widget.order.housing!.cancelFineDay !=
                                                 null
-                                            ? 'Бесплатная отмена ${widget.order.housing!.cancelFineDay ?? ''} дней до заезда'
+                                            ? 'Бесплатная отмена бронирования ${widget.order.housing!.cancelFineDay ?? ''} дней до прибытия.\nОтмена менее чем за ${widget.order.housing!.cancelFineDay ?? ''} дней - 100% штраф'
                                             : 'Бесплатная отмена',
                                         style: const TextStyle(
                                             fontSize: 14,
@@ -1116,7 +1116,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                                   width: MediaQuery.of(context)
                                                           .size
                                                           .width *
-                                                      0.7,
+                                                      0.6,
                                                   child: Text(
                                                     '${i + 1}. ${widget.order.roomNumbers?[i].roomName ?? ''} x ${checkNightCount(days.toString())}',
                                                     style: const TextStyle(

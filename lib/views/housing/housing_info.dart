@@ -1364,7 +1364,7 @@ class _HousingInfoState extends State<HousingInfo> {
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: Text(
                                 thisHousing.cancelFineDay != null
-                                    ? 'Бесплатная отмена ${thisHousing.cancelFineDay ?? ''} дней до заезда'
+                                    ? 'Бесплатная отмена бронирования ${thisHousing.cancelFineDay ?? ''} дней до прибытия.\nОтмена менее чем за ${thisHousing.cancelFineDay ?? ''} дней - 100% штраф'
                                     : 'Бесплатная отмена',
                                 style: const TextStyle(
                                     fontSize: 14,

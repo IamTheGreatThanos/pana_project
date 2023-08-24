@@ -1389,9 +1389,9 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                             left: 20, bottom: 20, right: 20),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
-                          child: Text(
-                            'Бесплатная отмена ${checkDaysCount(thisImpression.cancellationPolicy.toString())} до начала',
-                            style: const TextStyle(
+                          child: const Text(
+                            'Вы имеете возможность получить полный возврат средств, если вы отмените Впечатление не менее чем за 7 дней до его начала, или в течение 24 часов с момента бронирования (при условии, что Впечатление было забронировано не менее чем за 48 часов до его начала).',
+                            style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black45),

@@ -312,7 +312,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                     child: Row(
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.7,
+                          width: MediaQuery.of(context).size.width * 0.6,
                           child: Text(
                             'Сеанс: ${widget.session.startDate == widget.session.endDate ? '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}' : '${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.startDate ?? ''))}, ${widget.session.startTime?.substring(0, 5)} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(widget.session.endDate ?? ''))}, ${widget.session.endTime?.substring(0, 5)}; ${widget.type == 2 ? 'Закрытая группа' : 'Открытая группа'}'}',
                             style: const TextStyle(
@@ -533,7 +533,7 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                   const Padding(
                     padding: EdgeInsets.only(top: 20, bottom: 10),
                     child: Text(
-                      'Правила впечатления',
+                      'Правила отмены',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w500,
@@ -544,9 +544,9 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                     padding: const EdgeInsets.only(bottom: 20),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.9,
-                      child: Text(
-                        'Заезд до ${widget.session.startTime?.substring(0, 5) ?? ''}, выезд до ${widget.session.endTime?.substring(0, 5) ?? ''}',
-                        style: const TextStyle(
+                      child: const Text(
+                        'Вы имеете возможность получить полный возврат средств, если вы отмените Впечатление не менее чем за 7 дней до его начала, или в течение 24 часов с момента бронирования (при условии, что Впечатление было забронировано не менее чем за 48 часов до его начала).',
+                        style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.black45),

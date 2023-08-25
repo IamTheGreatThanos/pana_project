@@ -390,7 +390,7 @@ class _PaymentInformationPageState extends State<PaymentInformationPage> {
                           const SizedBox(width: 10),
                           Text(
                             widget.paymentType == 1
-                                ? 'Оплата при заселении'
+                                ? 'Оплата при заезде'
                                 : widget.paymentType == 2
                                     ? 'Новой картой'
                                     : '**** ${widget.cardInformation}',

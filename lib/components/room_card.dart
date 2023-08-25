@@ -62,7 +62,7 @@ class _RoomCardState extends State<RoomCard> {
                               aspectRatio: 16 / 10,
                               viewportFraction: 1,
                               initialPage: 0,
-                              enableInfiniteScroll: true,
+                              enableInfiniteScroll: false,
                               reverse: false,
                               autoPlay: false,
                               autoPlayInterval: const Duration(seconds: 3),

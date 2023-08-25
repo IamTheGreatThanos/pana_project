@@ -8,7 +8,6 @@ import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/impressionDetail.dart';
 import 'package:pana_project/models/impressionSession.dart';
 import 'package:pana_project/models/receipt_order.dart';
-import 'package:pana_project/models/roomCard.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
 import 'package:pana_project/utils/checkNightCount.dart';
@@ -17,6 +16,7 @@ import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/messages/support_chat_page.dart';
+import 'package:pana_project/views/payment/fine_payment_page.dart';
 import 'package:skeletons/skeletons.dart';
 
 class ReceiptPage extends StatefulWidget {
@@ -1006,8 +1006,16 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                       BorderRadius.circular(10), // <-- Radius
                                 ),
                               ),
-                              onPressed: () {
-                                Navigator.of(context).pop();
+                              onPressed: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FinePaymentPage(
+                                      order,
+                                      0,
+                                    ),
+                                  ),
+                                );
                               },
                               child: const Text(
                                 "Да,отменить",

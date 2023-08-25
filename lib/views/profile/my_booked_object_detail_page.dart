@@ -21,6 +21,7 @@ import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/housing/housing_info.dart';
 import 'package:pana_project/views/messages/chat_messages_page.dart';
+import 'package:pana_project/views/payment/fine_payment_page.dart';
 import 'package:pana_project/views/payment/receipt_page.dart';
 import 'package:pana_project/views/profile/my_reviews.dart';
 import 'package:pana_project/views/travel/send_text_review.dart';
@@ -1858,8 +1859,16 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                       BorderRadius.circular(10), // <-- Radius
                                 ),
                               ),
-                              onPressed: () {
-                                Navigator.of(context).pop();
+                              onPressed: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FinePaymentPage(
+                                      widget.order,
+                                      0,
+                                    ),
+                                  ),
+                                );
                               },
                               child: const Text(
                                 "Да,отменить",

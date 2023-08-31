@@ -157,18 +157,32 @@ class _ImpressionCardState extends State<ImpressionCard> {
                   ),
                 ),
                 const Spacer(),
-                Text(
-                  widget.impression.reviewsAvgBall.toString(),
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 2, left: 5),
-                  child: SizedBox(
-                      width: 15,
-                      height: 15,
-                      child: SvgPicture.asset('assets/icons/star.svg')),
-                )
+                widget.impression.reviewsAvgBall != 0
+                    ? Row(
+                        children: [
+                          Text(
+                            widget.impression.reviewsAvgBall.toString(),
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2, left: 5),
+                            child: SizedBox(
+                                width: 15,
+                                height: 15,
+                                child:
+                                    SvgPicture.asset('assets/icons/star.svg')),
+                          ),
+                        ],
+                      )
+                    : const Text(
+                        "Отзывов нет",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.blackWithOpacity,
+                        ),
+                      ),
               ],
             ),
             const SizedBox(

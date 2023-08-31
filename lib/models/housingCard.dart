@@ -13,7 +13,7 @@ class HousingCardModel {
   List<Images>? images;
   List<Videos>? videos;
   bool? inFavorite;
-  String? reviewsAvgBall;
+  double? reviewsAvgBall;
   int? reviewsCount;
   int? distance;
   User? user;
@@ -61,7 +61,7 @@ class HousingCardModel {
       });
     }
     inFavorite = json['in_favorite'];
-    reviewsAvgBall = json['reviews_ball_avg'].toString();
+    reviewsAvgBall = double.tryParse(json['reviews_ball_avg'].toString()) ?? 0;
     reviewsCount = json['reviews_count'];
     distance = json['distance'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;

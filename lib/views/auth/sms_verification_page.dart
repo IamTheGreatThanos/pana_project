@@ -219,7 +219,7 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
     if (widget.fromPage == 0) {
       var response = await AuthProvider().loginVerify(pinCodeController.text);
       // TODO: Действие при авторизации пользователя...
-      print(response);
+      // print(response);
       if (response['response_status'] == 'ok') {
         prefs.setString("token", response['data']['access_token']);
         prefs.setInt("user_id", response['data']['user']['id']);
@@ -228,14 +228,14 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
         prefs.setString("user_email", response['data']['user']['email'] ?? '');
         prefs.setString("user_phone", response['data']['user']['phone']);
         prefs.setInt("user_phone_code", response['data']['user']['phone_code']);
-        prefs.setString("user_avatar", response['data']['user']['avatar']);
+        if (response['data']['user']['avatar'] != null) {
+          prefs.setString("user_avatar", response['data']['user']['avatar']);
+        }
         prefs.setBool('isLogedIn', true);
 
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => widget.page),
             (Route<dynamic> route) => false);
-
-        prefs.setBool('isLogedIn', true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Введенный вами код не подходит. Попробуйте еще раз.",
@@ -258,15 +258,12 @@ class _SmsVerificationPageState extends State<SmsVerificationPage> {
         if (response['data']['user']['avatar'] != null) {
           prefs.setString("user_avatar", response['data']['user']['avatar']);
         }
-
         prefs.setBool('isLogedIn', true);
 
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => widget.page),
         );
-
-        prefs.setBool('isLogedIn', true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Введенный вами код не подходит. Попробуйте еще раз.",

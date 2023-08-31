@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/impressionDetail.dart';
@@ -17,6 +20,10 @@ import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/home/tabbar_page.dart';
 import 'package:pana_project/views/messages/support_chat_page.dart';
 import 'package:pana_project/views/payment/fine_payment_page.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pdfWidgets;
+import 'package:share_plus/share_plus.dart';
 import 'package:skeletons/skeletons.dart';
 
 class ReceiptPage extends StatefulWidget {
@@ -163,7 +170,9 @@ class _ReceiptPageState extends State<ReceiptPage> {
                         const Spacer(),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).pop();
+                            if (!isLoading) {
+                              generatePDF();
+                            }
                           },
                           child: Container(
                             width: 40,
@@ -697,6 +706,408 @@ class _ReceiptPageState extends State<ReceiptPage> {
           ),
         ),
       ),
+    );
+  }
+
+  // TODO: Generate PDF
+
+  void generatePDF() async {
+    final pdf = pdfWidgets.Document();
+
+    final response = await http.get(Uri.parse(widget.fromHousing
+        ? (widget.housing.images?[0].path ?? '')
+        : (widget.impression.images?[0].path ?? '')));
+    final Uint8List imageBytes = response.bodyBytes;
+
+    final fontData =
+        await rootBundle.load("assets/fonts/Montserrat-Regular.ttf");
+    final ttf = pdfWidgets.Font.ttf(fontData);
+    final fontDataBold =
+        await rootBundle.load("assets/fonts/Montserrat-Bold.ttf");
+    final ttfBold = pdfWidgets.Font.ttf(fontDataBold);
+
+    final blackWithOpacity = PdfColor.fromInt(0xFF2B2B2B);
+    final red = PdfColor.fromInt(0xFFF65151);
+    final green = PdfColor.fromInt(0xFF46CB63);
+    final white = PdfColor.fromInt(0xFFFFFFFF);
+    final black = PdfColor.fromInt(0xFF000000);
+    final double width = 375;
+
+    pdf.addPage(
+      pdfWidgets.Page(
+        build: (context) {
+          return pdfWidgets.Container(
+            padding: pdfWidgets.EdgeInsets.all(20),
+            width: width,
+            color: PdfColors.white,
+            child: pdfWidgets.Column(
+              crossAxisAlignment: pdfWidgets.CrossAxisAlignment.start,
+              children: [
+                pdfWidgets.Container(
+                  width: width,
+                  height: 40,
+                  color: order.status == 6 ? red : green,
+                  child: pdfWidgets.Center(
+                    child: pdfWidgets.Text(
+                      order.status == 6 ? 'Оплата отменена' : 'Оплачено',
+                      style: pdfWidgets.TextStyle(
+                        font: ttfBold,
+                        color: white,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+                pdfWidgets.SizedBox(height: 20),
+                pdfWidgets.Row(
+                  children: [
+                    pdfWidgets.ClipRRect(
+                      verticalRadius: 12,
+                      horizontalRadius: 12,
+                      child: pdfWidgets.SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: pdfWidgets.Image(
+                          pdfWidgets.MemoryImage(imageBytes),
+                          fit: pdfWidgets.BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    pdfWidgets.SizedBox(width: 15),
+                    pdfWidgets.Column(
+                      crossAxisAlignment: pdfWidgets.CrossAxisAlignment.start,
+                      children: [
+                        pdfWidgets.SizedBox(
+                          width: 200,
+                          child: pdfWidgets.Text(
+                            widget.fromHousing
+                                ? (widget.housing.name ?? '')
+                                : (widget.impression.name ?? ''),
+                            style: pdfWidgets.TextStyle(
+                              font: ttf,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        pdfWidgets.SizedBox(height: 10),
+                        pdfWidgets.SizedBox(
+                          width: 250,
+                          child: pdfWidgets.Text(
+                            widget.fromHousing
+                                ? '${widget.housing.city?.name ?? ''}, ${widget.housing.city?.country?.name ?? ''}'
+                                : '${widget.impression.city?.name ?? ''}, ${widget.impression.city?.country?.name ?? ''}',
+                            style: pdfWidgets.TextStyle(
+                              font: ttf,
+                              fontSize: 14,
+                              color: blackWithOpacity,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Divider(),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Text(
+                  'О бронировании',
+                  style: pdfWidgets.TextStyle(
+                    font: ttfBold,
+                    fontSize: 16,
+                    color: blackWithOpacity,
+                  ),
+                ),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Row(
+                  children: [
+                    pdfWidgets.Text(
+                      'Дата бронирования:',
+                      style: pdfWidgets.TextStyle(
+                        font: ttf,
+                        fontSize: 16,
+                        color: blackWithOpacity,
+                      ),
+                    ),
+                    pdfWidgets.Spacer(),
+                    widget.fromHousing
+                        ? pdfWidgets.Text(
+                            widget.startDate == widget.endDate
+                                ? DateFormat("d MMM", 'ru')
+                                    .format(DateTime.parse(widget.startDate))
+                                : '${DateFormat("d MMM", 'ru').format(DateTime.parse(widget.startDate))} - ${DateFormat("d MMM", 'ru').format(DateTime.parse(widget.endDate))}',
+                            style: pdfWidgets.TextStyle(
+                              font: ttf,
+                              fontSize: 14,
+                              color: black,
+                            ),
+                          )
+                        : pdfWidgets.SizedBox(
+                            width: width * 0.4,
+                            child: pdfWidgets.Text(
+                              order.dateFrom == order.dateTo
+                                  ? '${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateFrom ?? ''))}, ${order.timeStart?.substring(0, 5)} - ${order.timeEnd?.substring(0, 5)}; ${order.session?.type == 2 ? 'Закрытая группа' : 'Открытая группа'}'
+                                  : '${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateFrom ?? ''))}, ${order.timeStart?.substring(0, 5)} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateTo ?? ''))}, ${order.timeEnd?.substring(0, 5)}; ${order.session?.type == 2 ? 'Закрытая группа' : 'Открытая группа'}',
+                              style: pdfWidgets.TextStyle(
+                                font: ttf,
+                                fontSize: 14,
+                                color: black,
+                              ),
+                              textAlign: pdfWidgets.TextAlign.right,
+                            ),
+                          ),
+                  ],
+                ),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Row(
+                  children: [
+                    pdfWidgets.Text(
+                      widget.fromHousing
+                          ? 'Кол-во гостей:'
+                          : 'Кол-во участников:',
+                      style: pdfWidgets.TextStyle(
+                        font: ttf,
+                        fontSize: 14,
+                        color: blackWithOpacity,
+                      ),
+                    ),
+                    pdfWidgets.Spacer(),
+                    pdfWidgets.Text(
+                      widget.fromHousing
+                          ? '${widget.peopleCount} гостя, ${widget.babies} млад., ${widget.pets} питом.'
+                          : checkPeopleCount(widget.peopleCount.toString()),
+                      style: pdfWidgets.TextStyle(
+                        font: ttf,
+                        fontSize: 14,
+                        color: black,
+                      ),
+                    ),
+                  ],
+                ),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Divider(),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Text(
+                  'Детализация цены:',
+                  style: pdfWidgets.TextStyle(
+                    font: ttfBold,
+                    fontSize: 16,
+                    color: black,
+                  ),
+                ),
+                pdfWidgets.SizedBox(height: 10),
+                widget.fromHousing
+                    ? pdfWidgets.Column(
+                        children: [
+                          for (int i = 0;
+                              i < (order.roomNumbers?.length ?? 0);
+                              i++)
+                            pdfWidgets.Padding(
+                              padding:
+                                  const pdfWidgets.EdgeInsets.only(bottom: 8),
+                              child: pdfWidgets.Row(
+                                children: [
+                                  pdfWidgets.SizedBox(
+                                    width: width * 0.6,
+                                    child: pdfWidgets.Text(
+                                      '${i + 1}. ${order.roomNumbers?[i].roomName ?? ''} x ${checkNightCount(days.toString())}',
+                                      style: pdfWidgets.TextStyle(
+                                        font: ttf,
+                                        fontSize: 14,
+                                        color: blackWithOpacity,
+                                      ),
+                                    ),
+                                  ),
+                                  pdfWidgets.Spacer(),
+                                  pdfWidgets.Text(
+                                    '${formatNumberString(((order.roomNumbers?[i].price ?? 0) * days).toString())} \₸',
+                                    style: pdfWidgets.TextStyle(
+                                      font: ttfBold,
+                                      fontSize: 16,
+                                      color: black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      )
+                    : pdfWidgets.Padding(
+                        padding: pdfWidgets.EdgeInsets.only(bottom: 8),
+                        child: pdfWidgets.Row(
+                          children: [
+                            pdfWidgets.SizedBox(
+                              width: width * 0.7,
+                              child: pdfWidgets.Text(
+                                'Сеанс: ${order.dateFrom == order.dateTo ? '${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateFrom ?? ''))}, ${order.timeStart?.substring(0, 5)} - ${order.timeEnd?.substring(0, 5)}; ${order.session?.type == 2 ? 'Закрытая группа' : 'Открытая группа'}' : '${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateFrom ?? ''))}, ${order.timeStart?.substring(0, 5)} - ${DateFormat("d MMMM", 'ru').format(DateTime.parse(order.dateTo ?? ''))}, ${order.timeEnd?.substring(0, 5)}; ${order.session?.type == 2 ? 'Закрытая группа' : 'Открытая группа'}'}',
+                                style: pdfWidgets.TextStyle(
+                                  font: ttf,
+                                  fontSize: 14,
+                                  color: blackWithOpacity,
+                                ),
+                              ),
+                            ),
+                            pdfWidgets.Spacer(),
+                            pdfWidgets.Text(
+                              '${formatNumberString((((widget.type == 1 ? widget.session.openPrice ?? 0 : widget.session.closedPrice ?? 0))).toString())} \₸',
+                              style: pdfWidgets.TextStyle(
+                                font: ttfBold,
+                                fontSize: 16,
+                                color: black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Row(
+                  children: [
+                    pdfWidgets.Text(
+                      'Итого',
+                      style: pdfWidgets.TextStyle(
+                        font: ttf,
+                        fontSize: 14,
+                        color: black,
+                      ),
+                    ),
+                    pdfWidgets.Spacer(),
+                    pdfWidgets.Text(
+                      widget.fromHousing
+                          ? '${formatNumberString(sum.toString())} \₸'
+                          : '${formatNumberString(((order.session?.type == 1 ? order.session?.openPrice ?? 0 : order.session?.closedPrice ?? 0) * (order.countPeople ?? 1)).toString())} \₸',
+                      style: pdfWidgets.TextStyle(
+                        font: ttfBold,
+                        fontSize: 14,
+                        color: black,
+                      ),
+                    ),
+                  ],
+                ),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Divider(),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Text(
+                  'Платежная информация',
+                  style: pdfWidgets.TextStyle(
+                    font: ttfBold,
+                    fontSize: 16,
+                    color: black,
+                  ),
+                ),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Row(
+                  children: [
+                    pdfWidgets.Text(
+                      'Номер квитанции:',
+                      style: pdfWidgets.TextStyle(
+                        font: ttf,
+                        fontSize: 14,
+                        color: blackWithOpacity,
+                      ),
+                    ),
+                    pdfWidgets.Spacer(),
+                    pdfWidgets.Text(
+                      '${order.id ?? ''}',
+                      style: pdfWidgets.TextStyle(
+                        font: ttf,
+                        fontSize: 14,
+                        color: black,
+                      ),
+                    ),
+                  ],
+                ),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Row(
+                  children: [
+                    pdfWidgets.Text(
+                      'Дата транзакции:',
+                      style: pdfWidgets.TextStyle(
+                        font: ttf,
+                        fontSize: 14,
+                        color: blackWithOpacity,
+                      ),
+                    ),
+                    pdfWidgets.Spacer(),
+                    pdfWidgets.Text(
+                      order.paymentAt ?? '',
+                      style: pdfWidgets.TextStyle(
+                        font: ttf,
+                        fontSize: 14,
+                        color: black,
+                      ),
+                    ),
+                  ],
+                ),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Row(
+                  children: [
+                    pdfWidgets.Text(
+                      'Ф.И.О. плательщика:',
+                      style: pdfWidgets.TextStyle(
+                        font: ttf,
+                        fontSize: 14,
+                        color: blackWithOpacity,
+                      ),
+                    ),
+                    pdfWidgets.Spacer(),
+                    pdfWidgets.SizedBox(
+                      width: width * 0.45,
+                      child: pdfWidgets.Text(
+                        '${order.user?.name ?? ''} ${order.user?.surname ?? ''}',
+                        style: pdfWidgets.TextStyle(
+                          font: ttf,
+                          fontSize: 14,
+                          color: black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                pdfWidgets.SizedBox(height: 10),
+                pdfWidgets.Row(
+                  children: [
+                    pdfWidgets.Text(
+                      'Способ оплаты:',
+                      style: pdfWidgets.TextStyle(
+                        font: ttf,
+                        fontSize: 14,
+                        color: blackWithOpacity,
+                      ),
+                    ),
+                    pdfWidgets.Spacer(),
+                    pdfWidgets.Text(
+                      order.paymentType == 1
+                          ? order.successPaymentOperation != null
+                              ? 'Картой **** ${jsonDecode(order.successPaymentOperation?['description'])['cardMask'].toString().substring(9, 13)}'
+                              : ''
+                          : 'Оплата при заезде',
+                      style: pdfWidgets.TextStyle(
+                        font: ttf,
+                        fontSize: 14,
+                        color: black,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    final pdfOutput = await pdf.save();
+
+    final fileName = 'check_${widget.orderId}.pdf';
+
+    final appDir = await getApplicationDocumentsDirectory();
+    final pdfFile = File('${appDir.path}/$fileName');
+    await pdfFile.writeAsBytes(pdfOutput);
+
+    await Share.shareFiles(
+      [pdfFile.path],
+      text: 'PDF',
+      subject: 'Поделиться PDF',
     );
   }
 

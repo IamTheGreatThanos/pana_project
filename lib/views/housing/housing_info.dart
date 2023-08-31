@@ -328,14 +328,17 @@ class _HousingInfoState extends State<HousingInfo> {
                                     SvgPicture.asset('assets/icons/star.svg'),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: Text(
-                                '${thisHousing.reviewsBallAvg ?? 0}',
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
-                              ),
-                            ),
+                            thisHousing.reviewsBallAvg != '0'
+                                ? Padding(
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: Text(
+                                      '${thisHousing.reviewsBallAvg ?? 0}',
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: Text(
@@ -348,21 +351,27 @@ class _HousingInfoState extends State<HousingInfo> {
                               ),
                             ),
                             const SizedBox(width: 5),
-                            const Text(
-                              '•',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Colors.black45),
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              '${thisHousing.star ?? 0} Звезд',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Colors.black45),
-                            ),
+                            thisHousing.star != 0 && thisHousing.star != null
+                                ? Row(
+                                    children: [
+                                      const Text(
+                                        '•',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            color: Colors.black45),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        '${thisHousing.star} Звезд',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            color: Colors.black45),
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
                           ],
                         ),
                       ),
@@ -949,236 +958,263 @@ class _HousingInfoState extends State<HousingInfo> {
                       const Divider(),
 
                       // TODO: Reviews
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 20, left: 20, bottom: 10),
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Отзывы',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => TextReviewsPage(
-                                            textReviews, thisHousing, null)));
-                              },
-                              child: const Text(
-                                'Перейти',
-                                style: TextStyle(
-                                  color: AppColors.accent,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, left: 20, bottom: 10),
-                            child: Row(
+                      double.parse(thisHousing.reviewsPriceAvg ?? '0') != 0
+                          ? Column(
                               children: [
-                                const Text(
-                                  'Цена/Качество',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 20, left: 20, bottom: 10),
+                                  child: Row(
+                                    children: [
+                                      const Text(
+                                        'Отзывы',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      TextReviewsPage(
+                                                          textReviews,
+                                                          thisHousing,
+                                                          null)));
+                                        },
+                                        child: const Text(
+                                          'Перейти',
+                                          style: TextStyle(
+                                            color: AppColors.accent,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 20),
+                                    ],
                                   ),
                                 ),
-                                const Spacer(),
-                                Text(
-                                  double.parse(
-                                          thisHousing.reviewsPriceAvg ?? '0')
-                                      .toString(),
-                                  style: const TextStyle(
-                                    color: AppColors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, left: 20, bottom: 10),
+                                      child: Row(
+                                        children: [
+                                          const Text(
+                                            'Цена/Качество',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            double.parse(thisHousing
+                                                        .reviewsPriceAvg ??
+                                                    '0')
+                                                .toString(),
+                                            style: const TextStyle(
+                                              color: AppColors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 0,
+                                          left: 20,
+                                          bottom: 10,
+                                          right: 20),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(5),
+                                        ),
+                                        child: LinearProgressIndicator(
+                                          backgroundColor: AppColors.grey,
+                                          color: AppColors.accent,
+                                          minHeight: 3,
+                                          value: double.parse(
+                                                  thisHousing.reviewsPriceAvg ??
+                                                      '0') /
+                                              5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, left: 20, bottom: 10),
+                                      child: Row(
+                                        children: [
+                                          const Text(
+                                            'Атмосфера',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            double.parse(thisHousing
+                                                        .reviewsAtmosphereAvg ??
+                                                    '0')
+                                                .toString(),
+                                            style: const TextStyle(
+                                              color: AppColors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 0,
+                                          left: 20,
+                                          bottom: 10,
+                                          right: 20),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(5),
+                                        ),
+                                        child: LinearProgressIndicator(
+                                          backgroundColor: AppColors.grey,
+                                          color: AppColors.accent,
+                                          minHeight: 3,
+                                          value: double.parse(thisHousing
+                                                      .reviewsAtmosphereAvg ??
+                                                  '0') /
+                                              5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, left: 20, bottom: 10),
+                                      child: Row(
+                                        children: [
+                                          const Text(
+                                            'Чистота',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            double.parse(thisHousing
+                                                        .reviewsPurityAvg ??
+                                                    '0')
+                                                .toString(),
+                                            style: const TextStyle(
+                                              color: AppColors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 0,
+                                          left: 20,
+                                          bottom: 10,
+                                          right: 20),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(5),
+                                        ),
+                                        child: LinearProgressIndicator(
+                                          backgroundColor: AppColors.grey,
+                                          color: AppColors.accent,
+                                          minHeight: 3,
+                                          value: double.parse(thisHousing
+                                                      .reviewsPurityAvg ??
+                                                  '0') /
+                                              5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, left: 20, bottom: 10),
+                                      child: Row(
+                                        children: [
+                                          const Text(
+                                            'Персонал',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            double.parse(thisHousing
+                                                        .reviewsStaffAvg ??
+                                                    '0')
+                                                .toString(),
+                                            style: const TextStyle(
+                                              color: AppColors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 0,
+                                          left: 20,
+                                          bottom: 10,
+                                          right: 20),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(5),
+                                        ),
+                                        child: LinearProgressIndicator(
+                                          backgroundColor: AppColors.grey,
+                                          color: AppColors.accent,
+                                          minHeight: 3,
+                                          value: double.parse(
+                                                  thisHousing.reviewsStaffAvg ??
+                                                      '0') /
+                                              5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(width: 20),
+                                const Divider(),
                               ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 0, left: 20, bottom: 10, right: 20),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                              child: LinearProgressIndicator(
-                                backgroundColor: AppColors.grey,
-                                color: AppColors.accent,
-                                minHeight: 3,
-                                value: double.parse(
-                                        thisHousing.reviewsPriceAvg ?? '0') /
-                                    5,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, left: 20, bottom: 10),
-                            child: Row(
-                              children: [
-                                const Text(
-                                  'Атмосфера',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  double.parse(
-                                          thisHousing.reviewsAtmosphereAvg ??
-                                              '0')
-                                      .toString(),
-                                  style: const TextStyle(
-                                    color: AppColors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 0, left: 20, bottom: 10, right: 20),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                              child: LinearProgressIndicator(
-                                backgroundColor: AppColors.grey,
-                                color: AppColors.accent,
-                                minHeight: 3,
-                                value: double.parse(
-                                        thisHousing.reviewsAtmosphereAvg ??
-                                            '0') /
-                                    5,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, left: 20, bottom: 10),
-                            child: Row(
-                              children: [
-                                const Text(
-                                  'Чистота',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  double.parse(
-                                          thisHousing.reviewsPurityAvg ?? '0')
-                                      .toString(),
-                                  style: const TextStyle(
-                                    color: AppColors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 0, left: 20, bottom: 10, right: 20),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                              child: LinearProgressIndicator(
-                                backgroundColor: AppColors.grey,
-                                color: AppColors.accent,
-                                minHeight: 3,
-                                value: double.parse(
-                                        thisHousing.reviewsPurityAvg ?? '0') /
-                                    5,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, left: 20, bottom: 10),
-                            child: Row(
-                              children: [
-                                const Text(
-                                  'Персонал',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  double.parse(
-                                          thisHousing.reviewsStaffAvg ?? '0')
-                                      .toString(),
-                                  style: const TextStyle(
-                                    color: AppColors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 0, left: 20, bottom: 10, right: 20),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                              child: LinearProgressIndicator(
-                                backgroundColor: AppColors.grey,
-                                color: AppColors.accent,
-                                minHeight: 3,
-                                value: double.parse(
-                                        thisHousing.reviewsStaffAvg ?? '0') /
-                                    5,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 20),
-                      const Divider(),
+                            )
+                          : const SizedBox.shrink(),
 
                       // TODO: Audio reviews
                       // Padding(

@@ -128,18 +128,29 @@ class _BookedHousingCardState extends State<BookedHousingCard> {
                           fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                     const Spacer(),
-                    Text(
-                      widget.housing.reviewsAvgBall.toString(),
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500),
+                    widget.housing.reviewsAvgBall != 0 ? Row(
+                      children: [
+                        Text(
+                          widget.housing.reviewsAvgBall.toString(),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 2, left: 5),
+                          child: SizedBox(
+                              width: 15,
+                              height: 15,
+                              child: SvgPicture.asset('assets/icons/star.svg')),
+                        ),
+                      ],
+                    ): const Text(
+                      "Отзывов нет",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.blackWithOpacity,
+                      ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 2, left: 5),
-                      child: SizedBox(
-                          width: 15,
-                          height: 15,
-                          child: SvgPicture.asset('assets/icons/star.svg')),
-                    )
                   ],
                 ),
                 const SizedBox(

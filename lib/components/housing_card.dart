@@ -149,7 +149,7 @@ class _HousingCardState extends State<HousingCard> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.76,
+                  width: MediaQuery.of(context).size.width * 0.65,
                   child: Text(
                     widget.housing.name ?? '',
                     style: const TextStyle(
@@ -157,18 +157,32 @@ class _HousingCardState extends State<HousingCard> {
                   ),
                 ),
                 const Spacer(),
-                Text(
-                  widget.housing.reviewsAvgBall.toString(),
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 2, left: 5),
-                  child: SizedBox(
-                      width: 15,
-                      height: 15,
-                      child: SvgPicture.asset('assets/icons/star.svg')),
-                )
+                widget.housing.reviewsAvgBall != 0
+                    ? Row(
+                        children: [
+                          Text(
+                            widget.housing.reviewsAvgBall.toString(),
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2, left: 5),
+                            child: SizedBox(
+                                width: 15,
+                                height: 15,
+                                child:
+                                    SvgPicture.asset('assets/icons/star.svg')),
+                          ),
+                        ],
+                      )
+                    : const Text(
+                        "Отзывов нет",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.blackWithOpacity,
+                        ),
+                      ),
               ],
             ),
             const SizedBox(
@@ -193,21 +207,27 @@ class _HousingCardState extends State<HousingCard> {
                 //       color: Colors.black45),
                 // ),
                 const SizedBox(width: 5),
-                Text(
-                  '•',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black45),
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  '${widget.housing.star} Звезд',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black45),
-                ),
+                widget.housing.star != 0 && widget.housing.star != null
+                    ? Row(
+                        children: [
+                          const Text(
+                            '•',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                color: Colors.black45),
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            '${widget.housing.star} Звезд',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                color: Colors.black45),
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink(),
               ],
             ),
             const SizedBox(

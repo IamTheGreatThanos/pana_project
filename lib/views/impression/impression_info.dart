@@ -18,7 +18,7 @@ import 'package:pana_project/models/reels.dart';
 import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
-import 'package:pana_project/utils/checkDaysCount.dart';
+import 'package:pana_project/utils/checkReviewsCount.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/utils/get_bytes_from_asset.dart';
@@ -299,22 +299,26 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                     SvgPicture.asset('assets/icons/star.svg'),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: isLoading
-                                  ? const SizedBox(
-                                      width: 30, child: SkeletonLine())
-                                  : Text(
-                                      thisImpression.reviewsAvgBall ?? '',
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                            ),
+                            thisImpression.reviewsAvgBall != '0'
+                                ? Padding(
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: isLoading
+                                        ? const SizedBox(
+                                            width: 30, child: SkeletonLine())
+                                        : Text(
+                                            thisImpression.reviewsAvgBall ?? '',
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                  )
+                                : const SizedBox.shrink(),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: Text(
-                                '${thisImpression.reviewsCount ?? 0} Отзывов',
+                                checkReviewsCount(
+                                    (thisImpression.reviewsCount ?? 0)
+                                        .toString()),
                                 style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,

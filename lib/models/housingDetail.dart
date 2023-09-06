@@ -69,6 +69,7 @@ class HousingDetailModel {
   List<Languages>? languages;
   List<Breakfasts>? breakfasts;
   String? freeDates;
+  bool? isBookedByMe;
 
   HousingDetailModel({
     this.id,
@@ -131,6 +132,7 @@ class HousingDetailModel {
     this.languages,
     this.breakfasts,
     this.freeDates,
+    this.isBookedByMe,
   });
 
   HousingDetailModel.fromJson(Map<String, dynamic> json) {
@@ -223,6 +225,7 @@ class HousingDetailModel {
       });
     }
     freeDates = json['free_dates'];
+    isBookedByMe = json['order_exists'];
   }
 
   Map<String, dynamic> toJson() {
@@ -306,6 +309,7 @@ class HousingDetailModel {
       data['breakfasts'] = breakfasts!.map((v) => v.toJson()).toList();
     }
     data['free_dates'] = freeDates;
+    data['order_exists'] = isBookedByMe;
     return data;
   }
 }

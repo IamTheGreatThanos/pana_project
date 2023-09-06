@@ -401,6 +401,7 @@ class _EnterPersonalInformationPageState
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.date,
                       initialDateTime: DateTime.now(),
+                      maximumDate: DateTime.now(),
                       onDateTimeChanged: (DateTime newDateTime) {
                         setState(() {
                           selectedDate =

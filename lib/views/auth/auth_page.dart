@@ -129,6 +129,8 @@ class _AuthPageState extends State<AuthPage> {
                                   login();
                                 } else {
                                   ScaffoldMessenger.of(context)
+                                      .clearSnackBars();
+                                  ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
                                     behavior: SnackBarBehavior.floating,
                                     margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -401,6 +403,7 @@ class _AuthPageState extends State<AuthPage> {
                                 phoneController.text.isNotEmpty) {
                               registerButtonTapped();
                             } else {
+                              ScaffoldMessenger.of(context).clearSnackBars();
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
                                 behavior: SnackBarBehavior.floating,
@@ -471,6 +474,7 @@ class _AuthPageState extends State<AuthPage> {
                   lastNameController.text,
                   emailController.text)));
     } else {
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         behavior: SnackBarBehavior.floating,
         // margin: EdgeInsets.fromLTRB(

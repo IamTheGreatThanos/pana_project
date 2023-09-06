@@ -1152,12 +1152,12 @@ class _PaymentPageState extends State<PaymentPage> {
                                               : 3,
                                       selectedCardIndex < 0
                                           ? ''
-                                          : cards[selectedCardIndex].type ?? '',
-                                      selectedCardIndex < 0
-                                          ? ''
                                           : cards[selectedCardIndex]
                                               .number!
                                               .substring(9, 13),
+                                      selectedCardIndex < 0
+                                          ? ''
+                                          : cards[selectedCardIndex].type ?? '',
                                       orderId,
                                     )));
                           },

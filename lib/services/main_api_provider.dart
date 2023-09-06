@@ -688,6 +688,74 @@ class MainProvider {
     }
   }
 
+  // TODO: Request Order Return Penalty
+
+  Future<dynamic> requestOrderReturnPenalty(int id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    final response = await http.get(
+      Uri.parse('${API_URL}api/mobile/order/penalty/price/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
+  // TODO: Payment Order Return Penalty
+
+  Future<dynamic> orderPenaltyPayment(
+    int orderId,
+    int paymentCardId,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+
+    Map<String, dynamic> bodyObject = {'order_id': orderId};
+
+    if (paymentCardId != -2) {
+      bodyObject["payment_card_id"] = paymentCardId;
+    }
+
+    final response = await http.post(
+      Uri.parse('${API_URL}api/mobile/payment/penalty'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(bodyObject),
+    );
+
+    print(jsonDecode(response.body));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'ok';
+      return result;
+    } else {
+      Map<String, dynamic> result = {};
+      result['data'] = jsonDecode(response.body);
+      result['response_status'] = 'error';
+      return result;
+    }
+  }
+
   Future<dynamic> getOrder(int id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');

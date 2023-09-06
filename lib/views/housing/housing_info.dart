@@ -6,6 +6,7 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:pana_project/components/expandable_text.dart';
 import 'package:pana_project/components/facilities_widget.dart';
 import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/models/audioReview.dart';
@@ -455,25 +456,28 @@ class _HousingInfoState extends State<HousingInfo> {
                                     ),
                                   ],
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatMessagesPage(
-                                          ChatModel(
-                                            user: thisHousing.user,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: SizedBox(
-                                      width: 28,
-                                      height: 28,
-                                      child: Image.asset(
-                                          'assets/icons/start_chat_icon.png')),
-                                ),
+                                thisHousing.isBookedByMe == true
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ChatMessagesPage(
+                                                ChatModel(
+                                                  user: thisHousing.user,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: SizedBox(
+                                            width: 28,
+                                            height: 28,
+                                            child: Image.asset(
+                                                'assets/icons/start_chat_icon.png')),
+                                      )
+                                    : const SizedBox.shrink(),
                               ],
                             )
                           ],
@@ -637,16 +641,20 @@ class _HousingInfoState extends State<HousingInfo> {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: Skeleton(
-                            isLoading: isLoading,
-                            skeleton: SkeletonParagraph(),
-                            child: Text(
-                              thisHousing.description ?? '',
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black45),
-                            ),
-                          ),
+                              isLoading: isLoading,
+                              skeleton: SkeletonParagraph(),
+                              child: ExpandableText(
+                                  text: thisHousing.description ?? '')
+                              // Text(
+                              //   (thisHousing.description ?? '') * 10,
+                              //   textAlign: TextAlign.left,
+                              //   style: const TextStyle(
+                              //     fontSize: 14,
+                              //     fontWeight: FontWeight.w500,
+                              //     color: Colors.black45,
+                              //   ),
+                              // ),
+                              ),
                         ),
                       ),
                       const Divider(),
@@ -1400,7 +1408,7 @@ class _HousingInfoState extends State<HousingInfo> {
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: Text(
                                 thisHousing.cancelFineDay != null
-                                    ? 'Бесплатная отмена бронирования ${thisHousing.cancelFineDay ?? ''} дней до прибытия.\nОтмена менее чем за ${thisHousing.cancelFineDay ?? ''} дней - 100% штраф'
+                                    ? 'Бесплатная отмена бронирования за ${thisHousing.cancelFineDay ?? ''} дней до прибытия.\nОтмена менее чем за ${thisHousing.cancelFineDay ?? ''} дней - 100% штраф'
                                     : 'Бесплатная отмена',
                                 style: const TextStyle(
                                     fontSize: 14,

@@ -1,6 +1,6 @@
 import 'package:pana_project/models/housingCard.dart';
 import 'package:pana_project/models/impressionCard.dart';
-import 'package:pana_project/models/transactionHistory.dart';
+import 'package:pana_project/models/roomNumbers.dart';
 import 'package:pana_project/models/user.dart';
 
 class Order {

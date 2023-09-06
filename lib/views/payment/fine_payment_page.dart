@@ -25,10 +25,8 @@ class FinePaymentPage extends StatefulWidget {
 }
 
 class _FinePaymentPageState extends State<FinePaymentPage> {
-  TextEditingController commentController = TextEditingController();
   List<CreditCard> cards = [];
-  int selectedCardIndex = -1;
-  int orderId = 0;
+  int selectedCardIndex = -2;
 
   @override
   void initState() {
@@ -378,64 +376,43 @@ class _FinePaymentPageState extends State<FinePaymentPage> {
     var paymentPermissionResponse =
         await MainProvider().requestPaymentPermission();
     if (paymentPermissionResponse['data']['is_public'] == true) {
-      // if (selectedCardIndex == -2) {
-      //   var response = await HousingProvider().housingPayment(
-      //     widget.housing.id!,
-      //     dateFrom,
-      //     dateTo,
-      //     sharedHousingPaymentData.adults,
-      //     sharedHousingPaymentData.children,
-      //     sharedHousingPaymentData.babies,
-      //     sharedHousingPaymentData.pets,
-      //     widget.selectedRooms,
-      //     -2,
-      //     commentController.text,
-      //   );
-      //
-      //   if (response['response_status'] == 'ok') {
-      //     orderId = response['data']['order_id'];
-      //     goToEPay(_key, response['data']);
-      //   } else {
-      //     _key.currentState!.reset();
-      //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //       content: Text(response['data']['message'],
-      //           style: const TextStyle(fontSize: 14)),
-      //     ));
-      //   }
-      // } else {
-      //   if (cards.isNotEmpty) {
-      //     // TODO: Payment
-      //     var response = await HousingProvider().housingPayment(
-      //       widget.housing.id!,
-      //       dateFrom,
-      //       dateTo,
-      //       sharedHousingPaymentData.adults,
-      //       sharedHousingPaymentData.children,
-      //       sharedHousingPaymentData.babies,
-      //       sharedHousingPaymentData.pets,
-      //       widget.selectedRooms,
-      //       cards[selectedCardIndex].id!,
-      //       commentController.text,
-      //     );
-      //
-      //     if (response['response_status'] == 'ok') {
-      //       orderId = response['data']['order_id'];
-      //
-      //       showSuccessfullyPaySheet();
-      //     } else {
-      //       _key.currentState!.reset();
-      //       showPaymentErrorSheet();
-      //     }
-      //
-      //     // TODO: End ----------------------
-      //   } else {
-      //     _key.currentState!.reset();
-      //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      //       content:
-      //           Text("Добавьте способ оплаты.", style: TextStyle(fontSize: 14)),
-      //     ));
-      //   }
-      // }
+      if (selectedCardIndex == -2) {
+        var response = await MainProvider().orderPenaltyPayment(
+          widget.order.id!,
+          -2,
+        );
+
+        if (response['response_status'] == 'ok') {
+          goToEPay(_key, response['data']);
+        } else {
+          _key.currentState!.reset();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(response['data']['message'],
+                style: const TextStyle(fontSize: 14)),
+          ));
+        }
+      } else {
+        if (cards.isNotEmpty) {
+          // TODO: Payment
+          var response = await MainProvider().orderPenaltyPayment(
+            widget.order.id!,
+            cards[selectedCardIndex].id!,
+          );
+
+          if (response['response_status'] == 'ok') {
+            showSuccessfullyPaySheet();
+          } else {
+            _key.currentState!.reset();
+            showPaymentErrorSheet();
+          }
+        } else {
+          _key.currentState!.reset();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content:
+                Text("Добавьте способ оплаты.", style: TextStyle(fontSize: 14)),
+          ));
+        }
+      }
     } else {
       _key.currentState!.reset();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -340,7 +342,9 @@ class _SupportChatPageState extends State<SupportChatPage> {
         sendFile(selectedImage);
       }
     } else {
-      PermissionStatus requestStatus = await Permission.photos.request();
+      PermissionStatus requestStatus = Platform.isIOS
+          ? await Permission.photos.request()
+          : await Permission.mediaLibrary.request();
       if (requestStatus.isGranted) {
         final XFile? selectedImage =
             await _picker.pickImage(source: ImageSource.gallery);

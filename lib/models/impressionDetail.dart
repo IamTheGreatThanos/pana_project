@@ -39,6 +39,7 @@ class ImpressionDetailModel {
   List<Images>? images;
   List<Topic>? topics;
   List<Languages>? languages;
+  bool? isBookedByMe;
 
   ImpressionDetailModel({
     this.id,
@@ -73,6 +74,7 @@ class ImpressionDetailModel {
     this.images,
     this.topics,
     this.languages,
+    this.isBookedByMe,
   });
 
   ImpressionDetailModel.fromJson(Map<String, dynamic> json) {
@@ -145,6 +147,7 @@ class ImpressionDetailModel {
         languages!.add(Languages.fromJson(v));
       });
     }
+    isBookedByMe = json['order_exists'];
   }
 
   Map<String, dynamic> toJson() {
@@ -197,6 +200,7 @@ class ImpressionDetailModel {
     if (images != null) {
       data['images'] = images!.map((v) => v.toJson()).toList();
     }
+    data['order_exists'] = isBookedByMe;
     return data;
   }
 }

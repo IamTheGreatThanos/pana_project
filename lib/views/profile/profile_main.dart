@@ -333,10 +333,10 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
         uploadAvatar(selectedImage);
       }
     } else {
-      // PermissionStatus requestStatus = Platform.isIOS
-      //     ? await Permission.photos.request()
-      //     : await Permission.mediaLibrary.request();
-      PermissionStatus requestStatus = await Permission.photos.request();
+      PermissionStatus requestStatus = Platform.isIOS
+          ? await Permission.photos.request()
+          : await Permission.mediaLibrary.request();
+      // PermissionStatus requestStatus = await Permission.photos.request();
       if (requestStatus.isGranted) {
         final XFile? selectedImage =
             await _picker.pickImage(source: ImageSource.gallery);

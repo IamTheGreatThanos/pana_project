@@ -3,14 +3,15 @@ import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/impressionCard.dart';
 import 'package:pana_project/models/impressionDetail.dart';
 import 'package:pana_project/models/impressionSession.dart';
-import 'package:pana_project/models/transactionHistory.dart';
+import 'package:pana_project/models/roomNumbers.dart';
 import 'package:pana_project/models/user.dart';
 
 class ReceiptOrder {
   int? id;
-  String? type;
+  String? type; // 'housing' or 'impression'
   int? status; // 6 - отменено
   int? bookingStatus;
+  int? paymentStatus;
   User? user;
   HousingDetailModel? housing;
   HousingCardModel? housingCard;
@@ -41,6 +42,7 @@ class ReceiptOrder {
     this.type,
     this.status,
     this.bookingStatus,
+    this.paymentStatus,
     this.user,
     this.housing,
     this.housingCard,
@@ -72,6 +74,7 @@ class ReceiptOrder {
     type = json['type'];
     status = json['status'];
     bookingStatus = json['booking_status'];
+    paymentStatus = json['payment_status'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     housing = json['housing'] != null
         ? new HousingDetailModel.fromJson(json['housing'])
@@ -115,7 +118,8 @@ class ReceiptOrder {
     }
     successPaymentOperation = json['success_payment_operation'];
     session = json['sessions'].length != 0
-        ? ImpressionSessionModel.fromJson(json['sessions'][0])
+        ? ImpressionSessionModel.fromJson(
+            json['sessions'][0]['impression_session'])
         : null;
   }
 
@@ -125,6 +129,7 @@ class ReceiptOrder {
     data['type'] = this.type;
     data['status'] = this.status;
     data['booking_status'] = this.bookingStatus;
+    data['payment_status'] = paymentStatus;
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }

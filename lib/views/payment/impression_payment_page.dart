@@ -893,12 +893,12 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                                               : 3,
                                       selectedCardIndex < 0
                                           ? ''
-                                          : cards[selectedCardIndex].type ?? '',
-                                      selectedCardIndex < 0
-                                          ? ''
                                           : cards[selectedCardIndex]
                                               .number!
                                               .substring(9, 13),
+                                      selectedCardIndex < 0
+                                          ? ''
+                                          : cards[selectedCardIndex].type ?? '',
                                       orderId,
                                     )));
                           },

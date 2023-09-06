@@ -6,6 +6,7 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:pana_project/components/expandable_text.dart';
 import 'package:pana_project/components/impression_card.dart';
 import 'package:pana_project/components/text_review_small_card.dart';
 import 'package:pana_project/components/text_with_border.dart';
@@ -397,25 +398,28 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                     ),
                                   ],
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatMessagesPage(
-                                          ChatModel(
-                                            user: thisImpression.user,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: SizedBox(
-                                      width: 28,
-                                      height: 28,
-                                      child: Image.asset(
-                                          'assets/icons/start_chat_icon.png')),
-                                ),
+                                thisImpression.isBookedByMe == true
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ChatMessagesPage(
+                                                ChatModel(
+                                                  user: thisImpression.user,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: SizedBox(
+                                            width: 28,
+                                            height: 28,
+                                            child: Image.asset(
+                                                'assets/icons/start_chat_icon.png')),
+                                      )
+                                    : const SizedBox.shrink(),
                               ],
                             )
                           ],
@@ -438,17 +442,19 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: Skeleton(
-                            isLoading: isLoading,
-                            skeleton: SkeletonParagraph(),
-                            child: Text(
-                              thisImpression.description ?? '',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.blackWithOpacity,
+                              isLoading: isLoading,
+                              skeleton: SkeletonParagraph(),
+                              child: ExpandableText(
+                                  text: thisImpression.description ?? '')
+                              // Text(
+                              //   thisImpression.description ?? '',
+                              //   style: const TextStyle(
+                              //     fontSize: 14,
+                              //     fontWeight: FontWeight.w500,
+                              //     color: AppColors.blackWithOpacity,
+                              //   ),
+                              // ),
                               ),
-                            ),
-                          ),
                         ),
                       ),
                       Padding(

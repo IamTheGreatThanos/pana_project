@@ -176,10 +176,11 @@ class _ChangePhonePageState extends State<ChangePhonePage> {
                               ),
                             ),
                             onPressed: () {
-                              if (phoneController.text == '') {
+                              if (phoneController.text == '' ||
+                                  phoneController.text.length != 10) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
-                                  content: Text("Заполните все поля.",
+                                  content: Text("Заполните поле.",
                                       style: const TextStyle(fontSize: 14)),
                                 ));
                               } else {

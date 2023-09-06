@@ -49,6 +49,10 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
   double returnPrice = 0;
   double totalPrice = 0;
 
+  double penaltyPrice = -1;
+
+  bool isCancelAvailable = false;
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +66,10 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
         DateTime.parse(widget.order.dateFrom ?? DateTime.now().toString());
     DateTime dateToFormatted =
         DateTime.parse(widget.order.dateTo ?? DateTime.now().toString());
+
+    if (dateFromFormatted.isAfter(DateTime.now())) {
+      isCancelAvailable = true;
+    }
 
     Duration difference = dateToFormatted.difference(dateFromFormatted);
     days = difference.inDays;
@@ -1469,62 +1477,13 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                 ),
                 const Divider(),
                 // TODO: Return
-                returnPrice != 0
-                    ? Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, right: 20, left: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Правила отмены',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  widget.order.housing?.cancelFineDay != null
-                                      ? 'Бесплатная отмена ${widget.order.housing?.cancelFineDay ?? ''} дней до заезда'
-                                      : 'Бесплатная отмена',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black45,
-                                  ),
-                                ),
-                                const SizedBox(height: 15),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (widget.order.paymentType == 1) {
-                                      showCancelingConfirmation(
-                                          returnPrice, totalPrice);
-                                    } else {
-                                      showCancelingConfirmationWithoutPayment(
-                                          0);
-                                    }
-                                  },
-                                  child: const Text(
-                                    'Отменить бронирование',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
-                      )
-                    : const SizedBox.shrink(),
+                widget.order.paymentType == 1
+                    ? returnPrice != 0
+                        ? buildCancelWidget()
+                        : const SizedBox.shrink()
+                    : isCancelAvailable
+                        ? buildCancelWidget()
+                        : const SizedBox.shrink(),
                 const SizedBox(height: 30),
               ],
             ),
@@ -1584,18 +1543,91 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
   }
 
   void requestReturnPrice() async {
-    var response =
-        await MainProvider().requestOrderReturnPrices(widget.order.id!);
-    if (response['response_status'] == 'ok') {
-      returnPrice = double.parse(response['data']['refund_price'].toString());
-      totalPrice = double.parse(response['data']['total_price'].toString());
-      setState(() {});
+    if (widget.order.paymentType == 1) {
+      var response =
+          await MainProvider().requestOrderReturnPrices(widget.order.id!);
+      if (response['response_status'] == 'ok') {
+        returnPrice = double.parse(response['data']['refund_price'].toString());
+        totalPrice = double.parse(response['data']['total_price'].toString());
+        setState(() {});
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
+        ));
+      }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 14)),
-      ));
+      var response =
+          await MainProvider().requestOrderReturnPenalty(widget.order.id!);
+      if (response['response_status'] == 'ok') {
+        penaltyPrice =
+            double.parse(response['data']['penalty_price'].toString());
+        setState(() {});
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
+        ));
+      }
     }
+  }
+
+  Widget buildCancelWidget() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 10, right: 20, left: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Правила отмены',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                widget.order.housing?.cancelFineDay != null
+                    ? 'Бесплатная отмена ${widget.order.housing?.cancelFineDay ?? ''} дней до заезда'
+                    : 'Бесплатная отмена',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black45,
+                ),
+              ),
+              const SizedBox(height: 15),
+              GestureDetector(
+                onTap: () {
+                  if (widget.order.paymentType == 1) {
+                    showCancelingConfirmation(returnPrice, totalPrice);
+                  } else {
+                    if (penaltyPrice == 0) {
+                      cancelOrder();
+                    } else {
+                      showCancelingConfirmationWithoutPayment(penaltyPrice);
+                    }
+                  }
+                },
+                child: const Text(
+                  'Отменить бронирование',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+      ],
+    );
   }
 
   void showCancelingConfirmation(double returnPrice, double totalPrice) async {
@@ -1865,7 +1897,7 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                                   MaterialPageRoute(
                                     builder: (context) => FinePaymentPage(
                                       widget.order,
-                                      0,
+                                      penaltyPrice,
                                     ),
                                   ),
                                 );
@@ -1943,9 +1975,9 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                       const SizedBox(height: 20),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
-                        child: const Text(
-                          'Поздравляем! Вы успешно отменили свое бронирование, средства за бронирование будут отправлены вам, в течение дня!',
-                          style: TextStyle(
+                        child: Text(
+                          'Вы успешно отменили свое бронирование${widget.order.paymentType == 1 ? ', средства за бронирование будут отправлены вам, в течение дня' : ''}!',
+                          style: const TextStyle(
                             color: Colors.black45,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,

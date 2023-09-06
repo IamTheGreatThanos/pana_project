@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/components/transaction_payment_history_card.dart';
-import 'package:pana_project/models/transactionHistory.dart';
 import 'package:pana_project/models/transactionMain.dart';
 import 'package:pana_project/services/profile_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
+import 'package:pana_project/views/profile/my_transaction_detail.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MyTransactionsPage extends StatefulWidget {
@@ -20,8 +19,6 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
   List<_ChartData> data = [];
   List<_ChartData> data2 = [];
 
-  List<TransactionHistory> transactionHistory = [];
-
   late TooltipBehavior _tooltip;
 
   bool isHousingTapped = true;
@@ -30,7 +27,6 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
   @override
   void initState() {
     getMyTransactionsStatistic();
-    getMyTransactionsHistory();
     _tooltip = TooltipBehavior(enable: true);
     super.initState();
   }
@@ -202,7 +198,7 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
                                                   borderWidth: 1,
                                                 )
                                               : AreaSeries(
-                                                  dataSource: [],
+                                                  dataSource: const [],
                                                   xValueMapper:
                                                       (_ChartData data, _) =>
                                                           data.x,
@@ -225,7 +221,7 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
                                                   borderWidth: 1,
                                                 )
                                               : AreaSeries(
-                                                  dataSource: [],
+                                                  dataSource: const [],
                                                   xValueMapper:
                                                       (_ChartData data, _) =>
                                                           data.x,
@@ -356,7 +352,37 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
                                     ),
                                   )
                                 ],
-                              )
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Divider(),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MyTransactionDetailPage()));
+                                  },
+                                  child: Row(
+                                    children: const [
+                                      Text(
+                                        "История платежей",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.black,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Icon(Icons.arrow_forward_ios, size: 14)
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -365,20 +391,6 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: Text(
-                    "История платежей",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.black,
-                    ),
-                  ),
-                ),
-                for (int i = 0; i < transactionHistory.length; i++)
-                  TransactionPaymentHistoryCard(transactionHistory[i]),
-                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -400,20 +412,6 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
             '${transactionMain.month![i].name!.substring(0, 3)}.\n${transactionMain.month![i].year}',
             transactionMain.month![i].impressionPrice ?? 0));
       }
-      if (mounted) {
-        setState(() {});
-      }
-    }
-  }
-
-  void getMyTransactionsHistory() async {
-    var response = await ProfileProvider().getMyTransactionsHistory();
-    if (response['response_status'] == 'ok') {
-      for (int i = 0; i < response['data'].length; i++) {
-        transactionHistory
-            .add(TransactionHistory.fromJson(response['data'][i]));
-      }
-
       if (mounted) {
         setState(() {});
       }

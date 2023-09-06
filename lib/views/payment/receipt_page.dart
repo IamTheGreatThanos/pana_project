@@ -66,6 +66,10 @@ class _ReceiptPageState extends State<ReceiptPage> {
   int days = 0;
   double sum = 0;
 
+  double penaltyPrice = -1;
+
+  bool isCancelAvailable = false;
+
   @override
   void initState() {
     super.initState();
@@ -83,6 +87,10 @@ class _ReceiptPageState extends State<ReceiptPage> {
         DateTime.parse(order.dateFrom ?? DateTime.now().toString());
     DateTime dateToFormatted =
         DateTime.parse(order.dateTo ?? DateTime.now().toString());
+
+    if (dateFromFormatted.isAfter(DateTime.now())) {
+      isCancelAvailable = true;
+    }
 
     Duration difference = dateToFormatted.difference(dateFromFormatted);
     days = difference.inDays;
@@ -211,11 +219,18 @@ class _ReceiptPageState extends State<ReceiptPage> {
                     : Container(
                         width: MediaQuery.of(context).size.width,
                         height: 40,
-                        color:
-                            order.status == 6 ? AppColors.red : AppColors.green,
+                        color: order.status == 6
+                            ? AppColors.red
+                            : order.paymentStatus == 0
+                                ? AppColors.yellow
+                                : AppColors.green,
                         child: Center(
                           child: Text(
-                            order.status == 6 ? 'Оплата отменена' : 'Оплачено',
+                            order.status == 6
+                                ? 'Оплата отменена'
+                                : order.paymentStatus == 0
+                                    ? 'Ожидается оплата'
+                                    : 'Оплачено',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
@@ -438,7 +453,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                         ),
                                         const Spacer(),
                                         Text(
-                                          '${formatNumberString((((widget.type == 1 ? widget.session.openPrice ?? 0 : widget.session.closedPrice ?? 0))).toString())} \₸',
+                                          '${formatNumberString((((order.session?.type == 1 ? order.session?.openPrice ?? 0 : order.session?.closedPrice ?? 0))).toString())} \₸',
                                           style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -462,9 +477,9 @@ class _ReceiptPageState extends State<ReceiptPage> {
                             Text(
                               widget.fromHousing
                                   ? '${formatNumberString(sum.toString())} \₸'
-                                  : '${formatNumberString(((order.session?.type == 1 ? order.session?.openPrice ?? 0 : order.session?.closedPrice ?? 0) * (order.countPeople ?? 1)).toString())} \₸',
+                                  : '${formatNumberString(((order.session?.type == 1 ? order.session?.openPrice ?? 0 : order.session?.closedPrice ?? 0) * (widget.peopleCount ?? 1)).toString())} \₸',
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -589,65 +604,13 @@ class _ReceiptPageState extends State<ReceiptPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                returnPrice != 0
-                    ? Column(
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            color: AppColors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Правила отмены',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    order.housing?.cancelFineDay != null
-                                        ? 'Бесплатная отмена ${order.housing?.cancelFineDay ?? ''} дней до заезда'
-                                        : 'Бесплатная отмена',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black45,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 15),
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (order.paymentType == 1) {
-                                        showCancelingConfirmation(
-                                            returnPrice, totalPrice);
-                                      } else {
-                                        showCancelingConfirmationWithoutPayment(
-                                            0);
-                                      }
-                                    },
-                                    child: const Text(
-                                      'Отменить бронирование',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
-                      )
-                    : const SizedBox.shrink(),
+                order.paymentType == 1
+                    ? returnPrice != 0
+                        ? buildCancelWidget()
+                        : const SizedBox.shrink()
+                    : isCancelAvailable
+                        ? buildCancelWidget()
+                        : const SizedBox.shrink(),
                 Container(
                   color: AppColors.white,
                   child: Padding(
@@ -709,6 +672,68 @@ class _ReceiptPageState extends State<ReceiptPage> {
     );
   }
 
+  Widget buildCancelWidget() {
+    return Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          color: AppColors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Правила отмены',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  order.housing?.cancelFineDay != null
+                      ? 'Бесплатная отмена ${order.housing?.cancelFineDay ?? ''} дней до заезда'
+                      : 'Бесплатная отмена',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black45,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                GestureDetector(
+                  onTap: () {
+                    if (order.paymentType == 1) {
+                      showCancelingConfirmation(returnPrice, totalPrice);
+                    } else {
+                      if (penaltyPrice == 0) {
+                        cancelOrder();
+                      } else {
+                        showCancelingConfirmationWithoutPayment(penaltyPrice);
+                      }
+                    }
+                  },
+                  child: const Text(
+                    'Отменить бронирование',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
   // TODO: Generate PDF
 
   void generatePDF() async {
@@ -726,18 +751,19 @@ class _ReceiptPageState extends State<ReceiptPage> {
         await rootBundle.load("assets/fonts/Montserrat-Bold.ttf");
     final ttfBold = pdfWidgets.Font.ttf(fontDataBold);
 
-    final blackWithOpacity = PdfColor.fromInt(0xFF2B2B2B);
-    final red = PdfColor.fromInt(0xFFF65151);
-    final green = PdfColor.fromInt(0xFF46CB63);
-    final white = PdfColor.fromInt(0xFFFFFFFF);
-    final black = PdfColor.fromInt(0xFF000000);
-    final double width = 375;
+    const blackWithOpacity = PdfColor.fromInt(0xFF2B2B2B);
+    const red = PdfColor.fromInt(0xFFF65151);
+    const green = PdfColor.fromInt(0xFF46CB63);
+    const yellow = PdfColor.fromInt(0xFFFFB930);
+    const white = PdfColor.fromInt(0xFFFFFFFF);
+    const black = PdfColor.fromInt(0xFF000000);
+    const double width = 375;
 
     pdf.addPage(
       pdfWidgets.Page(
         build: (context) {
           return pdfWidgets.Container(
-            padding: pdfWidgets.EdgeInsets.all(20),
+            padding: const pdfWidgets.EdgeInsets.all(20),
             width: width,
             color: PdfColors.white,
             child: pdfWidgets.Column(
@@ -746,10 +772,18 @@ class _ReceiptPageState extends State<ReceiptPage> {
                 pdfWidgets.Container(
                   width: width,
                   height: 40,
-                  color: order.status == 6 ? red : green,
+                  color: order.status == 6
+                      ? red
+                      : order.paymentStatus == 0
+                          ? yellow
+                          : green,
                   child: pdfWidgets.Center(
                     child: pdfWidgets.Text(
-                      order.status == 6 ? 'Оплата отменена' : 'Оплачено',
+                      order.status == 6
+                          ? 'Оплата отменена'
+                          : order.paymentStatus == 0
+                              ? 'Ожидается оплата'
+                              : 'Оплачено',
                       style: pdfWidgets.TextStyle(
                         font: ttfBold,
                         color: white,
@@ -933,7 +967,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                         ],
                       )
                     : pdfWidgets.Padding(
-                        padding: pdfWidgets.EdgeInsets.only(bottom: 8),
+                        padding: const pdfWidgets.EdgeInsets.only(bottom: 8),
                         child: pdfWidgets.Row(
                           children: [
                             pdfWidgets.SizedBox(
@@ -949,7 +983,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                             ),
                             pdfWidgets.Spacer(),
                             pdfWidgets.Text(
-                              '${formatNumberString((((widget.type == 1 ? widget.session.openPrice ?? 0 : widget.session.closedPrice ?? 0))).toString())} \₸',
+                              '${formatNumberString((((order.session?.type == 1 ? order.session?.openPrice ?? 0 : order.session?.closedPrice ?? 0))).toString())} \₸',
                               style: pdfWidgets.TextStyle(
                                 font: ttfBold,
                                 fontSize: 16,
@@ -974,10 +1008,10 @@ class _ReceiptPageState extends State<ReceiptPage> {
                     pdfWidgets.Text(
                       widget.fromHousing
                           ? '${formatNumberString(sum.toString())} \₸'
-                          : '${formatNumberString(((order.session?.type == 1 ? order.session?.openPrice ?? 0 : order.session?.closedPrice ?? 0) * (order.countPeople ?? 1)).toString())} \₸',
+                          : '${formatNumberString(((order.session?.type == 1 ? order.session?.openPrice ?? 0 : order.session?.closedPrice ?? 0) * (widget.peopleCount ?? 1)).toString())} \₸',
                       style: pdfWidgets.TextStyle(
                         font: ttfBold,
-                        fontSize: 14,
+                        fontSize: 16,
                         color: black,
                       ),
                     ),
@@ -1059,6 +1093,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                           fontSize: 14,
                           color: black,
                         ),
+                        textAlign: pdfWidgets.TextAlign.right,
                       ),
                     ),
                   ],
@@ -1143,16 +1178,34 @@ class _ReceiptPageState extends State<ReceiptPage> {
   }
 
   void requestReturnPrice() async {
-    var response =
-        await MainProvider().requestOrderReturnPrices(widget.orderId);
-    if (response['response_status'] == 'ok') {
-      returnPrice = double.parse(response['data']['refund_price'].toString());
-      totalPrice = double.parse(response['data']['total_price'].toString());
+    if (order.paymentType == 1) {
+      var response =
+          await MainProvider().requestOrderReturnPrices(widget.orderId);
+      if (response['response_status'] == 'ok') {
+        returnPrice = double.parse(response['data']['refund_price'].toString());
+        totalPrice = double.parse(response['data']['total_price'].toString());
+        setState(() {});
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
+        ));
+      }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 14)),
-      ));
+      var response =
+          await MainProvider().requestOrderReturnPenalty(widget.orderId);
+      if (response['response_status'] == 'ok') {
+        penaltyPrice =
+            double.parse(response['data']['penalty_price'].toString());
+        if (mounted) {
+          setState(() {});
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response['data']['message'],
+              style: const TextStyle(fontSize: 14)),
+        ));
+      }
     }
   }
 
@@ -1501,9 +1554,9 @@ class _ReceiptPageState extends State<ReceiptPage> {
                       const SizedBox(height: 20),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
-                        child: const Text(
-                          'Поздравляем! Вы успешно отменили свое бронирование, средства за бронирование будут отправлены вам, в течение дня!',
-                          style: TextStyle(
+                        child: Text(
+                          'Вы успешно отменили свое бронирование${order.paymentType == 1 ? ', средства за бронирование будут отправлены вам, в течение дня' : ''}!',
+                          style: const TextStyle(
                             color: Colors.black45,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,

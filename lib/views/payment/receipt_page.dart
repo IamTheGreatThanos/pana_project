@@ -1142,7 +1142,6 @@ class _ReceiptPageState extends State<ReceiptPage> {
 
     await Share.shareXFiles(
       [XFile(pdfFile.path)],
-      text: 'PDF',
       subject: 'Поделиться PDF',
     );
   }

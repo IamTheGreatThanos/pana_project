@@ -396,14 +396,14 @@ class _MessagesPageState extends State<MessagesPage> {
   void getNotifications() async {
     var response = await MessagesProvider().getNotifications();
     if (response['response_status'] == 'ok') {
-      int messageCount = 0;
+      // int messageCount = 0;
       List<NotificationModel> tempList1 = [];
       List<NotificationModel> tempList2 = [];
       for (int i = 0; i < response['data']['new'].length; i++) {
         NotificationModel notification =
             NotificationModel.fromJson(response['data']['new'][i]);
         if (notification.type == 1) {
-          messageCount += 1;
+          // messageCount += 1;
         } else {
           tempList1.add(notification);
         }
@@ -414,7 +414,7 @@ class _MessagesPageState extends State<MessagesPage> {
         tempList2.add(notification);
       }
       if (mounted) {
-        newMessageCount = messageCount;
+        newMessageCount = response['data']['new_count_message'];
         newNotifications = tempList1;
         oldNotifications = tempList2;
         setState(() {});

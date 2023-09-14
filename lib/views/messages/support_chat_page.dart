@@ -26,6 +26,8 @@ class _SupportChatPageState extends State<SupportChatPage> {
   List<ChatMessageModel> listOfMessages = [];
   int myUserId = 0;
 
+  bool sending = false;
+
   late IO.Socket socket;
 
   @override
@@ -44,7 +46,6 @@ class _SupportChatPageState extends State<SupportChatPage> {
   void getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     myUserId = prefs.getInt('user_id') ?? 0;
-    print(prefs.getString('token'));
     setState(() {});
 
     socketInit();
@@ -57,12 +58,12 @@ class _SupportChatPageState extends State<SupportChatPage> {
     });
 
     socket.onConnect((_) {
-      print('Connected!');
+      // print('Connected!');
       socket.emit('join', myUserId);
     });
 
     socket.on('chat_message', (newMessage) async {
-      print(newMessage);
+      // print(newMessage);
       getMessagesFromBackground();
     });
   }
@@ -239,15 +240,24 @@ class _SupportChatPageState extends State<SupportChatPage> {
                             ),
                           ),
                           const Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              if (messageController.text.isNotEmpty) {
-                                sendMessage();
-                              }
-                            },
-                            child: SvgPicture.asset(
-                                'assets/icons/send_message_icon.svg'),
-                          ),
+                          sending
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.grey,
+                                  ),
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    if (messageController.text.isNotEmpty &&
+                                        sending == false) {
+                                      sendMessage();
+                                    }
+                                  },
+                                  child: SvgPicture.asset(
+                                      'assets/icons/send_message_icon.svg'),
+                                ),
                           const Spacer(),
                         ],
                       ),
@@ -307,10 +317,13 @@ class _SupportChatPageState extends State<SupportChatPage> {
   }
 
   void sendMessage() async {
+    sending = true;
+    setState(() {});
     var response = await MessagesProvider()
         .sendMessageInChatToSupport(messageController.text);
     if (response['response_status'] == 'ok') {
       messageController.text = '';
+      sending = false;
       getMessages();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -323,12 +336,12 @@ class _SupportChatPageState extends State<SupportChatPage> {
   void readMessages() async {
     var response = await MessagesProvider().readMessageInSupportChat();
     if (response['response_status'] == 'ok') {
-      print('Readed');
+      // print('Readed');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 14)),
-      ));
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text(response['data']['message'],
+      //       style: const TextStyle(fontSize: 14)),
+      // ));
     }
   }
 

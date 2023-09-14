@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pana_project/models/housingDetail.dart';
 import 'package:pana_project/models/impressionDetail.dart';
@@ -303,7 +304,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                         const Divider(),
                         const SizedBox(height: 10),
                         const Text(
-                          'О бронировании',
+                          'О бронировании:',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -466,7 +467,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                         Row(
                           children: [
                             const Text(
-                              'Итого',
+                              'Итого:',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -489,7 +490,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                         const Divider(),
                         const SizedBox(height: 10),
                         const Text(
-                          'Платежная информация',
+                          'Платежная информация:',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -684,7 +685,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Правила отмены',
+                  'Правила отмены:',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -845,7 +846,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                 pdfWidgets.Divider(),
                 pdfWidgets.SizedBox(height: 10),
                 pdfWidgets.Text(
-                  'О бронировании',
+                  'О бронировании:',
                   style: pdfWidgets.TextStyle(
                     font: ttfBold,
                     fontSize: 16,
@@ -997,7 +998,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                 pdfWidgets.Row(
                   children: [
                     pdfWidgets.Text(
-                      'Итого',
+                      'Итого:',
                       style: pdfWidgets.TextStyle(
                         font: ttf,
                         fontSize: 14,
@@ -1021,7 +1022,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                 pdfWidgets.Divider(),
                 pdfWidgets.SizedBox(height: 10),
                 pdfWidgets.Text(
-                  'Платежная информация',
+                  'Платежная информация:',
                   style: pdfWidgets.TextStyle(
                     font: ttfBold,
                     fontSize: 16,
@@ -1139,8 +1140,8 @@ class _ReceiptPageState extends State<ReceiptPage> {
     final pdfFile = File('${appDir.path}/$fileName');
     await pdfFile.writeAsBytes(pdfOutput);
 
-    await Share.shareFiles(
-      [pdfFile.path],
+    await Share.shareXFiles(
+      [XFile(pdfFile.path)],
       text: 'PDF',
       subject: 'Поделиться PDF',
     );

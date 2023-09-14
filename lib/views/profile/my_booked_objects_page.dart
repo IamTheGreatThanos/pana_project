@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pana_project/components/housing_card.dart';
-import 'package:pana_project/components/impression_card.dart';
-import 'package:pana_project/models/housingCard.dart';
-import 'package:pana_project/models/impressionCard.dart';
-import 'package:pana_project/models/order.dart';
+import 'package:pana_project/components/housing_booked_card.dart';
+import 'package:pana_project/components/impression_booked_card.dart';
 import 'package:pana_project/models/receipt_order.dart';
 import 'package:pana_project/services/travel_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
@@ -140,9 +137,8 @@ class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
                                                         housingList[i],
                                                       )));
                                         },
-                                        child: HousingCard(
-                                            housingList[i].housingCard!,
-                                            () {})),
+                                        child: HousingBookedCard(
+                                            housingList[i], () {})),
                                   )
                               ],
                             ),
@@ -161,9 +157,8 @@ class _MyBookedObjectsPageState extends State<MyBookedObjectsPage> {
                                                     MyBookedObjectDetailPage(
                                                         3, impressionList[i])));
                                       },
-                                      child: ImpressionCard(
-                                          impressionList[i].impressionCard!,
-                                          () {}),
+                                      child: ImpressionBookedCard(
+                                          impressionList[i], () {}),
                                     ),
                                   )
                               ],

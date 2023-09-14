@@ -628,7 +628,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: Text(
-                        'Заезд до ${widget.housing.checkInFrom?.substring(0, 5) ?? ''}, выезд до ${widget.housing.checkOutFrom?.substring(0, 5) ?? ''}',
+                        'Заезд в ${widget.housing.checkInFrom?.substring(0, 5) ?? ''}, выезд до ${widget.housing.checkOutFrom?.substring(0, 5) ?? ''}',
                         style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,

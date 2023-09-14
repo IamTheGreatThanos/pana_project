@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:pana_project/utils/const.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LockScreen extends StatefulWidget {
@@ -24,10 +25,7 @@ enum _SupportState {
 class _LockScreenState extends State<LockScreen> {
   final LocalAuthentication auth = LocalAuthentication();
   _SupportState _supportState = _SupportState.unknown;
-  bool? _canCheckBiometrics;
-  List<BiometricType>? _availableBiometrics;
   String _authorized = 'Not Authorized';
-  bool _isAuthenticating = false;
 
   String secureCode = '';
   var savedCode;
@@ -56,7 +54,6 @@ class _LockScreenState extends State<LockScreen> {
 
   void fastStartBiometrics() async {
     await Future.delayed(const Duration(seconds: 1));
-    print(123);
     if (_supportState == _SupportState.supported && useBiometrics == true) {
       authByBiometrics();
     }
@@ -70,95 +67,51 @@ class _LockScreenState extends State<LockScreen> {
     setState(() {});
   }
 
-  Future<void> _checkBiometrics() async {
-    late bool canCheckBiometrics;
-    try {
-      canCheckBiometrics = await auth.canCheckBiometrics;
-    } on PlatformException catch (e) {
-      canCheckBiometrics = false;
-      print(e);
-    }
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _canCheckBiometrics = canCheckBiometrics;
-    });
-  }
-
-  Future<void> _getAvailableBiometrics() async {
-    late List<BiometricType> availableBiometrics;
-    try {
-      availableBiometrics = await auth.getAvailableBiometrics();
-    } on PlatformException catch (e) {
-      availableBiometrics = <BiometricType>[];
-      print(e);
-    }
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _availableBiometrics = availableBiometrics;
-    });
-  }
-
-  Future<void> _authenticate() async {
-    bool authenticated = false;
-    try {
-      setState(() {
-        _isAuthenticating = true;
-        _authorized = 'Authenticating';
-      });
-      authenticated = await auth.authenticate(
-        localizedReason: 'Let OS determine authentication method',
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-        ),
-      );
-      setState(() {
-        _isAuthenticating = false;
-      });
-    } on PlatformException catch (e) {
-      print(e);
-      setState(() {
-        _isAuthenticating = false;
-        _authorized = 'Error - ${e.message}';
-      });
-      return;
-    }
-    if (!mounted) {
-      return;
-    }
-
-    setState(
-        () => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
-  }
-
   Future<void> _authenticateWithBiometrics() async {
     bool authenticated = false;
     try {
       setState(() {
-        _isAuthenticating = true;
         _authorized = 'Authenticating';
       });
       authenticated = await auth.authenticate(
         localizedReason:
             'Отсканируйте свой отпечаток пальца (или лицо) для аутентификации',
         options: const AuthenticationOptions(
+          useErrorDialogs: false,
           stickyAuth: true,
           biometricOnly: true,
         ),
       );
       setState(() {
-        _isAuthenticating = false;
         _authorized = 'Authenticating';
       });
+
+      if (_supportState == _SupportState.unsupported) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('Доступ к биометрической аутентификации запрещен'),
+            content: Text(
+                'Пожалуйста, откройте настройки и предоставьте доступ к биометрической аутентификации.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Отмена'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              TextButton(
+                child: Text('Настройки'),
+                onPressed: () {
+                  openAppSettings();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      }
     } on PlatformException catch (e) {
       print(e);
       setState(() {
-        _isAuthenticating = false;
         _authorized = 'Error - ${e.message}';
       });
       return;
@@ -171,11 +124,6 @@ class _LockScreenState extends State<LockScreen> {
     setState(() {
       _authorized = message;
     });
-  }
-
-  Future<void> _cancelAuthentication() async {
-    await auth.stopAuthentication();
-    setState(() => _isAuthenticating = false);
   }
 
   @override

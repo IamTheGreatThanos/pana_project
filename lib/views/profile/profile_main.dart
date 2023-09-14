@@ -293,7 +293,7 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    logOut();
+                                    showLogoutConfirmation();
                                   },
                                   child: const Padding(
                                     padding: EdgeInsets.symmetric(vertical: 40),
@@ -434,36 +434,151 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
     setState(() {});
   }
 
-  showAlertDialog(BuildContext context) {
-    Widget cancelButton = TextButton(
-      child: const Text("Отмена"),
-      onPressed: () {
-        widget.onButtonPressed(2);
-        Navigator.of(context).pop();
-      },
-    );
-    Widget continueButton = TextButton(
-      child: const Text("Да"),
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AuthPage()));
-      },
-    );
+  // showAlertDialog(BuildContext context) {
+  //   Widget cancelButton = TextButton(
+  //     child: const Text("Отмена"),
+  //     onPressed: () {
+  //       widget.onButtonPressed(2);
+  //       Navigator.of(context).pop();
+  //     },
+  //   );
+  //   Widget continueButton = TextButton(
+  //     child: const Text("Да"),
+  //     onPressed: () {
+  //       Navigator.push(
+  //           context, MaterialPageRoute(builder: (context) => AuthPage()));
+  //     },
+  //   );
+  //
+  //   AlertDialog alert = AlertDialog(
+  //     title: const Text("Внимание"),
+  //     content: const Text("Вы не вошли в аккаунт. Войти?"),
+  //     actions: [
+  //       cancelButton,
+  //       continueButton,
+  //     ],
+  //   );
+  //
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return alert;
+  //     },
+  //   ).whenComplete(() => widget.onButtonPressed(2));
+  // }
 
-    AlertDialog alert = AlertDialog(
-      title: const Text("Внимание"),
-      content: const Text("Вы не вошли в аккаунт. Войти?"),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
-
-    showDialog(
+  void showLogoutConfirmation() async {
+    showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius)),
+      ),
+      backgroundColor: Colors.white,
       builder: (BuildContext context) {
-        return alert;
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                topRight: Radius.circular(25.0),
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: const Text(
+                          'Внимание',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Вы уверены, что хотите выйти из аккаунта?',
+                        style: TextStyle(
+                          color: Colors.black45,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            height: 60,
+                            width: 150,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10), // <-- Radius
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                "Отмена",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 60,
+                            width: 150,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors.accent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(10), // <-- Radius
+                                ),
+                              ),
+                              onPressed: () {
+                                logOut();
+                              },
+                              child: const Text(
+                                "Да, выйти",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
       },
-    ).whenComplete(() => widget.onButtonPressed(2));
+    );
   }
 }

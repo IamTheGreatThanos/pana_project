@@ -6,6 +6,7 @@ import 'package:pana_project/models/impressionDetail.dart';
 import 'package:pana_project/models/impressionSession.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/utils/ImpressionData.dart';
+import 'package:pana_project/utils/checkPlaceCount.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
 import 'package:pana_project/views/payment/impression_payment_page.dart';
@@ -480,6 +481,15 @@ class _ImpressionPeopleCountBottomSheetState
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Свободно для бронирования: ${checkPlaceCount(widget.isPrivate == 2 ? (widget.session.closedGroupMax ?? 0).toString() : ((widget.session.maxCountOpen ?? 0) - (widget.session.currentPeopleCount ?? 0)).toString())}',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.blackWithOpacity,
                 ),
               ),
               widget.isPrivate == 2

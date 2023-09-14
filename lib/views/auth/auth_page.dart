@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pana_project/services/auth_api_provider.dart';
 import 'package:pana_project/utils/const.dart';
@@ -237,6 +238,10 @@ class _AuthPageState extends State<AuthPage> {
                               textCapitalization: TextCapitalization.words,
                               textInputAction: TextInputAction.done,
                               maxLength: 30,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp(
+                                    '[a-zA-Zа-яА-Я]')), // Регулярное выражение, разрешающее буквы на английском и кирилице
+                              ],
                               decoration: const InputDecoration(
                                 counterStyle: TextStyle(
                                   height: double.minPositive,
@@ -274,6 +279,10 @@ class _AuthPageState extends State<AuthPage> {
                               textCapitalization: TextCapitalization.words,
                               textInputAction: TextInputAction.done,
                               maxLength: 30,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp(
+                                    '[a-zA-Zа-яА-Я]')), // Регулярное выражение, разрешающее буквы на английском и кирилице
+                              ],
                               decoration: const InputDecoration(
                                 counterStyle: TextStyle(
                                   height: double.minPositive,

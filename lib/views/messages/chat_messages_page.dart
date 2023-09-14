@@ -28,6 +28,8 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
   List<ChatMessageModel> listOfMessages = [];
   int myUserId = 0;
 
+  bool sending = false;
+
   late IO.Socket socket;
 
   @override
@@ -46,7 +48,7 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
   void getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     myUserId = prefs.getInt('user_id') ?? 0;
-    print(prefs.getString('token'));
+    // print(prefs.getString('token'));
     setState(() {});
 
     socketInit();
@@ -59,12 +61,12 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
     });
 
     socket.onConnect((_) {
-      print('Connected!');
+      // print('Connected!');
       socket.emit('join', myUserId);
     });
 
     socket.on('chat_message', (newMessage) async {
-      print(newMessage);
+      // print(newMessage);
       getMessagesFromBackground();
     });
   }
@@ -244,15 +246,24 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
                             ),
                           ),
                           const Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              if (messageController.text.isNotEmpty) {
-                                sendMessage();
-                              }
-                            },
-                            child: SvgPicture.asset(
-                                'assets/icons/send_message_icon.svg'),
-                          ),
+                          sending
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.grey,
+                                  ),
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    if (messageController.text.isNotEmpty &&
+                                        sending == false) {
+                                      sendMessage();
+                                    }
+                                  },
+                                  child: SvgPicture.asset(
+                                      'assets/icons/send_message_icon.svg'),
+                                ),
                           const Spacer(),
                         ],
                       ),
@@ -314,10 +325,13 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
   }
 
   void sendMessage() async {
+    sending = true;
+    setState(() {});
     var response = await MessagesProvider()
         .sendMessageInChat(messageController.text, widget.chat.user!.id!);
     if (response['response_status'] == 'ok') {
       messageController.text = '';
+      sending = false;
       getMessages();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -331,12 +345,12 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
     var response =
         await MessagesProvider().readMessageInChat(widget.chat.user!.id!);
     if (response['response_status'] == 'ok') {
-      print('Readed');
+      // print('Readed');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(response['data']['message'],
-            style: const TextStyle(fontSize: 14)),
-      ));
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text(response['data']['message'],
+      //       style: const TextStyle(fontSize: 14)),
+      // ));
     }
   }
 
@@ -363,16 +377,16 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
         showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: Text('Доступ к галерее запрещен'),
-            content: Text(
+            title: const Text('Доступ к галерее запрещен'),
+            content: const Text(
                 'Пожалуйста, откройте настройки и предоставьте доступ к галерее.'),
             actions: <Widget>[
               TextButton(
-                child: Text('Отмена'),
+                child: const Text('Отмена'),
                 onPressed: () => Navigator.of(context).pop(),
               ),
               TextButton(
-                child: Text('Настройки'),
+                child: const Text('Настройки'),
                 onPressed: () {
                   openAppSettings();
                   Navigator.of(context).pop();

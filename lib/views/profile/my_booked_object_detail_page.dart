@@ -170,7 +170,9 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 10),
                             child: Text(
-                              'Статус: ${widget.order.status == 6 ? 'Отменено' : widget.order.bookingStatus == 2 ? 'Завершено' : widget.order.bookingStatus == 3 ? 'Проживание' : widget.order.bookingStatus == 4 ? 'Незаезд' : 'Ожидается заезд'}',
+                              widget.type == 2
+                                  ? 'Статус: ${widget.order.status == 6 ? 'Отменено' : widget.order.bookingStatus == 2 ? 'Завершено' : widget.order.bookingStatus == 3 ? 'Проживание' : widget.order.bookingStatus == 4 ? 'Незаезд' : 'Ожидается заезд'}'
+                                  : 'Статус: ${widget.order.status == 6 ? 'Отменено' : widget.order.bookingStatus == 2 ? 'Завершено' : widget.order.bookingStatus == 3 ? 'Началось' : 'Ожидает начала'}',
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -1429,19 +1431,33 @@ class _MyBookedObjectDetailPageState extends State<MyBookedObjectDetailPage> {
                         const SizedBox(height: 20),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SendTextReviewPage(
-                                          widget.type,
-                                          widget.type == 2
-                                              ? widget.order.housing!.id!
-                                              : widget.order.impression!.id!,
-                                          widget.type == 2
-                                              ? widget.order.dateFrom!
-                                              : widget.order.dateFrom!,
-                                          widget.type == 2 ? true : false,
-                                        )));
+                            DateTime? startDate =
+                                DateTime.tryParse(widget.order.dateFrom ?? '');
+                            if (startDate != null) {
+                              if (DateTime.now().isAfter(startDate)) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SendTextReviewPage(
+                                              widget.type,
+                                              widget.type == 2
+                                                  ? widget.order.housing!.id!
+                                                  : widget
+                                                      .order.impression!.id!,
+                                              widget.type == 2
+                                                  ? widget.order.dateFrom!
+                                                  : widget.order.dateFrom!,
+                                              widget.type == 2 ? true : false,
+                                            )));
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text('Событие еще не произошло.',
+                                      style: const TextStyle(fontSize: 14)),
+                                ));
+                              }
+                            }
                           },
                           child: Container(
                             // width: 162,

@@ -148,10 +148,10 @@ class HousingProvider {
       urlParams += '&beds=$tempString';
     }
     if (pets != 0) {
-      urlParams += '&pet=${pets == 2 ? 1 : 0}';
+      urlParams += '&pet=${pets == 2 ? 'yes' : 'no'}';
     }
     if (children != 0) {
-      urlParams += '&children_allowed=${children == 2 ? 'yes' : 'no'}';
+      urlParams += '&children_allowed=${children == 2 ? 1 : 0}';
     }
     if (locations.toString() != '[]') {
       String tempString = '';

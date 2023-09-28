@@ -17,7 +17,7 @@
 
    <application
        android:usesCleartextTraffic="true"
-        android:label="Pana Test"
+        android:label="Pana"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

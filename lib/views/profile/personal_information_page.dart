@@ -86,7 +86,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 Container(
                   color: AppColors.lightGray,
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
+                  height: MediaQuery.of(context).size.height - 100,
                   child: Column(
                     children: [
                       GestureDetector(

@@ -97,6 +97,15 @@ class _TransactionPaymentHistoryCardState
                   ),
                 ),
                 const SizedBox(height: 10),
+                Text(
+                  'Статус: ${widget.order.status == 6 ? 'Оплата отменена' : widget.order.paymentStatus == 0 ? 'Ожидается оплата' : 'Оплачено'}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.blackWithOpacity,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 const Divider(),
                 const SizedBox(height: 10),
                 Row(

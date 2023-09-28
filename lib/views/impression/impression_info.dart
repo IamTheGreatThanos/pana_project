@@ -1409,128 +1409,136 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                         ),
                       ),
                       const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                        child: Text(
-                          'Похожие впечатления',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
+
                       similarImpressionList.isNotEmpty
-                          ? SizedBox(
-                              height: 445,
-                              child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: <Widget>[
-                                    for (int i = 0;
-                                        i < similarImpressionList.length;
-                                        i++)
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 20),
-                                        child: GestureDetector(
-                                            onTap: () async {
-                                              StoryController _storyController =
-                                                  StoryController();
-                                              List<StoryItem?> thisStoryItems =
-                                                  [];
-                                              List<StoryItem?> mediaStoryItems =
-                                                  [];
-
-                                              for (int j = 0;
-                                                  j <
-                                                      similarImpressionList[i]
-                                                          .videos!
-                                                          .length;
-                                                  j++) {
-                                                thisStoryItems.add(
-                                                  StoryItem.pageVideo(
-                                                    similarImpressionList[i]
-                                                        .videos![j]
-                                                        .path!,
-                                                    controller:
-                                                        _storyController,
-                                                    imageFit: BoxFit.cover,
-                                                  ),
-                                                );
-
-                                                mediaStoryItems.add(
-                                                  StoryItem.pageVideo(
-                                                    similarImpressionList[i]
-                                                        .videos![j]
-                                                        .path!,
-                                                    controller:
-                                                        _storyController,
-                                                    imageFit: BoxFit.fitWidth,
-                                                  ),
-                                                );
-                                              }
-
-                                              for (int j = 0;
-                                                  j <
-                                                      similarImpressionList[i]
-                                                          .images!
-                                                          .length;
-                                                  j++) {
-                                                thisStoryItems.add(
-                                                  StoryItem.pageImage(
-                                                    url:
-                                                        similarImpressionList[i]
-                                                            .images![j]
-                                                            .path!,
-                                                    controller:
-                                                        _storyController,
-                                                    imageFit: BoxFit.cover,
-                                                  ),
-                                                );
-
-                                                mediaStoryItems.add(
-                                                  StoryItem.pageImage(
-                                                    url:
-                                                        similarImpressionList[i]
-                                                            .images![j]
-                                                            .path!,
-                                                    controller:
-                                                        _storyController,
-                                                    imageFit: BoxFit.fitWidth,
-                                                  ),
-                                                );
-                                              }
-
-                                              await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ImpressionInfo(
-                                                    similarImpressionList[i],
-                                                    thisStoryItems,
-                                                    mediaStoryItems,
-                                                  ),
-                                                ),
-                                              );
-
-                                              setState(() {});
-                                            },
-                                            child: ImpressionCard(
-                                                similarImpressionList[i],
-                                                () {})),
-                                      )
-                                  ]))
-                          : const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 10),
-                              child: Text(
-                                'Впечатления поблизости отсутствуют...',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.blackWithOpacity,
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 20, left: 20, bottom: 10),
+                                  child: Text(
+                                    'Похожие впечатления',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
+                                SizedBox(
+                                    height: 445,
+                                    child: ListView(
+                                        scrollDirection: Axis.horizontal,
+                                        children: <Widget>[
+                                          for (int i = 0;
+                                              i < similarImpressionList.length;
+                                              i++)
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 20),
+                                              child: GestureDetector(
+                                                  onTap: () async {
+                                                    StoryController
+                                                        _storyController =
+                                                        StoryController();
+                                                    List<StoryItem?>
+                                                        thisStoryItems = [];
+                                                    List<StoryItem?>
+                                                        mediaStoryItems = [];
+
+                                                    for (int j = 0;
+                                                        j <
+                                                            similarImpressionList[
+                                                                    i]
+                                                                .videos!
+                                                                .length;
+                                                        j++) {
+                                                      thisStoryItems.add(
+                                                        StoryItem.pageVideo(
+                                                          similarImpressionList[
+                                                                  i]
+                                                              .videos![j]
+                                                              .path!,
+                                                          controller:
+                                                              _storyController,
+                                                          imageFit:
+                                                              BoxFit.cover,
+                                                        ),
+                                                      );
+
+                                                      mediaStoryItems.add(
+                                                        StoryItem.pageVideo(
+                                                          similarImpressionList[
+                                                                  i]
+                                                              .videos![j]
+                                                              .path!,
+                                                          controller:
+                                                              _storyController,
+                                                          imageFit:
+                                                              BoxFit.fitWidth,
+                                                        ),
+                                                      );
+                                                    }
+
+                                                    for (int j = 0;
+                                                        j <
+                                                            similarImpressionList[
+                                                                    i]
+                                                                .images!
+                                                                .length;
+                                                        j++) {
+                                                      thisStoryItems.add(
+                                                        StoryItem.pageImage(
+                                                          url:
+                                                              similarImpressionList[
+                                                                      i]
+                                                                  .images![j]
+                                                                  .path!,
+                                                          controller:
+                                                              _storyController,
+                                                          imageFit:
+                                                              BoxFit.cover,
+                                                        ),
+                                                      );
+
+                                                      mediaStoryItems.add(
+                                                        StoryItem.pageImage(
+                                                          url:
+                                                              similarImpressionList[
+                                                                      i]
+                                                                  .images![j]
+                                                                  .path!,
+                                                          controller:
+                                                              _storyController,
+                                                          imageFit:
+                                                              BoxFit.fitWidth,
+                                                        ),
+                                                      );
+                                                    }
+
+                                                    await Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ImpressionInfo(
+                                                          similarImpressionList[
+                                                              i],
+                                                          thisStoryItems,
+                                                          mediaStoryItems,
+                                                        ),
+                                                      ),
+                                                    );
+
+                                                    setState(() {});
+                                                  },
+                                                  child: ImpressionCard(
+                                                      similarImpressionList[i],
+                                                      () {})),
+                                            )
+                                        ])),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 ),
@@ -1887,6 +1895,8 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                         textAlign: TextAlign.center),
                     selectionMode: DateRangePickerSelectionMode.range,
                     minDate: DateTime.now(),
+                    monthViewSettings: const DateRangePickerMonthViewSettings(
+                        firstDayOfWeek: 1),
                   ),
                 ],
               ),

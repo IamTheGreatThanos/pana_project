@@ -12,10 +12,10 @@ class AudioReviewModel {
   ImpressionDetailModel? impression;
   String? audio;
   String? description;
-  int? price;
-  int? purity;
-  int? staff;
-  int? ball;
+  double? price;
+  double? purity;
+  double? staff;
+  double? ball;
   List<Answers>? answers;
   List<Images>? images;
   int? likeCount;
@@ -50,10 +50,10 @@ class AudioReviewModel {
         : null;
     audio = json['audio'];
     description = json['description'];
-    price = json['price'];
-    purity = json['purity'];
-    staff = json['staff'];
-    ball = json['ball'];
+    price = double.tryParse(json['price'].toString()) ?? 0;
+    purity = double.tryParse(json['purity'].toString()) ?? 0;
+    staff = double.tryParse(json['staff'].toString()) ?? 0;
+    ball = double.tryParse(json['ball'].toString()) ?? 0;
     if (json['answers'] != null) {
       answers = <Answers>[];
       json['answers'].forEach((v) {

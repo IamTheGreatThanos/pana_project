@@ -39,6 +39,7 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
   void getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     myUserId = prefs.getInt('user_id') ?? 0;
+    // print(prefs.getString('token'));
     setState(() {});
 
     socketInit();
@@ -183,7 +184,7 @@ class _ListOfChatsPageState extends State<ListOfChatsPage> {
   void getSupportChat() async {
     try {
       var responseSupport = await MessagesProvider().getListOfChatsSupport();
-      print(responseSupport);
+      // print(responseSupport);
 
       if (responseSupport['response_status'] == 'ok') {
         isHaveSupportChat = true;

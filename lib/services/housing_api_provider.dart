@@ -110,42 +110,46 @@ class HousingProvider {
       for (var i in stars) {
         tempString += '$i,';
       }
-      urlParams += '&stars=$tempString';
+      urlParams += '&stars=${tempString.substring(0, tempString.length - 1)}';
     }
     if (reviewBalls.toString() != '[]') {
       String tempString = '';
       for (var i in reviewBalls) {
         tempString += '$i,';
       }
-      urlParams += '&review_balls=$tempString';
+      urlParams +=
+          '&review_balls=${tempString.substring(0, tempString.length - 1)}';
     }
     if (comforts.toString() != '[]') {
       String tempString = '';
       for (var i in comforts) {
         tempString += '$i,';
       }
-      urlParams += '&comforts=$tempString';
+      urlParams +=
+          '&comforts=${tempString.substring(0, tempString.length - 1)}';
     }
     if (breakfasts.toString() != '[]') {
       String tempString = '';
       for (var i in breakfasts) {
         tempString += '$i,';
       }
-      urlParams += '&breakfasts=$tempString';
+      urlParams +=
+          '&breakfasts=${tempString.substring(0, tempString.length - 1)}';
     }
     if (languages.toString() != '[]') {
       String tempString = '';
       for (var i in languages) {
         tempString += '$i,';
       }
-      urlParams += '&languages=$tempString';
+      urlParams +=
+          '&languages=${tempString.substring(0, tempString.length - 1)}';
     }
     if (beds.toString() != '[]') {
       String tempString = '';
       for (var i in beds) {
         tempString += '$i,';
       }
-      urlParams += '&beds=$tempString';
+      urlParams += '&beds=${tempString.substring(0, tempString.length - 1)}';
     }
     if (pets != 0) {
       urlParams += '&pet=${pets == 2 ? 'yes' : 'no'}';

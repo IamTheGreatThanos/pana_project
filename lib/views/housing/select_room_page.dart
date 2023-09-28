@@ -485,6 +485,8 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
                         textAlign: TextAlign.center),
                     selectionMode: DateRangePickerSelectionMode.range,
                     minDate: DateTime.now(),
+                    monthViewSettings: const DateRangePickerMonthViewSettings(
+                        firstDayOfWeek: 1),
                   ),
                 ],
               ),
@@ -544,7 +546,7 @@ class _SelectRoomPageState extends State<SelectRoomPage> {
       }
       setState(() {});
     } else {
-      print(response['data']['message']);
+      // print(response['data']['message']);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(response['data']['message'],
             style: const TextStyle(fontSize: 14)),

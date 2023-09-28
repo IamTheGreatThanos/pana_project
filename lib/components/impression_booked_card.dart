@@ -230,7 +230,7 @@ class _ImpressionBookedCardState extends State<ImpressionBookedCard> {
                 ),
                 const Spacer(),
                 Text(
-                  'Статус: ${widget.order.status == 6 ? 'Отменено' : widget.order.bookingStatus == 2 ? 'Завершено' : widget.order.bookingStatus == 3 ? 'Проживание' : widget.order.bookingStatus == 4 ? 'Незаезд' : 'Ожидается заезд'}',
+                  'Статус: ${widget.order.status == 6 ? 'Отменено' : widget.order.bookingStatus == 2 ? 'Завершено' : widget.order.bookingStatus == 3 ? 'Началось' : 'Ожидает начала'}',
                   style: const TextStyle(
                     color: AppColors.blackWithOpacity,
                     fontWeight: FontWeight.w500,

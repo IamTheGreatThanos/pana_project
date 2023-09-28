@@ -124,7 +124,7 @@ class _ChangeFullNamePageState extends State<ChangeFullNamePage> {
                                         height: 30,
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.6,
+                                                0.8,
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 4),
@@ -134,7 +134,7 @@ class _ChangeFullNamePageState extends State<ChangeFullNamePage> {
                                             inputFormatters: [
                                               FilteringTextInputFormatter.allow(
                                                   RegExp(
-                                                      '[a-zA-Zа-яА-Я]')), // Регулярное выражение, разрешающее буквы на английском и кирилице
+                                                      r'[a-zA-Zа-яА-Я-]')), // Регулярное выражение, разрешающее буквы на английском и кирилице
                                             ],
                                             decoration: const InputDecoration(
                                               counterStyle: TextStyle(
@@ -180,7 +180,7 @@ class _ChangeFullNamePageState extends State<ChangeFullNamePage> {
                                         height: 30,
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.6,
+                                                0.8,
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 4),
@@ -190,7 +190,7 @@ class _ChangeFullNamePageState extends State<ChangeFullNamePage> {
                                             inputFormatters: [
                                               FilteringTextInputFormatter.allow(
                                                   RegExp(
-                                                      '[a-zA-Zа-яА-Я]')), // Регулярное выражение, разрешающее буквы на английском и кирилице
+                                                      r'[a-zA-Zа-яА-Я-]')), // Регулярное выражение, разрешающее буквы на английском и кирилице
                                             ],
                                             decoration: const InputDecoration(
                                               counterStyle: TextStyle(

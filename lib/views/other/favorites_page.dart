@@ -267,7 +267,7 @@ class _FavoritesPageState extends State<FavoritesPage>
                                                       ),
                                                     );
 
-                                                    getHousingList();
+                                                    setState(() {});
                                                   },
                                                   child: HousingCard(
                                                       housingList[i],
@@ -409,7 +409,7 @@ class _FavoritesPageState extends State<FavoritesPage>
                                                     },
                                                     child: ImpressionCard(
                                                         impressionList[i],
-                                                        () {})),
+                                                        getImpressionList)),
                                               ),
                                             const SizedBox(height: 20)
                                           ],

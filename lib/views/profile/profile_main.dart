@@ -69,11 +69,11 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                       width: MediaQuery.of(context).size.width,
                       child: Stack(
                         children: [
-                          Container(
-                            color: AppColors.grey,
-                            width: MediaQuery.of(context).size.width,
-                            height: 300,
-                          ),
+                          // Container(
+                          //   color: AppColors.grey,
+                          //   width: MediaQuery.of(context).size.width,
+                          //   height: 300,
+                          // ),
                           SvgPicture.asset(
                             'assets/images/profile_bg.svg',
                             width: MediaQuery.of(context).size.width,

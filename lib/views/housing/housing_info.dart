@@ -19,6 +19,7 @@ import 'package:pana_project/models/textReview.dart';
 import 'package:pana_project/services/housing_api_provider.dart';
 import 'package:pana_project/services/impression_api_provider.dart';
 import 'package:pana_project/services/main_api_provider.dart';
+import 'package:pana_project/utils/checkDaysCount.dart';
 import 'package:pana_project/utils/checkReviewsCount.dart';
 import 'package:pana_project/utils/const.dart';
 import 'package:pana_project/utils/format_number_string.dart';
@@ -204,7 +205,6 @@ class _HousingInfoState extends State<HousingInfo> {
                                   onTap: () async {
                                     await FlutterShare.share(
                                       title: 'Pana',
-                                      text: 'Жилье в Pana',
                                       linkUrl:
                                           'pana://pana.app/housing?id=${widget.id}',
                                     );
@@ -293,7 +293,7 @@ class _HousingInfoState extends State<HousingInfo> {
                           Padding(
                             padding: const EdgeInsets.only(left: 20),
                             child: Text(
-                              '${thisHousing.distance ?? '-'} км от вас',
+                              '${thisHousing.distance == null || thisHousing.distance == -1 ? '-' : thisHousing.distance} км от вас',
                               style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -1408,7 +1408,7 @@ class _HousingInfoState extends State<HousingInfo> {
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: Text(
                                 thisHousing.cancelFineDay != null
-                                    ? 'Бесплатная отмена бронирования за ${thisHousing.cancelFineDay ?? ''} дней до прибытия.\nОтмена менее чем за ${thisHousing.cancelFineDay ?? ''} дней - 100% штраф'
+                                    ? 'Бесплатная отмена бронирования за ${checkDaysCount(thisHousing.cancelFineDay ?? '')} до прибытия.\nОтмена менее чем за ${checkDaysCount(thisHousing.cancelFineDay ?? '')} - 100% штраф'
                                     : 'Бесплатная отмена',
                                 style: const TextStyle(
                                     fontSize: 14,
@@ -1516,126 +1516,135 @@ class _HousingInfoState extends State<HousingInfo> {
                           ],
                         ),
                       ),
-
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10, left: 20, bottom: 10),
-                        child: Text(
-                          'Впечатления рядом',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
                       nearbyImpressionList.isNotEmpty
-                          ? SizedBox(
-                              height: 445,
-                              child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: <Widget>[
-                                    for (int i = 0;
-                                        i < nearbyImpressionList.length;
-                                        i++)
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 20),
-                                        child: GestureDetector(
-                                            onTap: () async {
-                                              StoryController _storyController =
-                                                  StoryController();
-                                              List<StoryItem?> thisStoryItems =
-                                                  [];
-                                              List<StoryItem?> mediaStoryItems =
-                                                  [];
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 10, left: 20, bottom: 10),
+                                  child: Text(
+                                    'Впечатления рядом',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                    height: 445,
+                                    child: ListView(
+                                        scrollDirection: Axis.horizontal,
+                                        children: <Widget>[
+                                          for (int i = 0;
+                                              i < nearbyImpressionList.length;
+                                              i++)
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 20),
+                                              child: GestureDetector(
+                                                  onTap: () async {
+                                                    StoryController
+                                                        _storyController =
+                                                        StoryController();
+                                                    List<StoryItem?>
+                                                        thisStoryItems = [];
+                                                    List<StoryItem?>
+                                                        mediaStoryItems = [];
 
-                                              for (int j = 0;
-                                                  j <
-                                                      nearbyImpressionList[i]
-                                                          .videos!
-                                                          .length;
-                                                  j++) {
-                                                thisStoryItems.add(
-                                                  StoryItem.pageVideo(
-                                                    nearbyImpressionList[i]
-                                                        .videos![j]
-                                                        .path!,
-                                                    controller:
-                                                        _storyController,
-                                                    imageFit: BoxFit.cover,
-                                                  ),
-                                                );
+                                                    for (int j = 0;
+                                                        j <
+                                                            nearbyImpressionList[
+                                                                    i]
+                                                                .videos!
+                                                                .length;
+                                                        j++) {
+                                                      thisStoryItems.add(
+                                                        StoryItem.pageVideo(
+                                                          nearbyImpressionList[
+                                                                  i]
+                                                              .videos![j]
+                                                              .path!,
+                                                          controller:
+                                                              _storyController,
+                                                          imageFit:
+                                                              BoxFit.cover,
+                                                        ),
+                                                      );
 
-                                                mediaStoryItems.add(
-                                                  StoryItem.pageVideo(
-                                                    nearbyImpressionList[i]
-                                                        .videos![j]
-                                                        .path!,
-                                                    controller:
-                                                        _storyController,
-                                                    imageFit: BoxFit.fitWidth,
-                                                  ),
-                                                );
-                                              }
+                                                      mediaStoryItems.add(
+                                                        StoryItem.pageVideo(
+                                                          nearbyImpressionList[
+                                                                  i]
+                                                              .videos![j]
+                                                              .path!,
+                                                          controller:
+                                                              _storyController,
+                                                          imageFit:
+                                                              BoxFit.fitWidth,
+                                                        ),
+                                                      );
+                                                    }
 
-                                              for (int j = 0;
-                                                  j <
-                                                      nearbyImpressionList[i]
-                                                          .images!
-                                                          .length;
-                                                  j++) {
-                                                thisStoryItems.add(
-                                                  StoryItem.pageImage(
-                                                    url: nearbyImpressionList[i]
-                                                        .images![j]
-                                                        .path!,
-                                                    controller:
-                                                        _storyController,
-                                                    imageFit: BoxFit.cover,
-                                                  ),
-                                                );
+                                                    for (int j = 0;
+                                                        j <
+                                                            nearbyImpressionList[
+                                                                    i]
+                                                                .images!
+                                                                .length;
+                                                        j++) {
+                                                      thisStoryItems.add(
+                                                        StoryItem.pageImage(
+                                                          url:
+                                                              nearbyImpressionList[
+                                                                      i]
+                                                                  .images![j]
+                                                                  .path!,
+                                                          controller:
+                                                              _storyController,
+                                                          imageFit:
+                                                              BoxFit.cover,
+                                                        ),
+                                                      );
 
-                                                mediaStoryItems.add(
-                                                  StoryItem.pageImage(
-                                                    url: nearbyImpressionList[i]
-                                                        .images![j]
-                                                        .path!,
-                                                    controller:
-                                                        _storyController,
-                                                    imageFit: BoxFit.fitWidth,
-                                                  ),
-                                                );
-                                              }
+                                                      mediaStoryItems.add(
+                                                        StoryItem.pageImage(
+                                                          url:
+                                                              nearbyImpressionList[
+                                                                      i]
+                                                                  .images![j]
+                                                                  .path!,
+                                                          controller:
+                                                              _storyController,
+                                                          imageFit:
+                                                              BoxFit.fitWidth,
+                                                        ),
+                                                      );
+                                                    }
 
-                                              await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ImpressionInfo(
-                                                    nearbyImpressionList[i],
-                                                    thisStoryItems,
-                                                    mediaStoryItems,
-                                                  ),
-                                                ),
-                                              );
+                                                    await Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ImpressionInfo(
+                                                          nearbyImpressionList[
+                                                              i],
+                                                          thisStoryItems,
+                                                          mediaStoryItems,
+                                                        ),
+                                                      ),
+                                                    );
 
-                                              setState(() {});
-                                            },
-                                            child: ImpressionCard(
-                                                nearbyImpressionList[i],
-                                                () {})),
-                                      )
-                                  ]))
-                          : const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 10),
-                              child: Text(
-                                'Впечатления поблизости отсутствуют...',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.blackWithOpacity),
-                              ),
-                            ),
+                                                    setState(() {});
+                                                  },
+                                                  child: ImpressionCard(
+                                                      nearbyImpressionList[i],
+                                                      () {})),
+                                            )
+                                        ])),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
                       const Divider(),
                       // const Padding(
                       //   padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -1887,6 +1896,8 @@ class _HousingInfoState extends State<HousingInfo> {
                         textAlign: TextAlign.center),
                     selectionMode: DateRangePickerSelectionMode.range,
                     minDate: DateTime.now(),
+                    monthViewSettings: const DateRangePickerMonthViewSettings(
+                        firstDayOfWeek: 1),
                   ),
                 ],
               ),

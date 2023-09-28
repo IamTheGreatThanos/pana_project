@@ -400,8 +400,10 @@ class _EnterPersonalInformationPageState
                     height: 250,
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.date,
-                      initialDateTime: DateTime.now(),
-                      maximumDate: DateTime.now(),
+                      initialDateTime: DateTime.now()
+                          .subtract(const Duration(days: 16 * 365)),
+                      maximumDate: DateTime.now()
+                          .subtract(const Duration(days: 16 * 365)),
                       onDateTimeChanged: (DateTime newDateTime) {
                         setState(() {
                           selectedDate =

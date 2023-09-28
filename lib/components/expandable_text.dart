@@ -84,6 +84,8 @@ class _ExpandableTextState extends State<ExpandableText> {
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(
             // height: 400,
+            constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.9),
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
               color: Colors.white,
@@ -100,20 +102,30 @@ class _ExpandableTextState extends State<ExpandableText> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: const Text(
-                          'Описание',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w600,
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            child: const Text(
+                              'Описание',
+                              style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.start,
+                            ),
                           ),
-                          textAlign: TextAlign.start,
-                        ),
+                          const Spacer(),
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Icon(Icons.close)),
+                        ],
                       ),
                       const SizedBox(height: 10),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width * 0.9,
                         child: Text(
                           widget.text,
                           style: const TextStyle(

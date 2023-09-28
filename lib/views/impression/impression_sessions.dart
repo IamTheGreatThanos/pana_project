@@ -333,6 +333,8 @@ class _ImpressionSessionsPageState extends State<ImpressionSessionsPage> {
                         textAlign: TextAlign.center),
                     selectionMode: DateRangePickerSelectionMode.range,
                     minDate: DateTime.now(),
+                    monthViewSettings: const DateRangePickerMonthViewSettings(
+                        firstDayOfWeek: 1),
                   ),
                 ],
               ),

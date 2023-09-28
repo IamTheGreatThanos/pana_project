@@ -1,14 +1,15 @@
-<svg width="375" height="980" viewBox="0 0 375 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="375" height="828" viewBox="0 0 375 828" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect y="1" width="375" height="194" fill="#E5E5E5"/>
 <g opacity="0.08">
-<path d="M20.4 0V812" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M68 0V812" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M115.6 0V812" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M163.2 0V812" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M210.8 0V812" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M258.4 0V812" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M306 0V812" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M353.6 0V812" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M20.4004 1V813" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M68 1V813" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M115.6 1V813" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M163.201 1V813" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M210.801 1V813" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M258.4 1V813" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M306 1V813" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M353.6 1V813" stroke="#2B2B2B" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
-<path d="M119.003 139.583L0 171.747V297H375V171.747L255.986 139.583C213.644 128.139 161.346 128.139 119.003 139.583Z" fill="#F5F5F5"/>
-<rect y="297" width="375" height="683" fill="#F5F5F5"/>
+<path d="M119.003 140.583L0 172.747V298H375V172.747L255.986 140.583C213.644 129.139 161.346 129.139 119.003 140.583Z" fill="#F5F5F5"/>
+<path d="M375 298H0V828H375V298Z" fill="#F5F5F5"/>
 </svg>

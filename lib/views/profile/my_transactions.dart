@@ -405,10 +405,10 @@ class _MyTransactionsPageState extends State<MyTransactionsPage> {
       transactionMain = TransactionMain.fromJson(response['data']);
 
       for (int i = 0; i < transactionMain.month!.length; i++) {
-        data.add(_ChartData(
+        data2.add(_ChartData(
             '${transactionMain.month![i].name!.substring(0, 3)}.\n${transactionMain.month![i].year}',
             transactionMain.month![i].housingPrice ?? 0));
-        data2.add(_ChartData(
+        data.add(_ChartData(
             '${transactionMain.month![i].name!.substring(0, 3)}.\n${transactionMain.month![i].year}',
             transactionMain.month![i].impressionPrice ?? 0));
       }

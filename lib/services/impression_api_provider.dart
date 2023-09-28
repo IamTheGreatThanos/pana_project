@@ -125,21 +125,24 @@ class ImpressionProvider {
       for (var i in reviewBalls) {
         tempString += '$i,';
       }
-      urlParams += '&review_balls=$tempString';
+      urlParams +=
+          '&review_balls=${tempString.substring(0, tempString.length - 1)}';
     }
     if (comforts.toString() != '[]') {
       String tempString = '';
       for (var i in comforts) {
         tempString += '$i,';
       }
-      urlParams += '&comforts=$tempString';
+      urlParams +=
+          '&comforts=${tempString.substring(0, tempString.length - 1)}';
     }
     if (languages.toString() != '[]') {
       String tempString = '';
       for (var i in languages) {
         tempString += '$i,';
       }
-      urlParams += '&languages=$tempString';
+      urlParams +=
+          '&languages=${tempString.substring(0, tempString.length - 1)}';
     }
 
     print(urlParams);

@@ -240,7 +240,7 @@ class _AuthPageState extends State<AuthPage> {
                               maxLength: 30,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(RegExp(
-                                    '[a-zA-Zа-яА-Я]')), // Регулярное выражение, разрешающее буквы на английском и кирилице
+                                    r'[a-zA-Zа-яА-Я-]')), // Регулярное выражение, разрешающее буквы на английском и кирилице
                               ],
                               decoration: const InputDecoration(
                                 counterStyle: TextStyle(
@@ -281,7 +281,7 @@ class _AuthPageState extends State<AuthPage> {
                               maxLength: 30,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(RegExp(
-                                    '[a-zA-Zа-яА-Я]')), // Регулярное выражение, разрешающее буквы на английском и кирилице
+                                    r'[a-zA-Zа-яА-Я-]')), // Регулярное выражение, разрешающее буквы на английском и кирилице
                               ],
                               decoration: const InputDecoration(
                                 counterStyle: TextStyle(

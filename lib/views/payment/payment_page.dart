@@ -616,7 +616,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   const Padding(
                     padding: EdgeInsets.only(top: 20, bottom: 10),
                     child: Text(
-                      'Правила дома',
+                      'Заезд/Выезд',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w500,

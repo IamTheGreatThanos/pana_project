@@ -176,9 +176,8 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                   onTap: () async {
                                     await FlutterShare.share(
                                       title: 'Pana',
-                                      text: 'Впечатление в Pana',
                                       linkUrl:
-                                          'pana://pana.app/impression?id=${widget.impression.id!}',
+                                          'http://pana.app/impression?id=${widget.impression.id!}',
                                     );
                                   },
                                   child: Container(

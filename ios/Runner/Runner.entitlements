@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:pana.app</string>
+		<string>applinks:panaclub.kz</string>
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>

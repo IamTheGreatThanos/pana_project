@@ -206,7 +206,7 @@ class _HousingInfoState extends State<HousingInfo> {
                                     await FlutterShare.share(
                                       title: 'Pana',
                                       linkUrl:
-                                          'http://pana.app/housing?id=${widget.id}',
+                                          'https://panaclub.kz/housing?id=${widget.id}',
                                     );
                                   },
                                   child: Container(

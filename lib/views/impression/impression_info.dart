@@ -177,7 +177,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                     await FlutterShare.share(
                                       title: 'Pana',
                                       linkUrl:
-                                          'http://pana.app/impression?id=${widget.impression.id!}',
+                                          'https://panaclub.kz/impression?id=${widget.impression.id!}',
                                     );
                                   },
                                   child: Container(
@@ -1417,7 +1417,7 @@ class _ImpressionInfoState extends State<ImpressionInfo> {
                                   padding: EdgeInsets.only(
                                       top: 20, left: 20, bottom: 10),
                                   child: Text(
-                                    'Похожие впечатления',
+                                    'Похожие предложения',
                                     style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.w500,

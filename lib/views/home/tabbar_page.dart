@@ -194,7 +194,7 @@ class _TabBarPageState extends State<TabBarPage> {
         List<StoryItem?> thisStoryItems = [];
         List<StoryItem?> mediaStoryItems = [];
 
-        for (int j = 0; j < thisImpression.videos!.length; j++) {
+        for (int j = 0; j < (thisImpression.videos?.length ?? 0); j++) {
           thisStoryItems.add(
             StoryItem.pageVideo(
               thisImpression.videos![j].path!,
@@ -326,7 +326,7 @@ class _TabBarPageState extends State<TabBarPage> {
                 'assets/icons/tab_bar_icon4.svg',
                 color: AppColors.accent,
               ),
-              label: 'Уведомления',
+              label: 'Входящие',
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(

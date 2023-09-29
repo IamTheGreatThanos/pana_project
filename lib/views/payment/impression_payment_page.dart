@@ -194,15 +194,18 @@ class _ImpressionPaymentPageState extends State<ImpressionPaymentPage> {
                                         'assets/icons/star.svg'),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5),
-                                  child: Text(
-                                    widget.impression.reviewsAvgBall ?? '0',
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
+                                (widget.impression.reviewsAvgBall ?? '0') != '0'
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(left: 5),
+                                        child: Text(
+                                          widget.impression.reviewsAvgBall ??
+                                              '0',
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: Text(

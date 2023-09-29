@@ -139,8 +139,8 @@ class _PaymentInformationPageState extends State<PaymentInformationPage> {
                               ),
                             ],
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
+                          child: const Padding(
+                            padding: EdgeInsets.all(12),
                             child: Icon(Icons.close),
                           ),
                         ),
@@ -208,18 +208,46 @@ class _PaymentInformationPageState extends State<PaymentInformationPage> {
                                         'assets/icons/star.svg'),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5),
-                                  child: Text(
-                                    widget.fromHousing
-                                        ? widget.housing.reviewsBallAvg ?? '0'
-                                        : widget.impression.reviewsAvgBall ??
-                                            '0',
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
+                                widget.fromHousing
+                                    ? (widget.housing.reviewsBallAvg ?? '0') !=
+                                            '0'
+                                        ? Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              widget.fromHousing
+                                                  ? widget.housing
+                                                          .reviewsBallAvg ??
+                                                      '0'
+                                                  : widget.impression
+                                                          .reviewsAvgBall ??
+                                                      '0',
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          )
+                                        : const SizedBox.shrink()
+                                    : (widget.impression.reviewsAvgBall ??
+                                                '0') !=
+                                            '0'
+                                        ? Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              widget.fromHousing
+                                                  ? widget.housing
+                                                          .reviewsBallAvg ??
+                                                      '0'
+                                                  : widget.impression
+                                                          .reviewsAvgBall ??
+                                                      '0',
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          )
+                                        : const SizedBox.shrink(),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: Text(
@@ -325,7 +353,7 @@ class _PaymentInformationPageState extends State<PaymentInformationPage> {
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  '${widget.peopleCount} гостя, ${widget.babies} младенца, ${widget.pets} питомца',
+                                  '${widget.peopleCount} гостя${widget.babies != 0 ? ', ${widget.babies} младенца':''}${widget.pets != 0 ? ', ${widget.pets} питомца':''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,

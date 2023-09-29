@@ -20,7 +20,7 @@ class AppConstants {
   static const String baseUrl = "https://back.panaclub.kz/";
   static String appVersion = '1.1.0';
   static double cardBorderRadius = 24;
-  static int mainTabIndex = 1;
+  static int mainTabIndex = 0;
   static String imagePlaceholderUrl =
       'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg';
 }

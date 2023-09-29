@@ -86,7 +86,7 @@ class _MessagesPageState extends State<MessagesPage> {
                                         padding:
                                             EdgeInsets.fromLTRB(20, 40, 20, 20),
                                         child: Text(
-                                          'Новые уведомления',
+                                          'Входящие',
                                           style: TextStyle(
                                             fontSize: 24,
                                             color: AppColors.black,
@@ -223,7 +223,7 @@ class _MessagesPageState extends State<MessagesPage> {
                                               padding: EdgeInsets.fromLTRB(
                                                   20, 40, 20, 20),
                                               child: Text(
-                                                'Просмотрено',
+                                                'Уведомления',
                                                 style: TextStyle(
                                                   fontSize: 24,
                                                   color: AppColors.black,
@@ -248,26 +248,26 @@ class _MessagesPageState extends State<MessagesPage> {
                                       )
                                     : Container(),
                                 const SizedBox(height: 20),
-                                oldNotifications.isNotEmpty
-                                    ? Center(
-                                        child: Column(
-                                          children: [
-                                            SvgPicture.asset(
-                                                'assets/images/smile.svg'),
-                                            const SizedBox(height: 10),
-                                            const Text(
-                                              'Вы долистали до конца',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: AppColors.black,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : const SizedBox.shrink(),
-                                const SizedBox(height: 20),
+                                // oldNotifications.isNotEmpty
+                                //     ? Center(
+                                //         child: Column(
+                                //           children: [
+                                //             SvgPicture.asset(
+                                //                 'assets/images/smile.svg'),
+                                //             const SizedBox(height: 10),
+                                //             const Text(
+                                //               'Вы долистали до конца',
+                                //               style: TextStyle(
+                                //                 fontSize: 16,
+                                //                 color: AppColors.black,
+                                //                 fontWeight: FontWeight.w500,
+                                //               ),
+                                //             ),
+                                //           ],
+                                //         ),
+                                //       )
+                                //     : const SizedBox.shrink(),
+                                // const SizedBox(height: 20),
                               ],
                             ),
                           ),

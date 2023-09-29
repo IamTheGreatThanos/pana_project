@@ -190,15 +190,17 @@ class _PaymentPageState extends State<PaymentPage> {
                                         'assets/icons/star.svg'),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5),
-                                  child: Text(
-                                    widget.housing.reviewsBallAvg ?? '0',
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
+                                (widget.housing.reviewsBallAvg ?? '0') != '0'
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(left: 5),
+                                        child: Text(
+                                          widget.housing.reviewsBallAvg ?? '0',
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: Text(
@@ -264,7 +266,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            '${sharedHousingPaymentData.adults + sharedHousingPaymentData.children} гостя, ${sharedHousingPaymentData.babies} младенца, ${sharedHousingPaymentData.pets} питомца',
+                            '${sharedHousingPaymentData.adults + sharedHousingPaymentData.children} гостя${sharedHousingPaymentData.babies != 0 ? ', ${sharedHousingPaymentData.babies} младенца' : ''}${sharedHousingPaymentData.pets != 0 ? ', ${sharedHousingPaymentData.pets} питомца' : ''}',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -637,30 +639,30 @@ class _PaymentPageState extends State<PaymentPage> {
                     ),
                   ),
                   const Divider(),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 10),
-                    child: Text(
-                      'Правила дома',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: const Text(
-                        'Отклонение проецирует суммарный поворот. Гировертикаль, в силу третьего закона Ньютона, даёт большую проекцию на оси, чем тангаж. Ротор безусловно заставляет иначе взглянуть на то, что такое уходящий ньютонометр, сводя задачу к квадратурам.',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black45),
-                      ),
-                    ),
-                  ),
-                  const Divider(),
+                  // const Padding(
+                  //   padding: EdgeInsets.only(top: 20, bottom: 10),
+                  //   child: Text(
+                  //     'Правила дома',
+                  //     style: TextStyle(
+                  //       fontSize: 24,
+                  //       fontWeight: FontWeight.w500,
+                  //     ),
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(bottom: 20),
+                  //   child: SizedBox(
+                  //     width: MediaQuery.of(context).size.width * 0.9,
+                  //     child: const Text(
+                  //       'Отклонение проецирует суммарный поворот. Гировертикаль, в силу третьего закона Ньютона, даёт большую проекцию на оси, чем тангаж. Ротор безусловно заставляет иначе взглянуть на то, что такое уходящий ньютонометр, сводя задачу к квадратурам.',
+                  //       style: TextStyle(
+                  //           fontSize: 14,
+                  //           fontWeight: FontWeight.w500,
+                  //           color: Colors.black45),
+                  //     ),
+                  //   ),
+                  // ),
+                  // const Divider(),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Builder(
